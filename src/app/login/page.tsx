@@ -21,8 +21,9 @@ export default function LoginPage() {
           발로란트 &amp; 리그 오브 레전드<br />스크림 매칭 플랫폼
         </p>
         <button
+          type="button"
           onClick={handleLogin}
-          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl transition"
+          className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-3 rounded-xl transition cursor-pointer"
         >
           Discord로 로그인
         </button>
