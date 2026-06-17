@@ -27,8 +27,7 @@ function ConfirmContent() {
     supabase.auth.exchangeCodeForSession(code)
       .then(({ data, error }) => {
         if (error || !data.session) {
-          setStatus('로그인 실패. 다시 시도해주세요.')
-          setTimeout(() => router.replace('/login'), 2000)
+          setStatus(`로그인 실패: ${error?.message ?? '세션 없음'} (code: ${code?.slice(0,10)}...)`)
         } else {
           router.replace('/dashboard')
         }
