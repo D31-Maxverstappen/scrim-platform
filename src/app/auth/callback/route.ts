@@ -1,19 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// 브라우저가 직접 세션 교환 처리하도록 클라이언트 페이지로 넘김
+// /auth/confirm 으로 그대로 넘김 (쿼리 파라미터 유지)
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const error = searchParams.get('error')
-
-  if (error) {
-    return NextResponse.redirect(`${origin}/login?error=${error}`)
-  }
-
-  if (code) {
-    return NextResponse.redirect(`${origin}/auth/confirm?code=${code}`)
-  }
-
-  return NextResponse.redirect(`${origin}/login`)
+  const url = new URL(request.url)
+  const confirmUrl = new URL('/auth/confirm', url.origin)
+  // code, error 등 모든 파라미터 그대로 전달
+  url.searchParams.forEach((value, key) => {
+    confirmUrl.searchParams.set(key, value)
+  })
+  return NextResponse.redirect(confirmUrl)
 }
