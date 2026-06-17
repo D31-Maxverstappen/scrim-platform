@@ -13,7 +13,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        {children}
+        <footer className="border-t border-white/5 bg-[#07070b] py-6 mt-auto">
+          <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
+            <span>© 2026 D31. All rights reserved.</span>
+            <div className="flex gap-4">
+              <a href="/terms" className="hover:text-slate-400 transition">이용약관</a>
+              <a href="/privacy" className="hover:text-slate-400 transition">개인정보 처리방침</a>
+            </div>
+          </div>
+        </footer>
+      </body>
     </html>
   );
 }
