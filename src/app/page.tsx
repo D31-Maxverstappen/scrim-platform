@@ -7,9 +7,14 @@ const games = [
     glow: 'rgba(255,70,85,0.5)',
     border: '#ff4655',
     bg: '#1a0a0b',
-    emoji: '🎯',
     desc: '5v5 전술 FPS',
     href: '/scrims?game=valorant',
+    logo: (
+      <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
+        <polygon points="4,52 32,12 60,52 44,52 32,32 20,52" fill="#ff4655"/>
+        <polygon points="20,52 32,32 44,52" fill="#ffffff" opacity="0.15"/>
+      </svg>
+    ),
   },
   {
     name: '리그 오브 레전드',
@@ -17,74 +22,108 @@ const games = [
     glow: 'rgba(200,155,60,0.5)',
     border: '#c89b3c',
     bg: '#0a0e1a',
-    emoji: '⚔️',
     desc: '5v5 전략 MOBA',
     href: '/scrims?game=lol',
+    logo: (
+      <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
+        <circle cx="32" cy="32" r="28" stroke="#c89b3c" strokeWidth="4" fill="#0a0e1a"/>
+        <circle cx="32" cy="32" r="18" stroke="#c89b3c" strokeWidth="2" fill="none"/>
+        <path d="M32 10 L32 54 M10 32 L54 32" stroke="#c89b3c" strokeWidth="2" opacity="0.4"/>
+        <circle cx="32" cy="32" r="6" fill="#c89b3c"/>
+      </svg>
+    ),
   },
   {
-    name: '오버워치',
+    name: '오버워치 2',
     color: '#f99e1a',
     glow: 'rgba(249,158,26,0.5)',
     border: '#f99e1a',
     bg: '#1a1000',
-    emoji: '🦸',
     desc: '6v6 팀 FPS',
     href: '/scrims?game=overwatch',
+    logo: (
+      <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
+        <circle cx="32" cy="32" r="26" stroke="#f99e1a" strokeWidth="4" fill="none"/>
+        <circle cx="32" cy="32" r="10" fill="#f99e1a"/>
+        <path d="M32 6 C18 6 8 18 8 32" stroke="#f99e1a" strokeWidth="4" strokeLinecap="round"/>
+        <path d="M32 58 C46 58 56 46 56 32" stroke="#f99e1a" strokeWidth="4" strokeLinecap="round"/>
+      </svg>
+    ),
   },
 ]
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0f0f13] flex flex-col">
+    <div className="min-h-screen bg-[#0a0a0f] flex flex-col relative overflow-hidden">
 
-      {/* 네비바 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0f0f13]/80 backdrop-blur border-b border-white/10 px-6 h-14 flex items-center justify-between">
+      {/* ── 경기장 배경 효과 ── */}
+      {/* 바닥 스포트라이트 */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* 관중석 느낌 - 상단 어두운 그라디언트 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050508] via-transparent to-[#050508] opacity-80" />
+        {/* 중앙 무대 스포트라이트 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-indigo-500/5 rounded-full blur-[100px]" />
+        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-purple-600/8 rounded-full blur-[80px]" />
+        {/* 좌우 사이드 라이트 */}
+        <div className="absolute top-1/3 -left-20 w-[300px] h-[500px] bg-indigo-800/10 rounded-full blur-[80px] rotate-12" />
+        <div className="absolute top-1/3 -right-20 w-[300px] h-[500px] bg-purple-800/10 rounded-full blur-[80px] -rotate-12" />
+        {/* 관중 실루엣 느낌 - 하단 점들 */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 opacity-10"
+          style={{
+            background: 'radial-gradient(ellipse at 20% 100%, #fff 1px, transparent 1px) 0 0 / 12px 16px, radial-gradient(ellipse at 60% 100%, #fff 1px, transparent 1px) 0 0 / 18px 20px, radial-gradient(ellipse at 80% 100%, #fff 1px, transparent 1px) 0 0 / 10px 14px'
+          }}
+        />
+        {/* 무대 바닥 라인 */}
+        <div className="absolute bottom-[30%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+      </div>
+
+      {/* ── 네비바 ── */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/80 backdrop-blur border-b border-white/10 px-6 h-14 flex items-center justify-between">
         <a href="/" className="text-white font-bold text-xl tracking-widest hover:text-indigo-400 transition">
           D31
         </a>
-        <a
-          href="/login"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition"
-        >
+        <a href="/login" className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
           로그인 / 시작하기
         </a>
       </nav>
 
-      {/* 히어로 섹션 */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pt-40 pb-20">
-        <p className="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-4">Korea&apos;s First Scrim Platform</p>
-        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
+      {/* ── 히어로 섹션 ── */}
+      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-44 pb-20">
+        <p className="text-indigo-400 text-xs font-semibold tracking-[0.3em] uppercase mb-5">
+          Korea&apos;s First Scrim Platform
+        </p>
+        <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6 drop-shadow-2xl">
           최초의 스크림 · 내전<br />구인구직 플랫폼
           <span className="text-indigo-400"> D31</span>
         </h1>
-        <p className="text-slate-400 text-lg max-w-xl mb-10">
-          프로 준비생부터 일반인까지 — 발로란트, 리그 오브 레전드, 오버워치 스크림을 지금 바로 찾아보세요.
+        <p className="text-slate-400 text-lg max-w-xl mb-10 leading-relaxed">
+          프로 준비생부터 일반인까지 —<br />
+          발로란트, 리그 오브 레전드, 오버워치 스크림을 지금 바로 찾아보세요.
         </p>
         <a
           href="/login"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-8 py-4 rounded-xl text-lg transition"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition shadow-lg shadow-indigo-500/30"
         >
           지금 시작하기 →
         </a>
       </section>
 
-      {/* 게임 선택 섹션 */}
-      <section className="px-6 pb-24 max-w-5xl mx-auto w-full">
-        <h2 className="text-center text-white font-bold text-2xl mb-10">게임을 선택하세요</h2>
+      {/* ── 게임 선택 섹션 ── */}
+      <section className="relative z-10 px-6 pb-28 max-w-5xl mx-auto w-full">
+        <h2 className="text-center text-slate-400 text-sm font-semibold tracking-widest uppercase mb-10">
+          게임을 선택하세요
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {games.map((game) => (
             <a
               key={game.name}
               href={game.href}
-              style={{
-                background: game.bg,
-                borderColor: 'transparent',
-              }}
-              className="group relative flex flex-col items-center justify-center rounded-2xl p-10 border-2 cursor-pointer transition-all duration-300 hover:scale-105"
+              style={{ background: game.bg, borderColor: 'transparent' }}
+              className="relative flex flex-col items-center justify-center rounded-2xl p-10 border-2 cursor-pointer transition-all duration-300 hover:scale-105"
               onMouseEnter={(e) => {
                 const el = e.currentTarget
                 el.style.borderColor = game.border
-                el.style.boxShadow = `0 0 30px ${game.glow}`
+                el.style.boxShadow = `0 0 40px ${game.glow}, inset 0 0 40px ${game.glow.replace('0.5', '0.05')}`
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget
@@ -92,12 +131,12 @@ export default function HomePage() {
                 el.style.boxShadow = 'none'
               }}
             >
-              <div className="text-7xl mb-4">{game.emoji}</div>
+              <div className="mb-5">{game.logo}</div>
               <h3 className="text-white font-bold text-xl mb-2">{game.name}</h3>
-              <p className="text-slate-400 text-sm">{game.desc}</p>
+              <p className="text-slate-400 text-sm mb-4">{game.desc}</p>
               <span
-                className="mt-4 text-xs font-semibold px-3 py-1 rounded-full"
-                style={{ background: game.color + '33', color: game.color }}
+                className="text-xs font-semibold px-3 py-1 rounded-full"
+                style={{ background: game.color + '22', color: game.color }}
               >
                 스크림 찾기 →
               </span>
@@ -106,8 +145,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 푸터 */}
-      <footer className="border-t border-white/10 text-center text-slate-600 text-sm py-6">
+      {/* ── 푸터 ── */}
+      <footer className="relative z-10 border-t border-white/10 text-center text-slate-600 text-sm py-6">
         © 2026 D31. All rights reserved.
       </footer>
     </div>
