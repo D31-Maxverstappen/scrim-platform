@@ -25,14 +25,22 @@ function CallbackContent() {
       return
     }
 
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    setMsg(`URL: ${supabaseUrl} | code: ${code.slice(0, 10)}...`)
+
+    // Supabase 연결 테스트
+    fetch(`${supabaseUrl}/auth/v1/health`)
+      .then(r => setMsg(`연결 OK (${r.status}) — 교환 시도 중...`))
+      .catch(e => setMsg(`연결 실패: ${e.message} | URL: ${supabaseUrl}`))
+
     const supabase = createClient()
     supabase.auth.exchangeCodeForSession(code).then(({ data, error: exchError }) => {
       if (exchError) {
-        setMsg(`교환 실패: ${exchError.message} | status: ${exchError.status} | code: ${code.slice(0, 20)}`)
+        setMsg(`교환 실패: ${exchError.message} | status: ${exchError.status}`)
         return
       }
       if (!data.session) {
-        setMsg('세션 없음 (error 없음)')
+        setMsg('세션 없음')
         return
       }
       router.replace('/dashboard')
