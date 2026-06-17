@@ -34,7 +34,11 @@ export default function LoginPage() {
       if (error) {
         setError(error.message === 'Invalid login credentials' ? '이메일 또는 비밀번호가 틀렸어요.' : error.message)
       } else {
-        router.replace('/onboarding')
+        // 이미 라이엇 계정 연동했으면 대시보드로, 아니면 온보딩으로
+        const { createClient } = await import('@/lib/supabase/client')
+        const supabase = createClient()
+        const { data: userData } = await supabase.from('users').select('riot_puuid').eq('id', (await supabase.auth.getUser()).data.user!.id).single()
+        router.replace(userData?.riot_puuid ? '/dashboard' : '/onboarding')
       }
     }
 
