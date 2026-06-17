@@ -1,17 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) redirect('/login')
-
   return (
     <div className="min-h-screen bg-[#0f0f13] p-8">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-white mb-2">🎮 스크림 플랫폼</h1>
-        <p className="text-slate-400 mb-8">안녕하세요, {user.email}</p>
+        <p className="text-slate-400 mb-8">환영해요!</p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a href="/scrims" className="bg-[#1e1e2e] hover:bg-[#2a2a3e] rounded-xl p-6 transition cursor-pointer">
