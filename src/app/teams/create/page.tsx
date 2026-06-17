@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import { createTeamAction } from '@/app/actions'
 
 const GAMES = [
   { value: 'valorant',  label: '발로란트' },
@@ -21,63 +20,20 @@ function getTiers(game: string) {
 }
 
 export default function CreateTeamPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
-  const [form, setForm] = useState({
-    name: '',
-    game_type: 'valorant',
-    tier_avg: '',
-    note: '',
-  })
+  const [game, setGame] = useState('valorant')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
+    const formData = new FormData(e.currentTarget)
+    formData.set('game_type', game)
 
-    const supabase = createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
-
-    if (!user) {
-      router.push('/login')
-      return
-    }
-
-    // users 테이블에 유저 없으면 자동 생성
-    await supabase.from('users').upsert({
-      id: user.id,
-      summoner_name: user.user_metadata?.full_name ?? user.email ?? '유저',
-      game_type: form.game_type as 'valorant' | 'lol',
-    }, { onConflict: 'id' })
-
-    // 팀 생성
-    const { data: team, error: teamError } = await supabase
-      .from('teams')
-      .insert({
-        name: form.name,
-        game_type: form.game_type,
-        captain_id: user.id,
-        tier_avg: form.tier_avg || null,
-      })
-      .select()
-      .single()
-
-    if (teamError) {
-      setError(teamError.message.includes('unique') ? '이미 존재하는 팀 이름이에요!' : teamError.message)
-      setLoading(false)
-      return
-    }
-
-    // 캡틴으로 팀 멤버 등록
-    await supabase.from('team_members').insert({
-      team_id: team.id,
-      user_id: user.id,
-      role: 'captain',
+    startTransition(async () => {
+      const result = await createTeamAction(formData)
+      if (result?.error) setError(result.error)
     })
-
-    router.push('/teams')
   }
 
   return (
@@ -91,21 +47,18 @@ export default function CreateTeamPage() {
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded-2xl p-6 flex flex-col gap-5">
 
-          {/* 팀 이름 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">팀 이름 *</label>
             <input
+              name="name"
               type="text"
               required
               maxLength={20}
               placeholder="ex) Team D31"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          {/* 게임 선택 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
             <div className="grid grid-cols-3 gap-2">
@@ -113,9 +66,9 @@ export default function CreateTeamPage() {
                 <button
                   key={g.value}
                   type="button"
-                  onClick={() => setForm({ ...form, game_type: g.value, tier_avg: '' })}
+                  onClick={() => setGame(g.value)}
                   className={`py-2.5 rounded-xl text-sm font-semibold transition ${
-                    form.game_type === g.value
+                    game === g.value
                       ? 'bg-indigo-500 text-white'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
@@ -126,35 +79,31 @@ export default function CreateTeamPage() {
             </div>
           </div>
 
-          {/* 평균 티어 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">팀 평균 티어</label>
             <select
-              value={form.tier_avg}
-              onChange={(e) => setForm({ ...form, tier_avg: e.target.value })}
+              name="tier_avg"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
             >
               <option value="">선택 안 함</option>
-              {getTiers(form.game_type).map((t) => (
+              {getTiers(game).map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
             </select>
           </div>
 
-          {/* 에러 */}
           {error && (
             <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
               {error}
             </p>
           )}
 
-          {/* 제출 */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={isPending}
             className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
           >
-            {loading ? '만드는 중...' : '팀 만들기'}
+            {isPending ? '만드는 중...' : '팀 만들기'}
           </button>
         </form>
       </div>

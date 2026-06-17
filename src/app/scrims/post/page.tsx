@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useState, useTransition } from 'react'
+import { createScrimAction } from '@/app/actions'
 
 const GAMES = [
   { value: 'valorant', label: '발로란트' },
@@ -11,65 +10,20 @@ const GAMES = [
 ]
 
 export default function PostScrimPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
-  const [form, setForm] = useState({
-    game_type: 'valorant',
-    preferred_date: '',
-    preferred_time: '',
-    note: '',
-  })
+  const [game, setGame] = useState('valorant')
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
+    const formData = new FormData(e.currentTarget)
+    formData.set('game_type', game)
 
-    const supabase = createClient()
-    const { data: { session } } = await supabase.auth.getSession()
-    const user = session?.user
-
-    if (!user) {
-      router.push('/login')
-      return
-    }
-
-    // 내 팀 찾기
-    const { data: myTeam } = await supabase
-      .from('teams')
-      .select('id')
-      .eq('captain_id', user.id)
-      .eq('game_type', form.game_type)
-      .single()
-
-    if (!myTeam) {
-      setError('해당 게임의 팀이 없어요. 먼저 팀을 만들어주세요!')
-      setLoading(false)
-      return
-    }
-
-    const preferredDate = form.preferred_date && form.preferred_time
-      ? `${form.preferred_date}T${form.preferred_time}:00`
-      : null
-
-    const { error: postError } = await supabase
-      .from('scrim_posts')
-      .insert({
-        team_id: myTeam.id,
-        game_type: form.game_type,
-        preferred_date: preferredDate,
-        note: form.note || null,
-        status: 'open',
-      })
-
-    if (postError) {
-      setError(postError.message)
-      setLoading(false)
-      return
-    }
-
-    router.push('/scrims')
+    startTransition(async () => {
+      const result = await createScrimAction(formData)
+      if (result?.error) setError(result.error)
+    })
   }
 
   return (
@@ -83,7 +37,6 @@ export default function PostScrimPage() {
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded-2xl p-6 flex flex-col gap-5">
 
-          {/* 게임 선택 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
             <div className="grid grid-cols-3 gap-2">
@@ -91,9 +44,9 @@ export default function PostScrimPage() {
                 <button
                   key={g.value}
                   type="button"
-                  onClick={() => setForm({ ...form, game_type: g.value })}
+                  onClick={() => setGame(g.value)}
                   className={`py-2.5 rounded-xl text-sm font-semibold transition ${
-                    form.game_type === g.value
+                    game === g.value
                       ? 'bg-indigo-500 text-white'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
@@ -104,36 +57,30 @@ export default function PostScrimPage() {
             </div>
           </div>
 
-          {/* 날짜 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">희망 날짜</label>
             <input
+              name="preferred_date"
               type="date"
-              value={form.preferred_date}
-              onChange={(e) => setForm({ ...form, preferred_date: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          {/* 시간 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">희망 시간</label>
             <input
+              name="preferred_time"
               type="time"
-              value={form.preferred_time}
-              onChange={(e) => setForm({ ...form, preferred_time: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
             />
           </div>
 
-          {/* 메모 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">한마디</label>
             <textarea
+              name="note"
               rows={3}
               placeholder="ex) 실버~골드 팀 구합니다. 디스코드 필참!"
-              value={form.note}
-              onChange={(e) => setForm({ ...form, note: e.target.value })}
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition resize-none"
             />
           </div>
@@ -146,10 +93,10 @@ export default function PostScrimPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isPending}
             className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
           >
-            {loading ? '올리는 중...' : '스크림 올리기'}
+            {isPending ? '올리는 중...' : '스크림 올리기'}
           </button>
         </form>
       </div>
