@@ -34,7 +34,7 @@ export default function LoginPage() {
       if (error) {
         setError(error.message === 'Invalid login credentials' ? '이메일 또는 비밀번호가 틀렸어요.' : error.message)
       } else {
-        router.replace('/dashboard')
+        router.replace('/onboarding')
       }
     }
 
