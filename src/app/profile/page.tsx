@@ -32,7 +32,7 @@ export default async function ProfilePage() {
     .eq('user_id', user.id)
     .single()
 
-  const team = teamMember?.teams as { id: string; name: string; game_type: string; tier_avg: string } | null
+  const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
 
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? 'text-slate-400'
 
