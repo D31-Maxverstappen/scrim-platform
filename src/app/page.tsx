@@ -95,12 +95,7 @@ export default function HomePage() {
           프로 준비생부터 일반인까지 —<br />
           발로란트, 리그 오브 레전드, 오버워치 스크림을 지금 바로 찾아보세요.
         </p>
-        <a
-          href="/login"
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition shadow-lg shadow-indigo-500/30"
-        >
-          지금 시작하기 →
-        </a>
+        <p className="text-slate-500 text-sm">↓ 아래에서 게임을 선택해 시작하세요</p>
       </section>
 
       {/* ── 게임 선택 섹션 ── */}

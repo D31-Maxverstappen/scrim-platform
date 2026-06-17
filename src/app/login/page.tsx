@@ -1,14 +1,26 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function LoginPage() {
+const GAME_INFO: Record<string, { label: string; color: string; emoji: string }> = {
+  valorant:  { label: '발로란트',        color: '#ff4655', emoji: '🎯' },
+  lol:       { label: '리그 오브 레전드', color: '#c89b3c', emoji: '⚔️' },
+  overwatch: { label: '오버워치 2',       color: '#f99e1a', emoji: '🦸' },
+}
+
+function LoginContent() {
+  const params = useSearchParams()
+  const game = params.get('game') ?? ''
+  const gameInfo = GAME_INFO[game]
+
   const handleLogin = async () => {
     const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'discord',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback${game ? `?game=${game}` : ''}`,
       },
     })
   }
@@ -16,12 +28,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#0f0f13] flex items-center justify-center relative overflow-hidden">
 
-      {/* 배경 글로우 효과 */}
+      {/* 배경 글로우 */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 left-1/4 w-[300px] h-[300px] bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-[300px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* 로그인 카드 */}
       <div className="relative z-10 w-full max-w-sm mx-6">
 
         {/* 로고 */}
@@ -32,10 +43,23 @@ export default function LoginPage() {
           <p className="text-slate-500 text-sm mt-2">Korea&apos;s First Scrim Platform</p>
         </div>
 
+        {/* 선택한 게임 표시 */}
+        {gameInfo && (
+          <div
+            className="flex items-center justify-center gap-2 mb-4 py-2 px-4 rounded-xl text-sm font-semibold mx-auto w-fit"
+            style={{ background: gameInfo.color + '22', color: gameInfo.color, border: `1px solid ${gameInfo.color}44` }}
+          >
+            <span>{gameInfo.emoji}</span>
+            <span>{gameInfo.label} 스크림 찾기</span>
+          </div>
+        )}
+
         {/* 카드 */}
         <div className="bg-[#1e1e2e]/80 backdrop-blur border border-white/10 rounded-2xl p-8 flex flex-col gap-6 shadow-2xl">
           <div className="text-center">
-            <h2 className="text-white font-bold text-xl mb-1">시작하기</h2>
+            <h2 className="text-white font-bold text-xl mb-1">
+              {gameInfo ? `${gameInfo.label} 시작하기` : '시작하기'}
+            </h2>
             <p className="text-slate-400 text-sm">Discord 계정으로 간편하게 로그인하세요</p>
           </div>
 
@@ -64,5 +88,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   )
 }
