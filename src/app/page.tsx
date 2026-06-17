@@ -9,14 +9,6 @@ const games = [
     bg: 'linear-gradient(135deg, #1a0508 0%, #0d0206 100%)',
     desc: '5v5 Tactical FPS',
     href: '/login?game=valorant',
-    logo: (
-      <svg viewBox="0 0 80 80" width="80" height="80" fill="none">
-        {/* V 심볼 — 발로란트 느낌의 커스텀 아이콘 */}
-        <polygon points="8,20 40,68 72,20 58,20 40,48 22,20" fill="#ff4655"/>
-        <polygon points="22,20 40,48 58,20 50,20 40,36 30,20" fill="#ff4655" opacity="0.4"/>
-        <rect x="36" y="8" width="8" height="14" rx="2" fill="#ff4655" opacity="0.6"/>
-      </svg>
-    ),
   },
   {
     name: 'LEAGUE OF LEGENDS',
@@ -26,16 +18,6 @@ const games = [
     bg: 'linear-gradient(135deg, #0d0e16 0%, #070810 100%)',
     desc: '5v5 Strategy MOBA',
     href: '/login?game=lol',
-    logo: (
-      <svg viewBox="0 0 80 80" width="80" height="80" fill="none">
-        {/* 방패 + 검 심볼 */}
-        <path d="M40 6 L68 18 L68 44 C68 58 55 68 40 74 C25 68 12 58 12 44 L12 18 Z" stroke="#c89b3c" strokeWidth="2.5" fill="#c89b3c11"/>
-        <path d="M40 6 L68 18 L68 44 C68 58 55 68 40 74" stroke="#c89b3c" strokeWidth="2.5" fill="none"/>
-        <line x1="40" y1="22" x2="40" y2="58" stroke="#c89b3c" strokeWidth="3" strokeLinecap="round"/>
-        <line x1="28" y1="36" x2="52" y2="36" stroke="#c89b3c" strokeWidth="3" strokeLinecap="round"/>
-        <circle cx="40" cy="36" r="4" fill="#c89b3c"/>
-      </svg>
-    ),
   },
 ]
 
@@ -104,11 +86,9 @@ export default function HomePage() {
                 style={{ background: `radial-gradient(circle at 30% 50%, ${game.glow} 0%, transparent 70%)` }}
               />
 
-              <div className="relative z-10 shrink-0">{game.logo}</div>
-
-              <div className="relative z-10">
-                <p className="text-white font-black text-lg tracking-wide">{game.name}</p>
-                <p className="text-slate-500 text-xs mb-3">{game.desc}</p>
+              <div className="relative z-10 flex-1">
+                <p className="font-black text-3xl tracking-widest mb-1" style={{ color: game.color }}>{game.name}</p>
+                <p className="text-slate-500 text-xs mb-4">{game.desc}</p>
                 <span
                   className="text-xs font-bold px-3 py-1 rounded-full"
                   style={{ background: game.color + '22', color: game.color }}
