@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
+import AvatarUpload from '@/components/AvatarUpload'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: 'text-slate-400', Bronze: 'text-orange-700', Silver: 'text-slate-300',
@@ -43,9 +44,11 @@ export default async function ProfilePage() {
 
         {/* 프로필 헤더 */}
         <div className="bg-[#111118] border border-white/5 rounded-2xl p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-black shrink-0">
-            {profile?.riot_gamename?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
-          </div>
+          <AvatarUpload
+            userId={user.id}
+            initialUrl={profile?.avatar_url ?? null}
+            initials={profile?.riot_gamename?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
+          />
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-white font-black text-2xl">
