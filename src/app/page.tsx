@@ -8,7 +8,7 @@ const games = [
     border: '#ff4655',
     bg: '#1a0a0b',
     desc: '5v5 전술 FPS',
-    href: '/scrims?game=valorant',
+    href: '/login?game=valorant',
     logo: (
       <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
         <polygon points="4,52 32,12 60,52 44,52 32,32 20,52" fill="#ff4655"/>
@@ -23,7 +23,7 @@ const games = [
     border: '#c89b3c',
     bg: '#0a0e1a',
     desc: '5v5 전략 MOBA',
-    href: '/scrims?game=lol',
+    href: '/login?game=lol',
     logo: (
       <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
         <circle cx="32" cy="32" r="28" stroke="#c89b3c" strokeWidth="4" fill="#0a0e1a"/>
@@ -40,7 +40,7 @@ const games = [
     border: '#f99e1a',
     bg: '#1a1000',
     desc: '6v6 팀 FPS',
-    href: '/scrims?game=overwatch',
+    href: '/login?game=overwatch',
     logo: (
       <svg viewBox="0 0 64 64" width="72" height="72" fill="none">
         <circle cx="32" cy="32" r="26" stroke="#f99e1a" strokeWidth="4" fill="none"/>
