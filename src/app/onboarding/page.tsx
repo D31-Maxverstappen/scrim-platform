@@ -9,11 +9,11 @@ const GAMES = [
 ]
 
 const LOL_TIERS = [
-  '아이언', '브론즈', '실버', '골드', '플래티넘', '에메랄드', '다이아몬드', '마스터', '그랜드마스터', '챌린저', '언랭',
+  'Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger', 'Unranked',
 ]
 
 const VAL_TIERS = [
-  '아이언', '브론즈', '실버', '골드', '플래티넘', '다이아몬드', '어센던트', '이모탈', '레디언트', '언랭',
+  'Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant', 'Unranked',
 ]
 
 export default function OnboardingPage() {
