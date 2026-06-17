@@ -21,7 +21,7 @@ function ConfirmContent() {
     const supabase = createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      { isSingleton: false }
+      { isSingleton: false, auth: { detectSessionInUrl: false } }
     )
 
     supabase.auth.exchangeCodeForSession(code)
