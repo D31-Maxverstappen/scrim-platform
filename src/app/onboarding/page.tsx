@@ -15,7 +15,7 @@ export default function OnboardingPage() {
   const [tagLine, setTagLine] = useState('KR1')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [result, setResult] = useState<{ account: { gameName: string; tagLine: string }; tier: string | null } | null>(null)
+  const [result, setResult] = useState<{ account: { gameName: string; tagLine: string }; tier: string | null; debug?: string | null } | null>(null)
 
   const handleVerify = async () => {
     if (!gameName.trim()) return
@@ -102,7 +102,7 @@ export default function OnboardingPage() {
               {result.tier ? (
                 <p className="text-slate-300 text-xs mt-0.5">티어: {result.tier}</p>
               ) : (
-                <p className="text-slate-500 text-xs mt-0.5">언랭 또는 티어 정보 없음</p>
+                <p className="text-slate-500 text-xs mt-0.5">{result.debug ?? '언랭 또는 티어 정보 없음'}</p>
               )}
             </div>
           )}

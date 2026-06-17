@@ -25,24 +25,28 @@ export async function getRiotAccount(gameName: string, tagLine: string): Promise
 }
 
 // LoL 티어 조회 (puuid → summonerId → tier)
-export async function getLolTier(puuid: string): Promise<SummonerTier | null> {
-  // puuid로 소환사 정보
+export async function getLolTier(puuid: string): Promise<SummonerTier | { error: string } | null> {
   const summonerRes = await fetch(
     `https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/${puuid}`,
     { headers: { 'X-Riot-Token': RIOT_API_KEY } }
   )
-  if (!summonerRes.ok) return null
+  if (!summonerRes.ok) {
+    const body = await summonerRes.text()
+    return { error: `소환사 조회 실패 (${summonerRes.status}): ${body}` }
+  }
   const summoner = await summonerRes.json()
 
-  // 랭크 정보
   const rankRes = await fetch(
     `https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/${summoner.id}`,
     { headers: { 'X-Riot-Token': RIOT_API_KEY } }
   )
-  if (!rankRes.ok) return null
+  if (!rankRes.ok) {
+    const body = await rankRes.text()
+    return { error: `랭크 조회 실패 (${rankRes.status}): ${body}` }
+  }
   const ranks: any[] = await rankRes.json()
   const solo = ranks.find((r) => r.queueType === 'RANKED_SOLO_5x5')
-  if (!solo) return null
+  if (!solo) return { error: `솔로랭크 기록 없음 (전체 큐: ${ranks.map(r => r.queueType).join(', ') || '없음'})` }
 
   return { tier: solo.tier, rank: solo.rank, lp: solo.leaguePoints, wins: solo.wins, losses: solo.losses }
 }

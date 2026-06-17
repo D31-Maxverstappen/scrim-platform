@@ -15,9 +15,14 @@ export async function POST(req: NextRequest) {
   }
 
   let tierStr: string | null = null
+  let tierDebug: string | null = null
   if (gameType === 'lol') {
     const tierData = await getLolTier(account.puuid)
-    if (tierData) tierStr = formatTier(tierData.tier, tierData.rank)
+    if (tierData && 'tier' in tierData) {
+      tierStr = formatTier(tierData.tier, tierData.rank)
+    } else if (tierData && 'error' in tierData) {
+      tierDebug = tierData.error
+    }
   }
 
   // Supabase에 저장
@@ -35,5 +40,5 @@ export async function POST(req: NextRequest) {
     tier: tierStr,
   }, { onConflict: 'id' })
 
-  return NextResponse.json({ success: true, account, tier: tierStr })
+  return NextResponse.json({ success: true, account, tier: tierStr, debug: tierDebug })
 }
