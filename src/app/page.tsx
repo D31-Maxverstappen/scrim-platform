@@ -56,25 +56,20 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex flex-col relative overflow-hidden">
 
-      {/* ── 경기장 배경 효과 ── */}
-      {/* 바닥 스포트라이트 */}
+      {/* ── 경기장 배경 ── */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* 관중석 느낌 - 상단 어두운 그라디언트 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050508] via-transparent to-[#050508] opacity-80" />
-        {/* 중앙 무대 스포트라이트 */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] bg-indigo-500/5 rounded-full blur-[100px]" />
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-purple-600/8 rounded-full blur-[80px]" />
-        {/* 좌우 사이드 라이트 */}
-        <div className="absolute top-1/3 -left-20 w-[300px] h-[500px] bg-indigo-800/10 rounded-full blur-[80px] rotate-12" />
-        <div className="absolute top-1/3 -right-20 w-[300px] h-[500px] bg-purple-800/10 rounded-full blur-[80px] -rotate-12" />
-        {/* 관중 실루엣 느낌 - 하단 점들 */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 opacity-10"
-          style={{
-            background: 'radial-gradient(ellipse at 20% 100%, #fff 1px, transparent 1px) 0 0 / 12px 16px, radial-gradient(ellipse at 60% 100%, #fff 1px, transparent 1px) 0 0 / 18px 20px, radial-gradient(ellipse at 80% 100%, #fff 1px, transparent 1px) 0 0 / 10px 14px'
-          }}
+        {/* 실제 e스포츠 경기장 사진 */}
+        <img
+          src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=60"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        {/* 무대 바닥 라인 */}
-        <div className="absolute bottom-[30%] left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent" />
+        {/* 어두운 오버레이 - 텍스트 가독성 확보 */}
+        <div className="absolute inset-0 bg-[#0a0a0f]/80" />
+        {/* 상하 페이드 */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0f]/60 via-transparent to-[#0a0a0f]/90" />
+        {/* 중앙 스포트라이트 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px]" />
       </div>
 
       {/* ── 네비바 ── */}
