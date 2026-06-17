@@ -1,60 +1,69 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+'use client'
 
-export default async function ScrimsPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+import { Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
+import Navbar from '@/components/Navbar'
 
-  const { data: posts } = await supabase
-    .from('scrim_posts')
-    .select('*, teams(name, tier_avg)')
-    .eq('status', 'open')
-    .order('created_at', { ascending: false })
+const GAMES = [
+  { value: '', label: '전체' },
+  { value: 'valorant', label: '발로란트' },
+  { value: 'lol', label: '리그 오브 레전드' },
+  { value: 'overwatch', label: '오버워치 2' },
+]
+
+function ScrimsContent() {
+  const params = useSearchParams()
+  const game = params.get('game') ?? ''
 
   return (
-    <div className="min-h-screen bg-[#0f0f13] p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold text-white">📋 스크림 게시판</h1>
-          <a
-            href="/scrims/post"
-            className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition"
-          >
+    <div className="min-h-screen bg-[#0a0a0f]">
+      <Navbar />
+      <div className="pt-14 max-w-4xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
+            <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
+          </div>
+          <a href="/scrims/post" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
             + 스크림 올리기
           </a>
         </div>
 
-        {posts && posts.length > 0 ? (
-          <div className="flex flex-col gap-3">
-            {posts.map((post: any) => (
-              <div key={post.id} className="bg-[#1e1e2e] rounded-xl p-5 flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-white font-semibold">{post.teams?.name}</span>
-                    <span className="bg-indigo-500/20 text-indigo-300 text-xs px-2 py-0.5 rounded-full">
-                      {post.game_type === 'valorant' ? '발로란트' : '리그 오브 레전드'}
-                    </span>
-                  </div>
-                  <p className="text-slate-400 text-sm">
-                    희망 일정: {new Date(post.preferred_date).toLocaleString('ko-KR')}
-                  </p>
-                  {post.note && <p className="text-slate-500 text-xs mt-1">{post.note}</p>}
-                </div>
-                <button className="bg-green-500/20 hover:bg-green-500/40 text-green-300 text-sm px-4 py-2 rounded-lg transition">
-                  신청하기
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-slate-500 py-20">
-            <p className="text-4xl mb-4">🎮</p>
-            <p>아직 스크림 모집 글이 없어요</p>
-            <p className="text-sm mt-1">첫 번째로 올려보세요!</p>
-          </div>
-        )}
+        {/* 게임 필터 */}
+        <div className="flex gap-2 mb-6">
+          {GAMES.map((g) => (
+            <a
+              key={g.value}
+              href={g.value ? `/scrims?game=${g.value}` : '/scrims'}
+              className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
+                game === g.value
+                  ? 'bg-indigo-500 text-white'
+                  : 'bg-white/5 text-slate-400 hover:bg-white/10'
+              }`}
+            >
+              {g.label}
+            </a>
+          ))}
+        </div>
+
+        {/* 빈 상태 */}
+        <div className="text-center text-slate-500 py-24 bg-[#1e1e2e] border border-white/10 rounded-2xl">
+          <p className="text-4xl mb-4">🎮</p>
+          <p>현재 모집 중인 스크림이 없어요</p>
+          <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
+          <a href="/scrims/post" className="mt-6 inline-block bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-sm px-5 py-2.5 rounded-xl transition">
+            + 스크림 올리기
+          </a>
+        </div>
       </div>
     </div>
+  )
+}
+
+export default function ScrimsPage() {
+  return (
+    <Suspense>
+      <ScrimsContent />
+    </Suspense>
   )
 }
