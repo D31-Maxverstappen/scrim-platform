@@ -84,10 +84,17 @@ export default function ProfileCard({
               <LolIcon active={activeGame === 'lol'} />
             </button>
           )}
-          {(!hasVal || !hasLol) && (
-            <a href="/onboarding"
+          {!hasVal && (
+            <a href="/onboarding?add=valorant"
               className="w-7 h-7 rounded-md flex items-center justify-center bg-white/5 hover:bg-white/10 transition border border-white/10"
-              title="게임 추가">
+              title="VALORANT 추가">
+              <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '16px', lineHeight: 1, marginTop: '-1px' }}>+</span>
+            </a>
+          )}
+          {!hasLol && (
+            <a href="/onboarding?add=lol"
+              className="w-7 h-7 rounded-md flex items-center justify-center bg-white/5 hover:bg-white/10 transition border border-white/10"
+              title="LoL 추가">
               <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '16px', lineHeight: 1, marginTop: '-1px' }}>+</span>
             </a>
           )}

@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger', 'Unranked']
 const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant', 'Unranked']
@@ -93,9 +94,11 @@ function GameForm({
   )
 }
 
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter()
-  const [step, setStep] = useState<'val' | 'lol' | 'done'>('val')
+  const searchParams = useSearchParams()
+  const add = searchParams.get('add') // 'lol' | 'valorant' | null
+  const [step, setStep] = useState<'val' | 'lol' | 'done'>(add === 'lol' ? 'lol' : 'val')
   const [valProfile, setValProfile] = useState<GameProfile | null>(null)
   const [lolProfile, setLolProfile] = useState<GameProfile | null>(null)
 
@@ -159,5 +162,13 @@ export default function OnboardingPage() {
         </button>
       </div>
     </div>
+  )
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingContent />
+    </Suspense>
   )
 }
