@@ -96,7 +96,7 @@ export default async function TeamsPage() {
             <div className="divide-y divide-white/5">
               {allTeams.map((team: any) => (
                 <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
-                  <span className="col-span-4 text-white font-semibold text-sm">{team.name}</span>
+                  <a href={`/teams/${team.id}`} className="col-span-4 text-white font-semibold text-sm hover:text-[#00D2BE] transition">{team.name}</a>
                   <span className="col-span-3 text-xs font-bold" style={{ color: GAME_COLOR[team.game_type] ?? '#fff' }}>
                     {GAME_LABEL[team.game_type] ?? team.game_type}
                   </span>
