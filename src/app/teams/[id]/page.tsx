@@ -52,40 +52,34 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <div className="flex-1 min-w-0 flex flex-col gap-6">
 
         {/* CURRENT ROSTER */}
-        <div className="bg-[#13131f] border border-white/5">
-          <div className="px-4 py-3 border-b border-white/5">
-            <h3 className="text-xs font-bold text-white uppercase tracking-widest">Current Roster</h3>
-          </div>
-          <div className="p-4 flex flex-col gap-6">
-
-            {/* PLAYERS */}
+        <div>
+          <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Current Roster</h3>
+          <div className="border border-white/10 p-4">
             {players.length > 0 ? (
-              <div>
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Players</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {players.map((m: any) => (
-                    <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-                  ))}
-                </div>
+              <div className="grid grid-cols-3 gap-2">
+                {players.map((m: any) => (
+                  <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
+                ))}
               </div>
             ) : (
               <p className="text-slate-600 text-sm py-4 text-center">아직 선수가 없어요</p>
             )}
-
-            {/* STAFF */}
-            {staff.length > 0 && (
-              <div>
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Staff</p>
-                <div className="grid grid-cols-5 gap-2">
-                  {staff.map((m: any) => (
-                    <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-                  ))}
-                </div>
-              </div>
-            )}
-
           </div>
         </div>
+
+        {/* COACHING STAFF */}
+        {staff.length > 0 && (
+          <div>
+            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Coaching Staff</h3>
+            <div className="border border-white/10 p-4">
+              <div className="grid grid-cols-3 gap-2">
+                {staff.map((m: any) => (
+                  <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 오른쪽 사이드바 */}
@@ -262,28 +256,28 @@ function RosterCard({ member, currentUserId, isVal }: {
     : (u?.lol_gamename ?? u?.riot_gamename ?? null)
   const tier = isVal ? (u?.val_tier ?? u?.tier ?? null) : (u?.lol_tier ?? u?.tier ?? null)
   return (
-    <div className={`border overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40 bg-[#0d1a19]' : 'border-white/5 bg-[#0d0d18]'}`}>
-      {/* 아바타 — 세로 직사각형 */}
-      <div className="relative" style={{ paddingBottom: '130%' }}>
+    <div className={`border flex items-center gap-3 px-3 py-2.5 ${isMe ? 'border-[#00D2BE]/40 bg-[#0d1a19]' : 'border-white/10 bg-[#13131f]'}`}>
+      {/* 아바타 — 작은 정사각형 */}
+      <div className="w-10 h-10 shrink-0 overflow-hidden bg-[#0d0d18]">
         {u?.avatar_url ? (
-          <img src={u.avatar_url} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
+          <img src={u.avatar_url} alt="" className="w-full h-full object-cover object-top" />
         ) : (
-          <div className="absolute inset-0 bg-[#111120] flex items-center justify-center text-2xl font-black text-white/10">
+          <div className="w-full h-full flex items-center justify-center text-base font-black text-white/20">
             {gameName?.[0]?.toUpperCase() ?? '?'}
           </div>
         )}
-        {isMe && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#00D2BE] border border-[#0d0d18]" />}
       </div>
       {/* 정보 */}
-      <div className="px-2 py-2 flex flex-col gap-1 border-t border-white/5">
-        <div className="flex items-center gap-1">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5 mb-0.5">
           <FlagImg code={u?.country} size={14} />
-          <p className="text-white font-bold text-[11px] truncate leading-tight">{gameName ?? '—'}</p>
+          <p className="text-white font-bold text-xs truncate">{gameName ?? '—'}</p>
+          {isMe && <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE] shrink-0" />}
         </div>
-        <span className="text-[9px] font-bold px-1 py-0.5 self-start" style={{ color: roleColor, background: roleColor + '22' }}>
-          {ROLE_LABEL[member.role] ?? member.role}
-        </span>
-        <p className="text-slate-600 text-[9px]">{tier ?? 'Unranked'}</p>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-bold" style={{ color: roleColor }}>{ROLE_LABEL[member.role] ?? member.role}</span>
+          {tier && <span className="text-[10px] text-slate-600">{tier}</span>}
+        </div>
       </div>
     </div>
   )
