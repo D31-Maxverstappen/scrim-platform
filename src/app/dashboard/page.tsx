@@ -87,14 +87,14 @@ export default async function DashboardPage() {
             <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">My Team</p>
               {team ? (
-                <div>
+                <a href={`/teams/${team.id}`} className="block hover:opacity-80 transition">
                   <p className="text-white font-bold text-sm">{team.name}</p>
                   <p className="text-slate-500 text-xs mt-0.5">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
                   {team.tier_avg && <p className="text-xs mt-1" style={{ color: '#c89b3c' }}>{team.tier_avg}</p>}
                   <span className="inline-block mt-2 text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
                     {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
                   </span>
-                </div>
+                </a>
               ) : (
                 <div className="flex flex-col gap-2">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
