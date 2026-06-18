@@ -49,37 +49,43 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const overviewContent = (
     <div className="flex gap-6">
       {/* 왼쪽 */}
-      <div className="flex-1 min-w-0 flex flex-col gap-8">
+      <div className="flex-1 min-w-0 flex flex-col gap-6">
 
-        {/* PLAYERS */}
-        <section>
-          <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 border-b border-white/5 pb-2">
-            Players
-          </h3>
-          {players.length > 0 ? (
-            <div className="grid grid-cols-3 gap-3">
-              {players.map((m: any) => (
-                <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-slate-600 text-sm py-6 text-center">아직 선수가 없어요</p>
-          )}
-        </section>
+        {/* CURRENT ROSTER */}
+        <div className="bg-[#13131f] border border-white/5">
+          <div className="px-4 py-3 border-b border-white/5">
+            <h3 className="text-xs font-bold text-white uppercase tracking-widest">Current Roster</h3>
+          </div>
+          <div className="p-4 flex flex-col gap-6">
 
-        {/* STAFF */}
-        {staff.length > 0 && (
-          <section>
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 border-b border-white/5 pb-2">
-              Staff
-            </h3>
-            <div className="grid grid-cols-3 gap-3">
-              {staff.map((m: any) => (
-                <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-              ))}
-            </div>
-          </section>
-        )}
+            {/* PLAYERS */}
+            {players.length > 0 ? (
+              <div>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Players</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {players.map((m: any) => (
+                    <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <p className="text-slate-600 text-sm py-4 text-center">아직 선수가 없어요</p>
+            )}
+
+            {/* STAFF */}
+            {staff.length > 0 && (
+              <div>
+                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-3">Staff</p>
+                <div className="grid grid-cols-5 gap-2">
+                  {staff.map((m: any) => (
+                    <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+        </div>
       </div>
 
       {/* 오른쪽 사이드바 */}
@@ -256,29 +262,28 @@ function RosterCard({ member, currentUserId, isVal }: {
     : (u?.lol_gamename ?? u?.riot_gamename ?? null)
   const tier = isVal ? (u?.val_tier ?? u?.tier ?? null) : (u?.lol_tier ?? u?.tier ?? null)
   return (
-    <div className={`bg-[#13131f] border overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40' : 'border-white/5'}`}>
-      {/* 아바타 */}
-      <div className="relative bg-[#0d0d18]">
+    <div className={`border overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40 bg-[#0d1a19]' : 'border-white/5 bg-[#0d0d18]'}`}>
+      {/* 아바타 — 세로 직사각형 */}
+      <div className="relative" style={{ paddingBottom: '130%' }}>
         {u?.avatar_url ? (
-          <img src={u.avatar_url} alt="" className="w-full aspect-square object-cover" />
+          <img src={u.avatar_url} alt="" className="absolute inset-0 w-full h-full object-cover object-top" />
         ) : (
-          <div className="w-full aspect-square bg-gradient-to-br from-[#1a1a2e] to-[#0d0d18] flex items-center justify-center text-4xl font-black text-white/20">
+          <div className="absolute inset-0 bg-[#111120] flex items-center justify-center text-2xl font-black text-white/10">
             {gameName?.[0]?.toUpperCase() ?? '?'}
           </div>
         )}
-        <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 "
-          style={{ color: roleColor, background: roleColor + '33' }}>
-          {ROLE_LABEL[member.role] ?? member.role}
-        </span>
-        {isMe && <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#00D2BE] border-2 border-[#0d0d18]" />}
+        {isMe && <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#00D2BE] border border-[#0d0d18]" />}
       </div>
       {/* 정보 */}
-      <div className="px-3 py-2.5 flex flex-col gap-0.5">
-        <div className="flex items-center gap-1.5">
-          <FlagImg code={u?.country} size={16} />
-          <p className="text-white font-bold text-xs truncate">{gameName ?? '알 수 없음'}</p>
+      <div className="px-2 py-2 flex flex-col gap-1 border-t border-white/5">
+        <div className="flex items-center gap-1">
+          <FlagImg code={u?.country} size={14} />
+          <p className="text-white font-bold text-[11px] truncate leading-tight">{gameName ?? '—'}</p>
         </div>
-        <p className="text-slate-500 text-[10px]">{tier ?? 'Unranked'}</p>
+        <span className="text-[9px] font-bold px-1 py-0.5 self-start" style={{ color: roleColor, background: roleColor + '22' }}>
+          {ROLE_LABEL[member.role] ?? member.role}
+        </span>
+        <p className="text-slate-600 text-[9px]">{tier ?? 'Unranked'}</p>
       </div>
     </div>
   )
