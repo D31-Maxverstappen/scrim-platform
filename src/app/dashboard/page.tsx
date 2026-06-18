@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import AvatarUpload from '@/components/AvatarUpload'
 import ProfileCard from '@/components/ProfileCard'
+import TeamRankings from '@/components/TeamRankings'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#6b7280', Bronze: '#92400e', Silver: '#94a3b8', Gold: '#f59e0b',
@@ -33,6 +34,26 @@ export default async function DashboardPage() {
   const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
 
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
+
+  // 팀 랭킹용 데이터
+  const { data: allTeams } = await supabase
+    .from('teams')
+    .select('id, name, game_type, tier_avg, wins, losses')
+    .limit(50)
+
+  const { data: scrimCounts } = await supabase
+    .from('scrim_posts')
+    .select('team_id')
+
+  const scrimCountMap: Record<string, number> = {}
+  scrimCounts?.forEach((s: any) => {
+    scrimCountMap[s.team_id] = (scrimCountMap[s.team_id] ?? 0) + 1
+  })
+
+  const teamsWithActivity = (allTeams ?? []).map((t: any) => ({
+    ...t,
+    scrim_count: scrimCountMap[t.id] ?? 0,
+  }))
 
   const { data: recentScrims } = await supabase
     .from('scrim_posts')
@@ -193,23 +214,7 @@ export default async function DashboardPage() {
               </div>
 
               {/* 팀 랭킹 */}
-              <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
-                <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
-                  <p className="text-white font-bold text-xs uppercase tracking-widest">Team Rankings</p>
-                  <a href="/leaderboard" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>
-                </div>
-                <div className="flex flex-col divide-y divide-white/5">
-                  {[1,2,3,4,5].map((i) => (
-                    <div key={i} className="flex items-center gap-3 px-4 py-2.5">
-                      <span className={`text-xs font-black w-4 text-center shrink-0 ${i === 1 ? 'text-yellow-400' : i === 2 ? 'text-slate-300' : i === 3 ? 'text-orange-400' : 'text-slate-600'}`}>
-                        {i}
-                      </span>
-                      <div className="flex-1 h-2 bg-white/5 rounded animate-pulse" />
-                      <div className="w-12 h-2 bg-white/5 rounded animate-pulse" />
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <TeamRankings teams={teamsWithActivity} />
 
             </div>
           </main>
