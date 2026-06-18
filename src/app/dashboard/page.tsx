@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0d0d14]">
       <Navbar />
-      <div className="pt-20 max-w-7xl mx-auto px-4 py-6">
+      <div className="pt-28 max-w-7xl mx-auto px-4 py-6">
         <div className="flex gap-6">
 
           {/* ── 왼쪽 사이드바 ── */}
