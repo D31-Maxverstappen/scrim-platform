@@ -11,12 +11,17 @@ const GAME_COLOR: Record<string, string> = {
   valorant: '#ff4655', lol: '#c89b3c',
 }
 const ROLE_LABEL: Record<string, string> = {
-  captain: 'Captain', igl: 'IGL', player: 'Player',
-  head_coach: 'Head Coach', coach: 'Coach',
+  captain: 'CAPTAIN', igl: 'IGL', player: 'PLAYER',
+  head_coach: 'HEAD COACH', coach: 'COACH',
 }
 const ROLE_COLOR: Record<string, string> = {
   captain: '#00D2BE', igl: '#f59e0b', player: '#94a3b8',
   head_coach: '#a78bfa', coach: '#60a5fa',
+}
+
+function getFlag(code: string | null | undefined) {
+  if (!code) return null
+  return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65))
 }
 
 export default async function TeamDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,7 +40,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
   const { data: members } = await supabase
     .from('team_members')
-    .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type)')
+    .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
     .eq('team_id', id)
 
   const isCaptain = team.captain_id === user.id
@@ -53,6 +58,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
 
   const gameColor = GAME_COLOR[team.game_type] ?? '#00D2BE'
+  const isVal = team.game_type === 'valorant'
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -60,18 +66,17 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <div className="pt-20 max-w-5xl mx-auto px-6 py-8">
 
         {/* 팀 헤더 */}
-        <div className="relative bg-[#13131f] border border-white/5 rounded-2xl overflow-hidden mb-6">
-          <div className="h-24 w-full" style={{ background: `linear-gradient(135deg, ${gameColor}22, transparent)` }} />
-          <div className="px-8 pb-8 flex flex-col md:flex-row items-start md:items-end gap-6 -mt-10">
-            {/* 팀 로고 */}
-            <div className="w-24 h-24 rounded-2xl border-4 border-[#0a0a0a] flex items-center justify-center text-4xl font-black shrink-0"
+        <div className="relative bg-[#13131f] border border-white/5 rounded overflow-hidden mb-6">
+          <div className="h-20 w-full" style={{ background: `linear-gradient(135deg, ${gameColor}33, transparent)` }} />
+          <div className="px-8 pb-7 flex flex-col md:flex-row items-start md:items-end gap-6 -mt-10">
+            <div className="w-20 h-20 rounded border-4 border-[#0a0a0a] flex items-center justify-center text-3xl font-black shrink-0"
               style={{ background: `linear-gradient(135deg, ${gameColor}44, ${gameColor}22)`, color: gameColor }}>
               {team.name[0].toUpperCase()}
             </div>
             <div className="flex-1 pb-1">
               <div className="flex items-center gap-3 flex-wrap">
                 <h1 className="text-white font-black text-3xl">{team.name}</h1>
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ color: gameColor, background: gameColor + '22' }}>
+                <span className="text-xs font-bold px-2.5 py-1 rounded" style={{ color: gameColor, background: gameColor + '22' }}>
                   {GAME_LABEL[team.game_type] ?? team.game_type}
                 </span>
               </div>
@@ -88,7 +93,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
                 <LeaveTeamButton teamId={id} />
               )}
               {isCaptain && (
-                <a href={`/teams/${id}/manage`} className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition">
+                <a href={`/teams/${id}/manage`} className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2.5 rounded transition">
                   팀 관리
                 </a>
               )}
@@ -100,39 +105,28 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
           {/* 선수 로스터 */}
           <div className="md:col-span-2">
-            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">선수</h2>
 
-            {/* 3-2 포메이션 */}
+            {/* PLAYERS */}
+            <h2 className="text-slate-400 font-bold text-xs uppercase tracking-widest mb-3">Players</h2>
             {players.length > 0 ? (
-              <div className="flex flex-col gap-3 mb-6">
-                {/* 첫 줄 최대 3명 */}
-                <div className="grid grid-cols-3 gap-3">
-                  {players.slice(0, 3).map((m: any) => (
-                    <PlayerCard key={m.user_id} member={m} isCaptain={isCaptain} teamId={id} currentUserId={user.id} />
-                  ))}
-                </div>
-                {/* 둘째 줄 나머지 */}
-                {players.length > 3 && (
-                  <div className={`grid gap-3 ${players.slice(3).length === 1 ? 'grid-cols-1 max-w-[33%] mx-auto w-full' : players.slice(3).length === 2 ? 'grid-cols-2 max-w-[66%] mx-auto w-full' : 'grid-cols-3'}`}>
-                    {players.slice(3, 6).map((m: any) => (
-                      <PlayerCard key={m.user_id} member={m} isCaptain={isCaptain} teamId={id} currentUserId={user.id} />
-                    ))}
-                  </div>
-                )}
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                {players.map((m: any) => (
+                  <PlayerCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} getFlag={getFlag} />
+                ))}
               </div>
             ) : (
-              <div className="bg-[#13131f] border border-white/5 rounded-xl p-8 text-center text-slate-600 text-sm mb-6">
+              <div className="bg-[#13131f] border border-white/5 rounded p-8 text-center text-slate-600 text-sm mb-6">
                 아직 선수가 없어요
               </div>
             )}
 
-            {/* 코칭스태프 */}
+            {/* STAFF */}
             {staff.length > 0 && (
               <>
-                <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">코칭 스태프</h2>
-                <div className="grid grid-cols-2 gap-3">
+                <h2 className="text-slate-400 font-bold text-xs uppercase tracking-widest mb-3">Staff</h2>
+                <div className="grid grid-cols-3 gap-3">
                   {staff.map((m: any) => (
-                    <PlayerCard key={m.user_id} member={m} isCaptain={isCaptain} teamId={id} currentUserId={user.id} />
+                    <PlayerCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} getFlag={getFlag} />
                   ))}
                 </div>
               </>
@@ -141,7 +135,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
           {/* 팀 정보 사이드 */}
           <div className="flex flex-col gap-4">
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-5">
+            <div className="bg-[#13131f] border border-white/5 rounded p-5">
               <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">팀 정보</h3>
               <div className="flex flex-col gap-3 text-sm">
                 <div className="flex justify-between">
@@ -167,15 +161,19 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
               </div>
             </div>
 
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-5">
+            <div className="bg-[#13131f] border border-white/5 rounded p-5">
               <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">전적</h3>
               <div className="flex items-end gap-2 mb-2">
-                <span className="text-3xl font-black text-white">0</span>
+                <span className="text-3xl font-black text-white">{team.wins ?? 0}</span>
                 <span className="text-slate-500 text-sm mb-1">W</span>
-                <span className="text-3xl font-black text-slate-600 ml-1">0</span>
+                <span className="text-3xl font-black text-slate-600 ml-1">{team.losses ?? 0}</span>
                 <span className="text-slate-600 text-sm mb-1">L</span>
               </div>
-              <p className="text-slate-600 text-xs">승률 —</p>
+              <p className="text-slate-600 text-xs">
+                {(team.wins ?? 0) + (team.losses ?? 0) === 0
+                  ? '승률 —'
+                  : `승률 ${Math.round((team.wins / ((team.wins ?? 0) + (team.losses ?? 0))) * 100)}%`}
+              </p>
             </div>
           </div>
         </div>
@@ -184,42 +182,57 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   )
 }
 
-function PlayerCard({ member, isCaptain, teamId, currentUserId }: {
-  member: any, isCaptain: boolean, teamId: string, currentUserId: string
+function PlayerCard({ member, currentUserId, isVal, getFlag }: {
+  member: any
+  currentUserId: string
+  isVal: boolean
+  getFlag: (code: string | null | undefined) => string | null
 }) {
   const u = member.users
   const roleColor = ROLE_COLOR[member.role] ?? '#94a3b8'
   const isMe = member.user_id === currentUserId
 
+  const gameName = isVal
+    ? (u?.val_gamename ?? u?.riot_gamename ?? null)
+    : (u?.lol_gamename ?? u?.riot_gamename ?? null)
+  const tier = isVal
+    ? (u?.val_tier ?? u?.tier ?? null)
+    : (u?.lol_tier ?? u?.tier ?? null)
+
+  const flag = getFlag(u?.country)
+
   return (
-    <div className={`bg-[#13131f] border rounded-xl p-4 flex flex-col items-center gap-2 text-center ${isMe ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
-      {/* 아바타 */}
-      <div className="relative">
+    <div className={`bg-[#13131f] border rounded overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40' : 'border-white/5'}`}>
+      {/* 아바타 영역 */}
+      <div className="relative bg-[#0d0d18]">
         {u?.avatar_url ? (
-          <img src={u.avatar_url} alt="" className="w-14 h-14 rounded-xl object-cover" />
+          <img src={u.avatar_url} alt="" className="w-full aspect-square object-cover" />
         ) : (
-          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#00D2BE] to-[#00a896] flex items-center justify-center text-white text-xl font-black">
-            {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
+          <div className="w-full aspect-square bg-gradient-to-br from-[#1a1a2e] to-[#0d0d18] flex items-center justify-center text-4xl font-black text-white/20">
+            {gameName?.[0]?.toUpperCase() ?? '?'}
           </div>
         )}
-        {isMe && <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#00D2BE] border-2 border-[#0a0a0a]" />}
+        {/* 역할 뱃지 - 좌상단 */}
+        <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+          style={{ color: roleColor, background: roleColor + '33' }}>
+          {ROLE_LABEL[member.role] ?? member.role}
+        </span>
+        {/* 나 표시 - 우상단 */}
+        {isMe && <span className="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-[#00D2BE] border-2 border-[#0d0d18]" />}
       </div>
 
-      {/* 이름 */}
-      <div>
-        <p className="text-white font-bold text-xs leading-tight">
-          {u?.riot_gamename ?? '알 수 없음'}
-        </p>
-        {u?.riot_tagline && <p className="text-slate-600 text-xs">#{u.riot_tagline}</p>}
+      {/* 정보 영역 */}
+      <div className="px-3 py-2.5 flex flex-col gap-0.5">
+        {/* 국기 + 닉네임 */}
+        <div className="flex items-center gap-1.5">
+          {flag && <span className="text-sm leading-none">{flag}</span>}
+          <p className="text-white font-bold text-xs truncate leading-tight">
+            {gameName ?? '알 수 없음'}
+          </p>
+        </div>
+        {/* 티어 */}
+        <p className="text-slate-500 text-[10px]">{tier ?? 'Unranked'}</p>
       </div>
-
-      {/* 티어 */}
-      {u?.tier && <p className="text-slate-400 text-xs">{u.tier}</p>}
-
-      {/* 역할 뱃지 */}
-      <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ color: roleColor, background: roleColor + '22' }}>
-        {ROLE_LABEL[member.role] ?? member.role}
-      </span>
     </div>
   )
 }

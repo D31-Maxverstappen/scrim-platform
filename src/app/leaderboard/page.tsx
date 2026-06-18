@@ -58,7 +58,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         <div className="flex gap-2 mb-6">
           {[['valorant', 'VALORANT'], ['lol', 'League of Legends']].map(([v, l]) => (
             <a key={v} href={`/leaderboard?game=${v}`}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${game === v ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+              className={`px-4 py-2 rounded text-sm font-semibold transition ${game === v ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
               {l}
             </a>
           ))}
@@ -66,7 +66,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
 
         {/* 내 순위 */}
         {myRank !== -1 && (
-          <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 rounded-xl px-5 py-3 mb-4 flex items-center gap-3">
+          <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 rounded px-5 py-3 mb-4 flex items-center gap-3">
             <span className="text-[#00D2BE] font-black text-lg">#{myRank + 1}</span>
             <span className="text-white font-semibold text-sm">내 순위</span>
             <span className="text-slate-400 text-sm">{sorted[myRank]?.tier ?? '—'}</span>
@@ -74,11 +74,11 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         )}
 
         {sorted.length === 0 ? (
-          <div className="bg-[#13131f] border border-white/5 rounded-2xl p-12 text-center text-slate-600 text-sm">
+          <div className="bg-[#13131f] border border-white/5 rounded p-12 text-center text-slate-600 text-sm">
             아직 등록된 플레이어가 없어요
           </div>
         ) : (
-          <div className="bg-[#13131f] border border-white/5 rounded-2xl overflow-hidden">
+          <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/5 text-xs text-slate-500 uppercase tracking-widest">

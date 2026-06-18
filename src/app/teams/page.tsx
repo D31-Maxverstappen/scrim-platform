@@ -40,7 +40,7 @@ export default async function TeamsPage() {
         {/* 내 팀 */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-white font-bold text-xl">내 팀</h1>
-          <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded-xl text-sm font-bold transition">
+          <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
             + 팀 만들기
           </a>
         </div>
@@ -51,7 +51,7 @@ export default async function TeamsPage() {
               const team = m.teams
               if (!team) return null
               return (
-                <div key={team.id} className="bg-[#13131f] border border-white/5 rounded-xl p-5 flex items-center justify-between">
+                <div key={team.id} className="bg-[#13131f] border border-white/5 rounded p-5 flex items-center justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-white font-bold">{team.name}</span>
@@ -74,9 +74,9 @@ export default async function TeamsPage() {
             })}
           </div>
         ) : (
-          <div className="bg-[#13131f] border border-white/5 rounded-xl p-10 text-center mb-10">
+          <div className="bg-[#13131f] border border-white/5 rounded p-10 text-center mb-10">
             <p className="text-slate-500 text-sm mb-3">아직 소속된 팀이 없어요</p>
-            <a href="/teams/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded-xl transition">
+            <a href="/teams/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
               + 팀 만들기
             </a>
           </div>
@@ -84,7 +84,7 @@ export default async function TeamsPage() {
 
         {/* 전체 팀 목록 */}
         <h2 className="text-white font-bold text-xl mb-4">전체 팀</h2>
-        <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+        <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
           <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
             <span className="col-span-4">팀 이름</span>
             <span className="col-span-3">게임</span>

@@ -119,3 +119,11 @@ export async function createScrimAction(formData: FormData) {
 
   redirect('/scrims')
 }
+
+export async function updateCountryAction(country: string) {
+  const supabase = await getSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: '로그인이 필요해요' }
+
+  await supabase.from('users').update({ country: country || null }).eq('id', user.id)
+}

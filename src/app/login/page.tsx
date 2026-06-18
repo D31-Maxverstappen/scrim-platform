@@ -58,10 +58,10 @@ export default function LoginPage() {
           <p className="text-slate-500 text-sm mt-2">Korea's First Scrim Platform</p>
         </div>
 
-        <div className="bg-[#1e1e2e]/80 backdrop-blur border border-white/10 rounded-2xl p-8 flex flex-col gap-5 shadow-2xl">
+        <div className="bg-[#1e1e2e]/80 backdrop-blur border border-white/10 rounded p-8 flex flex-col gap-5 shadow-2xl">
 
           {/* 탭 */}
-          <div className="flex bg-white/5 rounded-xl p-1">
+          <div className="flex bg-white/5 rounded p-1">
             <button
               onClick={() => { setTab('login'); setError(''); setSuccess('') }}
               className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${tab === 'login' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}
@@ -83,7 +83,7 @@ export default function LoginPage() {
               placeholder="이메일"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
             <input
               type="password"
@@ -91,20 +91,20 @@ export default function LoginPage() {
               placeholder="비밀번호"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
 
             {error && (
-              <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{error}</p>
+              <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">{error}</p>
             )}
             {success && (
-              <p className="text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3">{success}</p>
+              <p className="text-green-400 text-sm bg-green-500/10 border border-green-500/20 rounded px-4 py-3">{success}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
+              className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded transition"
             >
               {loading ? '처리 중...' : tab === 'login' ? '로그인' : '회원가입'}
             </button>

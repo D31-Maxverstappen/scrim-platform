@@ -50,9 +50,9 @@ function GameForm({
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
             placeholder="닉네임"
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition text-sm"
+            className="flex-1 bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition text-sm"
           />
-          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl px-3">
+          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded px-3">
             <span className="text-slate-500 text-sm">#</span>
             <input
               value={tagLine}
@@ -69,24 +69,24 @@ function GameForm({
         <div className="grid grid-cols-3 gap-2">
           {tiers.map((t) => (
             <button key={t} type="button" onClick={() => setTier(t)}
-              className={`py-2 rounded-xl text-xs font-semibold transition ${tier === t ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+              className={`py-2 rounded text-xs font-semibold transition ${tier === t ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
               {t}
             </button>
           ))}
         </div>
       </div>
 
-      {error && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{error}</p>}
+      {error && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">{error}</p>}
 
       <div className="flex gap-2">
         <button
           onClick={handleSave}
           disabled={loading || !gameName.trim() || !tier}
-          className="flex-1 bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-bold py-3 rounded-xl transition text-sm"
+          className="flex-1 bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-bold py-3 rounded transition text-sm"
         >
           {loading ? '저장 중...' : '저장'}
         </button>
-        <button onClick={onSkip} className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-semibold rounded-xl transition">
+        <button onClick={onSkip} className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-semibold rounded transition">
           건너뛰기
         </button>
       </div>
@@ -120,7 +120,7 @@ function OnboardingContent() {
             {lolProfile && <p className="text-[#c89b3c]">League of Legends · {lolProfile.gameName}#{lolProfile.tagLine} · {lolProfile.tier}</p>}
             {!valProfile && !lolProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
           </div>
-          <button onClick={() => router.replace('/dashboard')} className="w-full bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold py-3 rounded-xl transition">
+          <button onClick={() => router.replace('/dashboard')} className="w-full bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold py-3 rounded transition">
             대시보드로 이동 →
           </button>
         </div>
@@ -140,7 +140,7 @@ function OnboardingContent() {
           </div>
         </div>
 
-        <div className="bg-[#111118] border border-white/5 rounded-2xl p-6">
+        <div className="bg-[#111118] border border-white/5 rounded p-6">
           {step === 'val' && (
             <GameForm
               gameType="valorant" color="#ff4655" label="VALORANT"

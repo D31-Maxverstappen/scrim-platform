@@ -69,7 +69,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">제8조 (문의)</h2>
-            <div className="bg-white/5 rounded-xl p-4 text-slate-400 text-xs flex flex-col gap-1">
+            <div className="bg-white/5 rounded p-4 text-slate-400 text-xs flex flex-col gap-1">
               <p>서비스명: D31</p>
               <p>이메일: ceoofd31@gmail.com</p>
             </div>

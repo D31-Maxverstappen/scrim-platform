@@ -50,15 +50,15 @@ export default function AvatarUpload({ userId, initialUrl, initials }: Props) {
   return (
     <div className="relative w-20 h-20 shrink-0 group cursor-pointer" onClick={() => inputRef.current?.click()}>
       {url ? (
-        <img src={url} alt="avatar" className="w-20 h-20 rounded-2xl object-cover" />
+        <img src={url} alt="avatar" className="w-20 h-20 rounded object-cover" />
       ) : (
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-3xl font-black">
+        <div className="w-20 h-20 rounded bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-3xl font-black">
           {initials}
         </div>
       )}
 
       {/* 호버 오버레이 */}
-      <div className="absolute inset-0 rounded-2xl bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+      <div className="absolute inset-0 rounded bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
         {uploading ? (
           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
         ) : (

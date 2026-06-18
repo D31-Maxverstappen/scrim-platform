@@ -40,7 +40,7 @@ export default function Navbar() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="팀 이름, 게임 검색..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/60 focus:bg-white/8 transition"
+            className="w-full bg-white/5 border border-white/10 rounded pl-10 pr-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/60 focus:bg-white/8 transition"
           />
         </div>
       </form>

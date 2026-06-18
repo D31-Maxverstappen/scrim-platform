@@ -41,7 +41,7 @@ export default function HomePage() {
         <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">
           D31
         </span>
-        <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">
+        <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
           시작하기
         </a>
       </nav>
@@ -60,10 +60,10 @@ export default function HomePage() {
           실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
         </p>
         <div className="flex gap-3">
-          <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded-xl transition text-sm">
+          <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
             무료로 시작하기
           </a>
-          <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded-xl transition text-sm">
+          <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
             스크림 둘러보기
           </a>
         </div>
@@ -78,7 +78,7 @@ export default function HomePage() {
               key={game.name}
               href={game.href}
               style={{ background: game.bg }}
-              className="group relative flex items-center gap-6 rounded-2xl p-7 border border-white/5 hover:border-white/10 cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden"
+              className="group relative flex items-center gap-6 rounded p-7 border border-white/5 hover:border-white/10 cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden"
             >
               {/* 글로우 */}
               <div

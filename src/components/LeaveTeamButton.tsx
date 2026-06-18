@@ -19,7 +19,7 @@ export default function LeaveTeamButton({ teamId }: { teamId: string }) {
     <button
       onClick={handleLeave}
       disabled={loading}
-      className="bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-slate-400 text-sm font-semibold px-5 py-2.5 rounded-xl transition disabled:opacity-50"
+      className="bg-white/5 hover:bg-red-500/20 hover:text-red-400 text-slate-400 text-sm font-semibold px-5 py-2.5 rounded transition disabled:opacity-50"
     >
       {loading ? '탈퇴 중...' : '팀 탈퇴'}
     </button>

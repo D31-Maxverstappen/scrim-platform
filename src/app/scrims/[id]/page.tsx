@@ -63,7 +63,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
         <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-6">← 스크림 목록</a>
 
         {/* 포스트 헤더 */}
-        <div className="bg-[#13131f] border border-white/5 rounded-2xl p-6 mb-6">
+        <div className="bg-[#13131f] border border-white/5 rounded p-6 mb-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
@@ -110,11 +110,11 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 {players.map((m: any) => {
                   const u = m.users
                   return (
-                    <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded-xl p-3 flex flex-col items-center gap-2 text-center">
+                    <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded p-3 flex flex-col items-center gap-2 text-center">
                       {u?.avatar_url ? (
-                        <img src={u.avatar_url} className="w-12 h-12 rounded-xl object-cover" alt="" />
+                        <img src={u.avatar_url} className="w-12 h-12 rounded object-cover" alt="" />
                       ) : (
-                        <div className="w-12 h-12 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
+                        <div className="w-12 h-12 rounded bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
                           {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                         </div>
                       )}
@@ -125,7 +125,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 })}
               </div>
             ) : (
-              <div className="bg-[#13131f] border border-white/5 rounded-xl p-6 text-center text-slate-600 text-sm mb-4">
+              <div className="bg-[#13131f] border border-white/5 rounded p-6 text-center text-slate-600 text-sm mb-4">
                 아직 선수가 없어요
               </div>
             )}
@@ -136,8 +136,8 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                   {staff.map((m: any) => {
                     const u = m.users
                     return (
-                      <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded-xl p-3 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black shrink-0">
+                      <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded p-3 flex items-center gap-3">
+                        <div className="w-10 h-10 rounded bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black shrink-0">
                           {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                         </div>
                         <div>
@@ -161,7 +161,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 )}
               </h2>
               {!applications || applications.length === 0 ? (
-                <div className="bg-[#13131f] border border-white/5 rounded-xl p-6 text-center text-slate-600 text-sm">
+                <div className="bg-[#13131f] border border-white/5 rounded p-6 text-center text-slate-600 text-sm">
                   아직 신청이 없어요
                 </div>
               ) : (
@@ -169,7 +169,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                   {applications.map((app: any) => {
                     const t = Array.isArray(app.teams) ? app.teams[0] : app.teams
                     return (
-                      <div key={app.id} className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+                      <div key={app.id} className="bg-[#13131f] border border-white/5 rounded p-4">
                         <p className="text-white font-semibold text-sm">{t?.name ?? '?'}</p>
                         {t?.tier_avg && <p className="text-slate-500 text-xs">Avg. {t.tier_avg}</p>}
                         <span className={`mt-2 inline-block text-xs font-bold px-2 py-0.5 rounded-full ${

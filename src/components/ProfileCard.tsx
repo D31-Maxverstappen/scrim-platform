@@ -70,7 +70,7 @@ export default function ProfileCard({
   const gameColor = activeGame === 'valorant' ? '#ff4655' : activeGame === 'lol' ? '#c89b3c' : '#00D2BE'
 
   return (
-    <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+    <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
       {/* 상단 배너 + 게임 아이콘 */}
       <div className="h-14 relative" style={{ background: `linear-gradient(135deg, ${gameColor}22, transparent)` }}>
         <div className="absolute top-2.5 right-3 flex items-center gap-1.5">

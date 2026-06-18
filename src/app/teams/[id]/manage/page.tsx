@@ -18,11 +18,11 @@ function RequestRow({ r, onAction }: { r: any, onAction: (id: string, action: 'a
   const [selectedRole, setSelectedRole] = useState('player')
   const u = r.users
   return (
-    <div className="bg-[#13131f] border border-white/5 rounded-xl p-4 flex items-center gap-4">
+    <div className="bg-[#13131f] border border-white/5 rounded p-4 flex items-center gap-4">
       {u?.avatar_url ? (
-        <img src={u.avatar_url} className="w-10 h-10 rounded-xl object-cover" alt="" />
+        <img src={u.avatar_url} className="w-10 h-10 rounded object-cover" alt="" />
       ) : (
-        <div className="w-10 h-10 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
+        <div className="w-10 h-10 rounded bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
           {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
         </div>
       )}
@@ -148,7 +148,7 @@ export default function ManageTeamPage() {
         </div>
 
         {msg && (
-          <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 text-[#00D2BE] text-sm rounded-xl px-4 py-3 mb-6">
+          <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 text-[#00D2BE] text-sm rounded px-4 py-3 mb-6">
             {msg}
           </div>
         )}
@@ -156,7 +156,7 @@ export default function ManageTeamPage() {
         {/* 팀 정보 수정 */}
         <section className="mb-8">
           <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">팀 정보 수정</h2>
-          <div className="bg-[#13131f] border border-white/5 rounded-xl p-5 flex flex-col gap-4">
+          <div className="bg-[#13131f] border border-white/5 rounded p-5 flex flex-col gap-4">
             <div>
               <label className="text-slate-400 text-xs mb-1.5 block">팀 이름</label>
               <input
@@ -177,7 +177,7 @@ export default function ManageTeamPage() {
             <button
               onClick={handleSaveInfo}
               disabled={editSaving || !editName.trim()}
-              className="self-start bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+              className="self-start bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded transition"
             >
               {editSaving ? '저장 중...' : '저장'}
             </button>
@@ -190,7 +190,7 @@ export default function ManageTeamPage() {
             가입 신청 {requests.length > 0 && <span className="ml-2 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded-full">{requests.length}</span>}
           </h2>
           {requests.length === 0 ? (
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-6 text-center text-slate-600 text-sm">
+            <div className="bg-[#13131f] border border-white/5 rounded p-6 text-center text-slate-600 text-sm">
               대기 중인 신청이 없어요
             </div>
           ) : (
@@ -210,11 +210,11 @@ export default function ManageTeamPage() {
               const u = m.users
               const isCaptain = m.role === 'captain'
               return (
-                <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded-xl p-4 flex items-center gap-4">
+                <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded p-4 flex items-center gap-4">
                   {u?.avatar_url ? (
-                    <img src={u.avatar_url} className="w-10 h-10 rounded-xl object-cover" alt="" />
+                    <img src={u.avatar_url} className="w-10 h-10 rounded object-cover" alt="" />
                   ) : (
-                    <div className="w-10 h-10 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
+                    <div className="w-10 h-10 rounded bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
                       {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                     </div>
                   )}
@@ -247,13 +247,13 @@ export default function ManageTeamPage() {
         {/* 위험 구역 */}
         <section className="mt-12">
           <h2 className="text-red-500 font-bold text-sm uppercase tracking-widest mb-4">위험 구역</h2>
-          <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-5">
+          <div className="bg-red-500/5 border border-red-500/20 rounded p-5">
             <p className="text-white font-semibold text-sm mb-1">팀 삭제</p>
             <p className="text-slate-400 text-xs mb-4">팀을 삭제하면 모든 멤버, 스크림 기록이 함께 삭제되며 복구할 수 없어요.</p>
             {!showDeleteConfirm ? (
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-bold px-5 py-2.5 rounded-xl transition border border-red-500/20"
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-bold px-5 py-2.5 rounded transition border border-red-500/20"
               >
                 팀 삭제
               </button>
@@ -272,13 +272,13 @@ export default function ManageTeamPage() {
                   <button
                     onClick={handleDelete}
                     disabled={deleteInput !== team?.name}
-                    className="bg-red-500 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+                    className="bg-red-500 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-2.5 rounded transition"
                   >
                     영구 삭제
                   </button>
                   <button
                     onClick={() => { setShowDeleteConfirm(false); setDeleteInput('') }}
-                    className="bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-bold px-5 py-2.5 rounded-xl transition"
+                    className="bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-bold px-5 py-2.5 rounded transition"
                   >
                     취소
                   </button>

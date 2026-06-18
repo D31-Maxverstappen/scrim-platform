@@ -16,13 +16,13 @@ export default function JoinTeamButton({ teamId, hasPendingRequest }: { teamId: 
   }
 
   if (status === 'done') return (
-    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-[#00D2BE]/20 text-[#00D2BE]">
+    <span className="text-xs font-bold px-5 py-2.5 rounded bg-[#00D2BE]/20 text-[#00D2BE]">
       신청 완료 ✓
     </span>
   )
 
   if (status === 'error') return (
-    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-red-500/20 text-red-400">
+    <span className="text-xs font-bold px-5 py-2.5 rounded bg-red-500/20 text-red-400">
       오류 발생
     </span>
   )
@@ -31,7 +31,7 @@ export default function JoinTeamButton({ teamId, hasPendingRequest }: { teamId: 
     <button
       onClick={handleJoin}
       disabled={loading}
-      className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+      className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded transition"
     >
       {loading ? '신청 중...' : '가입 신청'}
     </button>

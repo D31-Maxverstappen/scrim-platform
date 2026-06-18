@@ -85,7 +85,7 @@ export default async function DashboardPage() {
             />
 
             {/* 매너 점수 */}
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+            <div className="bg-[#13131f] border border-white/5 rounded p-4">
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Manner Score</p>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-2xl font-black text-white">100</span>
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* 내 팀 */}
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+            <div className="bg-[#13131f] border border-white/5 rounded p-4">
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">My Team</p>
               {team ? (
                 <a href={`/teams/${team.id}`} className="block hover:opacity-80 transition">
@@ -132,7 +132,7 @@ export default async function DashboardPage() {
                 { label: '활성 유저', value: '—' },
                 { label: '평균 매너점수', value: '100' },
               ].map((s) => (
-                <div key={s.label} className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+                <div key={s.label} className="bg-[#13131f] border border-white/5 rounded p-4">
                   <p className="text-slate-500 text-xs mb-1">{s.label}</p>
                   <p className="text-white text-xl font-black">{s.value}</p>
                 </div>
@@ -140,7 +140,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* 게임 탭 + 스크림 목록 */}
-            <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+            <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
 
               {/* 탭 헤더 */}
               <div className="flex items-center justify-between px-4 border-b border-white/5">
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
             <div className="grid grid-cols-2 gap-4">
 
               {/* 최근 매치 */}
-              <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+              <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
                   <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
                   <a href="/profile" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>

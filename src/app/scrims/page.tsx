@@ -43,7 +43,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
           </div>
-          <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+          <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
             + 스크림 올리기
           </a>
         </div>
@@ -54,7 +54,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
             <a
               key={g.value}
               href={g.value ? `/scrims?game=${g.value}` : '/scrims'}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
+              className={`px-4 py-2 rounded text-sm font-semibold transition ${
                 game === g.value ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
               }`}
             >
@@ -64,11 +64,11 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
         </div>
 
         {!posts || posts.length === 0 ? (
-          <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded-2xl">
+          <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded">
             <p className="text-3xl mb-4">🎮</p>
             <p className="font-semibold">현재 모집 중인 스크림이 없어요</p>
             <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
-            <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded-xl transition">
+            <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
               + 스크림 올리기
             </a>
           </div>
@@ -79,7 +79,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
               const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
               return (
                 <a key={post.id} href={`/scrims/${post.id}`}
-                  className="bg-[#13131f] border border-white/5 hover:border-[#00D2BE]/30 rounded-xl px-6 py-4 flex items-center gap-4 transition group">
+                  className="bg-[#13131f] border border-white/5 hover:border-[#00D2BE]/30 rounded px-6 py-4 flex items-center gap-4 transition group">
                   {/* 게임 배지 */}
                   <div className="w-2 h-12 rounded-full shrink-0" style={{ background: gc }} />
                   <div className="flex-1 min-w-0">

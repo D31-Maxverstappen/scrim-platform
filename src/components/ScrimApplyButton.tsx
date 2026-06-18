@@ -22,11 +22,11 @@ export default function ScrimApplyButton({
   )
 
   if (status === 'accepted') return (
-    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-green-500/20 text-green-400">수락됨 ✓</span>
+    <span className="text-xs font-bold px-5 py-2.5 rounded bg-green-500/20 text-green-400">수락됨 ✓</span>
   )
 
   if (status === 'pending') return (
-    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-yellow-500/20 text-yellow-400">Applied ✓</span>
+    <span className="text-xs font-bold px-5 py-2.5 rounded bg-yellow-500/20 text-yellow-400">Applied ✓</span>
   )
 
   const handleApply = async () => {
@@ -50,7 +50,7 @@ export default function ScrimApplyButton({
       <button
         onClick={handleApply}
         disabled={loading}
-        className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+        className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded transition"
       >
         {loading ? '신청 중...' : '스크림 신청'}
       </button>

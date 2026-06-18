@@ -48,7 +48,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-white font-bold text-lg mb-3">5. 개인정보 처리 위탁</h2>
             <p className="text-slate-400 mb-2">서비스는 원활한 운영을 위해 아래와 같이 개인정보 처리를 위탁합니다.</p>
-            <div className="bg-white/5 rounded-xl p-4">
+            <div className="bg-white/5 rounded p-4">
               <table className="w-full text-xs text-slate-400">
                 <thead>
                   <tr className="text-slate-300 border-b border-white/10">
@@ -71,7 +71,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-white font-bold text-lg mb-3">7. 개인정보 보호책임자</h2>
-            <div className="bg-white/5 rounded-xl p-4 text-slate-400 text-xs flex flex-col gap-1">
+            <div className="bg-white/5 rounded p-4 text-slate-400 text-xs flex flex-col gap-1">
               <p>서비스명: D31</p>
               <p>이메일: ceoofd31@gmail.com</p>
             </div>
