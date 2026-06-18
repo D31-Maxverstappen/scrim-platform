@@ -34,6 +34,13 @@ export default async function DashboardPage() {
 
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
 
+  const { data: recentScrims } = await supabase
+    .from('scrim_posts')
+    .select('id, game_type, preferred_date, note, status, teams(name, tier_avg)')
+    .eq('status', 'open')
+    .order('created_at', { ascending: false })
+    .limit(8)
+
   return (
     <div className="min-h-screen bg-[#0d0d14]">
       <Navbar />
@@ -142,16 +149,33 @@ export default async function DashboardPage() {
                 <span className="col-span-1 text-right">신청</span>
               </div>
 
-              {/* 빈 상태 */}
-              <div className="flex flex-col items-center justify-center py-20 text-slate-600">
-                <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
-                </svg>
-                <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
-                <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 rounded-lg transition">
-                  + 스크림 올리기
-                </a>
-              </div>
+              {/* 스크림 목록 */}
+              {!recentScrims || recentScrims.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-slate-600">
+                  <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
+                  <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 rounded-lg transition">
+                    + 스크림 올리기
+                  </a>
+                </div>
+              ) : (
+                <div className="divide-y divide-white/5">
+                  {recentScrims.map((s: any) => {
+                    const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
+                    const gc = GAME_COLOR[s.game_type] ?? '#00D2BE'
+                    const date = s.preferred_date ? new Date(s.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '미정'
+                    return (
+                      <a key={s.id} href={`/scrims/${s.id}`} className="grid grid-cols-12 gap-2 px-4 py-3 hover:bg-white/2 transition items-center group">
+                        <span className="col-span-1 text-xs font-bold" style={{ color: gc }}>{s.game_type === 'valorant' ? 'VAL' : 'LoL'}</span>
+                        <span className="col-span-3 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
+                        <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
+                        <span className="col-span-2 text-slate-500 text-xs">{date}</span>
+                        <span className="col-span-3 text-slate-600 text-xs truncate">{s.note ?? '—'}</span>
+                        <span className="col-span-1 text-right text-[#00D2BE] text-xs">→</span>
+                      </a>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             {/* 하단 그리드 */}
