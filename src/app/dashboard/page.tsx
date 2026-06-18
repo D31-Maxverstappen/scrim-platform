@@ -35,6 +35,10 @@ export default async function DashboardPage() {
 
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
 
+  // 통계
+  const { count: userCount } = await supabase.from('users').select('*', { count: 'exact', head: true })
+  const { count: teamCount } = await supabase.from('teams').select('*', { count: 'exact', head: true })
+
   // 팀 랭킹용 데이터
   const { data: allTeams } = await supabase
     .from('teams')
@@ -128,11 +132,10 @@ export default async function DashboardPage() {
           <main className="flex-1 flex flex-col gap-4 min-w-0">
 
             {/* 통계 바 */}
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               {[
-                { label: '등록 팀', value: '—' },
-                { label: '오늘 스크림', value: '—' },
-                { label: '활성 유저', value: '—' },
+                { label: '가입 유저 수', value: userCount ?? '—' },
+                { label: '등록 팀 개수', value: teamCount ?? '—' },
                 { label: '평균 매너점수', value: '100' },
               ].map((s) => (
                 <div key={s.label} className="bg-[#13131f] border border-white/5 rounded p-4">
