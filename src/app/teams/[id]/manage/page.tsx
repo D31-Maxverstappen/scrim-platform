@@ -130,7 +130,10 @@ export default function ManageTeamPage() {
     if (deleteInput !== team?.name) return
     const res = await fetch(`/api/teams/${teamId}`, { method: 'DELETE' })
     if (res.ok) router.replace('/teams')
-    else setMsg('삭제에 실패했어요.')
+    else {
+      const data = await res.json()
+      setMsg('삭제 실패: ' + (data.error ?? '알 수 없는 오류'))
+    }
   }
 
   if (loading) return (
