@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { recalcTierAvg } from '@/lib/tierUtils'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: teamId } = await params
@@ -19,5 +20,6 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
+  await recalcTierAvg(supabase, teamId)
   return NextResponse.json({ success: true })
 }

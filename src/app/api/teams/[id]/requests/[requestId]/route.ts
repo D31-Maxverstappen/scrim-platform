@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { recalcTierAvg } from '@/lib/tierUtils'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string, requestId: string }> }) {
   const { id: teamId, requestId } = await params
@@ -18,13 +19,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!request) return NextResponse.json({ error: '신청을 찾을 수 없어요.' }, { status: 404 })
 
   if (action === 'accept') {
-    // team_members에 추가
     await supabase.from('team_members').insert({
       team_id: teamId,
       user_id: request.user_id,
       role: role ?? 'player',
     })
     await supabase.from('team_join_requests').update({ status: 'accepted' }).eq('id', requestId)
+    await recalcTierAvg(supabase, teamId)
   } else {
     await supabase.from('team_join_requests').update({ status: 'rejected' }).eq('id', requestId)
   }
