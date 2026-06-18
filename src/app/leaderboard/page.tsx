@@ -48,7 +48,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-16 max-w-3xl mx-auto px-6 py-8">
+      <div className="pt-20 max-w-3xl mx-auto px-6 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
           <p className="text-slate-400 text-sm mt-1">D31 상위 플레이어</p>

@@ -57,7 +57,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-16 max-w-5xl mx-auto px-6 py-8">
+      <div className="pt-20 max-w-5xl mx-auto px-6 py-8">
 
         {/* 팀 헤더 */}
         <div className="relative bg-[#13131f] border border-white/5 rounded-2xl overflow-hidden mb-6">

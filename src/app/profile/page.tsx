@@ -40,7 +40,7 @@ export default async function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#07070b]">
       <Navbar />
-      <div className="pt-16 max-w-3xl mx-auto px-6 py-10">
+      <div className="pt-20 max-w-3xl mx-auto px-6 py-10">
 
         {/* 프로필 헤더 */}
         <div className="bg-[#111118] border border-white/5 rounded-2xl p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">

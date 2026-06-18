@@ -36,7 +36,7 @@ export default async function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#0d0d14]">
       <Navbar />
-      <div className="pt-16 max-w-7xl mx-auto px-4 py-6">
+      <div className="pt-20 max-w-7xl mx-auto px-4 py-6">
         <div className="flex gap-6">
 
           {/* ── 왼쪽 사이드바 ── */}
@@ -105,23 +105,6 @@ export default async function DashboardPage() {
               )}
             </div>
 
-            {/* 빠른 링크 */}
-            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
-              <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Quick Links</p>
-              <div className="flex flex-col gap-1">
-                {[
-                  { label: '스크림 올리기', href: '/scrims/post', color: 'text-[#00D2BE]' },
-                  { label: '팀 찾기', href: '/teams', color: 'text-[#00D2BE]' },
-                  { label: '리더보드', href: '/leaderboard', color: 'text-[#00D2BE]' },
-                  { label: '내 프로필', href: '/profile', color: 'text-[#00D2BE]' },
-                ].map((l) => (
-                  <a key={l.href} href={l.href} className={`text-xs py-1.5 px-2 rounded hover:bg-white/5 transition flex items-center gap-2 ${l.color}`}>
-                    <span className="w-1 h-1 rounded-full bg-current" />
-                    {l.label}
-                  </a>
-                ))}
-              </div>
-            </div>
           </aside>
 
           {/* ── 메인 콘텐츠 ── */}

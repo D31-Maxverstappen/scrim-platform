@@ -37,7 +37,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-16 max-w-4xl mx-auto px-6 py-8">
+      <div className="pt-20 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>

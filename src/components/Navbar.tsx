@@ -14,7 +14,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur border-b border-white/5 px-6 h-20 flex items-center gap-6">
       {/* 로고 */}
       <a href="/dashboard" className="shrink-0 flex items-center gap-2">
         <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">
@@ -22,10 +22,11 @@ export default function Navbar() {
         </span>
       </a>
 
-      {/* 네비 링크 */}
+      {/* 네비 링크 + 퀵 링크 */}
       <div className="hidden md:flex items-center gap-1 text-sm">
         <a href="/scrims" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition">스크림</a>
-        <a href="/teams" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition">팀</a>
+        <a href="/scrims/post" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition">스크림 올리기</a>
+        <a href="/teams" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition">팀 찾기</a>
         <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 rounded-lg transition">리더보드</a>
       </div>
 
@@ -46,12 +47,12 @@ export default function Navbar() {
 
       {/* 우측 */}
       <div className="shrink-0 flex items-center gap-3">
-        <a href="/scrims/post" className="hidden sm:flex items-center gap-1.5 bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded-lg transition">
-          <span>+</span> 스크림 올리기
-        </a>
         <ThemeToggle />
-        <a href="/profile" className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-xs font-bold hover:opacity-80 transition">
-          나
+        <a href="/profile" className="flex items-center gap-2 hover:opacity-80 transition">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+            나
+          </div>
+          <span className="hidden sm:block text-sm text-slate-400 hover:text-white transition">프로필</span>
         </a>
       </div>
     </nav>
