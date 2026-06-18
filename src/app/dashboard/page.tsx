@@ -101,13 +101,16 @@ export default async function DashboardPage() {
             <div className="bg-[#13131f] border border-white/5 rounded p-4">
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">My Team</p>
               {team ? (
-                <a href={`/teams/${team.id}`} className="block hover:opacity-80 transition">
-                  <p className="text-white font-bold text-sm">{team.name}</p>
-                  <p className="text-slate-500 text-xs mt-0.5">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
-                  {team.tier_avg && <p className="text-xs mt-1" style={{ color: '#c89b3c' }}>{team.tier_avg}</p>}
-                  <span className="inline-block mt-2 text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
-                    {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
-                  </span>
+                <a href={`/teams/${team.id}`} className="flex items-center justify-between gap-2 group hover:bg-white/3 -mx-4 -mb-4 px-4 pb-4 pt-1 transition">
+                  <div>
+                    <p className="text-white font-bold text-sm">{team.name}</p>
+                    <p className="text-slate-500 text-xs mt-0.5">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
+                    {team.tier_avg && <p className="text-xs mt-1" style={{ color: '#c89b3c' }}>{team.tier_avg}</p>}
+                    <span className="inline-block mt-2 text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5">
+                      {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
+                    </span>
+                  </div>
+                  <span className="text-slate-600 group-hover:text-[#00D2BE] text-lg transition shrink-0">→</span>
                 </a>
               ) : (
                 <div className="flex flex-col gap-2">
