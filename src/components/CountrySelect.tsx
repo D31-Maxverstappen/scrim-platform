@@ -26,8 +26,22 @@ const COUNTRIES = [
   { code: 'MX', name: '멕시코', flag: '🇲🇽' },
 ]
 
-export function getFlag(code: string | null | undefined) {
-  return COUNTRIES.find((c) => c.code === code)?.flag ?? null
+export function getFlagUrl(code: string | null | undefined) {
+  if (!code) return null
+  return `https://flagcdn.com/w20/${code.toLowerCase()}.png`
+}
+
+export function FlagImg({ code, size = 20 }: { code: string | null | undefined; size?: number }) {
+  if (!code) return null
+  return (
+    <img
+      src={`https://flagcdn.com/w${size}/${code.toLowerCase()}.png`}
+      alt={code}
+      width={size}
+      height={Math.round(size * 0.67)}
+      style={{ imageRendering: 'pixelated', display: 'inline-block' }}
+    />
+  )
 }
 
 export default function CountrySelect({ initialCountry }: { initialCountry: string | null }) {
@@ -46,11 +60,14 @@ export default function CountrySelect({ initialCountry }: { initialCountry: stri
 
   return (
     <div className="flex items-center gap-2">
-      <span className="text-xl">{COUNTRIES.find((c) => c.code === country)?.flag ?? '🌐'}</span>
+      {country
+        ? <FlagImg code={country} size={20} />
+        : <span className="text-slate-600 text-xs">🌐</span>
+      }
       <select
         value={country}
         onChange={(e) => handleChange(e.target.value)}
-        className="bg-white/5 border border-white/10 rounded text-white text-xs px-2 py-1 focus:outline-none focus:border-[#00D2BE] transition"
+        className="bg-white/5 border border-white/10 text-white text-xs px-2 py-1 focus:outline-none focus:border-[#00D2BE] transition"
       >
         <option value="">국가 선택</option>
         {COUNTRIES.map((c) => (

@@ -33,14 +33,14 @@ function RequestRow({ r, onAction }: { r: any, onAction: (id: string, action: 'a
       <select
         value={selectedRole}
         onChange={(e) => setSelectedRole(e.target.value)}
-        className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none"
+        className="bg-white/5 border border-white/10  px-3 py-1.5 text-white text-xs focus:outline-none"
       >
         {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
       </select>
-      <button onClick={() => onAction(r.id, 'accept', selectedRole)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+      <button onClick={() => onAction(r.id, 'accept', selectedRole)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2  transition">
         수락
       </button>
-      <button onClick={() => onAction(r.id, 'reject', '')} className="bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 text-xs font-bold px-4 py-2 rounded-lg transition">
+      <button onClick={() => onAction(r.id, 'reject', '')} className="bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 text-xs font-bold px-4 py-2  transition">
         거절
       </button>
     </div>
@@ -162,7 +162,7 @@ export default function ManageTeamPage() {
               <input
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                className="w-full bg-white/5 border border-white/10  px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
               />
             </div>
             <div>
@@ -171,7 +171,7 @@ export default function ManageTeamPage() {
                 value={editTier}
                 onChange={(e) => setEditTier(e.target.value)}
                 placeholder="입력 안하면 표시 안됨"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+                className="w-full bg-white/5 border border-white/10  px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
               />
             </div>
             <button
@@ -229,7 +229,7 @@ export default function ManageTeamPage() {
                       <select
                         value={m.role}
                         onChange={(e) => handleRoleChange(m.user_id, e.target.value)}
-                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none"
+                        className="bg-white/5 border border-white/10  px-3 py-1.5 text-xs focus:outline-none"
                         style={{ color: ROLE_COLOR[m.role] ?? '#94a3b8' }}
                       >
                         {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
@@ -266,7 +266,7 @@ export default function ManageTeamPage() {
                   value={deleteInput}
                   onChange={(e) => setDeleteInput(e.target.value)}
                   placeholder="팀 이름 입력"
-                  className="bg-white/5 border border-red-500/30 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500 transition"
+                  className="bg-white/5 border border-red-500/30  px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500 transition"
                 />
                 <div className="flex gap-2">
                   <button

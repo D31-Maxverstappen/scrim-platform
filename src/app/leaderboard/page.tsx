@@ -101,9 +101,9 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
                       <td className="px-3 py-3">
                         <div className="flex items-center gap-3">
                           {u.avatar_url ? (
-                            <img src={u.avatar_url} className="w-8 h-8 rounded-lg object-cover" alt="" />
+                            <img src={u.avatar_url} className="w-8 h-8  object-cover" alt="" />
                           ) : (
-                            <div className="w-8 h-8 rounded-lg bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] text-xs font-black">
+                            <div className="w-8 h-8  bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] text-xs font-black">
                               {u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                             </div>
                           )}

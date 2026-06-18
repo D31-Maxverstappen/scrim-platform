@@ -107,7 +107,7 @@ export default async function TeamsPage() {
                     ) : team.captain_id === user.id ? (
                       <span className="text-xs text-slate-600">내 팀</span>
                     ) : (
-                      <a href={`/teams/${team.id}`} className="text-xs bg-white/5 hover:bg-white/10 text-slate-300 px-3 py-1 rounded-lg transition">
+                      <a href={`/teams/${team.id}`} className="text-xs bg-white/5 hover:bg-white/10 text-slate-300 px-3 py-1  transition">
                         보기
                       </a>
                     )}

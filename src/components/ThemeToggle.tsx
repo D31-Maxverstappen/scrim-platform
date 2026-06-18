@@ -22,7 +22,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition text-slate-400 hover:text-white"
+      className="w-8 h-8  bg-white/5 hover:bg-white/10 flex items-center justify-center transition text-slate-400 hover:text-white"
       title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
     >
       {theme === 'dark' ? (

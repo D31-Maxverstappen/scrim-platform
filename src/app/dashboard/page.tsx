@@ -112,7 +112,7 @@ export default async function DashboardPage() {
               ) : (
                 <div className="flex flex-col gap-2">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
-                  <a href="/teams/create" className="text-center bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold py-2 rounded-lg transition">
+                  <a href="/teams/create" className="text-center bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold py-2  transition">
                     팀 만들기
                   </a>
                 </div>
@@ -174,7 +174,7 @@ export default async function DashboardPage() {
               {!recentScrims || recentScrims.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-600">
                   <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
-                  <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 rounded-lg transition">
+                  <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2  transition">
                     + 스크림 올리기
                   </a>
                 </div>

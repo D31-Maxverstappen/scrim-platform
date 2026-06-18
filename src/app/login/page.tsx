@@ -64,13 +64,13 @@ export default function LoginPage() {
           <div className="flex bg-white/5 rounded p-1">
             <button
               onClick={() => { setTab('login'); setError(''); setSuccess('') }}
-              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${tab === 'login' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}
+              className={`flex-1 py-2  text-sm font-semibold transition ${tab === 'login' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}
             >
               로그인
             </button>
             <button
               onClick={() => { setTab('signup'); setError(''); setSuccess('') }}
-              className={`flex-1 py-2 rounded-lg text-sm font-semibold transition ${tab === 'signup' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}
+              className={`flex-1 py-2  text-sm font-semibold transition ${tab === 'signup' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}
             >
               회원가입
             </button>

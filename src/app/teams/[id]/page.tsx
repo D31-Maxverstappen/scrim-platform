@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import JoinTeamButton from '@/components/JoinTeamButton'
 import LeaveTeamButton from '@/components/LeaveTeamButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
+import { FlagImg } from '@/components/CountrySelect'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
@@ -16,10 +17,6 @@ const ROLE_COLOR: Record<string, string> = {
   head_coach: '#a78bfa', coach: '#60a5fa',
 }
 
-function getFlag(code: string | null | undefined) {
-  if (!code) return null
-  return String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1e6 + c.charCodeAt(0) - 65))
-}
 
 export default async function TeamDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -258,10 +255,8 @@ function RosterCard({ member, currentUserId, isVal }: {
     ? (u?.val_gamename ?? u?.riot_gamename ?? null)
     : (u?.lol_gamename ?? u?.riot_gamename ?? null)
   const tier = isVal ? (u?.val_tier ?? u?.tier ?? null) : (u?.lol_tier ?? u?.tier ?? null)
-  const flag = getFlag(u?.country)
-
   return (
-    <div className={`bg-[#13131f] border rounded overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40' : 'border-white/5'}`}>
+    <div className={`bg-[#13131f] border overflow-hidden flex flex-col ${isMe ? 'border-[#00D2BE]/40' : 'border-white/5'}`}>
       {/* 아바타 */}
       <div className="relative bg-[#0d0d18]">
         {u?.avatar_url ? (
@@ -271,7 +266,7 @@ function RosterCard({ member, currentUserId, isVal }: {
             {gameName?.[0]?.toUpperCase() ?? '?'}
           </div>
         )}
-        <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 rounded-sm"
+        <span className="absolute top-2 left-2 text-[10px] font-bold px-1.5 py-0.5 "
           style={{ color: roleColor, background: roleColor + '33' }}>
           {ROLE_LABEL[member.role] ?? member.role}
         </span>
@@ -280,7 +275,7 @@ function RosterCard({ member, currentUserId, isVal }: {
       {/* 정보 */}
       <div className="px-3 py-2.5 flex flex-col gap-0.5">
         <div className="flex items-center gap-1.5">
-          {flag && <span className="text-sm leading-none">{flag}</span>}
+          <FlagImg code={u?.country} size={16} />
           <p className="text-white font-bold text-xs truncate">{gameName ?? '알 수 없음'}</p>
         </div>
         <p className="text-slate-500 text-[10px]">{tier ?? 'Unranked'}</p>
