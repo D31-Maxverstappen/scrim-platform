@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import AvatarUpload from '@/components/AvatarUpload'
+import ProfileCard from '@/components/ProfileCard'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#6b7280', Bronze: '#92400e', Silver: '#94a3b8', Gold: '#f59e0b',
@@ -43,32 +44,17 @@ export default async function DashboardPage() {
           <aside className="w-64 shrink-0 flex flex-col gap-3">
 
             {/* 내 프로필 카드 */}
-            <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
-              <div className="h-16 bg-gradient-to-r from-[#003d38]/60 to-[#001a17]/40" />
-              <div className="px-4 pb-4 -mt-8">
-                <AvatarUpload
-                  userId={user.id}
-                  initialUrl={profile?.avatar_url ?? null}
-                  initials={profile?.riot_gamename?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
-                />
-                <div className="mt-2">
-                  <p className="text-white font-bold text-sm">
-                    {profile?.riot_gamename ?? user.email?.split('@')[0]}
-                    {profile?.riot_tagline && <span className="text-slate-500 font-normal text-xs"> #{profile.riot_tagline}</span>}
-                  </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    {profile?.game_type && (
-                      <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ color: GAME_COLOR[profile.game_type], background: GAME_COLOR[profile.game_type] + '22' }}>
-                        {GAME_LABEL[profile.game_type]}
-                      </span>
-                    )}
-                    {profile?.tier && (
-                      <span className="text-xs font-bold" style={{ color: tierColor }}>{profile.tier}</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ProfileCard
+              userId={user.id}
+              avatarUrl={profile?.avatar_url ?? null}
+              valGamename={profile?.val_gamename ?? profile?.riot_gamename ?? null}
+              valTagline={profile?.val_tagline ?? profile?.riot_tagline ?? null}
+              valTier={profile?.val_tier ?? (profile?.game_type === 'valorant' ? profile?.tier : null) ?? null}
+              lolGamename={profile?.lol_gamename ?? (profile?.game_type === 'lol' ? profile?.riot_gamename : null) ?? null}
+              lolTagline={profile?.lol_tagline ?? (profile?.game_type === 'lol' ? profile?.riot_tagline : null) ?? null}
+              lolTier={profile?.lol_tier ?? (profile?.game_type === 'lol' ? profile?.tier : null) ?? null}
+              primaryGame={profile?.game_type ?? null}
+            />
 
             {/* 매너 점수 */}
             <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">

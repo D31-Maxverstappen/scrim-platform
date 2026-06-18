@@ -18,6 +18,11 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
+  // 게임별 분리 저장
+  const gameFields = gameType === 'valorant'
+    ? { val_gamename: gameName, val_tagline: tagLine, val_tier: tier ?? null }
+    : { lol_gamename: gameName, lol_tagline: tagLine, lol_tier: tier ?? null }
+
   await supabase.from('users').upsert({
     id: user.id,
     summoner_name: `${gameName}#${tagLine}`,
@@ -26,6 +31,7 @@ export async function POST(req: NextRequest) {
     riot_tagline: tagLine,
     game_type: gameType,
     tier: tier ?? null,
+    ...gameFields,
   }, { onConflict: 'id' })
 
   return NextResponse.json({ success: true, account })
