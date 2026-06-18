@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import JoinTeamButton from '@/components/JoinTeamButton'
+import LeaveTeamButton from '@/components/LeaveTeamButton'
 
 const GAME_LABEL: Record<string, string> = {
   valorant: 'VALORANT', lol: 'League of Legends',
@@ -82,6 +83,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             <div className="flex gap-2 pb-1">
               {!isMember && !isCaptain && (
                 <JoinTeamButton teamId={id} hasPendingRequest={!!pendingRequest} />
+              )}
+              {isMember && !isCaptain && (
+                <LeaveTeamButton teamId={id} />
               )}
               {isCaptain && (
                 <a href={`/teams/${id}/manage`} className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition">

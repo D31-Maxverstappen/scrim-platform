@@ -33,6 +33,16 @@ export async function createTeamAction(formData: FormData) {
   const game_type = formData.get('game_type') as string
   const tier_avg = formData.get('tier_avg') as string
 
+  // 이미 팀에 소속됐는지 확인 (1팀 제한)
+  const { data: existingMembership } = await supabase
+    .from('team_members')
+    .select('id')
+    .eq('user_id', user.id)
+    .limit(1)
+    .single()
+
+  if (existingMembership) return { error: '이미 팀에 소속되어 있어요. 기존 팀을 탈퇴하거나 삭제한 뒤 만들 수 있어요.' }
+
   // users 테이블 upsert
   await supabase.from('users').upsert({
     id: user.id,
@@ -57,11 +67,17 @@ export async function createTeamAction(formData: FormData) {
     return { error: teamError.message }
   }
 
-  await supabase.from('team_members').insert({
+  const { error: memberError } = await supabase.from('team_members').insert({
     team_id: team.id,
     user_id: user.id,
     role: 'captain',
   })
+
+  // team_members insert 실패 시 팀도 롤백
+  if (memberError) {
+    await supabase.from('teams').delete().eq('id', team.id)
+    return { error: '팀 생성 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.' }
+  }
 
   redirect('/teams')
 }
