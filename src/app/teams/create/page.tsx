@@ -9,9 +9,9 @@ const GAMES = [
   { value: 'overwatch', label: '오버워치 2' },
 ]
 
-const TIERS_VAL = ['아이언', '브론즈', '실버', '골드', '플래티넘', '다이아', '어센던트', '이모탈', '레디언트']
-const TIERS_LOL = ['아이언', '브론즈', '실버', '골드', '플래티넘', '에메랄드', '다이아', '마스터', '그랜드마스터', '챌린저']
-const TIERS_OW  = ['브론즈', '실버', '골드', '플래티넘', '다이아', '마스터', '그랜드마스터', 'TOP 500']
+const TIERS_VAL = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
+const TIERS_LOL = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
+const TIERS_OW  = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster', 'Top 500']
 
 function getTiers(game: string) {
   if (game === 'lol') return TIERS_LOL
