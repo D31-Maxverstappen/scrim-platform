@@ -70,7 +70,7 @@ export default function PostScrimPage() {
             <textarea
               name="note"
               rows={3}
-              placeholder="ex) Silver~Gold team wanted. Discord required!"
+              placeholder="ex) Silver~Gold 팀 구해요. 디스코드 필수!"
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition resize-none"
             />
           </div>
