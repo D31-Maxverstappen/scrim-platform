@@ -1,166 +1,225 @@
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import AvatarUpload from '@/components/AvatarUpload'
 
-const STATS = [
-  { label: '등록된 팀', value: '—', sub: '팀' },
-  { label: '오늘 스크림', value: '—', sub: '매치' },
-  { label: '활성 유저', value: '—', sub: '명' },
-  { label: '평균 매너점수', value: '—', sub: 'pt' },
-]
+const TIER_COLOR: Record<string, string> = {
+  Iron: '#6b7280', Bronze: '#92400e', Silver: '#94a3b8', Gold: '#f59e0b',
+  Platinum: '#2dd4bf', Emerald: '#10b981', Diamond: '#60a5fa',
+  Master: '#a78bfa', Grandmaster: '#f87171', Challenger: '#fde68a',
+  Ascendant: '#34d399', Immortal: '#fb7185', Radiant: '#fef08a', Unranked: '#374151',
+}
 
-const GAMES = [
-  { name: '발로란트', color: 'from-red-500/20 to-pink-500/10', border: 'border-red-500/20', dot: 'bg-red-400', href: '/scrims?game=valorant' },
-  { name: '리그 오브 레전드', color: 'from-blue-500/20 to-cyan-500/10', border: 'border-blue-500/20', dot: 'bg-blue-400', href: '/scrims?game=lol' },
-  { name: '오버워치 2', color: 'from-orange-500/20 to-yellow-500/10', border: 'border-orange-500/20', dot: 'bg-orange-400', href: '/scrims?game=overwatch' },
-]
+const GAME_LABEL: Record<string, string> = {
+  lol: 'LoL', valorant: 'VALORANT',
+}
+
+const GAME_COLOR: Record<string, string> = {
+  lol: '#c89b3c', valorant: '#ff4655',
+}
 
 export default async function DashboardPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
+
+  const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single()
+  const { data: teamMember } = await supabase
+    .from('team_members')
+    .select('role, teams(id, name, game_type, tier_avg)')
+    .eq('user_id', user.id)
+    .single()
+  const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
+
+  const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
+
   return (
-    <div className="min-h-screen bg-[#07070b]">
+    <div className="min-h-screen bg-[#0d0d14]">
       <Navbar />
+      <div className="pt-16 max-w-7xl mx-auto px-4 py-6">
+        <div className="flex gap-6">
 
-      <div className="pt-16">
+          {/* ── 왼쪽 사이드바 ── */}
+          <aside className="w-64 shrink-0 flex flex-col gap-3">
 
-        {/* ── 히어로 배너 ── */}
-        <div className="relative overflow-hidden bg-gradient-to-b from-indigo-950/60 to-transparent border-b border-white/5">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5 pointer-events-none" />
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-green-400 text-xs font-semibold tracking-widest uppercase">Live Platform</span>
-              </div>
-              <h1 className="text-white text-3xl md:text-4xl font-black mb-2 leading-tight">
-                한국 최초<br />
-                <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">스크림 매칭 플랫폼</span>
-              </h1>
-              <p className="text-slate-400 text-sm">발로란트 · LoL · 오버워치 팀을 찾고, 스크림을 잡으세요.</p>
-            </div>
-
-            <div className="flex flex-col gap-3 shrink-0">
-              <a href="/teams/create" className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-8 py-3 rounded-xl transition text-sm text-center">
-                팀 만들기
-              </a>
-              <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3 rounded-xl transition text-sm text-center">
-                스크림 찾기
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-6xl mx-auto px-6">
-
-          {/* ── 통계 바 ── */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-[#111118] border border-white/5 rounded-2xl p-5">
-                <p className="text-slate-500 text-xs mb-2">{s.label}</p>
-                <p className="text-white text-2xl font-black">{s.value} <span className="text-slate-500 text-sm font-normal">{s.sub}</span></p>
-              </div>
-            ))}
-          </div>
-
-          {/* ── 게임별 빠른 이동 ── */}
-          <div className="mt-8">
-            <h2 className="text-white font-bold text-lg mb-4">게임별 스크림</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {GAMES.map((g) => (
-                <a
-                  key={g.name}
-                  href={g.href}
-                  className={`group relative bg-gradient-to-br ${g.color} border ${g.border} rounded-2xl p-6 hover:scale-[1.02] transition-transform cursor-pointer`}
-                >
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className={`w-2.5 h-2.5 rounded-full ${g.dot}`} />
-                    <span className="text-white font-bold text-sm">{g.name}</span>
+            {/* 내 프로필 카드 */}
+            <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+              <div className="h-16 bg-gradient-to-r from-indigo-900/60 to-purple-900/40" />
+              <div className="px-4 pb-4 -mt-8">
+                <AvatarUpload
+                  userId={user.id}
+                  initialUrl={profile?.avatar_url ?? null}
+                  initials={profile?.riot_gamename?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
+                />
+                <div className="mt-2">
+                  <p className="text-white font-bold text-sm">
+                    {profile?.riot_gamename ?? user.email?.split('@')[0]}
+                    {profile?.riot_tagline && <span className="text-slate-500 font-normal text-xs"> #{profile.riot_tagline}</span>}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    {profile?.game_type && (
+                      <span className="text-xs font-bold px-2 py-0.5 rounded" style={{ color: GAME_COLOR[profile.game_type], background: GAME_COLOR[profile.game_type] + '22' }}>
+                        {GAME_LABEL[profile.game_type]}
+                      </span>
+                    )}
+                    {profile?.tier && (
+                      <span className="text-xs font-bold" style={{ color: tierColor }}>{profile.tier}</span>
+                    )}
                   </div>
-                  <p className="text-slate-400 text-xs">스크림 보기 →</p>
-                </a>
+                </div>
+              </div>
+            </div>
+
+            {/* 매너 점수 */}
+            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Manner Score</p>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-2xl font-black text-white">100</span>
+                <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">기본</span>
+              </div>
+              <div className="w-full bg-white/5 rounded-full h-1 mb-1">
+                <div className="h-1 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style={{ width: '50%' }} />
+              </div>
+              <p className="text-slate-600 text-xs">100 / 200</p>
+            </div>
+
+            {/* 내 팀 */}
+            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">My Team</p>
+              {team ? (
+                <div>
+                  <p className="text-white font-bold text-sm">{team.name}</p>
+                  <p className="text-slate-500 text-xs mt-0.5">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
+                  {team.tier_avg && <p className="text-xs mt-1" style={{ color: '#c89b3c' }}>{team.tier_avg}</p>}
+                  <span className="inline-block mt-2 text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded">
+                    {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <p className="text-slate-600 text-xs">소속 팀 없음</p>
+                  <a href="/teams/create" className="text-center bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
+                    팀 만들기
+                  </a>
+                </div>
+              )}
+            </div>
+
+            {/* 빠른 링크 */}
+            <div className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+              <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Quick Links</p>
+              <div className="flex flex-col gap-1">
+                {[
+                  { label: '스크림 올리기', href: '/scrims/post', color: 'text-green-400' },
+                  { label: '팀 찾기', href: '/teams', color: 'text-blue-400' },
+                  { label: '리더보드', href: '/leaderboard', color: 'text-yellow-400' },
+                  { label: '내 프로필', href: '/profile', color: 'text-purple-400' },
+                ].map((l) => (
+                  <a key={l.href} href={l.href} className={`text-xs py-1.5 px-2 rounded hover:bg-white/5 transition flex items-center gap-2 ${l.color}`}>
+                    <span className="w-1 h-1 rounded-full bg-current" />
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          {/* ── 메인 콘텐츠 ── */}
+          <main className="flex-1 flex flex-col gap-4 min-w-0">
+
+            {/* 통계 바 */}
+            <div className="grid grid-cols-4 gap-3">
+              {[
+                { label: '등록 팀', value: '—' },
+                { label: '오늘 스크림', value: '—' },
+                { label: '활성 유저', value: '—' },
+                { label: '평균 매너점수', value: '100' },
+              ].map((s) => (
+                <div key={s.label} className="bg-[#13131f] border border-white/5 rounded-xl p-4">
+                  <p className="text-slate-500 text-xs mb-1">{s.label}</p>
+                  <p className="text-white text-xl font-black">{s.value}</p>
+                </div>
               ))}
             </div>
-          </div>
 
-          {/* ── 메인 그리드 ── */}
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 pb-16">
+            {/* 게임 탭 + 스크림 목록 */}
+            <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
 
-            {/* 실시간 모집 */}
-            <div className="md:col-span-2 bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                  <h3 className="text-white font-bold text-sm">실시간 스크림 모집</h3>
+              {/* 탭 헤더 */}
+              <div className="flex items-center justify-between px-4 border-b border-white/5">
+                <div className="flex">
+                  {['전체', 'VALORANT', 'LoL'].map((tab, i) => (
+                    <button key={tab} className={`px-4 py-3.5 text-xs font-bold border-b-2 transition ${i === 0 ? 'border-indigo-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+                      {tab}
+                    </button>
+                  ))}
                 </div>
-                <a href="/scrims" className="text-indigo-400 text-xs hover:underline">전체 보기 →</a>
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-1.5 text-xs text-green-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                    Live
+                  </span>
+                  <a href="/scrims" className="text-indigo-400 text-xs hover:underline">전체 보기 →</a>
+                </div>
               </div>
-              <div className="flex flex-col items-center justify-center py-16 text-slate-600">
-                <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
-                  </svg>
-                </div>
-                <p className="text-sm mb-1">현재 모집 중인 스크림이 없어요</p>
-                <a href="/scrims/post" className="mt-4 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-xs font-semibold px-5 py-2.5 rounded-lg transition">
+
+              {/* 테이블 헤더 */}
+              <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
+                <span className="col-span-1">게임</span>
+                <span className="col-span-3">팀 이름</span>
+                <span className="col-span-2">평균 티어</span>
+                <span className="col-span-2">희망 시간</span>
+                <span className="col-span-3">한마디</span>
+                <span className="col-span-1 text-right">신청</span>
+              </div>
+
+              {/* 빈 상태 */}
+              <div className="flex flex-col items-center justify-center py-20 text-slate-600">
+                <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
+                </svg>
+                <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
+                <a href="/scrims/post" className="mt-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-xs font-semibold px-5 py-2 rounded-lg transition">
                   + 스크림 올리기
                 </a>
               </div>
             </div>
 
-            {/* 사이드 */}
-            <div className="flex flex-col gap-4">
+            {/* 하단 그리드 */}
+            <div className="grid grid-cols-2 gap-4">
 
-              {/* 내 팀 */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
-                <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-4">내 팀</h3>
-                <div className="flex flex-col items-center py-4 gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87M16 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                  </div>
-                  <p className="text-slate-500 text-xs">소속 팀이 없어요</p>
-                  <a href="/teams/create" className="w-full bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2.5 rounded-lg transition text-center">
-                    팀 만들기
-                  </a>
+              {/* 최근 매치 */}
+              <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                  <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
+                  <a href="/profile" className="text-indigo-400 text-xs hover:underline">전체 →</a>
                 </div>
-              </div>
-
-              {/* 매너 점수 */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
-                <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-4">매너 점수</h3>
-                <div className="flex items-end gap-2 mb-3">
-                  <span className="text-4xl font-black text-white">100</span>
-                  <span className="text-slate-500 text-sm mb-1">/ 200</span>
-                </div>
-                <div className="w-full bg-white/5 rounded-full h-1.5 mb-2">
-                  <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full" style={{ width: '50%' }} />
-                </div>
-                <div className="flex justify-between text-xs text-slate-600 mt-1">
-                  <span>기본 등급</span>
-                  <span>다음: 실버 120pt</span>
+                <div className="flex flex-col items-center justify-center py-10 text-slate-600">
+                  <p className="text-xs">매치 기록이 없어요</p>
                 </div>
               </div>
 
               {/* 팀 랭킹 */}
-              <div className="bg-[#111118] border border-white/5 rounded-2xl p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-widest">팀 랭킹</h3>
+              <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
+                <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                  <p className="text-white font-bold text-xs uppercase tracking-widest">Team Rankings</p>
                   <a href="/leaderboard" className="text-indigo-400 text-xs hover:underline">전체 →</a>
                 </div>
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col divide-y divide-white/5">
                   {[1,2,3,4,5].map((i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <span className={`text-xs font-black w-4 text-center ${i === 1 ? 'text-yellow-400' : i === 2 ? 'text-slate-300' : i === 3 ? 'text-orange-400' : 'text-slate-600'}`}>
+                    <div key={i} className="flex items-center gap-3 px-4 py-2.5">
+                      <span className={`text-xs font-black w-4 text-center shrink-0 ${i === 1 ? 'text-yellow-400' : i === 2 ? 'text-slate-300' : i === 3 ? 'text-orange-400' : 'text-slate-600'}`}>
                         {i}
                       </span>
-                      <div className="flex-1 h-2.5 bg-white/5 rounded-full animate-pulse" />
+                      <div className="flex-1 h-2 bg-white/5 rounded animate-pulse" />
+                      <div className="w-12 h-2 bg-white/5 rounded animate-pulse" />
                     </div>
                   ))}
                 </div>
               </div>
 
             </div>
-          </div>
+          </main>
         </div>
       </div>
     </div>
