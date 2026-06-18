@@ -14,6 +14,39 @@ const ROLE_COLOR: Record<string, string> = {
   head_coach: '#a78bfa', coach: '#60a5fa',
 }
 
+function RequestRow({ r, onAction }: { r: any, onAction: (id: string, action: 'accept' | 'reject', role: string) => void }) {
+  const [selectedRole, setSelectedRole] = useState('player')
+  const u = r.users
+  return (
+    <div className="bg-[#13131f] border border-white/5 rounded-xl p-4 flex items-center gap-4">
+      {u?.avatar_url ? (
+        <img src={u.avatar_url} className="w-10 h-10 rounded-xl object-cover" alt="" />
+      ) : (
+        <div className="w-10 h-10 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
+          {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
+        </div>
+      )}
+      <div className="flex-1">
+        <p className="text-white font-semibold text-sm">{u?.riot_gamename ?? '알 수 없음'}{u?.riot_tagline && <span className="text-slate-500 text-xs"> #{u.riot_tagline}</span>}</p>
+        {u?.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
+      </div>
+      <select
+        value={selectedRole}
+        onChange={(e) => setSelectedRole(e.target.value)}
+        className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none"
+      >
+        {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
+      </select>
+      <button onClick={() => onAction(r.id, 'accept', selectedRole)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+        수락
+      </button>
+      <button onClick={() => onAction(r.id, 'reject', '')} className="bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 text-xs font-bold px-4 py-2 rounded-lg transition">
+        거절
+      </button>
+    </div>
+  )
+}
+
 export default function ManageTeamPage() {
   const { id: teamId } = useParams<{ id: string }>()
   const router = useRouter()
@@ -105,38 +138,9 @@ export default function ManageTeamPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {requests.map((r: any) => {
-                const u = r.users
-                const [selectedRole, setSelectedRole] = useState('player')
-                return (
-                  <div key={r.id} className="bg-[#13131f] border border-white/5 rounded-xl p-4 flex items-center gap-4">
-                    {u?.avatar_url ? (
-                      <img src={u.avatar_url} className="w-10 h-10 rounded-xl object-cover" alt="" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-xl bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black">
-                        {u?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <p className="text-white font-semibold text-sm">{u?.riot_gamename ?? '알 수 없음'}{u?.riot_tagline && <span className="text-slate-500 text-xs"> #{u.riot_tagline}</span>}</p>
-                      {u?.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
-                    </div>
-                    <select
-                      value={selectedRole}
-                      onChange={(e) => setSelectedRole(e.target.value)}
-                      className="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-white text-xs focus:outline-none"
-                    >
-                      {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
-                    </select>
-                    <button onClick={() => handleRequest(r.id, 'accept', selectedRole)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded-lg transition">
-                      수락
-                    </button>
-                    <button onClick={() => handleRequest(r.id, 'reject')} className="bg-white/5 hover:bg-red-500/20 text-slate-400 hover:text-red-400 text-xs font-bold px-4 py-2 rounded-lg transition">
-                      거절
-                    </button>
-                  </div>
-                )
-              })}
+              {requests.map((r: any) => (
+                <RequestRow key={r.id} r={r} onAction={handleRequest} />
+              ))}
             </div>
           )}
         </section>
