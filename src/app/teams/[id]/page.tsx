@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import JoinTeamButton from '@/components/JoinTeamButton'
 
 const GAME_LABEL: Record<string, string> = {
   valorant: 'VALORANT', lol: 'League of Legends',
@@ -39,6 +40,14 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const isCaptain = team.captain_id === user.id
   const isMember = members?.some((m: any) => m.user_id === user.id)
 
+  const { data: pendingRequest } = await supabase
+    .from('team_join_requests')
+    .select('id')
+    .eq('team_id', id)
+    .eq('user_id', user.id)
+    .eq('status', 'pending')
+    .single()
+
   const players = members?.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
   const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
 
@@ -71,10 +80,8 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
               </div>
             </div>
             <div className="flex gap-2 pb-1">
-              {!isMember && (
-                <button className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">
-                  가입 신청
-                </button>
+              {!isMember && !isCaptain && (
+                <JoinTeamButton teamId={id} hasPendingRequest={!!pendingRequest} />
               )}
               {isCaptain && (
                 <a href={`/teams/${id}/manage`} className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition">
