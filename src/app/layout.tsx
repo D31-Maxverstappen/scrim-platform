@@ -13,6 +13,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function() {
+            var t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', t);
+          })();
+        `}} />
+      </head>
       <body>
         {children}
         <footer className="border-t border-white/5 bg-[#07070b] py-6 mt-auto">

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
   const router = useRouter()
@@ -48,6 +49,7 @@ export default function Navbar() {
         <a href="/scrims/post" className="hidden sm:flex items-center gap-1.5 bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded-lg transition">
           <span>+</span> 스크림 올리기
         </a>
+        <ThemeToggle />
         <a href="/profile" className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-xs font-bold hover:opacity-80 transition">
           나
         </a>
