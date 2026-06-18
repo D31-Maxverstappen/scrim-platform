@@ -12,12 +12,18 @@ export default function PostScrimPage() {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
+  const [datetime, setDatetime] = useState('')
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!datetime) { setError('희망 날짜와 시간을 입력해주세요.'); return }
     setError('')
     const formData = new FormData(e.currentTarget)
     formData.set('game_type', game)
+    // datetime-local → date + time 분리
+    const [date, time] = datetime.split('T')
+    formData.set('preferred_date', date)
+    formData.set('preferred_time', time)
 
     startTransition(async () => {
       const result = await createScrimAction(formData)
@@ -38,18 +44,10 @@ export default function PostScrimPage() {
 
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {GAMES.map((g) => (
-                <button
-                  key={g.value}
-                  type="button"
-                  onClick={() => setGame(g.value)}
-                  className={`py-2.5 rounded-xl text-sm font-semibold transition ${
-                    game === g.value
-                      ? 'bg-[#00D2BE] text-white'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10'
-                  }`}
-                >
+                <button key={g.value} type="button" onClick={() => setGame(g.value)}
+                  className={`py-2.5 rounded-xl text-sm font-semibold transition ${game === g.value ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   {g.label}
                 </button>
               ))}
@@ -57,19 +55,12 @@ export default function PostScrimPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">희망 날짜</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">희망 날짜 & 시간 *</label>
             <input
-              name="preferred_date"
-              type="date"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
-            />
-          </div>
-
-          <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">희망 시간</label>
-            <input
-              name="preferred_time"
-              type="time"
+              type="datetime-local"
+              value={datetime}
+              onChange={(e) => setDatetime(e.target.value)}
+              required
               className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
             />
           </div>
@@ -85,16 +76,11 @@ export default function PostScrimPage() {
           </div>
 
           {error && (
-            <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">
-              {error}
-            </p>
+            <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3">{error}</p>
           )}
 
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
-          >
+          <button type="submit" disabled={isPending || !datetime}
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition">
             {isPending ? '올리는 중...' : '스크림 올리기'}
           </button>
         </form>
