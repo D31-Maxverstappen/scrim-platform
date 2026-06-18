@@ -44,7 +44,7 @@ export default async function DashboardPage() {
 
             {/* 내 프로필 카드 */}
             <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
-              <div className="h-16 bg-gradient-to-r from-indigo-900/60 to-purple-900/40" />
+              <div className="h-16 bg-gradient-to-r from-[#003d38]/60 to-[#001a17]/40" />
               <div className="px-4 pb-4 -mt-8">
                 <AvatarUpload
                   userId={user.id}
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
                 <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">기본</span>
               </div>
               <div className="w-full bg-white/5 rounded-full h-1 mb-1">
-                <div className="h-1 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" style={{ width: '50%' }} />
+                <div className="h-1 rounded-full bg-gradient-to-r from-[#00D2BE] to-[#00a896]" style={{ width: '50%' }} />
               </div>
               <p className="text-slate-600 text-xs">100 / 200</p>
             </div>
@@ -91,14 +91,14 @@ export default async function DashboardPage() {
                   <p className="text-white font-bold text-sm">{team.name}</p>
                   <p className="text-slate-500 text-xs mt-0.5">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
                   {team.tier_avg && <p className="text-xs mt-1" style={{ color: '#c89b3c' }}>{team.tier_avg}</p>}
-                  <span className="inline-block mt-2 text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded">
+                  <span className="inline-block mt-2 text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
                     {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
-                  <a href="/teams/create" className="text-center bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-2 rounded-lg transition">
+                  <a href="/teams/create" className="text-center bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold py-2 rounded-lg transition">
                     팀 만들기
                   </a>
                 </div>
@@ -110,10 +110,10 @@ export default async function DashboardPage() {
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Quick Links</p>
               <div className="flex flex-col gap-1">
                 {[
-                  { label: '스크림 올리기', href: '/scrims/post', color: 'text-green-400' },
-                  { label: '팀 찾기', href: '/teams', color: 'text-blue-400' },
-                  { label: '리더보드', href: '/leaderboard', color: 'text-yellow-400' },
-                  { label: '내 프로필', href: '/profile', color: 'text-purple-400' },
+                  { label: '스크림 올리기', href: '/scrims/post', color: 'text-[#00D2BE]' },
+                  { label: '팀 찾기', href: '/teams', color: 'text-[#00D2BE]' },
+                  { label: '리더보드', href: '/leaderboard', color: 'text-[#00D2BE]' },
+                  { label: '내 프로필', href: '/profile', color: 'text-[#00D2BE]' },
                 ].map((l) => (
                   <a key={l.href} href={l.href} className={`text-xs py-1.5 px-2 rounded hover:bg-white/5 transition flex items-center gap-2 ${l.color}`}>
                     <span className="w-1 h-1 rounded-full bg-current" />
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
               <div className="flex items-center justify-between px-4 border-b border-white/5">
                 <div className="flex">
                   {['전체', 'VALORANT', 'LoL'].map((tab, i) => (
-                    <button key={tab} className={`px-4 py-3.5 text-xs font-bold border-b-2 transition ${i === 0 ? 'border-indigo-500 text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+                    <button key={tab} className={`px-4 py-3.5 text-xs font-bold border-b-2 transition ${i === 0 ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
                       {tab}
                     </button>
                   ))}
@@ -159,7 +159,7 @@ export default async function DashboardPage() {
                     <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
                     Live
                   </span>
-                  <a href="/scrims" className="text-indigo-400 text-xs hover:underline">전체 보기 →</a>
+                  <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</a>
                 </div>
               </div>
 
@@ -179,7 +179,7 @@ export default async function DashboardPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
                 </svg>
                 <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
-                <a href="/scrims/post" className="mt-3 bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-xs font-semibold px-5 py-2 rounded-lg transition">
+                <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 rounded-lg transition">
                   + 스크림 올리기
                 </a>
               </div>
@@ -192,7 +192,7 @@ export default async function DashboardPage() {
               <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
                   <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
-                  <a href="/profile" className="text-indigo-400 text-xs hover:underline">전체 →</a>
+                  <a href="/profile" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>
                 </div>
                 <div className="flex flex-col items-center justify-center py-10 text-slate-600">
                   <p className="text-xs">매치 기록이 없어요</p>
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
               <div className="bg-[#13131f] border border-white/5 rounded-xl overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
                   <p className="text-white font-bold text-xs uppercase tracking-widest">Team Rankings</p>
-                  <a href="/leaderboard" className="text-indigo-400 text-xs hover:underline">전체 →</a>
+                  <a href="/leaderboard" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>
                 </div>
                 <div className="flex flex-col divide-y divide-white/5">
                   {[1,2,3,4,5].map((i) => (

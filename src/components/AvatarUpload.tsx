@@ -52,7 +52,7 @@ export default function AvatarUpload({ userId, initialUrl, initials }: Props) {
       {url ? (
         <img src={url} alt="avatar" className="w-20 h-20 rounded-2xl object-cover" />
       ) : (
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-black">
+        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-3xl font-black">
           {initials}
         </div>
       )}

@@ -47,7 +47,7 @@ export default function PostScrimPage() {
                   onClick={() => setGame(g.value)}
                   className={`py-2.5 rounded-xl text-sm font-semibold transition ${
                     game === g.value
-                      ? 'bg-indigo-500 text-white'
+                      ? 'bg-[#00D2BE] text-white'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
                 >
@@ -62,7 +62,7 @@ export default function PostScrimPage() {
             <input
               name="preferred_date"
               type="date"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
             />
           </div>
 
@@ -71,7 +71,7 @@ export default function PostScrimPage() {
             <input
               name="preferred_time"
               type="time"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
             />
           </div>
 
@@ -81,7 +81,7 @@ export default function PostScrimPage() {
               name="note"
               rows={3}
               placeholder="ex) 실버~골드 팀 구합니다. 디스코드 필참!"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition resize-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition resize-none"
             />
           </div>
 
@@ -94,7 +94,7 @@ export default function PostScrimPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
           >
             {isPending ? '올리는 중...' : '스크림 올리기'}
           </button>

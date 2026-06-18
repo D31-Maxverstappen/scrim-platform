@@ -70,7 +70,7 @@ export default async function ProfilePage() {
                 </span>
               )}
               {!profile?.riot_gamename && (
-                <a href="/onboarding" className="text-xs text-indigo-400 hover:underline">
+                <a href="/onboarding" className="text-xs text-[#00D2BE] hover:underline">
                   + 라이엇 계정 연동하기
                 </a>
               )}
@@ -92,7 +92,7 @@ export default async function ProfilePage() {
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">매너 점수</p>
             <p className="text-4xl font-black text-white mb-2">100</p>
             <div className="w-full bg-white/5 rounded-full h-1.5 mb-2">
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full" style={{ width: '50%' }} />
+              <div className="bg-gradient-to-r from-[#00D2BE] to-[#00a896] h-1.5 rounded-full" style={{ width: '50%' }} />
             </div>
             <p className="text-slate-600 text-xs">기본 등급 · 0~200pt</p>
           </div>
@@ -104,15 +104,15 @@ export default async function ProfilePage() {
               <>
                 <p className="text-white font-bold text-lg mb-1">{team.name}</p>
                 <p className="text-slate-500 text-xs">{GAME_LABEL[team.game_type] ?? team.game_type}</p>
-                {team.tier_avg && <p className="text-indigo-400 text-xs mt-1">{team.tier_avg}</p>}
-                <span className="inline-block mt-2 text-xs bg-indigo-500/20 text-indigo-400 px-2 py-0.5 rounded-full">
+                {team.tier_avg && <p className="text-[#00D2BE] text-xs mt-1">{team.tier_avg}</p>}
+                <span className="inline-block mt-2 text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded-full">
                   {teamMember?.role === 'captain' ? '캡틴' : '멤버'}
                 </span>
               </>
             ) : (
               <div className="flex flex-col gap-2">
                 <p className="text-slate-600 text-sm">소속 팀 없음</p>
-                <a href="/teams/create" className="text-xs text-indigo-400 hover:underline">팀 만들기 →</a>
+                <a href="/teams/create" className="text-xs text-[#00D2BE] hover:underline">팀 만들기 →</a>
               </div>
             )}
           </div>
@@ -135,7 +135,7 @@ export default async function ProfilePage() {
         <div className="bg-[#111118] border border-white/5 rounded-2xl overflow-hidden">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
             <h2 className="text-white font-bold text-sm">최근 스크림</h2>
-            <a href="/scrims" className="text-indigo-400 text-xs hover:underline">전체 보기 →</a>
+            <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</a>
           </div>
           <div className="flex flex-col items-center justify-center py-16 text-slate-600">
             <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -24,7 +24,7 @@ function ScrimsContent() {
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
           </div>
-          <a href="/scrims/post" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+          <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
             + 스크림 올리기
           </a>
         </div>
@@ -37,7 +37,7 @@ function ScrimsContent() {
               href={g.value ? `/scrims?game=${g.value}` : '/scrims'}
               className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
                 game === g.value
-                  ? 'bg-indigo-500 text-white'
+                  ? 'bg-[#00D2BE] text-white'
                   : 'bg-white/5 text-slate-400 hover:bg-white/10'
               }`}
             >
@@ -51,7 +51,7 @@ function ScrimsContent() {
           <p className="text-4xl mb-4">🎮</p>
           <p>현재 모집 중인 스크림이 없어요</p>
           <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
-          <a href="/scrims/post" className="mt-6 inline-block bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-sm px-5 py-2.5 rounded-xl transition">
+          <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded-xl transition">
             + 스크림 올리기
           </a>
         </div>

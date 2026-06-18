@@ -55,7 +55,7 @@ export default function CreateTeamPage() {
               required
               maxLength={20}
               placeholder="ex) Team D31"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
           </div>
 
@@ -69,7 +69,7 @@ export default function CreateTeamPage() {
                   onClick={() => setGame(g.value)}
                   className={`py-2.5 rounded-xl text-sm font-semibold transition ${
                     game === g.value
-                      ? 'bg-indigo-500 text-white'
+                      ? 'bg-[#00D2BE] text-white'
                       : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
                 >
@@ -83,7 +83,7 @@ export default function CreateTeamPage() {
             <label className="text-slate-300 text-sm font-semibold block mb-2">팀 평균 티어</label>
             <select
               name="tier_avg"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
             >
               <option value="">선택 안 함</option>
               {getTiers(game).map((t) => (
@@ -101,7 +101,7 @@ export default function CreateTeamPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
           >
             {isPending ? '만드는 중...' : '팀 만들기'}
           </button>

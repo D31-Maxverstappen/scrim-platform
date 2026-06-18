@@ -33,15 +33,15 @@ export default function HomePage() {
           className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/70 via-[#07070b]/60 to-[#07070b]" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-indigo-500/8 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px]" />
       </div>
 
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
-        <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+        <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">
           D31
         </span>
-        <a href="/login" className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">
+        <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded-xl transition">
           시작하기
         </a>
       </nav>
@@ -54,13 +54,13 @@ export default function HomePage() {
         </div>
         <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
           스크림 · 내전<br />
-          <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">매칭 플랫폼</span>
+          <span className="bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">매칭 플랫폼</span>
         </h1>
         <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
           실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
         </p>
         <div className="flex gap-3">
-          <a href="/login" className="bg-indigo-500 hover:bg-indigo-600 text-white font-bold px-8 py-3.5 rounded-xl transition text-sm">
+          <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded-xl transition text-sm">
             무료로 시작하기
           </a>
           <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded-xl transition text-sm">

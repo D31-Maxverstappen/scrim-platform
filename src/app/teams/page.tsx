@@ -16,7 +16,7 @@ export default async function TeamsPage() {
             <h1 className="text-2xl font-bold text-white">내 팀</h1>
             <p className="text-slate-400 text-sm mt-1">소속된 팀을 관리하세요</p>
           </div>
-          <a href="/teams/create" className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+          <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
             + 팀 만들기
           </a>
         </div>
@@ -25,7 +25,7 @@ export default async function TeamsPage() {
           <p className="text-4xl mb-4">🛡️</p>
           <p>아직 소속된 팀이 없어요</p>
           <p className="text-sm mt-1">팀을 만들거나 초대를 기다려보세요!</p>
-          <a href="/teams/create" className="mt-6 inline-block bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 text-sm px-5 py-2.5 rounded-xl transition">
+          <a href="/teams/create" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded-xl transition">
             + 팀 만들기
           </a>
         </div>

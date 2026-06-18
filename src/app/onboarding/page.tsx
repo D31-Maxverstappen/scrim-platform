@@ -58,7 +58,7 @@ export default function OnboardingPage() {
           <p className="text-slate-500 text-sm mb-8">{gameName}#{tagLine} · {tier}</p>
           <button
             onClick={() => router.replace('/dashboard')}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-3 rounded-xl transition"
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold py-3 rounded-xl transition"
           >
             대시보드로 이동 →
           </button>
@@ -72,7 +72,7 @@ export default function OnboardingPage() {
       <div className="w-full max-w-sm">
 
         <div className="text-center mb-10">
-          <span className="text-white font-black text-3xl tracking-widest bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">D31</span>
+          <span className="text-white font-black text-3xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">D31</span>
           <h1 className="text-white font-bold text-xl mt-4 mb-1">프로필 설정</h1>
           <p className="text-slate-500 text-sm">게임 계정과 티어를 입력해주세요</p>
         </div>
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
                   type="button"
                   onClick={() => { setGame(g.value); setTagLine(g.tag); setTier('') }}
                   className={`py-2.5 rounded-xl text-sm font-semibold transition ${
-                    game === g.value ? 'bg-indigo-500 text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                    game === g.value ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
                 >
                   {g.label}
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
                 value={gameName}
                 onChange={(e) => setGameName(e.target.value)}
                 placeholder="닉네임"
-                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition text-sm"
+                className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition text-sm"
               />
               <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl px-3">
                 <span className="text-slate-500 text-sm">#</span>
@@ -130,7 +130,7 @@ export default function OnboardingPage() {
                   type="button"
                   onClick={() => setTier(t)}
                   className={`py-2 rounded-xl text-xs font-semibold transition ${
-                    tier === t ? 'bg-indigo-500 text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                    tier === t ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
                 >
                   {t}
@@ -146,7 +146,7 @@ export default function OnboardingPage() {
           <button
             onClick={handleSubmit}
             disabled={loading || !gameName.trim() || !tier}
-            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition text-sm"
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-bold py-3 rounded-xl transition text-sm"
           >
             {loading ? '저장 중...' : '저장하기'}
           </button>
