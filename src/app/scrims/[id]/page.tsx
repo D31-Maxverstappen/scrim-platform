@@ -60,7 +60,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
       <div className="pt-16 max-w-4xl mx-auto px-6 py-8">
-        <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-6">← Back to Scrims</a>
+        <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-6">← 스크림 목록</a>
 
         {/* 포스트 헤더 */}
         <div className="bg-[#13131f] border border-white/5 rounded-2xl p-6 mb-6">
@@ -71,7 +71,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                   {GAME_LABEL[post.game_type] ?? post.game_type}
                 </span>
                 <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${post.status === 'open' ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'}`}>
-                  {post.status === 'open' ? 'Open' : 'Closed'}
+                  {post.status === 'open' ? '모집 중' : '마감'}
                 </span>
               </div>
               <h1 className="text-white font-black text-2xl mb-1">{team?.name ?? '?'}</h1>
@@ -104,7 +104,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 로스터 */}
           <div className="md:col-span-2">
-            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">Roster</h2>
+            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">로스터</h2>
             {players.length > 0 ? (
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {players.map((m: any) => {
@@ -126,7 +126,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
               </div>
             ) : (
               <div className="bg-[#13131f] border border-white/5 rounded-xl p-6 text-center text-slate-600 text-sm mb-4">
-                No players listed
+                아직 선수가 없어요
               </div>
             )}
             {staff.length > 0 && (
@@ -177,7 +177,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                           app.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
                           'bg-red-500/20 text-red-400'
                         }`}>
-                          {app.status === 'pending' ? 'Pending' : app.status === 'accepted' ? 'Accepted' : 'Rejected'}
+                          {app.status === 'pending' ? '대기 중' : app.status === 'accepted' ? '수락됨' : '거절됨'}
                         </span>
                       </div>
                     )

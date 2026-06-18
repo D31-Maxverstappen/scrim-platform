@@ -22,7 +22,7 @@ export default function ScrimApplyButton({
   )
 
   if (status === 'accepted') return (
-    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-green-500/20 text-green-400">Accepted ✓</span>
+    <span className="text-xs font-bold px-5 py-2.5 rounded-xl bg-green-500/20 text-green-400">수락됨 ✓</span>
   )
 
   if (status === 'pending') return (

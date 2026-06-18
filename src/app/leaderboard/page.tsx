@@ -51,7 +51,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
       <div className="pt-16 max-w-3xl mx-auto px-6 py-8">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
-          <p className="text-slate-400 text-sm mt-1">Top players on D31</p>
+          <p className="text-slate-400 text-sm mt-1">D31 상위 플레이어</p>
         </div>
 
         {/* 게임 탭 */}
@@ -68,14 +68,14 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
         {myRank !== -1 && (
           <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 rounded-xl px-5 py-3 mb-4 flex items-center gap-3">
             <span className="text-[#00D2BE] font-black text-lg">#{myRank + 1}</span>
-            <span className="text-white font-semibold text-sm">Your rank</span>
+            <span className="text-white font-semibold text-sm">내 순위</span>
             <span className="text-slate-400 text-sm">{sorted[myRank]?.tier ?? '—'}</span>
           </div>
         )}
 
         {sorted.length === 0 ? (
           <div className="bg-[#13131f] border border-white/5 rounded-2xl p-12 text-center text-slate-600 text-sm">
-            No players registered yet
+            아직 등록된 플레이어가 없어요
           </div>
         ) : (
           <div className="bg-[#13131f] border border-white/5 rounded-2xl overflow-hidden">
@@ -83,9 +83,9 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
               <thead>
                 <tr className="border-b border-white/5 text-xs text-slate-500 uppercase tracking-widest">
                   <th className="text-left px-5 py-3 w-12">#</th>
-                  <th className="text-left px-3 py-3">Player</th>
-                  <th className="text-left px-3 py-3">Tier</th>
-                  <th className="text-right px-5 py-3">Manner</th>
+                  <th className="text-left px-3 py-3">플레이어</th>
+                  <th className="text-left px-3 py-3">티어</th>
+                  <th className="text-right px-5 py-3">매너</th>
                 </tr>
               </thead>
               <tbody>

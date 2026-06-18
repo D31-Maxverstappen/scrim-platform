@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 
 const GAMES = [
-  { value: '', label: 'All' },
+  { value: '', label: '전체' },
   { value: 'valorant', label: 'VALORANT' },
-  { value: 'lol', label: 'League of Legends' },
+  { value: 'lol', label: '리그 오브 레전드' },
 ]
 
 const GAME_COLOR: Record<string, string> = {
@@ -40,11 +40,11 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
       <div className="pt-16 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-white">Scrim Board</h1>
-            <p className="text-slate-400 text-sm mt-1">Find your next practice match</p>
+            <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
+            <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
           </div>
           <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
-            + Post Scrim
+            + 스크림 올리기
           </a>
         </div>
 
@@ -66,10 +66,10 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
         {!posts || posts.length === 0 ? (
           <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded-2xl">
             <p className="text-3xl mb-4">🎮</p>
-            <p className="font-semibold">No scrims posted yet</p>
-            <p className="text-sm mt-1">Be the first to post!</p>
+            <p className="font-semibold">현재 모집 중인 스크림이 없어요</p>
+            <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
             <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded-xl transition">
-              + Post Scrim
+              + 스크림 올리기
             </a>
           </div>
         ) : (
@@ -103,7 +103,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
                       )}
                     </div>
                   </div>
-                  <span className="text-[#00D2BE] text-xs font-bold shrink-0">Apply →</span>
+                  <span className="text-[#00D2BE] text-xs font-bold shrink-0">신청하기 →</span>
                 </a>
               )
             })}

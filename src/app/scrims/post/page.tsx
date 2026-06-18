@@ -30,14 +30,14 @@ export default function PostScrimPage() {
       <div className="w-full max-w-md">
         <div className="mb-8">
           <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition">← 뒤로</a>
-          <h1 className="text-white font-bold text-2xl mt-3">Post a Scrim</h1>
-          <p className="text-slate-400 text-sm mt-1">Find an opponent team</p>
+          <h1 className="text-white font-bold text-2xl mt-3">스크림 올리기</h1>
+          <p className="text-slate-400 text-sm mt-1">상대 팀을 모집하세요</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded-2xl p-6 flex flex-col gap-5">
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">Game *</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
             <div className="grid grid-cols-3 gap-2">
               {GAMES.map((g) => (
                 <button
@@ -57,7 +57,7 @@ export default function PostScrimPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">Preferred Date</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">희망 날짜</label>
             <input
               name="preferred_date"
               type="date"
@@ -66,7 +66,7 @@ export default function PostScrimPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">Preferred Time</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">희망 시간</label>
             <input
               name="preferred_time"
               type="time"
@@ -75,7 +75,7 @@ export default function PostScrimPage() {
           </div>
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">Note</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">한마디</label>
             <textarea
               name="note"
               rows={3}
@@ -95,7 +95,7 @@ export default function PostScrimPage() {
             disabled={isPending}
             className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded-xl transition"
           >
-            {isPending ? 'Posting...' : 'Post Scrim'}
+            {isPending ? '올리는 중...' : '스크림 올리기'}
           </button>
         </form>
       </div>

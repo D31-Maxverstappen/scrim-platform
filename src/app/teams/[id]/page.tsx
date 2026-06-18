@@ -75,7 +75,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
                 </span>
               </div>
               <div className="flex items-center gap-4 mt-2 text-sm text-slate-400">
-                {team.tier_avg && <span>Avg. {team.tier_avg}</span>}
+                {team.tier_avg && <span>평균 {team.tier_avg}</span>}
                 <span>{members?.length ?? 0}명</span>
               </div>
             </div>
@@ -96,7 +96,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
           {/* 선수 로스터 */}
           <div className="md:col-span-2">
-            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">Players</h2>
+            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">선수</h2>
 
             {/* 3-2 포메이션 */}
             {players.length > 0 ? (
@@ -125,7 +125,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             {/* 코칭스태프 */}
             {staff.length > 0 && (
               <>
-                <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">Coaching Staff</h2>
+                <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">코칭 스태프</h2>
                 <div className="grid grid-cols-2 gap-3">
                   {staff.map((m: any) => (
                     <PlayerCard key={m.user_id} member={m} isCaptain={isCaptain} teamId={id} currentUserId={user.id} />
@@ -138,7 +138,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           {/* 팀 정보 사이드 */}
           <div className="flex flex-col gap-4">
             <div className="bg-[#13131f] border border-white/5 rounded-xl p-5">
-              <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">Team Info</h3>
+              <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">팀 정보</h3>
               <div className="flex flex-col gap-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-slate-500">게임</span>
@@ -164,14 +164,14 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             </div>
 
             <div className="bg-[#13131f] border border-white/5 rounded-xl p-5">
-              <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">Record</h3>
+              <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-4">전적</h3>
               <div className="flex items-end gap-2 mb-2">
                 <span className="text-3xl font-black text-white">0</span>
                 <span className="text-slate-500 text-sm mb-1">W</span>
                 <span className="text-3xl font-black text-slate-600 ml-1">0</span>
                 <span className="text-slate-600 text-sm mb-1">L</span>
               </div>
-              <p className="text-slate-600 text-xs">Win rate —</p>
+              <p className="text-slate-600 text-xs">승률 —</p>
             </div>
           </div>
         </div>
