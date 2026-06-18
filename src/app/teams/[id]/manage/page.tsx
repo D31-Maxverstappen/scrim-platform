@@ -55,6 +55,11 @@ export default function ManageTeamPage() {
   const [requests, setRequests] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState('')
+  const [editName, setEditName] = useState('')
+  const [editTier, setEditTier] = useState('')
+  const [editSaving, setEditSaving] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleteInput, setDeleteInput] = useState('')
 
   const supabase = createClient()
 
@@ -66,6 +71,8 @@ export default function ManageTeamPage() {
     const { data: t } = await supabase.from('teams').select('*').eq('id', teamId).single()
     if (!t || t.captain_id !== user.id) { router.replace(`/teams/${teamId}`); return }
     setTeam(t)
+    setEditName(t.name ?? '')
+    setEditTier(t.tier_avg ?? '')
 
     const { data: m } = await supabase
       .from('team_members')
@@ -107,6 +114,25 @@ export default function ManageTeamPage() {
     load()
   }
 
+  const handleSaveInfo = async () => {
+    if (!editName.trim()) return
+    setEditSaving(true)
+    await supabase.from('teams').update({
+      name: editName.trim(),
+      tier_avg: editTier.trim() || null,
+    }).eq('id', teamId)
+    setEditSaving(false)
+    setMsg('팀 정보를 저장했어요.')
+    load()
+  }
+
+  const handleDelete = async () => {
+    if (deleteInput !== team?.name) return
+    const res = await fetch(`/api/teams/${teamId}`, { method: 'DELETE' })
+    if (res.ok) router.replace('/teams')
+    else setMsg('삭제에 실패했어요.')
+  }
+
   if (loading) return (
     <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="w-6 h-6 border-2 border-[#00D2BE] border-t-transparent rounded-full animate-spin" />
@@ -126,6 +152,37 @@ export default function ManageTeamPage() {
             {msg}
           </div>
         )}
+
+        {/* 팀 정보 수정 */}
+        <section className="mb-8">
+          <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">팀 정보 수정</h2>
+          <div className="bg-[#13131f] border border-white/5 rounded-xl p-5 flex flex-col gap-4">
+            <div>
+              <label className="text-slate-400 text-xs mb-1.5 block">팀 이름</label>
+              <input
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+              />
+            </div>
+            <div>
+              <label className="text-slate-400 text-xs mb-1.5 block">평균 티어 <span className="text-slate-600">(예: Gold 2)</span></label>
+              <input
+                value={editTier}
+                onChange={(e) => setEditTier(e.target.value)}
+                placeholder="입력 안하면 표시 안됨"
+                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              />
+            </div>
+            <button
+              onClick={handleSaveInfo}
+              disabled={editSaving || !editName.trim()}
+              className="self-start bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+            >
+              {editSaving ? '저장 중...' : '저장'}
+            </button>
+          </div>
+        </section>
 
         {/* 가입 신청 */}
         <section className="mb-8">
@@ -185,6 +242,49 @@ export default function ManageTeamPage() {
                 </div>
               )
             })}
+          </div>
+        </section>
+        {/* 위험 구역 */}
+        <section className="mt-12">
+          <h2 className="text-red-500 font-bold text-sm uppercase tracking-widest mb-4">위험 구역</h2>
+          <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-5">
+            <p className="text-white font-semibold text-sm mb-1">팀 삭제</p>
+            <p className="text-slate-400 text-xs mb-4">팀을 삭제하면 모든 멤버, 스크림 기록이 함께 삭제되며 복구할 수 없어요.</p>
+            {!showDeleteConfirm ? (
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-bold px-5 py-2.5 rounded-xl transition border border-red-500/20"
+              >
+                팀 삭제
+              </button>
+            ) : (
+              <div className="flex flex-col gap-3">
+                <p className="text-slate-300 text-sm">
+                  확인을 위해 팀 이름 <span className="text-white font-bold">"{team?.name}"</span>을 입력해주세요
+                </p>
+                <input
+                  value={deleteInput}
+                  onChange={(e) => setDeleteInput(e.target.value)}
+                  placeholder="팀 이름 입력"
+                  className="bg-white/5 border border-red-500/30 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-red-500 transition"
+                />
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDelete}
+                    disabled={deleteInput !== team?.name}
+                    className="bg-red-500 hover:bg-red-600 disabled:opacity-30 disabled:cursor-not-allowed text-white text-sm font-bold px-5 py-2.5 rounded-xl transition"
+                  >
+                    영구 삭제
+                  </button>
+                  <button
+                    onClick={() => { setShowDeleteConfirm(false); setDeleteInput('') }}
+                    className="bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-bold px-5 py-2.5 rounded-xl transition"
+                  >
+                    취소
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       </div>
