@@ -26,6 +26,13 @@ export default function TeamChat({
   const [error, setError] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
   const supabase = useRef(createClient()).current
+  const seenIds = useRef(new Set<string>())
+
+  const addMessage = (msg: Message) => {
+    if (seenIds.current.has(msg.id)) return
+    seenIds.current.add(msg.id)
+    setMessages((prev) => [...prev, msg])
+  }
 
   useEffect(() => {
     supabase
@@ -35,21 +42,26 @@ export default function TeamChat({
       .order('created_at', { ascending: true })
       .limit(100)
       .then(({ data }) => {
-        if (data) setMessages(data as Message[])
+        if (data) {
+          data.forEach((m: any) => seenIds.current.add(m.id))
+          setMessages(data as Message[])
+        }
       })
 
+    // 필터 없이 전체 구독 후 클라이언트에서 team_id 필터링
     const channel = supabase
       .channel(`team_chat_${teamId}`)
       .on(
         'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'team_messages', filter: `team_id=eq.${teamId}` },
+        { event: 'INSERT', schema: 'public', table: 'team_messages' },
         async (payload) => {
+          if (payload.new.team_id !== teamId) return
           const { data } = await supabase
             .from('team_messages')
             .select('id, content, created_at, user_id, users(riot_gamename, avatar_url)')
             .eq('id', payload.new.id)
             .single()
-          if (data) setMessages((prev) => [...prev, data as Message])
+          if (data) addMessage(data as Message)
         }
       )
       .subscribe()
@@ -67,10 +79,19 @@ export default function TeamChat({
     setSending(true)
     setError(null)
     setInput('')
-    const { error: insertError } = await supabase.from('team_messages').insert({ team_id: teamId, user_id: currentUserId, content })
+
+    const { data: inserted, error: insertError } = await supabase
+      .from('team_messages')
+      .insert({ team_id: teamId, user_id: currentUserId, content })
+      .select('id, content, created_at, user_id, users(riot_gamename, avatar_url)')
+      .single()
+
     if (insertError) {
       setError(insertError.message)
       setInput(content)
+    } else if (inserted) {
+      // Realtime을 기다리지 않고 즉시 표시
+      addMessage(inserted as Message)
     }
     setSending(false)
   }
