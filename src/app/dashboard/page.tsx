@@ -151,7 +151,7 @@ export default async function DashboardPage() {
               {/* 탭 헤더 */}
               <div className="flex items-center justify-between px-4 border-b border-white/5">
                 <div className="flex">
-                  {['전체', 'VALORANT', 'LoL'].map((tab, i) => (
+                  {['VALORANT', 'League of Legends'].map((tab, i) => (
                     <button key={tab} className={`px-4 py-3.5 text-xs font-bold border-b-2 transition ${i === 0 ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
                       {tab}
                     </button>
@@ -168,11 +168,10 @@ export default async function DashboardPage() {
 
               {/* 테이블 헤더 */}
               <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
-                <span className="col-span-1">게임</span>
-                <span className="col-span-3">팀 이름</span>
+                <span className="col-span-4">팀 이름</span>
                 <span className="col-span-2">평균 티어</span>
-                <span className="col-span-2">희망 시간</span>
-                <span className="col-span-3">한마디</span>
+                <span className="col-span-3">희망 시간</span>
+                <span className="col-span-2">한마디</span>
                 <span className="col-span-1 text-right">신청</span>
               </div>
 
@@ -180,23 +179,22 @@ export default async function DashboardPage() {
               {!recentScrims || recentScrims.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-600">
                   <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
-                  <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2  transition">
+                  <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 transition">
                     + 스크림 올리기
                   </a>
                 </div>
               ) : (
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-white/10">
                   {recentScrims.map((s: any) => {
                     const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
                     const gc = GAME_COLOR[s.game_type] ?? '#00D2BE'
                     const date = s.preferred_date ? new Date(s.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '미정'
                     return (
-                      <a key={s.id} href={`/scrims/${s.id}`} className="grid grid-cols-12 gap-2 px-4 py-3 hover:bg-white/2 transition items-center group">
-                        <span className="col-span-1 text-xs font-bold" style={{ color: gc }}>{s.game_type === 'valorant' ? 'VAL' : 'LoL'}</span>
-                        <span className="col-span-3 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
+                      <a key={s.id} href={`/scrims/${s.id}`} className="grid grid-cols-12 gap-2 px-4 py-3 hover:bg-white/2 transition items-center group border-l-2 border-transparent hover:border-[#00D2BE]">
+                        <span className="col-span-4 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
                         <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
-                        <span className="col-span-2 text-slate-500 text-xs">{date}</span>
-                        <span className="col-span-3 text-slate-600 text-xs truncate">{s.note ?? '—'}</span>
+                        <span className="col-span-3 text-slate-500 text-xs">{date}</span>
+                        <span className="col-span-2 text-slate-600 text-xs truncate">{s.note ?? '—'}</span>
                         <span className="col-span-1 text-right text-[#00D2BE] text-xs">→</span>
                       </a>
                     )
