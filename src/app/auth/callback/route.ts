@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=no_code`)
   }
 
-  const response = NextResponse.redirect(`${origin}/dashboard`)
+  const pendingCookies: { name: string; value: string; options: any }[] = []
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
           return request.cookies.getAll()
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          )
+          pendingCookies.push(...cookiesToSet)
         },
       },
     }
@@ -74,6 +72,11 @@ export async function GET(request: NextRequest) {
   }
 
   const redirectTo = (!existing || !existing.riot_puuid) ? '/onboarding' : '/dashboard'
-  response.headers.set('location', `${origin}${redirectTo}`)
+  const response = NextResponse.redirect(`${origin}${redirectTo}`)
+
+  pendingCookies.forEach(({ name, value, options }) => {
+    response.cookies.set(name, value, options)
+  })
+
   return response
 }
