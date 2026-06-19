@@ -36,10 +36,11 @@ export function FlagImg({ code, size = 20 }: { code: string | null | undefined; 
   return (
     <img
       src={`https://flagcdn.com/w${size}/${code.toLowerCase()}.png`}
-      alt={code}
+      alt=""
       width={size}
       height={Math.round(size * 0.67)}
       style={{ imageRendering: 'pixelated', display: 'inline-block' }}
+      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
     />
   )
 }
