@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import AvatarUpload from '@/components/AvatarUpload'
 import CountrySelect from '@/components/CountrySelect'
+import DeleteAccountButton from '@/components/DeleteAccountButton'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: 'text-slate-400', Bronze: 'text-orange-700', Silver: 'text-slate-300',
@@ -134,6 +135,15 @@ export default async function ProfilePage() {
             <p className="text-slate-600 text-xs">승률 —</p>
           </div>
 
+        </div>
+
+        {/* 회원탈퇴 */}
+        <div className="border border-red-500/20 bg-red-500/5 rounded p-6 flex items-center justify-between">
+          <div>
+            <p className="text-white font-semibold text-sm">회원탈퇴</p>
+            <p className="text-slate-500 text-xs mt-0.5">계정과 모든 데이터가 영구적으로 삭제돼요</p>
+          </div>
+          <DeleteAccountButton />
         </div>
 
         {/* 최근 스크림 */}
