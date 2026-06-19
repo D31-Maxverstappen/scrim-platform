@@ -1,0 +1,16 @@
+{
+  "name": "d31-discord-bot",
+  "version": "1.0.0",
+  "description": "D31 스크림 플랫폼 Discord 봇",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "discord.js": "^14.16.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
