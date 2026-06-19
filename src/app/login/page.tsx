@@ -42,7 +42,7 @@ function LoginForm() {
         <div className="bg-[#1e1e2e]/80 backdrop-blur border border-white/10 rounded p-8 flex flex-col gap-5 shadow-2xl">
           <div className="text-center">
             <p className="text-white font-semibold text-lg mb-1">시작하기</p>
-            <p className="text-slate-500 text-sm">Discord 계정으로 바로 시작하세요</p>
+            <p className="text-slate-400 text-sm">Discord 계정으로 바로 시작하세요</p>
           </div>
 
           <button
@@ -63,7 +63,7 @@ function LoginForm() {
             </div>
           )}
 
-          <p className="text-center text-slate-600 text-xs">
+          <p className="text-center text-slate-400 text-xs">
             Discord 계정이 없다면{' '}
             <a href="https://discord.com/register" target="_blank" rel="noopener noreferrer" className="text-[#5865F2] hover:underline">
               여기서 만들 수 있어요
@@ -71,8 +71,8 @@ function LoginForm() {
           </p>
         </div>
 
-        <p className="text-center text-slate-600 text-xs mt-6">
-          <a href="/" className="hover:text-slate-400 transition">← 메인으로 돌아가기</a>
+        <p className="text-center text-slate-400 text-xs mt-6">
+          <a href="/" className="hover:text-white transition">← 메인으로 돌아가기</a>
         </p>
       </div>
     </div>
