@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createScrimVoiceChannel } from '@/lib/discord'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
   const { appId } = await params
@@ -9,7 +10,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  // 신청 정보 가져오기
   const { data: app } = await supabase
     .from('scrim_applications')
     .select('id, scrim_post_id, status')
@@ -19,7 +19,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
   if (!app) return NextResponse.json({ error: '신청을 찾을 수 없어요.' }, { status: 404 })
   if (app.status !== 'pending') return NextResponse.json({ error: '이미 처리된 신청이에요.' }, { status: 400 })
 
-  // 스크림 포스트의 팀 캡틴인지 확인
   const { data: post } = await supabase
     .from('scrim_posts')
     .select('team_id, teams(captain_id)')
@@ -32,7 +31,6 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
   const newStatus = action === 'accept' ? 'accepted' : 'rejected'
   await supabase.from('scrim_applications').update({ status: newStatus }).eq('id', appId)
 
-  // 수락 시 매치 자동 생성
   if (action === 'accept') {
     const [{ data: scrimPost }, { data: applyApp }] = await Promise.all([
       supabase.from('scrim_posts').select('team_id, preferred_date').eq('id', app.scrim_post_id).single(),
@@ -69,6 +67,30 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
       supabase.from('match_maps').insert(mapRows),
       supabase.from('scrim_applications').update({ match_id: newMatch.id }).eq('id', appId),
     ])
+
+    // 양 팀 이름 + Discord ID 수집
+    const [{ data: team1Data }, { data: team2Data }, { data: team1Members }, { data: team2Members }] = await Promise.all([
+      supabase.from('teams').select('name').eq('id', scrimPost.team_id).single(),
+      supabase.from('teams').select('name').eq('id', applyApp.applying_team_id).single(),
+      supabase.from('team_members').select('users(discord_id)').eq('team_id', scrimPost.team_id),
+      supabase.from('team_members').select('users(discord_id)').eq('team_id', applyApp.applying_team_id),
+    ])
+
+    const extractIds = (members: any[]) =>
+      members.flatMap((m: any) => {
+        const u = Array.isArray(m.users) ? m.users[0] : m.users
+        return u?.discord_id ? [u.discord_id] : []
+      })
+
+    const discordIds = [...extractIds(team1Members ?? []), ...extractIds(team2Members ?? [])]
+    const t1Name = team1Data?.name ?? '팀1'
+    const t2Name = team2Data?.name ?? '팀2'
+
+    // Discord 음성채널 생성
+    const channelId = await createScrimVoiceChannel(t1Name, t2Name, discordIds)
+    if (channelId) {
+      await supabase.from('matches').update({ discord_channel_id: channelId }).eq('id', newMatch.id)
+    }
 
     return NextResponse.json({ success: true, matchId: newMatch.id })
   }
