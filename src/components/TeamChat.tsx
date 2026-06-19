@@ -23,8 +23,9 @@ export default function TeamChat({
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
-  const supabase = createClient()
+  const supabase = useRef(createClient()).current
 
   useEffect(() => {
     supabase
@@ -64,8 +65,13 @@ export default function TeamChat({
     const content = input.trim()
     if (!content || sending) return
     setSending(true)
+    setError(null)
     setInput('')
-    await supabase.from('team_messages').insert({ team_id: teamId, user_id: currentUserId, content })
+    const { error: insertError } = await supabase.from('team_messages').insert({ team_id: teamId, user_id: currentUserId, content })
+    if (insertError) {
+      setError(insertError.message)
+      setInput(content)
+    }
     setSending(false)
   }
 
@@ -111,6 +117,11 @@ export default function TeamChat({
         <div ref={bottomRef} />
       </div>
 
+      {error && (
+        <div className="px-4 py-2 bg-red-500/10 border-t border-red-500/20">
+          <p className="text-red-400 text-xs">전송 실패: {error}</p>
+        </div>
+      )}
       <div className="border-t border-white/5 px-4 py-3 flex gap-2">
         <input
           value={input}
