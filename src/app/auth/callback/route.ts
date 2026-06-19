@@ -63,14 +63,6 @@ export async function GET(request: NextRequest) {
     }).eq('id', user.id)
   }
 
-  if (discordId) {
-    fetch(`${origin}/api/discord/dm`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ discordId }),
-    }).catch(() => {})
-  }
-
   const redirectTo = (!existing || !existing.riot_puuid) ? '/onboarding' : '/dashboard'
   const response = NextResponse.redirect(`${origin}${redirectTo}`)
 
