@@ -62,21 +62,13 @@ export default function AuthCallbackPage() {
         }).eq('id', user.id)
       }
 
-      // Discord 서버 자동 참여
-      if (providerToken && discordId) {
-        try {
-          const joinRes = await fetch('/api/discord/join', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ accessToken: providerToken }),
-          })
-          const joinData = await joinRes.json()
-          console.log('[Discord Join]', joinRes.status, joinData)
-        } catch (e) {
-          console.error('[Discord Join Error]', e)
-        }
-      } else {
-        console.log('[Discord Join] skipped - providerToken:', !!providerToken, 'discordId:', !!discordId)
+      // 신규 유저면 Discord DM으로 서버 초대 링크 전송
+      if (!existing && discordId) {
+        fetch('/api/discord/dm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ discordId }),
+        }).catch(() => {})
       }
 
       router.replace(!existing || !existing.riot_puuid ? '/onboarding' : '/dashboard')
