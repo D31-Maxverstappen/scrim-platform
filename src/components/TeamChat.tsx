@@ -8,7 +8,7 @@ type Message = {
   content: string
   created_at: string
   user_id: string
-  users: { riot_gamename: string | null; avatar_url: string | null } | null
+  users: { riot_gamename: string | null; avatar_url: string | null } | { riot_gamename: string | null; avatar_url: string | null }[] | null
 }
 
 export default function TeamChat({
