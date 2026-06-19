@@ -2,29 +2,38 @@
 
 import Image from 'next/image'
 import DiscordBanner from '@/components/DiscordBanner'
+import { useEffect, useState } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 const games = [
   {
     name: 'VALORANT',
-    sub: '발로란트',
     color: '#ff4655',
     glow: 'rgba(255,70,85,0.4)',
     bg: 'linear-gradient(135deg, #1a0508 0%, #0d0206 100%)',
     desc: '5v5 Tactical FPS',
-    href: '/login?game=valorant',
+    href: '/valorant/dashboard',
+    loginHref: '/login',
   },
   {
     name: 'LEAGUE OF LEGENDS',
-    sub: '리그 오브 레전드',
     color: '#c89b3c',
     glow: 'rgba(200,155,60,0.4)',
     bg: 'linear-gradient(135deg, #0d0e16 0%, #070810 100%)',
     desc: '5v5 Strategy MOBA',
-    href: '/login?game=lol',
+    href: '/lol/dashboard',
+    loginHref: '/login',
   },
 ]
 
 export default function HomePage() {
+  const [loggedIn, setLoggedIn] = useState(false)
+
+  useEffect(() => {
+    createClient().auth.getSession().then(({ data }) => {
+      setLoggedIn(!!data.session)
+    })
+  }, [])
   return (
     <div className="min-h-screen bg-[#07070b] flex flex-col relative overflow-hidden">
 
@@ -42,8 +51,8 @@ export default function HomePage() {
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
         <Image src="/logo.png" alt="D31" width={112} height={112} className="object-contain" />
-        <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
-          시작하기
+        <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
+          {loggedIn ? '대시보드' : '시작하기'}
         </a>
       </nav>
 
@@ -61,8 +70,8 @@ export default function HomePage() {
           실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
         </p>
         <div className="flex gap-3">
-          <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-            무료로 시작하기
+          <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
+            {loggedIn ? '대시보드로 이동' : '무료로 시작하기'}
           </a>
           <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
             스크림 둘러보기
@@ -77,7 +86,7 @@ export default function HomePage() {
           {games.map((game) => (
             <a
               key={game.name}
-              href={game.href}
+              href={loggedIn ? game.href : game.loginHref}
               style={{ background: game.bg }}
               className="group relative flex items-center gap-6 rounded p-7 border border-white/5 hover:border-white/10 cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden"
             >
