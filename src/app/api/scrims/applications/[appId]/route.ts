@@ -4,7 +4,7 @@ import { createScrimVoiceChannel } from '@/lib/discord'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
   const { appId } = await params
-  const { action, format = 'BO3' } = await req.json() // 'accept' | 'reject'
+  const { action } = await req.json() // 'accept' | 'reject'
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -33,13 +33,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
 
   if (action === 'accept') {
     const [{ data: scrimPost }, { data: applyApp }] = await Promise.all([
-      supabase.from('scrim_posts').select('team_id, preferred_date').eq('id', app.scrim_post_id).single(),
+      supabase.from('scrim_posts').select('team_id, preferred_date, format').eq('id', app.scrim_post_id).single(),
       supabase.from('scrim_applications').select('applying_team_id').eq('id', appId).single(),
     ])
 
     if (!scrimPost) return NextResponse.json({ error: '스크림 포스트를 찾을 수 없어요.' }, { status: 404 })
     if (!applyApp?.applying_team_id) return NextResponse.json({ error: '신청 팀 정보를 찾을 수 없어요.' }, { status: 404 })
 
+    const format = scrimPost.format ?? 'BO3'
     await supabase.from('scrim_posts').update({ status: 'matched' }).eq('id', app.scrim_post_id)
 
     const mapCount = format === 'BO5' ? 5 : 3

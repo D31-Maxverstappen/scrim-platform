@@ -17,7 +17,6 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
   const [apps, setApps] = useState(initialApps)
   const [loading, setLoading] = useState<string | null>(null)
   const [accepting, setAccepting] = useState<string | null>(null)
-  const [format, setFormat] = useState<'BO3' | 'BO5'>('BO3')
   const [matchLinks, setMatchLinks] = useState<Record<string, string>>(
     () => Object.fromEntries(initialApps.filter((a) => a.match_id).map((a) => [a.id, a.match_id!]))
   )
@@ -27,7 +26,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
     const res = await fetch(`/api/scrims/applications/${appId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'accept', format }),
+      body: JSON.stringify({ action: 'accept' }),
     })
     setLoading(null)
     setAccepting(null)
@@ -107,14 +106,6 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                 {app.status === 'pending' ? (
                   accepting === app.id ? (
                     <div className="flex items-center gap-2">
-                      <div className="flex border border-white/10 text-[10px] font-bold overflow-hidden">
-                        {(['BO3', 'BO5'] as const).map((f) => (
-                          <button key={f} onClick={() => setFormat(f)}
-                            className={`px-3 py-1.5 transition ${format === f ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:bg-white/5'}`}>
-                            {f}
-                          </button>
-                        ))}
-                      </div>
                       <button
                         onClick={() => handleAcceptConfirm(app.id)}
                         disabled={!!loading}
@@ -127,7 +118,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                   ) : (
                     <>
                       <button
-                        onClick={() => { setAccepting(app.id); setFormat('BO3') }}
+                        onClick={() => setAccepting(app.id)}
                         disabled={!!loading}
                         className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
                       >
