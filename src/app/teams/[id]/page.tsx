@@ -5,6 +5,7 @@ import JoinTeamButton from '@/components/JoinTeamButton'
 import LeaveTeamButton from '@/components/LeaveTeamButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
 import { FlagImg } from '@/components/CountrySelect'
+import TeamChat from '@/components/TeamChat'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
@@ -236,6 +237,13 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           overviewContent={overviewContent}
           statsContent={statsContent}
           matchesContent={matchesContent}
+          chatContent={
+            <TeamChat
+              teamId={id}
+              currentUserId={user.id}
+              isMember={isMember || isCaptain}
+            />
+          }
         />
       </div>
     </div>

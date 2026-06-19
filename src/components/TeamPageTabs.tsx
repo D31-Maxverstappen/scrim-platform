@@ -6,20 +6,27 @@ const TABS = [
   { key: 'overview', label: '개요' },
   { key: 'stats', label: '통계' },
   { key: 'matches', label: '매치' },
+  { key: 'chat', label: '채팅' },
 ]
 
 export default function TeamPageTabs({
   overviewContent,
   statsContent,
   matchesContent,
+  chatContent,
 }: {
   overviewContent: React.ReactNode
   statsContent: React.ReactNode
   matchesContent: React.ReactNode
+  chatContent: React.ReactNode
 }) {
   const [tab, setTab] = useState('overview')
 
-  const content = tab === 'overview' ? overviewContent : tab === 'stats' ? statsContent : matchesContent
+  const content =
+    tab === 'overview' ? overviewContent :
+    tab === 'stats' ? statsContent :
+    tab === 'matches' ? matchesContent :
+    chatContent
 
   return (
     <>
