@@ -5,6 +5,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import ThemeToggle from './ThemeToggle'
 import GameSwitcher from './GameSwitcher'
+import ProfileDropdown from './ProfileDropdown'
 
 export default function Navbar() {
   const router = useRouter()
@@ -56,12 +57,7 @@ export default function Navbar() {
       {/* 우측 */}
       <div className="shrink-0 flex items-center gap-3">
         <ThemeToggle />
-        <a href="/profile" className="flex items-center gap-2 hover:opacity-80 transition">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-            나
-          </div>
-          <span className="hidden sm:block text-sm text-slate-400 hover:text-white transition">프로필</span>
-        </a>
+        <ProfileDropdown />
       </div>
     </nav>
   )
