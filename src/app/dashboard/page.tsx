@@ -48,7 +48,17 @@ export default async function DashboardPage() {
     supabase.from('scrim_applications').select('id, status, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }),
   ])
 
+
   const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
+
+  // 내 팀 최근 매치
+  const recentMatches = team ? (await supabase
+    .from('matches')
+    .select('id, format, status, match_date, team1:teams!team1_id(id, name), team2:teams!team2_id(id, name), winner:teams!winner_id(id, name)')
+    .or(`team1_id.eq.${team.id},team2_id.eq.${team.id}`)
+    .order('created_at', { ascending: false })
+    .limit(5)
+  ).data ?? [] : []
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
 
   const scrimCountMap: Record<string, number> = {}
@@ -163,13 +173,42 @@ export default async function DashboardPage() {
 
               {/* 최근 매치 */}
               <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
-                <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
+                <div className="px-4 py-3 border-b border-white/5">
                   <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
-                  <a href="/profile" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>
                 </div>
-                <div className="flex flex-col items-center justify-center py-10 text-slate-600">
-                  <p className="text-xs">매치 기록이 없어요</p>
-                </div>
+                {recentMatches.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-10 text-slate-600">
+                    <p className="text-xs">매치 기록이 없어요</p>
+                  </div>
+                ) : (
+                  <div className="divide-y divide-white/5">
+                    {recentMatches.map((m: any) => {
+                      const t1 = Array.isArray(m.team1) ? m.team1[0] : m.team1
+                      const t2 = Array.isArray(m.team2) ? m.team2[0] : m.team2
+                      const w = Array.isArray(m.winner) ? m.winner[0] : m.winner
+                      const isWin = w?.id === team?.id
+                      const isLoss = m.status === 'completed' && w && w.id !== team?.id
+                      const statusLabel = m.status === 'completed' ? (isWin ? '승' : '패') : m.status === 'ongoing' ? '진행 중' : '예정'
+                      const statusColor = m.status === 'completed' ? (isWin ? 'text-[#00D2BE]' : 'text-red-400') : 'text-slate-500'
+                      const date = m.match_date
+                        ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+                        : '날짜 미정'
+                      return (
+                        <a key={m.id} href={`/matches/${m.id}`}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition group">
+                          <span className={`text-xs font-black w-6 text-center ${statusColor}`}>{statusLabel}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white text-xs font-semibold truncate">
+                              {t1?.name ?? '—'} <span className="text-slate-600">vs</span> {t2?.name ?? '—'}
+                            </p>
+                            <p className="text-slate-600 text-[10px]">{m.format} · {date}</p>
+                          </div>
+                          <span className="text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
+                        </a>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* 팀 랭킹 */}

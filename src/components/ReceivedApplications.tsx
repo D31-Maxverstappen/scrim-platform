@@ -15,25 +15,41 @@ const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'LoL' }
 export default function ReceivedApplications({ initialApps }: { initialApps: Application[] }) {
   const [apps, setApps] = useState(initialApps)
   const [loading, setLoading] = useState<string | null>(null)
+  const [accepting, setAccepting] = useState<string | null>(null) // appId currently choosing format
+  const [format, setFormat] = useState<'BO3' | 'BO5'>('BO3')
 
-  const handleAction = async (appId: string, action: 'accept' | 'reject') => {
-    setLoading(appId + action)
+  const handleAcceptConfirm = async (appId: string) => {
+    setLoading(appId + 'accept')
     const res = await fetch(`/api/scrims/applications/${appId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action }),
+      body: JSON.stringify({ action: 'accept', format }),
     })
     setLoading(null)
+    setAccepting(null)
     if (res.ok) {
       const data = await res.json()
-      if (action === 'accept' && data.matchId) {
+      if (data.matchId) {
         window.location.href = `/matches/${data.matchId}`
         return
       }
       setApps((prev) => prev.map((a) =>
-        a.id === appId ? { ...a, status: action === 'accept' ? 'accepted' : 'rejected' } : a
+        a.id === appId ? { ...a, status: 'accepted' } : a
       ))
     }
+  }
+
+  const handleReject = async (appId: string) => {
+    setLoading(appId + 'reject')
+    await fetch(`/api/scrims/applications/${appId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reject' }),
+    })
+    setLoading(null)
+    setApps((prev) => prev.map((a) =>
+      a.id === appId ? { ...a, status: 'rejected' } : a
+    ))
   }
 
   const pending = apps.filter((a) => a.status === 'pending')
@@ -78,22 +94,43 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
 
               <div className="shrink-0 flex items-center gap-2">
                 {app.status === 'pending' ? (
-                  <>
-                    <button
-                      onClick={() => handleAction(app.id, 'accept')}
-                      disabled={!!loading}
-                      className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
-                    >
-                      {loading === app.id + 'accept' ? '...' : '수락'}
-                    </button>
-                    <button
-                      onClick={() => handleAction(app.id, 'reject')}
-                      disabled={!!loading}
-                      className="text-[10px] font-bold px-3 py-1.5 bg-white/5 text-slate-400 hover:bg-white/10 transition disabled:opacity-50"
-                    >
-                      {loading === app.id + 'reject' ? '...' : '거절'}
-                    </button>
-                  </>
+                  accepting === app.id ? (
+                    <div className="flex items-center gap-2">
+                      <div className="flex border border-white/10 text-[10px] font-bold overflow-hidden">
+                        {(['BO3', 'BO5'] as const).map((f) => (
+                          <button key={f} onClick={() => setFormat(f)}
+                            className={`px-3 py-1.5 transition ${format === f ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:bg-white/5'}`}>
+                            {f}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => handleAcceptConfirm(app.id)}
+                        disabled={!!loading}
+                        className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
+                      >
+                        {loading === app.id + 'accept' ? '...' : '확정'}
+                      </button>
+                      <button onClick={() => setAccepting(null)} className="text-[10px] text-slate-600 hover:text-slate-400 transition">✕</button>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => { setAccepting(app.id); setFormat('BO3') }}
+                        disabled={!!loading}
+                        className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
+                      >
+                        수락
+                      </button>
+                      <button
+                        onClick={() => handleReject(app.id)}
+                        disabled={!!loading}
+                        className="text-[10px] font-bold px-3 py-1.5 bg-white/5 text-slate-400 hover:bg-white/10 transition disabled:opacity-50"
+                      >
+                        {loading === app.id + 'reject' ? '...' : '거절'}
+                      </button>
+                    </>
+                  )
                 ) : app.status === 'accepted' ? (
                   <span className="text-[10px] font-bold text-green-400">수락됨</span>
                 ) : (

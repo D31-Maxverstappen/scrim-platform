@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
   const { appId } = await params
-  const { action } = await req.json() // 'accept' | 'reject'
+  const { action, format = 'BO3' } = await req.json() // 'accept' | 'reject'
 
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -49,14 +49,26 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
       .single()
 
     if (scrimPost && applyApp) {
+      const mapCount = format === 'BO5' ? 5 : 3
       const { data: newMatch } = await supabase.from('matches').insert({
         scrim_post_id: app.scrim_post_id,
         team1_id: scrimPost.team_id,
         team2_id: applyApp.applying_team_id,
         match_date: scrimPost.preferred_date,
         status: 'scheduled',
-        format: 'BO3',
+        format,
       }).select('id').single()
+
+      if (newMatch?.id) {
+        const mapRows = Array.from({ length: mapCount }, (_, i) => ({
+          match_id: newMatch.id,
+          map_number: i + 1,
+          map_name: 'TBD',
+          team1_score: 0,
+          team2_score: 0,
+        }))
+        await supabase.from('match_maps').insert(mapRows)
+      }
 
       return NextResponse.json({ success: true, matchId: newMatch?.id })
     }
