@@ -38,6 +38,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const { error: e } = await admin.from('match_maps').delete().in('match_id', matchIds)
     if (e) return NextResponse.json({ error: 'match_maps: ' + e.message }, { status: 500 })
 
+    // scrim_applications.match_id FK 제약 해제 (null로 초기화)
+    const { error: eNull } = await admin.from('scrim_applications').update({ match_id: null }).in('match_id', matchIds)
+    if (eNull) return NextResponse.json({ error: 'scrim_applications(match_id null): ' + eNull.message }, { status: 500 })
+
     const { error: e2 } = await admin.from('matches').delete().in('id', matchIds)
     if (e2) return NextResponse.json({ error: 'matches: ' + e2.message }, { status: 500 })
   }
