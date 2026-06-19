@@ -10,6 +10,13 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handle = async () => {
       const supabase = createClient()
+
+      // PKCE 코드 교환
+      const code = new URLSearchParams(window.location.search).get('code')
+      if (code) {
+        await supabase.auth.exchangeCodeForSession(code)
+      }
+
       const { data: { session } } = await supabase.auth.getSession()
 
       if (!session) {
