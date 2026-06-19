@@ -11,45 +11,84 @@ export default function AuthCallbackPage() {
     const handle = async () => {
       const supabase = createClient()
 
-      // hash fragment 방식(implicit flow) 처리
-      // onAuthStateChange가 hash를 감지하고 세션을 설정함
-      const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          subscription.unsubscribe()
+      // hash fragment에서 토큰 파싱 (implicit flow)
+      const hash = window.location.hash.substring(1)
+      const params = new URLSearchParams(hash)
+      const accessToken = params.get('access_token')
+      const refreshToken = params.get('refresh_token')
 
-          const user = session.user
+      if (accessToken && refreshToken) {
+        const { data: { session }, error } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        })
 
-          // users 테이블에 없으면 생성
-          const { data: existing } = await supabase
-            .from('users')
-            .select('id, riot_puuid')
-            .eq('id', user.id)
-            .single()
-
-          if (!existing) {
-            const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
-            const discordAvatar = user.user_metadata?.avatar_url ?? null
-            await supabase.from('users').insert({
-              id: user.id,
-              email: user.email,
-              riot_gamename: discordName,
-              avatar_url: discordAvatar,
-            })
-            router.replace('/onboarding')
-          } else {
-            router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
-          }
-        } else if (event === 'SIGNED_OUT') {
-          subscription.unsubscribe()
-          router.replace('/login')
+        if (error || !session) {
+          router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'set_session_failed'))
+          return
         }
-      })
 
-      // 5초 후에도 이벤트 없으면 로그인 페이지로
-      setTimeout(() => {
-        subscription.unsubscribe()
-        router.replace('/login?error=timeout')
-      }, 5000)
+        const user = session.user
+
+        const { data: existing } = await supabase
+          .from('users')
+          .select('id, riot_puuid')
+          .eq('id', user.id)
+          .single()
+
+        if (!existing) {
+          const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
+          const discordAvatar = user.user_metadata?.avatar_url ?? null
+          await supabase.from('users').insert({
+            id: user.id,
+            email: user.email,
+            riot_gamename: discordName,
+            avatar_url: discordAvatar,
+          })
+          router.replace('/onboarding')
+        } else {
+          router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
+        }
+        return
+      }
+
+      // PKCE code 방식 시도
+      const code = new URLSearchParams(window.location.search).get('code')
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (error) {
+          router.replace('/login?error=' + encodeURIComponent(error.message))
+          return
+        }
+        const { data: { session } } = await supabase.auth.getSession()
+        if (!session) {
+          router.replace('/login?error=no_session_after_exchange')
+          return
+        }
+        const user = session.user
+        const { data: existing } = await supabase
+          .from('users')
+          .select('id, riot_puuid')
+          .eq('id', user.id)
+          .single()
+
+        if (!existing) {
+          const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
+          const discordAvatar = user.user_metadata?.avatar_url ?? null
+          await supabase.from('users').insert({
+            id: user.id,
+            email: user.email,
+            riot_gamename: discordName,
+            avatar_url: discordAvatar,
+          })
+          router.replace('/onboarding')
+        } else {
+          router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
+        }
+        return
+      }
+
+      router.replace('/login?error=no_token')
     }
 
     handle()
