@@ -17,6 +17,7 @@ export default function Navbar() {
   const [results, setResults] = useState<TeamResult[]>([])
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const fetchIdRef = useRef(0)
 
   const game = pathname.startsWith('/valorant') ? 'valorant' : pathname.startsWith('/lol') ? 'lol' : null
   const link = (path: string) => game ? `/${game}${path}` : path
@@ -24,17 +25,15 @@ export default function Navbar() {
   useEffect(() => {
     if (!search.trim()) { setResults([]); setOpen(false); return }
     setOpen(true)
-    let cancelled = false
-    const supabase = createClient()
-    supabase
+    const myId = ++fetchIdRef.current
+    createClient()
       .from('teams')
       .select('id, name, game_type, tier_avg')
       .ilike('name', `%${search.trim()}%`)
       .limit(6)
       .then(({ data }) => {
-        if (!cancelled) setResults(data ?? [])
+        if (fetchIdRef.current === myId) setResults(data ?? [])
       })
-    return () => { cancelled = true }
   }, [search])
 
   useEffect(() => {
