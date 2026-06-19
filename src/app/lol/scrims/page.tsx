@@ -9,17 +9,32 @@ function formatDate(dt: string | null) {
   return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
-export default async function LolScrimsPage() {
+export default async function LolScrimsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const { q = '' } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: posts } = await supabase
-    .from('scrim_posts')
-    .select('id, game_type, preferred_date, note, status, format, created_at, teams(id, name, tier_avg)')
-    .eq('status', 'open')
-    .eq('game_type', 'lol')
-    .order('created_at', { ascending: false })
+  let posts: any[] = []
+  if (q) {
+    const { data: matched } = await supabase.from('teams').select('id').ilike('name', `%${q}%`)
+    const teamIds = matched?.map((t: any) => t.id) ?? []
+    if (teamIds.length > 0) {
+      const { data } = await supabase
+        .from('scrim_posts')
+        .select('id, game_type, preferred_date, note, status, format, created_at, teams(id, name, tier_avg)')
+        .eq('status', 'open').eq('game_type', 'lol').in('team_id', teamIds)
+        .order('created_at', { ascending: false })
+      posts = data ?? []
+    }
+  } else {
+    const { data } = await supabase
+      .from('scrim_posts')
+      .select('id, game_type, preferred_date, note, status, format, created_at, teams(id, name, tier_avg)')
+      .eq('status', 'open').eq('game_type', 'lol')
+      .order('created_at', { ascending: false })
+    posts = data ?? []
+  }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -39,14 +54,23 @@ export default async function LolScrimsPage() {
           </a>
         </div>
 
-        {!posts || posts.length === 0 ? (
+        {posts.length === 0 ? (
           <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded">
             <p className="text-3xl mb-4">🎮</p>
-            <p className="font-semibold">현재 모집 중인 LoL 스크림이 없어요</p>
-            <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
-            <a href="/scrims/post" className="mt-6 inline-block bg-[#c89b3c]/20 hover:bg-[#c89b3c]/30 text-[#c89b3c] text-sm px-5 py-2.5 rounded transition">
-              + 스크림 올리기
-            </a>
+            {q ? (
+              <>
+                <p className="font-semibold">"{q}" 검색 결과가 없어요</p>
+                <p className="text-sm mt-1">다른 팀 이름으로 검색해보세요</p>
+              </>
+            ) : (
+              <>
+                <p className="font-semibold">현재 모집 중인 LoL 스크림이 없어요</p>
+                <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
+                <a href="/scrims/post" className="mt-6 inline-block bg-[#c89b3c]/20 hover:bg-[#c89b3c]/30 text-[#c89b3c] text-sm px-5 py-2.5 rounded transition">
+                  + 스크림 올리기
+                </a>
+              </>
+            )}
           </div>
         ) : (
           <div className="flex flex-col gap-3">
