@@ -26,14 +26,41 @@ const games = [
   },
 ]
 
+function StatCard({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="bg-white/3 border border-white/5 rounded p-5 text-center">
+      <p className="text-white font-black text-3xl mb-1">{value}</p>
+      <p className="text-slate-500 text-[10px] uppercase tracking-widest">{label}</p>
+    </div>
+  )
+}
+
 export default function HomePage() {
   const [loggedIn, setLoggedIn] = useState(false)
+  const [stats, setStats] = useState({ users: 0, teams: 0, matches: 0, manner: 100 })
 
   useEffect(() => {
-    createClient().auth.getSession().then(({ data }) => {
+    const supabase = createClient()
+
+    supabase.auth.getSession().then(({ data }) => {
       setLoggedIn(!!data.session)
     })
+
+    Promise.all([
+      supabase.from('users').select('id', { count: 'exact', head: true }),
+      supabase.from('teams').select('id', { count: 'exact', head: true }),
+      supabase.from('matches').select('id', { count: 'exact', head: true }).eq('status', 'completed'),
+      supabase.from('scrim_posts').select('id', { count: 'exact', head: true }).eq('status', 'open'),
+    ]).then(([users, teams, matches, scrims]) => {
+      setStats({
+        users: users.count ?? 0,
+        teams: teams.count ?? 0,
+        matches: matches.count ?? 0,
+        manner: scrims.count ?? 0,
+      })
+    })
   }, [])
+
   return (
     <div className="min-h-screen bg-[#07070b] flex flex-col relative overflow-hidden">
 
@@ -59,26 +86,51 @@ export default function HomePage() {
       </nav>
 
       {/* 히어로 */}
-      <section className="relative z-10 flex flex-col items-center justify-center text-center px-6 pt-48 pb-24">
-        <div className="flex items-center gap-2 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-          <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Korea's First Scrim Platform</p>
+      <section className="relative z-10 flex items-center justify-center pt-48 pb-24 px-6 gap-8">
+
+        {/* 왼쪽 스탯 */}
+        <div className="hidden lg:flex flex-col gap-4 w-44 shrink-0">
+          <StatCard label="가입 유저" value={stats.users} />
+          <StatCard label="완료된 스크림" value={stats.matches} />
         </div>
-        <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
-          스크림 · 내전<br />
-          <span className="bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">매칭 플랫폼</span>
-        </h1>
-        <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
-          실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
-        </p>
-        <div className="flex gap-3">
-          <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-            {loggedIn ? '홈으로' : '로그인 / 회원가입'}
-          </a>
-          <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
-            스크림 둘러보기
-          </a>
+
+        {/* 센터 히어로 */}
+        <div className="flex flex-col items-center text-center flex-1 max-w-2xl">
+          <div className="flex items-center gap-2 mb-6">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+            <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Korea's First Scrim Platform</p>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
+            스크림 · 내전<br />
+            <span className="bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">매칭 플랫폼</span>
+          </h1>
+          <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
+            실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
+          </p>
+          <div className="flex gap-3">
+            <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
+              {loggedIn ? '홈으로' : '로그인 / 회원가입'}
+            </a>
+            <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
+              스크림 둘러보기
+            </a>
+          </div>
+
+          {/* 모바일 전용 스탯 (lg 미만) */}
+          <div className="flex lg:hidden gap-3 mt-10 w-full justify-center">
+            <StatCard label="가입 유저" value={stats.users} />
+            <StatCard label="등록 팀" value={stats.teams} />
+            <StatCard label="완료된 스크림" value={stats.matches} />
+            <StatCard label="모집 중" value={stats.manner} />
+          </div>
         </div>
+
+        {/* 오른쪽 스탯 */}
+        <div className="hidden lg:flex flex-col gap-4 w-44 shrink-0">
+          <StatCard label="등록 팀" value={stats.teams} />
+          <StatCard label="모집 중" value={stats.manner} />
+        </div>
+
       </section>
 
       {/* 게임 선택 */}
@@ -92,12 +144,10 @@ export default function HomePage() {
               style={{ background: game.bg }}
               className="group relative flex items-center gap-6 rounded p-7 border border-white/5 hover:border-white/10 cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden"
             >
-              {/* 글로우 */}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                 style={{ background: `radial-gradient(circle at 30% 50%, ${game.glow} 0%, transparent 70%)` }}
               />
-
               <div className="relative z-10 flex-1">
                 <p className="font-black text-3xl tracking-widest mb-1" style={{ color: game.color }}>{game.name}</p>
                 <p className="text-slate-500 text-xs mb-4">{game.desc}</p>
@@ -115,22 +165,6 @@ export default function HomePage() {
 
       {/* Discord 배너 */}
       <DiscordBanner />
-
-      {/* 통계 바 */}
-      <section className="relative z-10 border-t border-white/5 py-12 px-6">
-        <div className="max-w-4xl mx-auto grid grid-cols-3 gap-6 text-center">
-          {[
-            { label: '등록 팀', value: '—' },
-            { label: '진행된 스크림', value: '—' },
-            { label: '평균 매너점수', value: '100' },
-          ].map((s) => (
-            <div key={s.label}>
-              <p className="text-white font-black text-3xl mb-1">{s.value}</p>
-              <p className="text-slate-600 text-xs uppercase tracking-widest">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
     </div>
   )
