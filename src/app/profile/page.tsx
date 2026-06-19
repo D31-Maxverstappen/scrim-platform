@@ -24,7 +24,7 @@ export default async function ProfilePage() {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('*')
+    .select('id, avatar_url, val_gamename, val_tagline, val_tier, lol_gamename, lol_tagline, lol_tier, riot_gamename, riot_tagline, tier, game_type, country')
     .eq('id', user.id)
     .single()
 

@@ -26,7 +26,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   if (!match) notFound()
 
   const [{ data: maps }, { data: stats }, { data: team1Members }, { data: team2Members }] = await Promise.all([
-    supabase.from('match_maps').select('*').eq('match_id', id).order('map_number'),
+    supabase.from('match_maps').select('id, match_id, map_number, map_name, team1_score, team2_score, round_results').eq('match_id', id).order('map_number'),
     supabase.from('match_player_stats')
       .select('*, users(riot_gamename, val_gamename, lol_gamename, avatar_url, country)')
       .eq('match_id', id),

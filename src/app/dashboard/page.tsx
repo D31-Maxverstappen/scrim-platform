@@ -40,14 +40,14 @@ export default async function DashboardPage() {
     { data: recentScrims },
     { data: allApplications },
   ] = await Promise.all([
-    supabase.from('users').select('*').eq('id', user.id).single(),
+    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, lol_gamename, lol_tagline, lol_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, game_type, tier_avg)').eq('user_id', user.id).single(),
-    supabase.from('users').select('*', { count: 'exact', head: true }),
-    supabase.from('teams').select('*', { count: 'exact', head: true }),
+    supabase.from('users').select('id', { count: 'exact', head: true }),
+    supabase.from('teams').select('id', { count: 'exact', head: true }),
     supabase.from('teams').select('id, name, game_type, tier_avg, wins, losses').limit(50),
     supabase.from('scrim_posts').select('team_id'),
     supabase.from('scrim_posts').select('id, game_type, preferred_date, note, status, teams(name, tier_avg)').eq('status', 'open').order('created_at', { ascending: false }).limit(8),
-    supabase.from('scrim_applications').select('id, status, match_id, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }),
+    supabase.from('scrim_applications').select('id, status, match_id, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }).limit(30),
   ])
 
 

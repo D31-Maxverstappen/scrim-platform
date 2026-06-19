@@ -24,7 +24,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: team } = await supabase.from('teams').select('*').eq('id', id).single()
+  const { data: team } = await supabase.from('teams').select('id, name, game_type, tier_avg, captain_id, wins, losses').eq('id', id).single()
   if (!team) notFound()
 
   const [{ data: members }, { data: pendingRequest }] = await Promise.all([
