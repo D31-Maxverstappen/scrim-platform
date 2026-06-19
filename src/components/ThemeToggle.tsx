@@ -22,7 +22,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="w-8 h-8  bg-white/5 hover:bg-white/10 flex items-center justify-center transition text-slate-400 hover:text-white"
+      className="flex flex-col items-center gap-0.5 bg-white/5 hover:bg-white/10 px-2 py-1.5 transition text-slate-400 hover:text-white"
       title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
     >
       {theme === 'dark' ? (
@@ -35,6 +35,9 @@ export default function ThemeToggle() {
           <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
         </svg>
       )}
+      <span className="text-[9px] font-bold tracking-widest">
+        {theme === 'dark' ? 'DAY' : 'NIGHT'}
+      </span>
     </button>
   )
 }
