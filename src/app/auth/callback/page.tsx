@@ -33,8 +33,12 @@ export default function AuthCallbackPage() {
       }
 
       const user = session.user
+      const discordIdentity = user.identities?.find((i: any) => i.provider === 'discord')
       const discordId = user.user_metadata?.provider_id
-        ?? user.identities?.find((i: any) => i.provider === 'discord')?.identity_data?.sub
+        ?? user.user_metadata?.sub
+        ?? discordIdentity?.identity_data?.sub
+        ?? discordIdentity?.id
+        ?? null
       const providerToken = hashParams.current.providerToken ?? session.provider_token
 
       const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
