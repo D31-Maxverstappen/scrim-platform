@@ -113,18 +113,7 @@ client.once('ready', async () => {
   await postVerifyMessage()
 })
 
-// ── 서버 입장 시 D31 Member 역할 부여 ──
-client.on('guildMemberAdd', async (member) => {
-  if (member.guild.id !== GUILD_ID) return
-  if (!memberRoleId) return
-
-  try {
-    await member.roles.add(memberRoleId)
-    console.log(`[D31 Bot] D31 Member 역할 부여: ${member.user.tag}`)
-  } catch (e) {
-    console.error(`[D31 Bot] 역할 부여 실패 (${member.user.tag}):`, e.message)
-  }
-})
+// 입장 시 역할 자동 부여 없음 — ✅ 인증 후 부여
 
 // ── ✅ 반응 시 인증 역할 부여 ──
 client.on('messageReactionAdd', async (reaction, user) => {
