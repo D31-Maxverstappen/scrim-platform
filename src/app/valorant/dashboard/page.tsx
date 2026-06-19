@@ -152,9 +152,9 @@ export default async function ValorantDashboardPage() {
 
             <ScrimList scrims={recentScrims ?? []} game={GAME} />
 
-            <div className="grid grid-cols-2 gap-4">
-              <ReceivedApplications initialApps={receivedApps} />
+            <ReceivedApplications initialApps={receivedApps} />
 
+            <div className="grid grid-cols-2 gap-4">
               {/* 최근 매치 */}
               <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5">
@@ -188,9 +188,9 @@ export default async function ValorantDashboardPage() {
                   </div>
                 )}
               </div>
-            </div>
 
-            <TeamRankings teams={teamsWithActivity} game={GAME} />
+              <TeamRankings teams={teamsWithActivity} game={GAME} />
+            </div>
           </main>
         </div>
       </div>

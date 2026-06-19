@@ -152,9 +152,9 @@ export default async function LolDashboardPage() {
 
             <ScrimList scrims={recentScrims ?? []} game={GAME} />
 
-            <div className="grid grid-cols-2 gap-4">
-              <ReceivedApplications initialApps={receivedApps} />
+            <ReceivedApplications initialApps={receivedApps} />
 
+            <div className="grid grid-cols-2 gap-4">
               <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5">
                   <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
@@ -187,9 +187,9 @@ export default async function LolDashboardPage() {
                   </div>
                 )}
               </div>
-            </div>
 
-            <TeamRankings teams={teamsWithActivity} game={GAME} />
+              <TeamRankings teams={teamsWithActivity} game={GAME} />
+            </div>
           </main>
         </div>
       </div>
