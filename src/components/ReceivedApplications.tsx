@@ -5,6 +5,7 @@ import { useState } from 'react'
 type Application = {
   id: string
   status: string
+  match_id: string | null
   applying_team: { id: string; name: string; tier_avg: string | null; game_type: string }
   scrim_post: { id: string; preferred_date: string | null; note: string | null }
 }
@@ -15,8 +16,11 @@ const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'LoL' }
 export default function ReceivedApplications({ initialApps }: { initialApps: Application[] }) {
   const [apps, setApps] = useState(initialApps)
   const [loading, setLoading] = useState<string | null>(null)
-  const [accepting, setAccepting] = useState<string | null>(null) // appId currently choosing format
+  const [accepting, setAccepting] = useState<string | null>(null)
   const [format, setFormat] = useState<'BO3' | 'BO5'>('BO3')
+  const [matchLinks, setMatchLinks] = useState<Record<string, string>>(
+    () => Object.fromEntries(initialApps.filter((a) => a.match_id).map((a) => [a.id, a.match_id!]))
+  )
 
   const handleAcceptConfirm = async (appId: string) => {
     setLoading(appId + 'accept')
@@ -30,6 +34,8 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
     if (res.ok) {
       const data = await res.json()
       if (data.matchId) {
+        setMatchLinks((prev) => ({ ...prev, [appId]: data.matchId }))
+        setApps((prev) => prev.map((a) => a.id === appId ? { ...a, status: 'accepted' } : a))
         window.location.href = `/matches/${data.matchId}`
         return
       }
@@ -132,7 +138,15 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                     </>
                   )
                 ) : app.status === 'accepted' ? (
-                  <span className="text-[10px] font-bold text-green-400">수락됨</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-green-400">수락됨</span>
+                    {matchLinks[app.id] && (
+                      <a href={`/matches/${matchLinks[app.id]}`}
+                        className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition">
+                        매치 보기 →
+                      </a>
+                    )}
+                  </div>
                 ) : (
                   <span className="text-[10px] font-bold text-slate-600">거절됨</span>
                 )}

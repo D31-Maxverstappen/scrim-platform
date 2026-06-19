@@ -67,7 +67,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
           team1_score: 0,
           team2_score: 0,
         }))
-        await supabase.from('match_maps').insert(mapRows)
+        await Promise.all([
+          supabase.from('match_maps').insert(mapRows),
+          supabase.from('scrim_applications').update({ match_id: newMatch.id }).eq('id', appId),
+        ])
       }
 
       return NextResponse.json({ success: true, matchId: newMatch?.id })

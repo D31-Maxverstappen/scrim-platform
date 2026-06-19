@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     supabase.from('teams').select('id, name, game_type, tier_avg, wins, losses').limit(50),
     supabase.from('scrim_posts').select('team_id'),
     supabase.from('scrim_posts').select('id, game_type, preferred_date, note, status, teams(name, tier_avg)').eq('status', 'open').order('created_at', { ascending: false }).limit(8),
-    supabase.from('scrim_applications').select('id, status, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }),
+    supabase.from('scrim_applications').select('id, status, match_id, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }),
   ])
 
 
