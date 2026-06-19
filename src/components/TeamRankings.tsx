@@ -85,17 +85,18 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
             const winrate = total === 0 ? null : Math.round((team.wins / total) * 100)
 
             return (
-              <a key={team.id} href={`/teams/${team.id}`} className="grid grid-cols-12 gap-2 px-4 py-2.5 hover:bg-white/2 transition items-center">
+              <a key={team.id} href={`/teams/${team.id}`} className="grid grid-cols-12 gap-2 px-4 py-2.5 hover:bg-white/5 transition items-center group">
                 <span className={`col-span-1 text-xs font-black text-center ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-400' : 'text-slate-600'}`}>
                   {i + 1}
                 </span>
                 <span className="col-span-2 text-xs font-bold" style={{ color: gc }}>{GAME_LABEL[team.game_type]}</span>
-                <span className="col-span-6 text-white text-xs font-semibold truncate">{team.name}</span>
+                <span className="col-span-5 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{team.name}</span>
                 <span className="col-span-3 text-right text-slate-500 text-xs shrink-0">
                   {tab === 'tier' && (team.tier_avg ?? '—')}
                   {tab === 'winrate' && (winrate !== null ? `${winrate}%` : '—')}
                   {tab === 'activity' && `${team.scrim_count}회`}
                 </span>
+                <span className="col-span-1 text-right text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
               </a>
             )
           })}
