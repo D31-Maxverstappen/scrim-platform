@@ -4,28 +4,21 @@ import { useState, useTransition } from 'react'
 import { createTeamAction } from '@/app/actions'
 
 const GAMES = [
-  { value: 'valorant',  label: '발로란트' },
-  { value: 'lol',       label: '리그 오브 레전드' },
-  { value: 'overwatch', label: '오버워치 2' },
+  { value: 'valorant', label: '발로란트' },
+  { value: 'lol',      label: '리그 오브 레전드' },
 ]
-
-const TIERS_VAL = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
-const TIERS_LOL = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
-const TIERS_OW  = ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Master', 'Grandmaster', 'Top 500']
-
-function getTiers(game: string) {
-  if (game === 'lol') return TIERS_LOL
-  if (game === 'overwatch') return TIERS_OW
-  return TIERS_VAL
-}
 
 export default function CreateTeamPage() {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
+  const [name, setName] = useState('')
+
+  const nameValid = name.length >= 3 && name.length <= 10
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!nameValid) { setError('팀 이름은 3~10글자여야 해요.'); return }
     setError('')
     const formData = new FormData(e.currentTarget)
     formData.set('game_type', game)
@@ -45,32 +38,40 @@ export default function CreateTeamPage() {
           <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림을 시작하세요</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded p-6 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 p-6 flex flex-col gap-5">
 
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">팀 이름 *</label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-slate-300 text-sm font-semibold">팀 이름 *</label>
+              <span className={`text-xs ${name.length > 10 ? 'text-red-400' : name.length >= 3 ? 'text-[#00D2BE]' : 'text-slate-600'}`}>
+                {name.length} / 10
+              </span>
+            </div>
             <input
               name="name"
               type="text"
               required
-              maxLength={20}
-              placeholder="ex) Team D31"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={10}
+              placeholder="3~10글자"
+              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
+            {name.length > 0 && name.length < 3 && (
+              <p className="text-slate-600 text-xs mt-1">최소 3글자 이상 입력해주세요</p>
+            )}
           </div>
 
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {GAMES.map((g) => (
                 <button
                   key={g.value}
                   type="button"
                   onClick={() => setGame(g.value)}
-                  className={`py-2.5 rounded text-sm font-semibold transition ${
-                    game === g.value
-                      ? 'bg-[#00D2BE] text-white'
-                      : 'bg-white/5 text-slate-400 hover:bg-white/10'
+                  className={`py-2.5 text-sm font-semibold transition ${
+                    game === g.value ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
                   }`}
                 >
                   {g.label}
@@ -79,29 +80,16 @@ export default function CreateTeamPage() {
             </div>
           </div>
 
-          <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">팀 평균 티어</label>
-            <select
-              name="tier_avg"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
-            >
-              <option value="">선택 안 함</option>
-              {getTiers(game).map((t) => (
-                <option key={t} value={t}>{t}</option>
-              ))}
-            </select>
-          </div>
-
           {error && (
-            <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">
+            <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 px-4 py-3">
               {error}
             </p>
           )}
 
           <button
             type="submit"
-            disabled={isPending}
-            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded transition"
+            disabled={isPending || !nameValid}
+            className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 transition"
           >
             {isPending ? '만드는 중...' : '팀 만들기'}
           </button>
