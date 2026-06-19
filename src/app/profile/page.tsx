@@ -230,17 +230,8 @@ export default async function ProfilePage() {
 
         </div>
 
-        {/* 회원탈퇴 */}
-        <div className="border border-red-500/20 bg-red-500/5 rounded p-6 flex items-center justify-between">
-          <div>
-            <p className="text-white font-semibold text-sm">회원탈퇴</p>
-            <p className="text-slate-500 text-xs mt-0.5">계정과 모든 데이터가 영구적으로 삭제돼요</p>
-          </div>
-          <DeleteAccountButton />
-        </div>
-
         {/* 최근 스크림 */}
-        <div className="bg-[#111118] border border-white/5 rounded overflow-hidden">
+        <div className="bg-[#111118] border border-white/5 rounded overflow-hidden mb-6">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
             <h2 className="text-white font-bold text-sm">최근 스크림</h2>
             <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</a>
@@ -251,6 +242,15 @@ export default async function ProfilePage() {
             </svg>
             <p className="text-sm">아직 스크림 기록이 없어요</p>
           </div>
+        </div>
+
+        {/* 회원탈퇴 */}
+        <div className="border border-red-500/20 bg-red-500/5 rounded p-6 flex items-center justify-between">
+          <div>
+            <p className="text-white font-semibold text-sm">회원탈퇴</p>
+            <p className="text-slate-500 text-xs mt-0.5">계정과 모든 데이터가 영구적으로 삭제돼요</p>
+          </div>
+          <DeleteAccountButton />
         </div>
 
       </div>

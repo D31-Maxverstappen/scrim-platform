@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 export default async function LolTeamsPage() {
   const supabase = await createClient()
@@ -27,6 +28,7 @@ export default async function LolTeamsPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <RealtimeRefresher tables={["teams", "team_members"]} />
       <Navbar />
       <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
 

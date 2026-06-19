@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 function formatDate(dt: string | null) {
   if (!dt) return null
@@ -22,6 +23,7 @@ export default async function ValorantScrimsPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <RealtimeRefresher tables={["scrim_posts"]} />
       <Navbar />
       <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-8">

@@ -5,6 +5,7 @@ import MatchTabs from '@/components/MatchTabs'
 import RosterComparison from '@/components/RosterComparison'
 import MatchCancelButton from '@/components/MatchCancelButton'
 import MatchEndButton from '@/components/MatchEndButton'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
 
@@ -68,6 +69,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <RealtimeRefresher tables={["matches", "match_maps", "match_player_stats"]} />
       <Navbar />
       <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
 

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const TIER_ORDER = [
   'Challenger', 'Grandmaster', 'Master', 'Diamond', 'Emerald',
@@ -47,6 +48,7 @@ export default async function LeaderboardPage({ searchParams }: { searchParams: 
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <RealtimeRefresher tables={["users"]} />
       <Navbar />
       <div className="pt-28 max-w-3xl mx-auto px-6 py-8">
         <div className="mb-6">

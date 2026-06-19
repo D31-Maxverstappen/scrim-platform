@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import ScrimApplyButton from '@/components/ScrimApplyButton'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
@@ -59,6 +60,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <RealtimeRefresher tables={["scrim_posts", "scrim_applications"]} />
       <Navbar />
       <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
         <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-6">← 스크림 목록</a>

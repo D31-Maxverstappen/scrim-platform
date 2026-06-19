@@ -8,6 +8,7 @@ import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
 import ReceivedApplications from '@/components/ReceivedApplications'
 import DiscordBanner from '@/components/DiscordBanner'
+import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME = 'valorant'
 const GAME_COLOR = '#ff4655'
@@ -70,6 +71,7 @@ export default async function ValorantDashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#0d0d14]">
+      <RealtimeRefresher tables={["scrim_applications", "scrim_posts", "teams", "team_members", "matches"]} />
       <Navbar />
       <div className="pt-28 max-w-7xl mx-auto px-6 py-8">
 
