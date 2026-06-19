@@ -117,6 +117,15 @@ client.once('ready', async () => {
 
 // ── ✅ 반응 시 인증 역할 부여 ──
 client.on('messageReactionAdd', async (reaction, user) => {
+  try {
+    // Partial 객체 fetch
+    if (reaction.partial) await reaction.fetch()
+    if (user.partial) await user.fetch()
+  } catch (e) {
+    console.error('[D31 Bot] reaction fetch 실패:', e.message)
+    return
+  }
+
   if (user.bot) return
   if (reaction.message.channelId !== VERIFY_CHANNEL_ID) return
   if (reaction.emoji.name !== VERIFY_EMOJI) return
