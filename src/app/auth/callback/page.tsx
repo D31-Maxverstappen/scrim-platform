@@ -64,11 +64,19 @@ export default function AuthCallbackPage() {
 
       // Discord 서버 자동 참여
       if (providerToken && discordId) {
-        fetch('/api/discord/join', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessToken: providerToken }),
-        }).catch(() => {})
+        try {
+          const joinRes = await fetch('/api/discord/join', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accessToken: providerToken }),
+          })
+          const joinData = await joinRes.json()
+          console.log('[Discord Join]', joinRes.status, joinData)
+        } catch (e) {
+          console.error('[Discord Join Error]', e)
+        }
+      } else {
+        console.log('[Discord Join] skipped - providerToken:', !!providerToken, 'discordId:', !!discordId)
       }
 
       router.replace(!existing || !existing.riot_puuid ? '/onboarding' : '/dashboard')
