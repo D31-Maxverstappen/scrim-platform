@@ -113,24 +113,33 @@ export default function TeamChat({
         {messages.map((msg) => {
           const isMe = msg.user_id === currentUserId
           const u = Array.isArray(msg.users) ? msg.users[0] : msg.users
-          const name = u?.riot_gamename ?? '알 수 없음'
+          const name = isMe ? '나' : (u?.riot_gamename ?? '알 수 없음')
           const time = new Date(msg.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
 
           return (
-            <div key={msg.id} className={`flex items-end gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
-              <div className="w-7 h-7 shrink-0 rounded bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] text-xs font-black overflow-hidden">
+            <div key={msg.id} className={`flex items-start gap-3 ${isMe ? 'flex-row-reverse' : ''}`}>
+              {/* 아바타 */}
+              <div className="w-9 h-9 shrink-0 rounded-full overflow-hidden flex items-center justify-center text-sm font-black"
+                style={{ background: isMe ? '#00D2BE33' : '#ffffff11', color: isMe ? '#00D2BE' : '#94a3b8' }}>
                 {u?.avatar_url ? (
                   <img src={u.avatar_url} alt="" className="w-full h-full object-cover" />
                 ) : (
-                  name[0]?.toUpperCase() ?? '?'
+                  (u?.riot_gamename ?? '?')[0]?.toUpperCase()
                 )}
               </div>
-              <div className={`max-w-[65%] flex flex-col gap-0.5 ${isMe ? 'items-end' : 'items-start'}`}>
-                {!isMe && <p className="text-slate-500 text-[10px] px-1">{name}</p>}
-                <div className={`px-3 py-2 rounded text-sm leading-relaxed ${isMe ? 'bg-[#00D2BE]/20 text-[#00D2BE]' : 'bg-white/5 text-white'}`}>
+              {/* 말풍선 */}
+              <div className={`flex flex-col gap-1 max-w-[65%] ${isMe ? 'items-end' : 'items-start'}`}>
+                <div className={`flex items-baseline gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
+                  <span className={`text-xs font-bold ${isMe ? 'text-[#00D2BE]' : 'text-white'}`}>{name}</span>
+                  <span className="text-slate-600 text-[10px]">{time}</span>
+                </div>
+                <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                  isMe
+                    ? 'bg-[#00D2BE]/20 text-[#00D2BE] rounded-tr-sm'
+                    : 'bg-white/8 text-white rounded-tl-sm'
+                }`}>
                   {msg.content}
                 </div>
-                <p className="text-slate-700 text-[10px] px-1">{time}</p>
               </div>
             </div>
           )
