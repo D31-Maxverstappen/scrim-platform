@@ -32,7 +32,7 @@ export default function Navbar() {
         .limit(6)
       setResults(data ?? [])
       setOpen(true)
-    }, 200)
+    }, 0)
     return () => clearTimeout(timer)
   }, [search])
 
