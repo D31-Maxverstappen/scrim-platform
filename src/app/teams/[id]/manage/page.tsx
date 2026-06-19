@@ -56,7 +56,6 @@ export default function ManageTeamPage() {
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState('')
   const [editName, setEditName] = useState('')
-  const [editTier, setEditTier] = useState('')
   const [editSaving, setEditSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
@@ -72,7 +71,6 @@ export default function ManageTeamPage() {
     if (!t || t.captain_id !== user.id) { router.replace(`/teams/${teamId}`); return }
     setTeam(t)
     setEditName(t.name ?? '')
-    setEditTier(t.tier_avg ?? '')
 
     const { data: m } = await supabase
       .from('team_members')
@@ -129,7 +127,6 @@ export default function ManageTeamPage() {
     setEditSaving(true)
     await supabase.from('teams').update({
       name: editName.trim(),
-      tier_avg: editTier.trim() || null,
     }).eq('id', teamId)
     setEditSaving(false)
     setMsg('팀 정보를 저장했어요.')
@@ -176,15 +173,6 @@ export default function ManageTeamPage() {
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 className="w-full bg-white/5 border border-white/10  px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
-              />
-            </div>
-            <div>
-              <label className="text-slate-400 text-xs mb-1.5 block">평균 티어 <span className="text-slate-600">(예: Gold 2)</span></label>
-              <input
-                value={editTier}
-                onChange={(e) => setEditTier(e.target.value)}
-                placeholder="입력 안하면 표시 안됨"
-                className="w-full bg-white/5 border border-white/10  px-4 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
               />
             </div>
             <button
