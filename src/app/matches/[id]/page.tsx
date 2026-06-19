@@ -133,6 +133,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           team2={team2}
           maps={maps ?? []}
           stats={stats ?? []}
+          team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
+          team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
         />
 
       </div>

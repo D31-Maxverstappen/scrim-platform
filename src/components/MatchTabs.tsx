@@ -72,12 +72,41 @@ function StatHeader() {
   )
 }
 
-export default function MatchTabs({ match, team1, team2, maps, stats }: {
+const EMPTY_CELL = <span className="block h-5 bg-white/5 mx-auto w-10" />
+
+function EmptyStatRow({ member }: { member: any }) {
+  const u = member.users
+  const name = u?.val_gamename ?? u?.lol_gamename ?? u?.riot_gamename ?? '—'
+  return (
+    <div className="grid items-center px-4 py-2.5 border-b border-white/5"
+      style={{ gridTemplateColumns: '2fr 1fr 1fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr' }}>
+      <div className="flex items-center gap-2">
+        {u?.avatar_url
+          ? <img src={u.avatar_url} alt="" className="w-7 h-7 object-cover" />
+          : <div className="w-7 h-7 bg-[#1a1a2e] flex items-center justify-center text-xs font-black text-white/20">{name[0]}</div>
+        }
+        <div>
+          <div className="flex items-center gap-1">
+            <FlagImg code={u?.country} size={12} />
+            <span className="text-white text-xs font-semibold">{name}</span>
+          </div>
+        </div>
+      </div>
+      {Array.from({ length: 9 }).map((_, i) => (
+        <div key={i} className="flex justify-center">{EMPTY_CELL}</div>
+      ))}
+    </div>
+  )
+}
+
+export default function MatchTabs({ match, team1, team2, maps, stats, team1Members = [], team2Members = [] }: {
   match: any
   team1: any
   team2: any
   maps: any[]
   stats: any[]
+  team1Members?: any[]
+  team2Members?: any[]
 }) {
   const [tab, setTab] = useState('overview')
   const [mapTab, setMapTab] = useState('all')
@@ -155,39 +184,28 @@ export default function MatchTabs({ match, team1, team2, maps, stats }: {
 
       {/* 스탯 테이블 */}
       <div className="overflow-x-auto">
-        {team1Stats.length === 0 && team2Stats.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-slate-600">
-            <p className="text-sm">아직 스탯이 없어요</p>
-            <p className="text-xs mt-1 text-slate-700">매치 종료 후 스탯을 입력해주세요</p>
+        {/* 팀 1 */}
+        <div>
+          <div className="px-4 py-2 bg-white/2 border-b border-white/5">
+            <span className="text-white text-xs font-bold">{team1?.name}</span>
           </div>
-        ) : (
-          <>
-            {/* 팀 1 */}
-            {team1Stats.length > 0 && (
-              <div>
-                <div className="px-4 py-2 bg-white/2 border-b border-white/5">
-                  <span className="text-white text-xs font-bold">{team1?.name}</span>
-                </div>
-                <StatHeader />
-                {team1Stats.map((s: any) => (
-                  <StatRow key={s.id} stat={s} gameName={team1?.name} />
-                ))}
-              </div>
-            )}
-            {/* 팀 2 */}
-            {team2Stats.length > 0 && (
-              <div>
-                <div className="px-4 py-2 bg-white/2 border-b border-white/5 mt-2">
-                  <span className="text-white text-xs font-bold">{team2?.name}</span>
-                </div>
-                <StatHeader />
-                {team2Stats.map((s: any) => (
-                  <StatRow key={s.id} stat={s} gameName={team2?.name} />
-                ))}
-              </div>
-            )}
-          </>
-        )}
+          <StatHeader />
+          {team1Stats.length > 0
+            ? team1Stats.map((s: any) => <StatRow key={s.id} stat={s} gameName={team1?.name} />)
+            : team1Members.map((m: any) => <EmptyStatRow key={m.user_id} member={m} />)
+          }
+        </div>
+        {/* 팀 2 */}
+        <div className="mt-2">
+          <div className="px-4 py-2 bg-white/2 border-b border-white/5">
+            <span className="text-white text-xs font-bold">{team2?.name}</span>
+          </div>
+          <StatHeader />
+          {team2Stats.length > 0
+            ? team2Stats.map((s: any) => <StatRow key={s.id} stat={s} gameName={team2?.name} />)
+            : team2Members.map((m: any) => <EmptyStatRow key={m.user_id} member={m} />)
+          }
+        </div>
       </div>
     </div>
   )
