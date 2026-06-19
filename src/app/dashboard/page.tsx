@@ -26,29 +26,27 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single()
-  const { data: teamMember } = await supabase
-    .from('team_members')
-    .select('role, teams(id, name, game_type, tier_avg)')
-    .eq('user_id', user.id)
-    .single()
+  // 모든 쿼리 병렬 실행
+  const [
+    { data: profile },
+    { data: teamMember },
+    { count: userCount },
+    { count: teamCount },
+    { data: allTeams },
+    { data: scrimCounts },
+    { data: recentScrims },
+  ] = await Promise.all([
+    supabase.from('users').select('*').eq('id', user.id).single(),
+    supabase.from('team_members').select('role, teams(id, name, game_type, tier_avg)').eq('user_id', user.id).single(),
+    supabase.from('users').select('*', { count: 'exact', head: true }),
+    supabase.from('teams').select('*', { count: 'exact', head: true }),
+    supabase.from('teams').select('id, name, game_type, tier_avg, wins, losses').limit(50),
+    supabase.from('scrim_posts').select('team_id'),
+    supabase.from('scrim_posts').select('id, game_type, preferred_date, note, status, teams(name, tier_avg)').eq('status', 'open').order('created_at', { ascending: false }).limit(8),
+  ])
+
   const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
-
   const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? '#6b7280'
-
-  // 통계
-  const { count: userCount } = await supabase.from('users').select('*', { count: 'exact', head: true })
-  const { count: teamCount } = await supabase.from('teams').select('*', { count: 'exact', head: true })
-
-  // 팀 랭킹용 데이터
-  const { data: allTeams } = await supabase
-    .from('teams')
-    .select('id, name, game_type, tier_avg, wins, losses')
-    .limit(50)
-
-  const { data: scrimCounts } = await supabase
-    .from('scrim_posts')
-    .select('team_id')
 
   const scrimCountMap: Record<string, number> = {}
   scrimCounts?.forEach((s: any) => {
@@ -59,13 +57,6 @@ export default async function DashboardPage() {
     ...t,
     scrim_count: scrimCountMap[t.id] ?? 0,
   }))
-
-  const { data: recentScrims } = await supabase
-    .from('scrim_posts')
-    .select('id, game_type, preferred_date, note, status, teams(name, tier_avg)')
-    .eq('status', 'open')
-    .order('created_at', { ascending: false })
-    .limit(8)
 
   return (
     <div className="min-h-screen bg-[#0d0d14]">

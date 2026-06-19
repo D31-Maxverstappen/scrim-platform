@@ -27,17 +27,16 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: team } = await supabase.from('teams').select('*').eq('id', id).single()
   if (!team) notFound()
 
-  const { data: members } = await supabase
-    .from('team_members')
-    .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
-    .eq('team_id', id)
+  const [{ data: members }, { data: pendingRequest }] = await Promise.all([
+    supabase.from('team_members')
+      .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
+      .eq('team_id', id),
+    supabase.from('team_join_requests').select('id')
+      .eq('team_id', id).eq('user_id', user.id).eq('status', 'pending').single(),
+  ])
 
   const isCaptain = team.captain_id === user.id
   const isMember = members?.some((m: any) => m.user_id === user.id)
-
-  const { data: pendingRequest } = await supabase
-    .from('team_join_requests').select('id')
-    .eq('team_id', id).eq('user_id', user.id).eq('status', 'pending').single()
 
   const players = members?.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
   const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
