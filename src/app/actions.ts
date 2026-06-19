@@ -117,6 +117,7 @@ export async function createScrimAction(formData: FormData) {
   const preferred_time = formData.get('preferred_time') as string
   const note = formData.get('note') as string
   const format = (formData.get('format') as string) || 'BO3'
+  const server = (formData.get('server') as string) || 'KR'
 
   const { data: myTeam } = await supabase
     .from('teams')
@@ -138,6 +139,7 @@ export async function createScrimAction(formData: FormData) {
       game_type,
       preferred_date: preferredDate,
       note: note || null,
+      server,
       status: 'open',
       format,
     })

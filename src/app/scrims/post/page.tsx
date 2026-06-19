@@ -13,6 +13,7 @@ export default function PostScrimPage() {
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
   const [format, setFormat] = useState<'BO3' | 'BO5'>('BO3')
+  const [server, setServer] = useState<'KR' | 'AS'>('KR')
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [hour, setHour] = useState('8')
@@ -34,6 +35,7 @@ export default function PostScrimPage() {
     formData.set('preferred_date', date)
     formData.set('preferred_time', time)
     formData.set('format', format)
+    formData.set('server', server)
 
     startTransition(async () => {
       const result = await createScrimAction(formData)
@@ -119,13 +121,17 @@ export default function PostScrimPage() {
             </div>
           </div>
 
-          {/* 한마디 */}
+          {/* 서버 */}
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">한마디</label>
-            <textarea name="note" rows={3}
-              placeholder="ex) Silver~Gold 팀 구해요. 디스코드 필수!"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition resize-none"
-            />
+            <label className="text-slate-300 text-sm font-semibold block mb-2">서버 *</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(['KR', 'AS'] as const).map((s) => (
+                <button key={s} type="button" onClick={() => setServer(s)}
+                  className={`py-2.5 rounded text-sm font-semibold transition ${server === s ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  {s === 'KR' ? 'KR (한국)' : 'AS (아시아)'}
+                </button>
+              ))}
+            </div>
           </div>
 
           {error && (

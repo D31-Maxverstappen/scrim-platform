@@ -33,7 +33,6 @@ export default function Navbar() {
 
       {/* 네비 링크 */}
       <div className="hidden md:flex items-center gap-1 text-sm">
-        <a href={link('/scrims')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">스크림</a>
         <a href={link('/scrims/post')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">스크림 올리기</a>
         <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 찾기</a>
         <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">리더보드</a>

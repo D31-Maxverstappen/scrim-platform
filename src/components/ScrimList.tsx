@@ -37,7 +37,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
           ))}
           {game && (
             <span className="px-4 py-3.5 text-xs font-bold text-white">
-              최근 스크림
+              스크림 게시판
             </span>
           )}
         </div>
@@ -55,7 +55,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
         <span className="col-span-4">팀 이름</span>
         <span className="col-span-2">평균 티어</span>
         <span className="col-span-3">희망 시간</span>
-        <span className="col-span-2">한마디</span>
+        <span className="col-span-2">서버</span>
         <span className="col-span-1 text-right">신청</span>
       </div>
 
@@ -83,7 +83,11 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
                 <span className="col-span-4 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
                 <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
                 <span className="col-span-3 text-slate-500 text-xs">{date}</span>
-                <span className="col-span-2 text-slate-600 text-xs truncate">{s.note ?? '—'}</span>
+                <span className="col-span-2 text-xs">
+                  <span className="px-1.5 py-0.5 bg-white/5 text-slate-400 text-[10px] font-bold">
+                    {s.server ?? 'KR'}
+                  </span>
+                </span>
                 <span className="col-span-1 text-right text-[#00D2BE] text-xs">→</span>
               </a>
             )
