@@ -33,8 +33,8 @@ function LoginForm() {
 
       <div className="relative z-10 w-full max-w-sm mx-6">
         <div className="text-center mb-8">
-          <a href="/" className="inline-block">
-            <Image src="/logo.png" alt="D31" width={120} height={120} className="object-contain mx-auto" />
+          <a href="/" className="flex justify-center">
+            <Image src="/logo.png" alt="D31" width={120} height={120} className="object-contain" />
           </a>
           <p className="text-slate-500 text-sm mt-2">Korea's First Scrim Platform</p>
         </div>
