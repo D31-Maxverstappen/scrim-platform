@@ -11,20 +11,13 @@ export default function AuthCallbackPage() {
     const handle = async () => {
       const supabase = createClient()
 
-      const code = new URLSearchParams(window.location.search).get('code')
+      // implicit flow: 클라이언트가 hash에서 자동으로 세션 설정
+      await new Promise(r => setTimeout(r, 500))
 
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (error) {
-          router.replace('/login?error=' + encodeURIComponent(error.message))
-          return
-        }
-      }
+      const { data: { session }, error } = await supabase.auth.getSession()
 
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
-
-      if (sessionError || !session) {
-        router.replace('/login?error=' + encodeURIComponent(sessionError?.message ?? 'no_session'))
+      if (error || !session) {
+        router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'no_session'))
         return
       }
 
