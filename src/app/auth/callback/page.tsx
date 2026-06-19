@@ -11,84 +11,37 @@ export default function AuthCallbackPage() {
     const handle = async () => {
       const supabase = createClient()
 
-      // hash fragment에서 토큰 파싱 (implicit flow)
-      const hash = window.location.hash.substring(1)
-      const params = new URLSearchParams(hash)
-      const accessToken = params.get('access_token')
-      const refreshToken = params.get('refresh_token')
+      // @supabase/ssr이 초기화 시 hash/code를 자동 처리함 - 잠깐 대기 후 세션 확인
+      await new Promise(r => setTimeout(r, 500))
 
-      if (accessToken && refreshToken) {
-        const { data: { session }, error } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
+      const { data: { session }, error } = await supabase.auth.getSession()
+
+      if (error || !session) {
+        router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'no_session'))
+        return
+      }
+
+      const user = session.user
+
+      const { data: existing } = await supabase
+        .from('users')
+        .select('id, riot_puuid')
+        .eq('id', user.id)
+        .single()
+
+      if (!existing) {
+        const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
+        const discordAvatar = user.user_metadata?.avatar_url ?? null
+        await supabase.from('users').insert({
+          id: user.id,
+          email: user.email,
+          riot_gamename: discordName,
+          avatar_url: discordAvatar,
         })
-
-        if (error || !session) {
-          router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'set_session_failed'))
-          return
-        }
-
-        const user = session.user
-
-        const { data: existing } = await supabase
-          .from('users')
-          .select('id, riot_puuid')
-          .eq('id', user.id)
-          .single()
-
-        if (!existing) {
-          const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
-          const discordAvatar = user.user_metadata?.avatar_url ?? null
-          await supabase.from('users').insert({
-            id: user.id,
-            email: user.email,
-            riot_gamename: discordName,
-            avatar_url: discordAvatar,
-          })
-          router.replace('/onboarding')
-        } else {
-          router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
-        }
-        return
+        router.replace('/onboarding')
+      } else {
+        router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
       }
-
-      // PKCE code 방식 시도
-      const code = new URLSearchParams(window.location.search).get('code')
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code)
-        if (error) {
-          router.replace('/login?error=' + encodeURIComponent(error.message))
-          return
-        }
-        const { data: { session } } = await supabase.auth.getSession()
-        if (!session) {
-          router.replace('/login?error=no_session_after_exchange')
-          return
-        }
-        const user = session.user
-        const { data: existing } = await supabase
-          .from('users')
-          .select('id, riot_puuid')
-          .eq('id', user.id)
-          .single()
-
-        if (!existing) {
-          const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
-          const discordAvatar = user.user_metadata?.avatar_url ?? null
-          await supabase.from('users').insert({
-            id: user.id,
-            email: user.email,
-            riot_gamename: discordName,
-            avatar_url: discordAvatar,
-          })
-          router.replace('/onboarding')
-        } else {
-          router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
-        }
-        return
-      }
-
-      router.replace('/login?error=no_token')
     }
 
     handle()
