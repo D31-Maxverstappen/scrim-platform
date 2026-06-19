@@ -36,7 +36,7 @@ export default function ThemeToggle() {
         </svg>
       )}
       <span className="text-[9px] font-bold tracking-widest">
-        {theme === 'dark' ? 'DAY' : 'NIGHT'}
+        {theme === 'dark' ? 'DARK' : 'LIGHT'}
       </span>
     </button>
   )
