@@ -23,17 +23,18 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!search.trim()) { setResults([]); setOpen(false); return }
-    const timer = setTimeout(async () => {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('teams')
-        .select('id, name, game_type, tier_avg')
-        .ilike('name', `%${search.trim()}%`)
-        .limit(6)
-      setResults(data ?? [])
-      setOpen(true)
-    }, 0)
-    return () => clearTimeout(timer)
+    setOpen(true)
+    let cancelled = false
+    const supabase = createClient()
+    supabase
+      .from('teams')
+      .select('id, name, game_type, tier_avg')
+      .ilike('name', `%${search.trim()}%`)
+      .limit(6)
+      .then(({ data }) => {
+        if (!cancelled) setResults(data ?? [])
+      })
+    return () => { cancelled = true }
   }, [search])
 
   useEffect(() => {
