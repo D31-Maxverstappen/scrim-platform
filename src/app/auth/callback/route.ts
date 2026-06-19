@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
   if (error || !data.session) {
-    return NextResponse.redirect(`${origin}/login`)
+    const msg = encodeURIComponent(error?.message ?? 'no session')
+    return NextResponse.redirect(`${origin}/login?error=${msg}`)
   }
 
   const session = data.session

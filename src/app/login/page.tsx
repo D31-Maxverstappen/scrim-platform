@@ -1,11 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
-export default function LoginPage() {
+function LoginForm() {
   const [loading, setLoading] = useState(false)
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
 
   const handleDiscordLogin = async () => {
     setLoading(true)
@@ -48,8 +51,12 @@ export default function LoginPage() {
             {loading ? '연결 중...' : 'Discord로 로그인 / 가입'}
           </button>
 
+          {error && (
+            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded px-3 py-2 text-center break-all">{decodeURIComponent(error)}</p>
+          )}
+
           <p className="text-center text-slate-600 text-xs">
-            Discord 계정이 없다면{' '}
+            Discord 계정이 없다면{' '}</p>
             <a href="https://discord.com/register" target="_blank" rel="noopener noreferrer" className="text-[#5865F2] hover:underline">
               여기서 만들 수 있어요
             </a>
@@ -61,5 +68,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
