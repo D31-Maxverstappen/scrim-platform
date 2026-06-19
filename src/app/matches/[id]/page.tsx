@@ -58,7 +58,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-20 max-w-5xl mx-auto px-6 py-8">
+      <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
 
         {/* ── 매치 헤더 ── */}
         <div className="border border-white/10 bg-[#13131f] mb-6 overflow-hidden">

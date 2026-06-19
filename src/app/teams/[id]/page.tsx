@@ -187,7 +187,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-20 max-w-5xl mx-auto px-6 py-8">
+      <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
 
         {/* ── 팀 헤더 (Liquipedia 스타일) ── */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-white/10">

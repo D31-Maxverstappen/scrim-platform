@@ -37,7 +37,7 @@ export default async function TeamsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navbar />
-      <div className="pt-20 max-w-5xl mx-auto px-6 py-8">
+      <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
 
         {/* 내 팀 */}
         <div className="flex items-center justify-between mb-4">
