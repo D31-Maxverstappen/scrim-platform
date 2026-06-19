@@ -30,8 +30,13 @@ export async function createTeamAction(formData: FormData) {
   if (!user) redirect('/login')
 
   const name = formData.get('name') as string
+  const abbreviation = (formData.get('abbreviation') as string)?.toUpperCase().trim()
   const game_type = formData.get('game_type') as string
   const tier_avg = formData.get('tier_avg') as string
+
+  if (!abbreviation || abbreviation.length < 2 || abbreviation.length > 5) {
+    return { error: '팀 약자는 2~5글자로 입력해주세요. (예: PRX, T1, GEN)' }
+  }
 
   // 이미 팀에 소속됐는지 확인 (1팀 제한)
   const { data: existingMembership } = await supabase
@@ -55,6 +60,7 @@ export async function createTeamAction(formData: FormData) {
     .from('teams')
     .insert({
       name,
+      abbreviation,
       game_type,
       captain_id: user.id,
       tier_avg: tier_avg || null,

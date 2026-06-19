@@ -56,6 +56,7 @@ export default function ManageTeamPage() {
   const [loading, setLoading] = useState(true)
   const [msg, setMsg] = useState('')
   const [editName, setEditName] = useState('')
+  const [editAbbr, setEditAbbr] = useState('')
   const [editSaving, setEditSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
@@ -71,6 +72,7 @@ export default function ManageTeamPage() {
     if (!t || t.captain_id !== user.id) { router.replace(`/teams/${teamId}`); return }
     setTeam(t)
     setEditName(t.name ?? '')
+    setEditAbbr(t.abbreviation ?? '')
 
     const { data: m } = await supabase
       .from('team_members')
@@ -124,9 +126,15 @@ export default function ManageTeamPage() {
 
   const handleSaveInfo = async () => {
     if (!editName.trim()) return
+    const abbr = editAbbr.toUpperCase().trim()
+    if (abbr && (abbr.length < 2 || abbr.length > 5)) {
+      setMsg('팀 약자는 2~5글자여야 해요.')
+      return
+    }
     setEditSaving(true)
     await supabase.from('teams').update({
       name: editName.trim(),
+      abbreviation: abbr || null,
     }).eq('id', teamId)
     setEditSaving(false)
     setMsg('팀 정보를 저장했어요.')
@@ -172,7 +180,17 @@ export default function ManageTeamPage() {
               <input
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
-                className="w-full bg-white/5 border border-white/10  px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                className="w-full bg-white/5 border border-white/10 px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+              />
+            </div>
+            <div>
+              <label className="text-slate-400 text-xs mb-1.5 block">팀 약자 <span className="text-slate-600">(Discord 채널명에 사용)</span></label>
+              <input
+                value={editAbbr}
+                onChange={(e) => setEditAbbr(e.target.value.toUpperCase())}
+                maxLength={5}
+                placeholder="예: PRX, T1, GEN"
+                className="w-full bg-white/5 border border-white/10 px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition font-bold tracking-widest"
               />
             </div>
             <button

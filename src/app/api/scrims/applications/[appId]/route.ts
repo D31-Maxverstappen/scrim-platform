@@ -70,8 +70,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
 
     // 양 팀 이름 + Discord ID 수집
     const [{ data: team1Data }, { data: team2Data }, { data: team1Members }, { data: team2Members }] = await Promise.all([
-      supabase.from('teams').select('name').eq('id', scrimPost.team_id).single(),
-      supabase.from('teams').select('name').eq('id', applyApp.applying_team_id).single(),
+      supabase.from('teams').select('name, abbreviation').eq('id', scrimPost.team_id).single(),
+      supabase.from('teams').select('name, abbreviation').eq('id', applyApp.applying_team_id).single(),
       supabase.from('team_members').select('users(discord_id)').eq('team_id', scrimPost.team_id),
       supabase.from('team_members').select('users(discord_id)').eq('team_id', applyApp.applying_team_id),
     ])
@@ -83,11 +83,11 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
       })
 
     const discordIds = [...extractIds(team1Members ?? []), ...extractIds(team2Members ?? [])]
-    const t1Name = team1Data?.name ?? '팀1'
-    const t2Name = team2Data?.name ?? '팀2'
+    const t1Label = team1Data?.abbreviation ?? team1Data?.name ?? '팀1'
+    const t2Label = team2Data?.abbreviation ?? team2Data?.name ?? '팀2'
 
-    // Discord 음성채널 생성
-    const channelId = await createScrimVoiceChannel(t1Name, t2Name, discordIds)
+    // Discord 음성채널 생성 (약자 사용)
+    const channelId = await createScrimVoiceChannel(t1Label, t2Label, discordIds)
     if (channelId) {
       await supabase.from('matches').update({ discord_channel_id: channelId }).eq('id', newMatch.id)
     }

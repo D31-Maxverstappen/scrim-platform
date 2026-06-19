@@ -7,8 +7,8 @@ const MEMBER_ALLOW = '3146752'
 const EVERYONE_DENY = '1024'
 
 export async function createScrimVoiceChannel(
-  team1Name: string,
-  team2Name: string,
+  team1Abbr: string,
+  team2Abbr: string,
   discordIds: string[],
 ): Promise<string | null> {
   const permissionOverwrites = [
@@ -30,7 +30,7 @@ export async function createScrimVoiceChannel(
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: `${team1Name} vs ${team2Name}`,
+      name: `${team1Abbr} vs ${team2Abbr}`,
       type: 2, // GUILD_VOICE
       permission_overwrites: permissionOverwrites,
     }),

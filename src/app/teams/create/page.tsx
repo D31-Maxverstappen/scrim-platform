@@ -13,12 +13,15 @@ export default function CreateTeamPage() {
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
   const [name, setName] = useState('')
+  const [abbr, setAbbr] = useState('')
 
   const nameValid = name.length >= 3 && name.length <= 10
+  const abbrValid = abbr.length >= 2 && abbr.length <= 5
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!nameValid) { setError('팀 이름은 3~10글자여야 해요.'); return }
+    if (!abbrValid) { setError('팀 약자는 2~5글자여야 해요. (예: PRX, T1, GEN)'); return }
     setError('')
     const formData = new FormData(e.currentTarget)
     formData.set('game_type', game)
@@ -54,12 +57,32 @@ export default function CreateTeamPage() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={10}
-              placeholder="3~10글자"
+              placeholder="팀 풀네임 (3~10글자)"
               className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
             {name.length > 0 && name.length < 3 && (
               <p className="text-slate-600 text-xs mt-1">최소 3글자 이상 입력해주세요</p>
             )}
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <label className="text-slate-300 text-sm font-semibold">팀 약자 *</label>
+              <span className={`text-xs ${abbr.length > 5 ? 'text-red-400' : abbrValid ? 'text-[#00D2BE]' : 'text-slate-600'}`}>
+                {abbr.length} / 5
+              </span>
+            </div>
+            <input
+              name="abbreviation"
+              type="text"
+              required
+              value={abbr}
+              onChange={(e) => setAbbr(e.target.value.toUpperCase())}
+              maxLength={5}
+              placeholder="예: PRX, T1, GEN"
+              className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition font-bold tracking-widest"
+            />
+            <p className="text-slate-600 text-xs mt-1">Discord 스크림 채널명에 사용돼요</p>
           </div>
 
           <div>
@@ -88,7 +111,7 @@ export default function CreateTeamPage() {
 
           <button
             type="submit"
-            disabled={isPending || !nameValid}
+            disabled={isPending || !nameValid || !abbrValid}
             className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 transition"
           >
             {isPending ? '만드는 중...' : '팀 만들기'}
