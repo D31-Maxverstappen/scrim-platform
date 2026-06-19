@@ -56,7 +56,7 @@ function LoginForm() {
           )}
 
           <p className="text-center text-slate-600 text-xs">
-            Discord 계정이 없다면{' '}</p>
+            Discord 계정이 없다면{' '}
             <a href="https://discord.com/register" target="_blank" rel="noopener noreferrer" className="text-[#5865F2] hover:underline">
               여기서 만들 수 있어요
             </a>
