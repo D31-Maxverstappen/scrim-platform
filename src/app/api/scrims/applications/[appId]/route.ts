@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { createScrimVoiceChannel } from '@/lib/discord'
+import { createScrimVoiceChannels } from '@/lib/discord'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
   const { appId } = await params
@@ -83,14 +83,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
         return u?.discord_id ? [u.discord_id] : []
       })
 
-    const discordIds = [...extractIds(team1Members ?? []), ...extractIds(team2Members ?? [])]
+    const team1Ids = extractIds(team1Members ?? [])
+    const team2Ids = extractIds(team2Members ?? [])
     const t1Label = team1Data?.abbreviation ?? team1Data?.name ?? '팀1'
     const t2Label = team2Data?.abbreviation ?? team2Data?.name ?? '팀2'
 
-    // Discord 음성채널 생성 (약자 사용)
-    const channelId = await createScrimVoiceChannel(t1Label, t2Label, discordIds)
-    if (channelId) {
-      await supabase.from('matches').update({ discord_channel_id: channelId }).eq('id', newMatch.id)
+    // 팀별 Discord 음성채널 각각 생성
+    const { team1ChannelId, team2ChannelId } = await createScrimVoiceChannels(t1Label, t2Label, team1Ids, team2Ids)
+    const channelStr = [team1ChannelId, team2ChannelId].filter(Boolean).join(',')
+    if (channelStr) {
+      await supabase.from('matches').update({ discord_channel_id: channelStr }).eq('id', newMatch.id)
     }
 
     return NextResponse.json({ success: true, matchId: newMatch.id })

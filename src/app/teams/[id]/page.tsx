@@ -28,13 +28,24 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: team } = await supabase.from('teams').select('id, name, game_type, tier_avg, captain_id, wins, losses').eq('id', id).single()
   if (!team) notFound()
 
-  const [{ data: members }, { data: pendingRequest }] = await Promise.all([
+  const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }] = await Promise.all([
     supabase.from('team_members')
       .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
       .eq('team_id', id),
     supabase.from('team_join_requests').select('id')
       .eq('team_id', id).eq('user_id', user.id).eq('status', 'pending').single(),
+    supabase.from('matches')
+      .select('id, status, format, match_date, winner_id, team1_id, team2_id, team2:teams!team2_id(id, name)')
+      .eq('team1_id', id).order('match_date', { ascending: false }).limit(20),
+    supabase.from('matches')
+      .select('id, status, format, match_date, winner_id, team1_id, team2_id, team1:teams!team1_id(id, name)')
+      .eq('team2_id', id).order('match_date', { ascending: false }).limit(20),
   ])
+
+  const allMatches = [
+    ...(matches1 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2, isteam1: true })),
+    ...(matches2 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1, isteam1: false })),
+  ].sort((a, b) => new Date(b.match_date ?? 0).getTime() - new Date(a.match_date ?? 0).getTime())
 
   const isCaptain = team.captain_id === user.id
   const isMember = members?.some((m: any) => m.user_id === user.id)
@@ -175,13 +186,58 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <div className="px-4 py-2.5 border-b border-white/5">
         <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">최근 매치</p>
       </div>
-      <div className="flex flex-col items-center justify-center py-16 text-slate-600 gap-2">
-        <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
-        </svg>
-        <p className="text-sm">아직 매치 기록이 없어요</p>
-        <p className="text-xs text-slate-700">매치 결과 입력 시스템 준비 중</p>
-      </div>
+      {allMatches.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-slate-600 gap-2">
+          <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
+          </svg>
+          <p className="text-sm">아직 매치 기록이 없어요</p>
+        </div>
+      ) : (
+        <div className="divide-y divide-white/5">
+          {allMatches.map((m: any) => {
+            const isWin = m.winner_id === id
+            const isDraw = m.status === 'completed' && !m.winner_id
+            const isLoss = m.status === 'completed' && m.winner_id && m.winner_id !== id
+            const isOngoing = m.status === 'ongoing'
+            const isScheduled = m.status === 'scheduled'
+            const date = m.match_date
+              ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+              : '날짜 미정'
+            return (
+              <a key={m.id} href={`/matches/${m.id}`}
+                className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/3 transition group">
+                {/* 결과 배지 */}
+                <div className={`w-8 h-8 shrink-0 flex items-center justify-center text-xs font-black rounded
+                  ${isWin ? 'bg-[#00D2BE]/20 text-[#00D2BE]' :
+                    isLoss ? 'bg-red-500/20 text-red-400' :
+                    isDraw ? 'bg-slate-500/20 text-slate-400' :
+                    isOngoing ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-white/5 text-slate-600'}`}>
+                  {isWin ? 'W' : isLoss ? 'L' : isDraw ? 'D' : isOngoing ? '●' : '—'}
+                </div>
+                {/* 상대 팀 */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-sm font-semibold truncate group-hover:text-[#00D2BE] transition">
+                    vs {m.opponent?.name ?? '?'}
+                  </p>
+                  <p className="text-slate-600 text-xs">{date} · {m.format ?? 'BO3'}</p>
+                </div>
+                {/* 상태 */}
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0
+                  ${isWin ? 'bg-[#00D2BE]/10 text-[#00D2BE]' :
+                    isLoss ? 'bg-red-500/10 text-red-400' :
+                    isDraw ? 'bg-slate-500/10 text-slate-400' :
+                    isOngoing ? 'bg-yellow-500/10 text-yellow-400' :
+                    'bg-white/5 text-slate-500'}`}>
+                  {isWin ? '승' : isLoss ? '패' : isDraw ? '무' : isOngoing ? '진행 중' : '예정'}
+                </span>
+                <span className="text-slate-700 text-xs group-hover:text-slate-500 transition">→</span>
+              </a>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 

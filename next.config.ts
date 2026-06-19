@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'opitkttpjlxmdmqfvuew.supabase.co' },
     ],
   },
+  experimental: {
+    staleTimes: { dynamic: 0, static: 30 },
+  },
 };
 
 export default nextConfig;

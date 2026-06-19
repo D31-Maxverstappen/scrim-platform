@@ -41,7 +41,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }).eq('id', id)
 
   if (match.discord_channel_id) {
-    await deleteDiscordChannel(match.discord_channel_id)
+    await Promise.all(
+      match.discord_channel_id.split(',').filter(Boolean).map((cid: string) => deleteDiscordChannel(cid))
+    )
     await supabase.from('matches').update({ discord_channel_id: null }).eq('id', id)
   }
 
@@ -62,7 +64,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   // Discord 채널 먼저 삭제
   if (match.discord_channel_id) {
-    await deleteDiscordChannel(match.discord_channel_id)
+    await Promise.all(
+      match.discord_channel_id.split(',').filter(Boolean).map((cid: string) => deleteDiscordChannel(cid))
+    )
   }
 
   await supabase.from('match_player_stats').delete().eq('match_id', id)
