@@ -34,10 +34,11 @@ const TABS = [
   { key: 'activity', label: '스크림 활동' },
 ]
 
-export default function TeamRankings({ teams }: { teams: Team[] }) {
+export default function TeamRankings({ teams, game }: { teams: Team[]; game?: string }) {
   const [tab, setTab] = useState('tier')
 
-  const sorted = [...teams].sort((a, b) => {
+  const filtered = game ? teams.filter((t) => t.game_type === game) : teams
+  const sorted = [...filtered].sort((a, b) => {
     if (tab === 'tier') return tierScore(a.tier_avg) - tierScore(b.tier_avg)
     if (tab === 'winrate') {
       const aTotal = a.wins + a.losses

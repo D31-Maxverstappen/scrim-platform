@@ -11,10 +11,12 @@ const TABS = [
   { key: 'lol', label: 'League of Legends' },
 ]
 
-export default function ScrimList({ scrims }: { scrims: any[] }) {
-  const [tab, setTab] = useState('valorant')
+export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
+  const [tab, setTab] = useState(game ?? 'valorant')
 
-  const filtered = scrims.filter((s) => s.game_type === tab)
+  const filtered = scrims.filter((s) => s.game_type === (game ?? tab))
+  const gameColor = game === 'lol' ? '#c89b3c' : game === 'valorant' ? '#ff4655' : '#00D2BE'
+  const allLink = game ? `/${game}/scrims` : '/scrims'
 
   return (
     <div className="bg-[#13131f] border border-white/5 overflow-hidden">
@@ -22,7 +24,7 @@ export default function ScrimList({ scrims }: { scrims: any[] }) {
       {/* 탭 헤더 */}
       <div className="flex items-center justify-between px-4 border-b border-white/10">
         <div className="flex">
-          {TABS.map((t) => (
+          {!game && TABS.map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
@@ -33,13 +35,18 @@ export default function ScrimList({ scrims }: { scrims: any[] }) {
               {t.label}
             </button>
           ))}
+          {game && (
+            <span className="px-4 py-3.5 text-xs font-bold text-white">
+              최근 스크림
+            </span>
+          )}
         </div>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-xs text-green-400">
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
             Live
           </span>
-          <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</a>
+          <a href={allLink} className="text-xs hover:underline" style={{ color: gameColor }}>전체 보기 →</a>
         </div>
       </div>
 
