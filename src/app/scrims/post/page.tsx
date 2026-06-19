@@ -13,7 +13,7 @@ export default function PostScrimPage() {
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
 
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
   const [hour, setHour] = useState('8')
   const [minute, setMinute] = useState('00')
   const [ampm, setAmpm] = useState<'오전' | '오후'>('오후')
