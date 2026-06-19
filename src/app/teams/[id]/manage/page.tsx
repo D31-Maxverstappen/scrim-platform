@@ -106,13 +106,13 @@ export default function ManageTeamPage() {
   }
 
   const handleIglToggle = async (userId: string, currentIsIgl: boolean) => {
-    // 기존 IGL 해제 후 새 IGL 지정
     if (!currentIsIgl) {
       await supabase.from('team_members').update({ is_igl: false }).eq('team_id', teamId)
+      setMembers((prev) => prev.map((m) => ({ ...m, is_igl: false })))
     }
     await supabase.from('team_members').update({ is_igl: !currentIsIgl }).eq('team_id', teamId).eq('user_id', userId)
+    setMembers((prev) => prev.map((m) => m.user_id === userId ? { ...m, is_igl: !currentIsIgl } : m))
     setMsg(!currentIsIgl ? 'IGL을 지정했어요.' : 'IGL을 해제했어요.')
-    load()
   }
 
   const handleKick = async (userId: string) => {
