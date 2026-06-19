@@ -26,7 +26,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: team } = await supabase.from('teams').select('id, name, game_type, tier_avg, captain_id, wins, losses').eq('id', id).single()
+  const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses').eq('id', id).single()
   if (!team) notFound()
 
   const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }] = await Promise.all([
@@ -260,7 +260,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           <div className="flex-1 min-w-0">
             <div className="flex items-baseline gap-3 flex-wrap">
               <h1 className="text-white font-black text-3xl">{team.name}</h1>
-              <span className="text-slate-400 font-bold text-lg">{team.name.slice(0, 3).toUpperCase()}</span>
+              {team.abbreviation && (
+                <span className="text-slate-400 font-bold text-lg">{team.abbreviation}</span>
+              )}
             </div>
             <div className="flex items-center gap-2 mt-2">
               <span className="text-sm font-bold" style={{ color: gameColor }}>{GAME_LABEL[team.game_type] ?? team.game_type}</span>
