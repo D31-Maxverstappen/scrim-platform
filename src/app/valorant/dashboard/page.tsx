@@ -137,20 +137,20 @@ export default async function ValorantDashboardPage() {
 
           {/* 메인 콘텐츠 */}
           <main className="flex-1 flex flex-col gap-4 min-w-0">
-            <div className="grid grid-cols-3 gap-3">
+            <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden flex divide-x divide-white/5">
               {[
                 { label: '가입 유저 수', value: userCount ?? '—' },
                 { label: '발로란트 팀', value: teamCount ?? '—' },
                 { label: '평균 매너점수', value: '100' },
               ].map((s) => (
-                <div key={s.label} className="bg-[#13131f] border border-white/5 rounded p-4">
+                <div key={s.label} className="flex-1 p-4">
                   <p className="text-slate-500 text-xs mb-1">{s.label}</p>
                   <p className="text-white text-xl font-black">{s.value}</p>
                 </div>
               ))}
             </div>
 
-            {team && <ReceivedApplications initialApps={receivedApps} />}
+            <ReceivedApplications initialApps={receivedApps} />
 
             <ScrimList scrims={recentScrims ?? []} game={GAME} />
 

@@ -28,7 +28,7 @@ const games = [
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="bg-white/3 border border-white/5 rounded p-5 text-center">
+    <div className="px-4 py-7 text-center border-b border-white/5 last:border-b-0">
       <p className="text-white font-black text-3xl mb-1">{value}</p>
       <p className="text-slate-500 text-[10px] uppercase tracking-widest">{label}</p>
     </div>
@@ -86,10 +86,10 @@ export default function HomePage() {
       </nav>
 
       {/* 히어로 */}
-      <section className="relative z-10 flex items-center justify-center pt-48 pb-24 px-6 gap-8">
+      <section className="relative z-10 flex items-center justify-center pt-48 pb-24 px-6 gap-4">
 
         {/* 왼쪽 스탯 */}
-        <div className="hidden lg:flex flex-col gap-4 w-44 shrink-0">
+        <div className="hidden lg:flex flex-col w-36 shrink-0 bg-white/3 border border-white/5 rounded overflow-hidden">
           <StatCard label="가입 유저" value={stats.users} />
           <StatCard label="완료된 스크림" value={stats.matches} />
         </div>
@@ -126,7 +126,7 @@ export default function HomePage() {
         </div>
 
         {/* 오른쪽 스탯 */}
-        <div className="hidden lg:flex flex-col gap-4 w-44 shrink-0">
+        <div className="hidden lg:flex flex-col w-36 shrink-0 bg-white/3 border border-white/5 rounded overflow-hidden">
           <StatCard label="등록 팀" value={stats.teams} />
           <StatCard label="모집 중" value={stats.manner} />
         </div>
