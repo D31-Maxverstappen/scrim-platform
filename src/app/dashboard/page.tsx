@@ -5,6 +5,7 @@ import AvatarUpload from '@/components/AvatarUpload'
 import ProfileCard from '@/components/ProfileCard'
 import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
+import ReceivedApplications from '@/components/ReceivedApplications'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#6b7280', Bronze: '#92400e', Silver: '#94a3b8', Gold: '#f59e0b',
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
     { data: allTeams },
     { data: scrimCounts },
     { data: recentScrims },
+    { data: allApplications },
   ] = await Promise.all([
     supabase.from('users').select('*').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, game_type, tier_avg)').eq('user_id', user.id).single(),
@@ -43,6 +45,7 @@ export default async function DashboardPage() {
     supabase.from('teams').select('id, name, game_type, tier_avg, wins, losses').limit(50),
     supabase.from('scrim_posts').select('team_id'),
     supabase.from('scrim_posts').select('id, game_type, preferred_date, note, status, teams(name, tier_avg)').eq('status', 'open').order('created_at', { ascending: false }).limit(8),
+    supabase.from('scrim_applications').select('id, status, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }),
   ])
 
   const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
@@ -52,6 +55,16 @@ export default async function DashboardPage() {
   scrimCounts?.forEach((s: any) => {
     scrimCountMap[s.team_id] = (scrimCountMap[s.team_id] ?? 0) + 1
   })
+
+  // 내 팀 스크림에 들어온 신청만 필터
+  const receivedApps = (allApplications ?? []).filter((a: any) => {
+    const post = Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post
+    return post?.team_id === team?.id
+  }).map((a: any) => ({
+    ...a,
+    applying_team: Array.isArray(a.applying_team) ? a.applying_team[0] : a.applying_team,
+    scrim_post: Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post,
+  }))
 
   const teamsWithActivity = (allTeams ?? []).map((t: any) => ({
     ...t,
@@ -136,6 +149,11 @@ export default async function DashboardPage() {
                 </div>
               ))}
             </div>
+
+            {/* 받은 스크림 신청 */}
+            {team && receivedApps.length > 0 && (
+              <ReceivedApplications initialApps={receivedApps} />
+            )}
 
             {/* 게임 탭 + 스크림 목록 */}
             <ScrimList scrims={recentScrims ?? []} />
