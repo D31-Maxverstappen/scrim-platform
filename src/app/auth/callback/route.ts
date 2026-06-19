@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   const code = searchParams.get('code')
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/login`)
+    return NextResponse.redirect(`${origin}/login?error=no_code`)
   }
 
   const supabase = await createClient()
