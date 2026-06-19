@@ -113,7 +113,21 @@ client.once('ready', async () => {
   await postVerifyMessage()
 })
 
-// 입장 시 역할 자동 부여 없음 — ✅ 인증 후 부여
+const WELCOME_CHANNEL_ID = '1517580108175642705' // 🎉│등장
+
+// ── 서버 입장 시 환영 메시지 ──
+client.on('guildMemberAdd', async (member) => {
+  if (member.guild.id !== GUILD_ID) return
+
+  try {
+    const channel = await client.channels.fetch(WELCOME_CHANNEL_ID)
+    if (!channel) return
+    await channel.send(`🎉 **${member.user.username}** 님이 D31에 입장했습니다! 환영해요!\n🔒│인증 채널에서 ✅ 를 눌러 모든 채널을 열어보세요.`)
+    console.log(`[D31 Bot] 환영 메시지 전송: ${member.user.tag}`)
+  } catch (e) {
+    console.error('[D31 Bot] 환영 메시지 실패:', e.message)
+  }
+})
 
 // ── ✅ 반응 시 인증 역할 부여 ──
 client.on('messageReactionAdd', async (reaction, user) => {
