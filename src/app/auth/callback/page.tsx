@@ -11,7 +11,6 @@ export default function AuthCallbackPage() {
     const handle = async () => {
       const supabase = createClient()
 
-      // implicit flow: 클라이언트가 hash에서 자동으로 세션 설정
       await new Promise(r => setTimeout(r, 500))
 
       const { data: { session }, error } = await supabase.auth.getSession()
@@ -22,15 +21,11 @@ export default function AuthCallbackPage() {
       }
 
       const user = session.user
+      const discordId = user.user_metadata?.provider_id ?? user.identities?.find((i: any) => i.provider === 'discord')?.identity_data?.sub
+      const providerToken = session.provider_token
 
-      // Discord 서버 자동 참여
-      if (session.provider_token) {
-        fetch('/api/discord/join', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ accessToken: session.provider_token }),
-        }).catch(() => {})
-      }
+      const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
+      const discordAvatar = user.user_metadata?.avatar_url ?? null
 
       const { data: existing } = await supabase
         .from('users')
@@ -39,18 +34,32 @@ export default function AuthCallbackPage() {
         .single()
 
       if (!existing) {
-        const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
-        const discordAvatar = user.user_metadata?.avatar_url ?? null
         await supabase.from('users').insert({
           id: user.id,
           email: user.email,
           riot_gamename: discordName,
           avatar_url: discordAvatar,
+          discord_id: discordId ?? null,
+          discord_access_token: providerToken ?? null,
         })
-        router.replace('/onboarding')
       } else {
-        router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
+        // 토큰 업데이트 (매 로그인마다 갱신)
+        await supabase.from('users').update({
+          discord_id: discordId ?? null,
+          discord_access_token: providerToken ?? null,
+        }).eq('id', user.id)
       }
+
+      // Discord 서버 자동 참여
+      if (providerToken && discordId) {
+        fetch('/api/discord/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: providerToken }),
+        }).catch(() => {})
+      }
+
+      router.replace(!existing || !existing.riot_puuid ? '/onboarding' : '/dashboard')
     }
 
     handle()
