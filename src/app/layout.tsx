@@ -2,8 +2,22 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "스크림 플랫폼",
-  description: "발로란트 & 리그 오브 레전드 스크림 매칭 플랫폼",
+  title: "D31 - 스크림 매칭 플랫폼",
+  description: "실력에 맞는 팀을 찾고, 스크림을 잡고, 매너 점수로 신뢰를 쌓으세요. 대한민국 최초 발로란트 & 리그 오브 레전드 스크림 매칭 플랫폼.",
+  openGraph: {
+    title: "D31 - 스크림 매칭 플랫폼",
+    description: "실력에 맞는 팀을 찾고, 스크림을 잡고, 매너 점수로 신뢰를 쌓으세요.",
+    siteName: "D31",
+    locale: "ko_KR",
+    type: "website",
+    images: [{ url: "/logo.png", width: 569, height: 439, alt: "D31 로고" }],
+  },
+  twitter: {
+    card: "summary",
+    title: "D31 - 스크림 매칭 플랫폼",
+    description: "대한민국 최초 발로란트 & LoL 스크림 매칭 플랫폼",
+    images: ["/logo.png"],
+  },
 };
 
 export default function RootLayout({
