@@ -68,7 +68,8 @@ export default function CountrySelect({ initialCountry }: { initialCountry: stri
       <select
         value={country}
         onChange={(e) => handleChange(e.target.value)}
-        className="bg-white/5 border border-white/10 text-white text-xs px-2 py-1 focus:outline-none focus:border-[#00D2BE] transition"
+        className="bg-[#1a1a2e] border border-white/10 text-white text-xs px-2 py-1 focus:outline-none focus:border-[#00D2BE] transition"
+        style={{ colorScheme: 'dark' }}
       >
         <option value="">국가 선택</option>
         {COUNTRIES.map((c) => (
