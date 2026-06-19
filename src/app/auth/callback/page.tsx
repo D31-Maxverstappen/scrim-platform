@@ -23,7 +23,8 @@ export default function AuthCallbackPage() {
       const { data: { session }, error } = await supabase.auth.getSession()
 
       if (error || !session) {
-        router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'no_session'))
+        const url = encodeURIComponent(window.location.href)
+        router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'no_session') + '&url=' + url)
         return
       }
 

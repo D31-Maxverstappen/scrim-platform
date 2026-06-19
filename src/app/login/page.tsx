@@ -9,6 +9,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
+  const url = searchParams.get('url')
 
   const handleDiscordLogin = async () => {
     setLoading(true)
@@ -52,7 +53,10 @@ function LoginForm() {
           </button>
 
           {error && (
-            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded px-3 py-2 text-center break-all">{decodeURIComponent(error)}</p>
+            <div className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded px-3 py-2 break-all">
+              <p className="font-bold mb-1">{decodeURIComponent(error)}</p>
+              {url && <p className="text-slate-400">{decodeURIComponent(url)}</p>}
+            </div>
           )}
 
           <p className="text-center text-slate-600 text-xs">
