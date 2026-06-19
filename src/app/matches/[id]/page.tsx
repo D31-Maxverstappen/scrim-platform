@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import MatchTabs from '@/components/MatchTabs'
 import RosterComparison from '@/components/RosterComparison'
+import MatchCancelButton from '@/components/MatchCancelButton'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
 
@@ -44,6 +45,15 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const team2 = Array.isArray(match.team2) ? match.team2[0] : match.team2
   const winner = Array.isArray(match.winner) ? match.winner[0] : match.winner
 
+  // 양 팀 중 하나의 캡틴인지 확인
+  const { data: captainTeam } = await supabase
+    .from('teams')
+    .select('id')
+    .in('id', [match.team1_id, match.team2_id])
+    .eq('captain_id', user.id)
+    .single()
+  const isCaptain = !!captainTeam
+
   const team1Score = (maps ?? []).filter((m: any) => m.team1_score > m.team2_score).length
   const team2Score = (maps ?? []).filter((m: any) => m.team2_score > m.team1_score).length
 
@@ -72,9 +82,14 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                 <p className="text-[#00D2BE] text-xs font-bold uppercase tracking-widest mb-0.5">스크림 매치</p>
                 <p className="text-slate-500 text-xs">{match.format}</p>
               </div>
-              <div className="text-right">
-                <p className="text-white text-sm font-semibold">{matchDate}</p>
-                {matchTime && <p className="text-slate-500 text-xs mt-0.5">{matchTime} KST</p>}
+              <div className="flex items-center gap-4">
+                {isCaptain && match.status !== 'completed' && (
+                  <MatchCancelButton matchId={id} />
+                )}
+                <div className="text-right">
+                  <p className="text-white text-sm font-semibold">{matchDate}</p>
+                  {matchTime && <p className="text-slate-500 text-xs mt-0.5">{matchTime} KST</p>}
+                </div>
               </div>
             </div>
 
