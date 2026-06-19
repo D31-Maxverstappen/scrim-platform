@@ -1,11 +1,23 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
+// Supabase 클라이언트 초기화 전에 hash 캡처
+function captureHashParams() {
+  if (typeof window === 'undefined') return {}
+  const params = new URLSearchParams(window.location.hash.substring(1))
+  return {
+    providerToken: params.get('provider_token'),
+    accessToken: params.get('access_token'),
+    refreshToken: params.get('refresh_token'),
+  }
+}
+
 export default function AuthCallbackPage() {
   const router = useRouter()
+  const hashParams = useRef(captureHashParams())
 
   useEffect(() => {
     const handle = async () => {
@@ -21,8 +33,9 @@ export default function AuthCallbackPage() {
       }
 
       const user = session.user
-      const discordId = user.user_metadata?.provider_id ?? user.identities?.find((i: any) => i.provider === 'discord')?.identity_data?.sub
-      const providerToken = session.provider_token
+      const discordId = user.user_metadata?.provider_id
+        ?? user.identities?.find((i: any) => i.provider === 'discord')?.identity_data?.sub
+      const providerToken = hashParams.current.providerToken ?? session.provider_token
 
       const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
       const discordAvatar = user.user_metadata?.avatar_url ?? null
@@ -43,7 +56,6 @@ export default function AuthCallbackPage() {
           discord_access_token: providerToken ?? null,
         })
       } else {
-        // 토큰 업데이트 (매 로그인마다 갱신)
         await supabase.from('users').update({
           discord_id: discordId ?? null,
           discord_access_token: providerToken ?? null,
