@@ -91,6 +91,99 @@ export default async function ProfilePage() {
           </a>
         </div>
 
+        {/* 게임 계정 */}
+        <div className="flex flex-col gap-3 mb-6">
+          {/* VALORANT */}
+          <div className="bg-[#111118] border border-white/5 rounded p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#ff4655]" />
+                <p className="text-xs font-black text-[#ff4655] uppercase tracking-widest">VALORANT</p>
+              </div>
+              <a href="/onboarding?add=valorant" className="text-xs text-slate-500 hover:text-white transition">
+                {profile?.val_gamename ? '수정' : '+ 등록'}
+              </a>
+            </div>
+            {profile?.val_gamename ? (
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded bg-[#ff4655]/10 border border-[#ff4655]/20 flex items-center justify-center text-[#ff4655] font-black text-lg">
+                  {profile.val_gamename[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-white font-bold">
+                    {profile.val_gamename}
+                    {profile.val_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.val_tagline}</span>}
+                  </p>
+                  {profile.val_tier && (
+                    <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier] ?? 'text-slate-400'}`}>
+                      {profile.val_tier}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 py-2">
+                <div className="w-12 h-12 rounded bg-white/5 border border-white/10 border-dashed flex items-center justify-center text-slate-700">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-sm">계정을 등록하여 정보를 확인하세요!</p>
+                  <a href="/onboarding?add=valorant" className="text-[#ff4655] text-xs hover:underline mt-0.5 inline-block">
+                    VALORANT 계정 연동 →
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* League of Legends */}
+          <div className="bg-[#111118] border border-white/5 rounded p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#c89b3c]" />
+                <p className="text-xs font-black text-[#c89b3c] uppercase tracking-widest">League of Legends</p>
+              </div>
+              <a href="/onboarding?add=lol" className="text-xs text-slate-500 hover:text-white transition">
+                {profile?.lol_gamename ? '수정' : '+ 등록'}
+              </a>
+            </div>
+            {profile?.lol_gamename ? (
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded bg-[#c89b3c]/10 border border-[#c89b3c]/20 flex items-center justify-center text-[#c89b3c] font-black text-lg">
+                  {profile.lol_gamename[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-white font-bold">
+                    {profile.lol_gamename}
+                    {profile.lol_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.lol_tagline}</span>}
+                  </p>
+                  {profile.lol_tier && (
+                    <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.lol_tier] ?? 'text-slate-400'}`}>
+                      {profile.lol_tier}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 py-2">
+                <div className="w-12 h-12 rounded bg-white/5 border border-white/10 border-dashed flex items-center justify-center text-slate-700">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-slate-500 text-sm">계정을 등록하여 정보를 확인하세요!</p>
+                  <a href="/onboarding?add=lol" className="text-[#c89b3c] text-xs hover:underline mt-0.5 inline-block">
+                    LoL 계정 연동 →
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
 
           {/* 매너 점수 */}
