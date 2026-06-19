@@ -8,14 +8,17 @@ const DiscordIcon = ({ className }: { className?: string }) => (
   </svg>
 )
 
+const FALLBACK_URL = 'https://discord.gg/d31'
+
 export default function DiscordBanner({ compact = false }: { compact?: boolean }) {
-  const [inviteUrl, setInviteUrl] = useState<string | null>(null)
+  const [inviteUrl, setInviteUrl] = useState<string>(FALLBACK_URL)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetch('/api/discord/invite')
       .then(r => r.json())
       .then(d => { if (d.inviteUrl) setInviteUrl(d.inviteUrl) })
+      .catch(() => {})
       .finally(() => setLoading(false))
   }, [])
 
@@ -30,7 +33,7 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
         <p className="text-slate-500 text-xs mb-3">공지 · 팀원 모집 · 커뮤니티</p>
         {loading ? (
           <div className="h-8 bg-white/5 rounded animate-pulse" />
-        ) : inviteUrl ? (
+        ) : (
           <a
             href={inviteUrl}
             target="_blank"
@@ -40,7 +43,7 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
             <DiscordIcon className="w-3.5 h-3.5" />
             서버 참여하기
           </a>
-        ) : null}
+        )}
       </div>
     )
   }
@@ -57,7 +60,7 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
         </div>
         {loading ? (
           <div className="w-36 h-11 bg-white/5 rounded animate-pulse shrink-0" />
-        ) : inviteUrl ? (
+        ) : (
           <a
             href={inviteUrl}
             target="_blank"
@@ -67,7 +70,7 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
             <DiscordIcon className="w-4 h-4" />
             서버 참여하기
           </a>
-        ) : null}
+        )}
       </div>
     </section>
   )

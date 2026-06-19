@@ -184,7 +184,7 @@ function OnboardingContent() {
     <div className="min-h-screen bg-[#07070b] flex items-center justify-center px-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <span className="text-white font-black text-3xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">D31</span>
+          <span className="font-black text-3xl tracking-widest text-[#00D2BE]">D31</span>
           <h1 className="text-white font-bold text-xl mt-4 mb-1">프로필 설정</h1>
           <div className="flex items-center justify-center gap-2 mt-3">
             <div className={`w-8 h-1.5 rounded-full transition-all ${step === 'val' ? 'bg-[#ff4655]' : 'bg-[#ff4655]/80'}`} />

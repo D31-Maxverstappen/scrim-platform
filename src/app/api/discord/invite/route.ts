@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
-const CHANNEL_ID = '1517433927126749307'
+const CHANNEL_ID = '1517581328936210464' // 🔒│인증 채널
 
 export async function GET() {
   const res = await fetch(`https://discord.com/api/v10/channels/${CHANNEL_ID}/invites`, {
