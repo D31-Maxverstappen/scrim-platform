@@ -8,9 +8,39 @@ export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
-    createClient().auth.getSession().then(({ data: { session } }) => {
-      router.replace(session ? '/dashboard' : '/login')
-    })
+    const handle = async () => {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+
+      if (!session) {
+        router.replace('/login')
+        return
+      }
+
+      // users 테이블에 없으면 생성 (Discord 신규 유저)
+      const { data: existing } = await supabase
+        .from('users')
+        .select('id, riot_puuid')
+        .eq('id', session.user.id)
+        .single()
+
+      if (!existing) {
+        const discordName = session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? null
+        const discordAvatar = session.user.user_metadata?.avatar_url ?? null
+        await supabase.from('users').insert({
+          id: session.user.id,
+          email: session.user.email,
+          riot_gamename: discordName,
+          avatar_url: discordAvatar,
+        })
+        router.replace('/onboarding')
+        return
+      }
+
+      router.replace(existing.riot_puuid ? '/dashboard' : '/onboarding')
+    }
+
+    handle()
   }, [router])
 
   return (
