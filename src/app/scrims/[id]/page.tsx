@@ -28,7 +28,6 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
 
   const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
-  const isMyTeam = team?.captain_id === user.id
 
   // 내 팀이 이미 신청했는지 확인
   const { data: myTeam } = await supabase
@@ -37,6 +36,8 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     .eq('captain_id', user.id)
     .eq('game_type', post.game_type)
     .single()
+
+  const isMyTeam = team?.captain_id === user.id || myTeam?.id === team?.id
 
   const { data: existingApp } = myTeam ? await supabase
     .from('scrim_applications')
