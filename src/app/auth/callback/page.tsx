@@ -23,6 +23,15 @@ export default function AuthCallbackPage() {
 
       const user = session.user
 
+      // Discord 서버 자동 참여
+      if (session.provider_token) {
+        fetch('/api/discord/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: session.provider_token }),
+        }).catch(() => {})
+      }
+
       const { data: existing } = await supabase
         .from('users')
         .select('id, riot_puuid')
