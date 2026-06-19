@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 type Application = {
   id: string
@@ -20,6 +20,11 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
   const [matchLinks, setMatchLinks] = useState<Record<string, string>>(
     () => Object.fromEntries(initialApps.filter((a) => a.match_id).map((a) => [a.id, a.match_id!]))
   )
+
+  useEffect(() => {
+    setApps(initialApps)
+    setMatchLinks(Object.fromEntries(initialApps.filter((a) => a.match_id).map((a) => [a.id, a.match_id!])))
+  }, [initialApps])
 
   const handleAcceptConfirm = async (appId: string) => {
     setLoading(appId + 'accept')
