@@ -51,9 +51,11 @@ export default function HomePage() {
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
         <Image src="/logo.png" alt="D31" width={112} height={112} className="object-contain" />
-        <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
-          {loggedIn ? '대시보드' : '시작하기'}
-        </a>
+        {loggedIn && (
+          <a href="/dashboard" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
+            홈으로
+          </a>
+        )}
       </nav>
 
       {/* 히어로 */}
@@ -71,7 +73,7 @@ export default function HomePage() {
         </p>
         <div className="flex gap-3">
           <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-            {loggedIn ? '대시보드로 이동' : '무료로 시작하기'}
+            {loggedIn ? '홈으로' : '로그인 / 회원가입'}
           </a>
           <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
             스크림 둘러보기
