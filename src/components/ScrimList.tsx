@@ -36,7 +36,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
             </button>
           ))}
           {game && (
-            <span className="px-4 py-3.5 text-xs font-bold text-white">
+            <span className="py-3.5 text-xs font-bold text-white">
               스크림 게시판
             </span>
           )}
