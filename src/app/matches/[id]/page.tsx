@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import MatchTabs from '@/components/MatchTabs'
+import RosterComparison from '@/components/RosterComparison'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
 
@@ -24,11 +25,19 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   if (!match) notFound()
 
-  const [{ data: maps }, { data: stats }] = await Promise.all([
+  const [{ data: maps }, { data: stats }, { data: team1Members }, { data: team2Members }] = await Promise.all([
     supabase.from('match_maps').select('*').eq('match_id', id).order('map_number'),
     supabase.from('match_player_stats')
       .select('*, users(riot_gamename, val_gamename, lol_gamename, avatar_url, country)')
       .eq('match_id', id),
+    supabase.from('team_members')
+      .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
+      .eq('team_id', match.team1_id)
+      .eq('role', 'player'),
+    supabase.from('team_members')
+      .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
+      .eq('team_id', match.team2_id)
+      .eq('role', 'player'),
   ])
 
   const team1 = Array.isArray(match.team1) ? match.team1[0] : match.team1
@@ -108,6 +117,14 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+
+        {/* ── 로스터 비교 ── */}
+        <RosterComparison
+          team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
+          team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
+          team1Name={team1?.name ?? '팀 1'}
+          team2Name={team2?.name ?? '팀 2'}
+        />
 
         {/* ── 탭 + 콘텐츠 ── */}
         <MatchTabs
