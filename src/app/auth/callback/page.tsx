@@ -2,17 +2,23 @@
 
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
+import { createClient as createSSRClient } from '@/lib/supabase/client'
+import { createClient } from '@supabase/supabase-js'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
 
   useEffect(() => {
     const handle = async () => {
-      const supabase = createClient()
+      // 일반 supabase-js 클라이언트 - hash fragment 자동 감지
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        { auth: { detectSessionInUrl: true, persistSession: true } }
+      )
 
-      // @supabase/ssr이 초기화 시 hash/code를 자동 처리함 - 잠깐 대기 후 세션 확인
-      await new Promise(r => setTimeout(r, 500))
+      // hash/code 처리 대기
+      await new Promise(r => setTimeout(r, 800))
 
       const { data: { session }, error } = await supabase.auth.getSession()
 
@@ -21,9 +27,16 @@ export default function AuthCallbackPage() {
         return
       }
 
+      // SSR 클라이언트에도 세션 동기화
+      const ssrClient = createSSRClient()
+      await ssrClient.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      })
+
       const user = session.user
 
-      const { data: existing } = await supabase
+      const { data: existing } = await ssrClient
         .from('users')
         .select('id, riot_puuid')
         .eq('id', user.id)
@@ -32,7 +45,7 @@ export default function AuthCallbackPage() {
       if (!existing) {
         const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
         const discordAvatar = user.user_metadata?.avatar_url ?? null
-        await supabase.from('users').insert({
+        await ssrClient.from('users').insert({
           id: user.id,
           email: user.email,
           riot_gamename: discordName,
