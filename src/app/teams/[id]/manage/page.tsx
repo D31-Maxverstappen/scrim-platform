@@ -76,7 +76,7 @@ export default function ManageTeamPage() {
 
     const { data: m } = await supabase
       .from('team_members')
-      .select('user_id, role, users(riot_gamename, riot_tagline, avatar_url, tier)')
+      .select('user_id, role, is_igl, users(riot_gamename, riot_tagline, avatar_url, tier)')
       .eq('team_id', teamId)
     setMembers(m ?? [])
 
@@ -104,6 +104,16 @@ export default function ManageTeamPage() {
   const handleRoleChange = async (userId: string, newRole: string) => {
     await supabase.from('team_members').update({ role: newRole }).eq('team_id', teamId).eq('user_id', userId)
     setMsg('역할을 변경했어요.')
+    load()
+  }
+
+  const handleIglToggle = async (userId: string, currentIsIgl: boolean) => {
+    // 기존 IGL 해제 후 새 IGL 지정
+    if (!currentIsIgl) {
+      await supabase.from('team_members').update({ is_igl: false }).eq('team_id', teamId)
+    }
+    await supabase.from('team_members').update({ is_igl: !currentIsIgl }).eq('team_id', teamId).eq('user_id', userId)
+    setMsg(!currentIsIgl ? 'IGL을 지정했어요.' : 'IGL을 해제했어요.')
     load()
   }
 
@@ -225,14 +235,23 @@ export default function ManageTeamPage() {
                     <p className="text-white font-semibold text-sm">{u?.riot_gamename ?? '알 수 없음'}{u?.riot_tagline && <span className="text-slate-500 text-xs"> #{u.riot_tagline}</span>}</p>
                     {u?.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
                   </div>
+                  {/* IGL 토글 (코치 제외) */}
+                  {!['head_coach', 'coach'].includes(m.role) && (
+                    <button
+                      onClick={() => handleIglToggle(m.user_id, m.is_igl)}
+                      className={`text-[10px] font-black px-2.5 py-1 border transition ${m.is_igl ? 'border-[#00D2BE] text-[#00D2BE] bg-[#00D2BE]/10' : 'border-white/10 text-slate-600 hover:border-white/30 hover:text-slate-400'}`}
+                    >
+                      IGL
+                    </button>
+                  )}
                   {isCaptain ? (
-                    <span className="text-xs font-bold px-3 py-1 rounded-full" style={{ color: '#00D2BE', background: '#00D2BE22' }}>Captain</span>
+                    <span className="text-xs font-bold px-3 py-1" style={{ color: '#00D2BE', background: '#00D2BE22' }}>Captain</span>
                   ) : (
                     <>
                       <select
                         value={m.role}
                         onChange={(e) => handleRoleChange(m.user_id, e.target.value)}
-                        className="bg-white/5 border border-white/10  px-3 py-1.5 text-xs focus:outline-none"
+                        className="bg-white/5 border border-white/10 px-3 py-1.5 text-xs focus:outline-none"
                         style={{ color: ROLE_COLOR[m.role] ?? '#94a3b8' }}
                       >
                         {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}

@@ -33,11 +33,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     supabase.from('team_members')
       .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
       .eq('team_id', match.team1_id)
-      .eq('role', 'player'),
+      .neq('role', 'coach'),
     supabase.from('team_members')
       .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
       .eq('team_id', match.team2_id)
-      .eq('role', 'player'),
+      .neq('role', 'coach'),
   ])
 
   const team1 = Array.isArray(match.team1) ? match.team1[0] : match.team1

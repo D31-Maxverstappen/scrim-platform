@@ -31,6 +31,9 @@ function PlayerCard({ member, flip = false }: { member: Member; flip?: boolean }
         <div className={`flex items-center gap-1.5 ${flip ? 'justify-end' : ''}`}>
           <FlagImg code={u?.country} size={12} />
           <span className="text-white text-xs font-semibold truncate">{name}</span>
+          {member.role === 'captain' && (
+            <span className="text-[9px] font-black px-1.5 py-0.5 bg-amber-500/20 text-amber-400 shrink-0">C</span>
+          )}
           {member.is_igl && (
             <span className="text-[9px] font-black px-1.5 py-0.5 bg-[#00D2BE]/20 text-[#00D2BE] shrink-0">IGL</span>
           )}
