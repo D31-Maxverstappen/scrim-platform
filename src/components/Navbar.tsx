@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import ThemeToggle from './ThemeToggle'
 
 export default function Navbar() {
@@ -16,10 +17,8 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur border-b border-white/5 px-6 h-20 flex items-center gap-6">
       {/* 로고 */}
-      <a href="/dashboard" className="shrink-0 flex items-center gap-2">
-        <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">
-          D31
-        </span>
+      <a href="/dashboard" className="shrink-0 flex items-center">
+        <Image src="/logo.png" alt="D31" width={40} height={40} className="object-contain" />
       </a>
 
       {/* 네비 링크 + 퀵 링크 */}

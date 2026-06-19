@@ -17,6 +17,15 @@ export default function AuthCallbackPage() {
         return
       }
 
+      // Discord 유저면 서버 자동 참여
+      if (session.provider_token && session.user.app_metadata?.provider === 'discord') {
+        fetch('/api/discord/join', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ accessToken: session.provider_token }),
+        }).catch(() => {})
+      }
+
       // users 테이블에 없으면 생성 (Discord 신규 유저)
       const { data: existing } = await supabase
         .from('users')

@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 const games = [
   {
     name: 'VALORANT',
@@ -38,9 +40,7 @@ export default function HomePage() {
 
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
-        <span className="text-white font-black text-xl tracking-widest bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">
-          D31
-        </span>
+        <Image src="/logo.png" alt="D31" width={36} height={36} className="object-contain" />
         <a href="/login" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
           시작하기
         </a>
