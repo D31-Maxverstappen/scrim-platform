@@ -34,8 +34,6 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
   const pending = apps.filter((a) => a.status === 'pending')
   const done = apps.filter((a) => a.status !== 'pending')
 
-  if (apps.length === 0) return null
-
   return (
     <div className="bg-[#13131f] border border-white/5">
       <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
@@ -45,6 +43,11 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
         )}
       </div>
 
+      {apps.length === 0 ? (
+        <div className="px-4 py-6 text-center text-slate-600 text-xs">
+          아직 들어온 요청이 없어요!
+        </div>
+      ) : (
       <div className="divide-y divide-white/5">
         {[...pending, ...done].map((app) => {
           const gc = GAME_COLOR[app.applying_team.game_type] ?? '#00D2BE'
@@ -96,6 +99,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
           )
         })}
       </div>
+      )}
     </div>
   )
 }

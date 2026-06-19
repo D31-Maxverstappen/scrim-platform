@@ -151,7 +151,7 @@ export default async function DashboardPage() {
             </div>
 
             {/* 받은 스크림 신청 */}
-            {team && receivedApps.length > 0 && (
+            {team && (
               <ReceivedApplications initialApps={receivedApps} />
             )}
 
