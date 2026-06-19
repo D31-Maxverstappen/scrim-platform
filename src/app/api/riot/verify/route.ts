@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getRiotAccount } from '@/lib/riot'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
+import { assignDiscordRole } from '@/lib/discord'
+
+async function getRoleId(admin: any, name: string): Promise<string | null> {
+  const { data } = await admin.from('discord_roles').select('discord_role_id').eq('name', name).single()
+  return data?.discord_role_id ?? null
+}
 
 export async function POST(req: NextRequest) {
   const { gameName, tagLine, gameType, tier } = await req.json()
@@ -18,7 +25,6 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  // 게임별 분리 저장
   const gameFields = gameType === 'valorant'
     ? { val_gamename: gameName, val_tagline: tagLine, val_tier: tier ?? null }
     : { lol_gamename: gameName, lol_tagline: tagLine, lol_tier: tier ?? null }
@@ -33,6 +39,28 @@ export async function POST(req: NextRequest) {
     tier: tier ?? null,
     ...gameFields,
   }, { onConflict: 'id' })
+
+  // Discord 역할 부여 (discord_id 있는 경우)
+  const { data: profile } = await supabase.from('users').select('discord_id').eq('id', user.id).single()
+  if (profile?.discord_id && tier) {
+    const admin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
+    const prefix = gameType === 'valorant' ? 'VAL' : 'LoL'
+    const gameRoleName = gameType === 'valorant' ? 'VALORANT Player' : 'League of Legends Player'
+    const tierRoleName = `${prefix} ${tier}`
+
+    const [gameRoleId, tierRoleId] = await Promise.all([
+      getRoleId(admin, gameRoleName),
+      getRoleId(admin, tierRoleName),
+    ])
+
+    await Promise.allSettled([
+      gameRoleId ? assignDiscordRole(profile.discord_id, gameRoleId) : Promise.resolve(),
+      tierRoleId ? assignDiscordRole(profile.discord_id, tierRoleId) : Promise.resolve(),
+    ])
+  }
 
   return NextResponse.json({ success: true, account })
 }

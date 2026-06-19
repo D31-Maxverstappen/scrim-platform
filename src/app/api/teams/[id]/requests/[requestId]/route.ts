@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { recalcTierAvg } from '@/lib/tierUtils'
+import { assignDiscordRole } from '@/lib/discord'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string, requestId: string }> }) {
   const { id: teamId, requestId } = await params
@@ -11,7 +12,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
   // 팀장인지 확인
-  const { data: team } = await supabase.from('teams').select('captain_id').eq('id', teamId).single()
+  const { data: team } = await supabase.from('teams').select('captain_id, discord_role_id').eq('id', teamId).single()
   if (team?.captain_id !== user.id) return NextResponse.json({ error: '권한이 없어요.' }, { status: 403 })
 
   // 신청 정보
@@ -26,6 +27,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     })
     await supabase.from('team_join_requests').update({ status: 'accepted' }).eq('id', requestId)
     await recalcTierAvg(supabase, teamId)
+
+    // Discord 팀 역할 부여
+    if (team?.discord_role_id) {
+      const { data: memberProfile } = await supabase
+        .from('users').select('discord_id').eq('id', request.user_id).single()
+      if (memberProfile?.discord_id) {
+        await assignDiscordRole(memberProfile.discord_id, team.discord_role_id).catch(() => {})
+      }
+    }
   } else {
     await supabase.from('team_join_requests').update({ status: 'rejected' }).eq('id', requestId)
   }

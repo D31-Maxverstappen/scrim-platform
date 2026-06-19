@@ -6,6 +6,35 @@ const MEMBER_ALLOW = '3146752'
 // VIEW_CHANNEL
 const EVERYONE_DENY = '1024'
 
+// ── 역할 관리 ──
+
+export async function createDiscordRole(name: string, color: number): Promise<string | null> {
+  const res = await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/roles`, {
+    method: 'POST',
+    headers: { Authorization: `Bot ${BOT_TOKEN}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, color, hoist: false, mentionable: false }),
+  })
+  if (!res.ok) return null
+  const data = await res.json()
+  return data.id ?? null
+}
+
+export async function assignDiscordRole(discordUserId: string, roleId: string): Promise<boolean> {
+  const res = await fetch(
+    `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordUserId}/roles/${roleId}`,
+    { method: 'PUT', headers: { Authorization: `Bot ${BOT_TOKEN}` } },
+  )
+  return res.ok || res.status === 204
+}
+
+export async function removeDiscordRole(discordUserId: string, roleId: string): Promise<boolean> {
+  const res = await fetch(
+    `https://discord.com/api/v10/guilds/${GUILD_ID}/members/${discordUserId}/roles/${roleId}`,
+    { method: 'DELETE', headers: { Authorization: `Bot ${BOT_TOKEN}` } },
+  )
+  return res.ok || res.status === 204
+}
+
 export async function createScrimVoiceChannel(
   team1Abbr: string,
   team2Abbr: string,

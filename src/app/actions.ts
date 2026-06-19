@@ -3,6 +3,8 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { createDiscordRole, assignDiscordRole } from '@/lib/discord'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 
 async function getSupabase() {
   const cookieStore = await cookies()
@@ -79,11 +81,28 @@ export async function createTeamAction(formData: FormData) {
     role: 'captain',
   })
 
-  // team_members insert 실패 시 팀도 롤백
   if (memberError) {
     await supabase.from('teams').delete().eq('id', team.id)
     return { error: '팀 생성 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.' }
   }
+
+  // Discord 팀 역할 생성 + 캡틴에게 부여
+  try {
+    const teamColor = game_type === 'valorant' ? 0xFF4655 : 0xC89B3C
+    const discordRoleId = await createDiscordRole(abbreviation, teamColor)
+    if (discordRoleId) {
+      const admin = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      )
+      await admin.from('teams').update({ discord_role_id: discordRoleId }).eq('id', team.id)
+
+      const { data: captainProfile } = await supabase.from('users').select('discord_id').eq('id', user.id).single()
+      if (captainProfile?.discord_id) {
+        await assignDiscordRole(captainProfile.discord_id, discordRoleId)
+      }
+    }
+  } catch {}
 
   redirect('/teams')
 }
