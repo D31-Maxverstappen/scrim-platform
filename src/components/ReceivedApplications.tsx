@@ -31,6 +31,11 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
     })
     setLoading(null)
     setAccepting(null)
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      alert('오류: ' + (err.error ?? '알 수 없는 오류'))
+      return
+    }
     if (res.ok) {
       const data = await res.json()
       if (data.matchId) {
