@@ -2,10 +2,13 @@
 
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const game = searchParams.get('game') // 'valorant' | 'lol' | null
   const [tab, setTab] = useState<'login' | 'signup'>('login')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -38,7 +41,8 @@ export default function LoginPage() {
         const { createClient } = await import('@/lib/supabase/client')
         const supabase = createClient()
         const { data: userData } = await supabase.from('users').select('riot_puuid').eq('id', (await supabase.auth.getUser()).data.user!.id).single()
-        router.replace(userData?.riot_puuid ? '/dashboard' : '/onboarding')
+        const onboardingUrl = game === 'lol' ? '/onboarding?add=lol' : '/onboarding'
+        router.replace(userData?.riot_puuid ? '/dashboard' : onboardingUrl)
       }
     }
 
@@ -116,5 +120,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
