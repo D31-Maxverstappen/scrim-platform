@@ -32,9 +32,34 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
   const newStatus = action === 'accept' ? 'accepted' : 'rejected'
   await supabase.from('scrim_applications').update({ status: newStatus }).eq('id', appId)
 
-  // 수락 시 스크림 상태를 matched로 변경
+  // 수락 시 매치 자동 생성
   if (action === 'accept') {
     await supabase.from('scrim_posts').update({ status: 'matched' }).eq('id', app.scrim_post_id)
+
+    const { data: scrimPost } = await supabase
+      .from('scrim_posts')
+      .select('team_id, preferred_date, applying_team_id')
+      .eq('id', app.scrim_post_id)
+      .single()
+
+    const { data: applyApp } = await supabase
+      .from('scrim_applications')
+      .select('applying_team_id')
+      .eq('id', appId)
+      .single()
+
+    if (scrimPost && applyApp) {
+      const { data: newMatch } = await supabase.from('matches').insert({
+        scrim_post_id: app.scrim_post_id,
+        team1_id: scrimPost.team_id,
+        team2_id: applyApp.applying_team_id,
+        match_date: scrimPost.preferred_date,
+        status: 'scheduled',
+        format: 'BO3',
+      }).select('id').single()
+
+      return NextResponse.json({ success: true, matchId: newMatch?.id })
+    }
   }
 
   return NextResponse.json({ success: true })

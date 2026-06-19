@@ -25,6 +25,11 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
     })
     setLoading(null)
     if (res.ok) {
+      const data = await res.json()
+      if (action === 'accept' && data.matchId) {
+        window.location.href = `/matches/${data.matchId}`
+        return
+      }
       setApps((prev) => prev.map((a) =>
         a.id === appId ? { ...a, status: action === 'accept' ? 'accepted' : 'rejected' } : a
       ))
