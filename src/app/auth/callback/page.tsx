@@ -1,32 +1,27 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
-// Supabase 클라이언트 초기화 전에 hash 캡처
-function captureHashParams() {
-  if (typeof window === 'undefined') return {}
-  const params = new URLSearchParams(window.location.hash.substring(1))
-  return {
-    providerToken: params.get('provider_token'),
-    accessToken: params.get('access_token'),
-    refreshToken: params.get('refresh_token'),
-  }
-}
-
 export default function AuthCallbackPage() {
   const router = useRouter()
-  const hashParams = useRef(captureHashParams())
 
   useEffect(() => {
     const handle = async () => {
       const supabase = createClient()
 
-      await new Promise(r => setTimeout(r, 500))
+      // PKCE: URL query param의 code를 세션으로 교환
+      const code = new URLSearchParams(window.location.search).get('code')
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code)
+        if (error) {
+          router.replace('/login?error=' + encodeURIComponent(error.message))
+          return
+        }
+      }
 
       const { data: { session }, error } = await supabase.auth.getSession()
-
       if (error || !session) {
         router.replace('/login?error=' + encodeURIComponent(error?.message ?? 'no_session'))
         return
@@ -39,7 +34,7 @@ export default function AuthCallbackPage() {
         ?? discordIdentity?.identity_data?.sub
         ?? discordIdentity?.id
         ?? null
-      const providerToken = hashParams.current.providerToken ?? session.provider_token
+      const providerToken = session.provider_token ?? null
 
       const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
       const discordAvatar = user.user_metadata?.avatar_url ?? null
@@ -57,28 +52,23 @@ export default function AuthCallbackPage() {
           riot_gamename: discordName,
           avatar_url: discordAvatar,
           discord_id: discordId ?? null,
-          discord_access_token: providerToken ?? null,
+          discord_access_token: providerToken,
         })
       } else {
         await supabase.from('users').update({
           discord_id: discordId ?? null,
-          discord_access_token: providerToken ?? null,
+          discord_access_token: providerToken,
         }).eq('id', user.id)
       }
 
-      // Discord DM으로 서버 초대 링크 전송
       if (discordId) {
         try {
-          const dmRes = await fetch('/api/discord/dm', {
+          await fetch('/api/discord/dm', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ discordId }),
           })
-          const dmData = await dmRes.json()
-          console.log('[Discord DM]', dmRes.status, dmData)
-        } catch (e) {
-          console.error('[Discord DM Error]', e)
-        }
+        } catch {}
       }
 
       router.replace(!existing || !existing.riot_puuid ? '/onboarding' : '/dashboard')
