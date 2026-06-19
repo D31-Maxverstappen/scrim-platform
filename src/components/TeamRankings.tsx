@@ -50,12 +50,10 @@ export default function TeamRankings({ teams }: { teams: Team[] }) {
   }).slice(0, 5)
 
   return (
-    <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
+    <div className="bg-[#13131f] border border-white/5 overflow-hidden">
+      {/* 헤더 */}
       <div className="px-4 pt-3 pb-0 border-b border-white/5">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-white font-bold text-xs uppercase tracking-widest">팀 랭킹</p>
-          <a href="/leaderboard" className="text-[#00D2BE] text-xs hover:underline">전체 →</a>
-        </div>
+        <p className="text-white font-bold text-xs uppercase tracking-widest mb-2">팀 랭킹</p>
         <div className="flex gap-0">
           {TABS.map((t) => (
             <button key={t.key} onClick={() => setTab(t.key)}
@@ -64,6 +62,14 @@ export default function TeamRankings({ teams }: { teams: Team[] }) {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* 컬럼 헤더 */}
+      <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-wider">
+        <span className="col-span-1">#</span>
+        <span className="col-span-2">게임</span>
+        <span className="col-span-6">팀 이름</span>
+        <span className="col-span-3 text-right">수치</span>
       </div>
 
       {sorted.length === 0 ? (
@@ -78,13 +84,13 @@ export default function TeamRankings({ teams }: { teams: Team[] }) {
             const winrate = total === 0 ? null : Math.round((team.wins / total) * 100)
 
             return (
-              <a key={team.id} href={`/teams/${team.id}`} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/2 transition">
-                <span className={`text-xs font-black w-4 text-center shrink-0 ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-400' : 'text-slate-600'}`}>
+              <a key={team.id} href={`/teams/${team.id}`} className="grid grid-cols-12 gap-2 px-4 py-2.5 hover:bg-white/2 transition items-center">
+                <span className={`col-span-1 text-xs font-black text-center ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-400' : 'text-slate-600'}`}>
                   {i + 1}
                 </span>
-                <span className="text-xs font-bold shrink-0" style={{ color: gc }}>{GAME_LABEL[team.game_type]}</span>
-                <span className="text-white text-xs font-semibold flex-1 truncate">{team.name}</span>
-                <span className="text-slate-500 text-xs shrink-0">
+                <span className="col-span-2 text-xs font-bold" style={{ color: gc }}>{GAME_LABEL[team.game_type]}</span>
+                <span className="col-span-6 text-white text-xs font-semibold truncate">{team.name}</span>
+                <span className="col-span-3 text-right text-slate-500 text-xs shrink-0">
                   {tab === 'tier' && (team.tier_avg ?? '—')}
                   {tab === 'winrate' && (winrate !== null ? `${winrate}%` : '—')}
                   {tab === 'activity' && `${team.scrim_count}회`}
