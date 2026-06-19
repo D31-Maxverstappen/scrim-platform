@@ -15,7 +15,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   const { data: scrimPosts } = await supabase.from('scrim_posts').select('id').eq('team_id', teamId)
   const scrimIds = (scrimPosts ?? []).map((s: any) => s.id)
   if (scrimIds.length > 0) {
-    const { error: e1 } = await supabase.from('scrim_applications').delete().in('scrim_id', scrimIds)
+    const { error: e1 } = await supabase.from('scrim_applications').delete().in('scrim_post_id', scrimIds)
     if (e1) return NextResponse.json({ error: 'scrim_applications: ' + e1.message }, { status: 500 })
   }
 
