@@ -66,7 +66,7 @@ export default function TeamRankings({ teams }: { teams: Team[] }) {
 
       {/* 컬럼 헤더 */}
       <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-wider">
-        <span className="col-span-1">#</span>
+        <span className="col-span-1">순위</span>
         <span className="col-span-2">게임</span>
         <span className="col-span-6">팀 이름</span>
         <span className="col-span-3 text-right">수치</span>
