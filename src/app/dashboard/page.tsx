@@ -8,6 +8,7 @@ import ProfileCard from '@/components/ProfileCard'
 import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
 import ReceivedApplications from '@/components/ReceivedApplications'
+import DiscordBanner from '@/components/DiscordBanner'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#6b7280', Bronze: '#92400e', Silver: '#94a3b8', Gold: '#f59e0b',
@@ -142,6 +143,9 @@ export default async function DashboardPage() {
                 </div>
               )}
             </div>
+
+            {/* Discord 서버 */}
+            <DiscordBanner compact />
 
           </aside>
 

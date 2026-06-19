@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import DiscordBanner from '@/components/DiscordBanner'
 
 const games = [
   {
@@ -100,6 +101,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* Discord 배너 */}
+      <DiscordBanner />
 
       {/* 통계 바 */}
       <section className="relative z-10 border-t border-white/5 py-12 px-6">
