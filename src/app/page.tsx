@@ -163,6 +163,186 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ── 주요 기능 ── */}
+      <section className="relative z-10 px-6 py-24 max-w-5xl mx-auto w-full">
+        <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">Features</p>
+        <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-4">필요한 건 다 있어요</h2>
+        <p className="text-center text-slate-500 text-sm mb-14">스크림부터 팀 관리까지, 하나의 플랫폼에서</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {[
+            {
+              icon: '⚡',
+              title: '자동 매칭',
+              desc: '버튼 하나로 티어가 비슷한 상대팀을 자동으로 찾아줘요. 기다리는 동안 다른 걸 해도 돼요.',
+              color: '#00D2BE',
+            },
+            {
+              icon: '📋',
+              title: '스크림 게시판',
+              desc: '원하는 날짜, 포맷, 서버를 설정해서 공고를 올리면 상대팀이 신청해요. 수락하면 매치가 바로 생성돼요.',
+              color: '#ff4655',
+            },
+            {
+              icon: '🔍',
+              title: '모집 게시판 (LFT/LFP)',
+              desc: '팀을 찾는 선수, 선수를 찾는 팀. Discord 태그로 바로 연락할 수 있어요.',
+              color: '#c89b3c',
+            },
+            {
+              icon: '🏆',
+              title: '리더보드',
+              desc: '팀 승률, 평균 티어, 스크림 활동량 기준으로 순위를 확인할 수 있어요.',
+              color: '#a78bfa',
+            },
+            {
+              icon: '👥',
+              title: '팀 관리',
+              desc: '멤버 초대, 역할 설정, 공개/초대 전용 전환. 팀 운영에 필요한 모든 것을 한 곳에서.',
+              color: '#60a5fa',
+            },
+            {
+              icon: '🔔',
+              title: '실시간 알림',
+              desc: '스크림 신청, 수락, 매칭 완료, 팀 초대. 중요한 순간을 놓치지 않아요.',
+              color: '#34d399',
+            },
+          ].map((f) => (
+            <div key={f.title} className="bg-[#13131f] border border-white/5 rounded p-5 hover:border-white/10 transition">
+              <div className="text-2xl mb-3">{f.icon}</div>
+              <h3 className="text-white font-bold text-sm mb-2">{f.title}</h3>
+              <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 이렇게 시작하세요 ── */}
+      <section className="relative z-10 px-6 py-24 border-t border-white/5 w-full">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">How it works</p>
+          <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-16">4단계로 첫 스크림까지</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+            {/* 연결선 */}
+            <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+            {[
+              { step: '01', title: '회원가입', desc: '구글 또는 이메일로 가입하고 게임 닉네임과 티어를 등록해요.' },
+              { step: '02', title: '팀 만들기', desc: '직접 팀을 만들거나 공개 팀에 가입 신청을 해요.' },
+              { step: '03', title: '스크림 잡기', desc: '게시판에 공고를 올리거나 자동 매칭으로 상대를 찾아요.' },
+              { step: '04', title: '결과 입력', desc: '맵별 스코어를 입력하면 전적과 승률이 자동으로 기록돼요.' },
+            ].map((s) => (
+              <div key={s.step} className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 rounded-full bg-[#13131f] border border-white/10 flex items-center justify-center mb-4 relative z-10">
+                  <span className="text-[#00D2BE] font-black text-lg">{s.step}</span>
+                </div>
+                <h3 className="text-white font-bold text-sm mb-2">{s.title}</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 자동 매칭 하이라이트 ── */}
+      <section className="relative z-10 px-6 py-24 border-t border-white/5">
+        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">자동 매칭</p>
+            <h2 className="text-white font-black text-3xl mb-5 leading-tight">상대 찾는 데<br />시간 낭비 없이</h2>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              매칭 시작 버튼을 누르면 비슷한 티어의 팀을 자동으로 탐색해요.
+              상대가 찾아지는 순간 알림이 오고 매치가 바로 생성돼요.
+              기다리는 동안 다른 준비를 할 수 있어요.
+            </p>
+            <ul className="flex flex-col gap-2">
+              {['티어 차이 ±2단계 이내 자동 탐색', 'BO1 / BO3 / BO5 포맷 선택', 'KR / AS 서버 선택', '매칭 완료 시 실시간 알림'].map((item) => (
+                <li key={item} className="flex items-center gap-2 text-slate-400 text-xs">
+                  <span className="w-1 h-1 rounded-full bg-[#00D2BE] shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-white text-xs font-bold">자동 매칭</span>
+              <span className="text-[10px] text-slate-500">비슷한 티어 자동 탐색</span>
+            </div>
+            <div className="flex gap-2">
+              {['BO1', 'BO3', 'BO5'].map((f, i) => (
+                <div key={f} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 1 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{f}</div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              {['KR', 'AS'].map((s, i) => (
+                <div key={s} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 0 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{s}</div>
+              ))}
+            </div>
+            <div className="bg-[#0d1a19] border border-[#00D2BE]/20 rounded px-4 py-3 flex items-center gap-2 mt-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE] animate-pulse shrink-0" />
+              <div>
+                <p className="text-white text-xs font-bold">매칭 중...</p>
+                <p className="text-slate-500 text-[10px]">23초 대기 중 · BO3 · KR</p>
+              </div>
+            </div>
+            <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/30 rounded px-4 py-3 flex items-center justify-between">
+              <div>
+                <p className="text-[#00D2BE] text-xs font-black">매칭 완료!</p>
+                <p className="text-slate-400 text-[10px]">EDITH과의 매치가 잡혔어요</p>
+              </div>
+              <span className="bg-[#00D2BE] text-white text-[10px] font-bold px-2.5 py-1 rounded">매치 보기 →</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="relative z-10 px-6 py-24 border-t border-white/5">
+        <div className="max-w-2xl mx-auto">
+          <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">FAQ</p>
+          <h2 className="text-center text-white font-black text-3xl mb-12">자주 묻는 질문</h2>
+
+          <div className="flex flex-col gap-3">
+            {[
+              { q: '무료인가요?', a: '네, 완전 무료예요. 가입부터 스크림 매칭, 팀 관리까지 모든 기능이 무료예요.' },
+              { q: '어떤 게임을 지원하나요?', a: '현재 VALORANT와 League of Legends를 지원해요. 추후 다른 게임도 추가될 예정이에요.' },
+              { q: '팀이 없어도 가입할 수 있나요?', a: '물론이에요. 가입 후 LFT(팀 구함) 게시판에 글을 올리거나, 공개 팀에 가입 신청을 할 수 있어요.' },
+              { q: '스크림 결과는 어떻게 입력하나요?', a: '매치 페이지에서 맵별 스코어를 입력하면 자동으로 승패가 계산되고 팀 전적에 기록돼요.' },
+              { q: '자동 매칭은 어떻게 작동하나요?', a: '팀 평균 티어를 기준으로 ±2단계 이내의 팀과 매칭해요. 같은 게임, 서버, 포맷을 선택한 팀 중 가장 오래 기다린 팀부터 매칭돼요.' },
+              { q: 'Discord 연동은 필수인가요?', a: '필수는 아니에요. 하지만 연동하면 팀 역할이 자동 생성되고 매치 대기실 채널이 만들어져요.' },
+            ].map((item) => (
+              <details key={item.q} className="bg-[#13131f] border border-white/5 rounded group">
+                <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none">
+                  <span className="text-white text-sm font-semibold">{item.q}</span>
+                  <span className="text-slate-500 text-lg group-open:rotate-45 transition-transform duration-200">+</span>
+                </summary>
+                <div className="px-5 pb-4 text-slate-400 text-sm leading-relaxed border-t border-white/5 pt-3">
+                  {item.a}
+                </div>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 최종 CTA ── */}
+      <section className="relative z-10 px-6 py-32 border-t border-white/5 text-center">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#00D2BE]/5 rounded-full blur-[100px]" />
+        </div>
+        <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-4">지금 시작하세요</p>
+        <h2 className="text-white font-black text-4xl md:text-5xl mb-5">
+          다음 스크림 상대,<br />여기서 찾으세요
+        </h2>
+        <p className="text-slate-400 text-sm mb-10">무료 · 가입 1분 · 바로 시작</p>
+        <a href={loggedIn ? '/dashboard' : '/login'}
+          className="inline-block bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-10 py-4 rounded transition text-sm">
+          {loggedIn ? '대시보드로 →' : '무료로 시작하기 →'}
+        </a>
+      </section>
+
       {/* Discord 배너 */}
       <DiscordBanner />
 
