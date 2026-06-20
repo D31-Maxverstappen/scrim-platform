@@ -11,12 +11,34 @@ const TABS = [
   { key: 'lol', label: 'League of Legends' },
 ]
 
+const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
+const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
+
 export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
   const [tab, setTab] = useState(game ?? 'valorant')
+  const [filterServer, setFilterServer] = useState('')
+  const [filterFormat, setFilterFormat] = useState('')
+  const [filterTier, setFilterTier] = useState('')
 
-  const filtered = scrims.filter((s) => s.game_type === (game ?? tab))
-  const gameColor = game === 'lol' ? '#c89b3c' : game === 'valorant' ? '#ff4655' : '#00D2BE'
+  const activeGame = game ?? tab
+  const gameColor = activeGame === 'lol' ? '#c89b3c' : activeGame === 'valorant' ? '#ff4655' : '#00D2BE'
   const allLink = game ? `/${game}/scrims` : '/scrims'
+  const tiers = activeGame === 'lol' ? LOL_TIERS : VAL_TIERS
+
+  const filtered = scrims
+    .filter((s) => s.game_type === activeGame)
+    .filter((s) => !filterServer || (s.server ?? 'KR') === filterServer)
+    .filter((s) => !filterFormat || s.format === filterFormat)
+    .filter((s) => {
+      if (!filterTier) return true
+      const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
+      return t?.tier_avg === filterTier
+    })
+
+  const chipCls = (active: boolean) =>
+    `px-2.5 py-1 text-[10px] font-bold rounded transition cursor-pointer select-none ${
+      active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500 hover:bg-white/10 hover:text-slate-300'
+    }`
 
   return (
     <div className="bg-[#13131f] border border-white/5 overflow-hidden">
@@ -27,7 +49,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
           {!game && TABS.map((t) => (
             <button
               key={t.key}
-              onClick={() => setTab(t.key)}
+              onClick={() => { setTab(t.key); setFilterTier('') }}
               className={`px-4 py-3.5 text-xs font-bold border-b-2 transition ${
                 tab === t.key ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'
               }`}
@@ -36,9 +58,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
             </button>
           ))}
           {game && (
-            <span className="py-3.5 text-xs font-bold text-white">
-              스크림 게시판
-            </span>
+            <span className="py-3.5 text-xs font-bold text-white">스크림 게시판</span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -50,19 +70,41 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
         </div>
       </div>
 
+      {/* 필터 바 */}
+      <div className="flex flex-wrap items-center gap-1.5 px-4 py-2.5 border-b border-white/5">
+        {/* 서버 */}
+        <span className="text-[10px] text-slate-600 uppercase tracking-wider mr-0.5">서버</span>
+        {['KR', 'AS'].map((s) => (
+          <button key={s} onClick={() => setFilterServer(filterServer === s ? '' : s)} className={chipCls(filterServer === s)}>{s}</button>
+        ))}
+        <span className="w-px h-3 bg-white/10 mx-1" />
+        {/* 포맷 */}
+        <span className="text-[10px] text-slate-600 uppercase tracking-wider mr-0.5">포맷</span>
+        {['BO1', 'BO3', 'BO5'].map((f) => (
+          <button key={f} onClick={() => setFilterFormat(filterFormat === f ? '' : f)} className={chipCls(filterFormat === f)}>{f}</button>
+        ))}
+        <span className="w-px h-3 bg-white/10 mx-1" />
+        {/* 티어 */}
+        <span className="text-[10px] text-slate-600 uppercase tracking-wider mr-0.5">티어</span>
+        {tiers.map((tier) => (
+          <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={chipCls(filterTier === tier)}>{tier}</button>
+        ))}
+      </div>
+
       {/* 테이블 헤더 */}
       <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-b border-white/10 text-xs text-slate-600 uppercase tracking-wider">
-        <span className="col-span-4">팀 이름</span>
+        <span className="col-span-3">팀 이름</span>
         <span className="col-span-2">평균 티어</span>
         <span className="col-span-3">희망 시간</span>
         <span className="col-span-2">서버</span>
+        <span className="col-span-1">포맷</span>
         <span className="col-span-1 text-right">신청</span>
       </div>
 
       {/* 스크림 목록 */}
       {filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-slate-600">
-          <p className="text-sm mb-1">모집 중인 스크림이 없어요</p>
+        <div className="flex flex-col items-center justify-center py-12 text-slate-600">
+          <p className="text-sm mb-1">조건에 맞는 스크림이 없어요</p>
           <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 transition">
             + 스크림 올리기
           </a>
@@ -80,7 +122,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
                 href={`/scrims/${s.id}`}
                 className={`grid grid-cols-12 gap-2 px-4 py-3 hover:bg-white/3 transition items-center group border-l-2 border-transparent hover:border-[#00D2BE] ${i !== 0 ? 'border-t border-t-white/10' : ''}`}
               >
-                <span className="col-span-4 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
+                <span className="col-span-3 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
                 <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
                 <span className="col-span-3 text-slate-500 text-xs">{date}</span>
                 <span className="col-span-2 text-xs">
@@ -88,6 +130,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
                     {s.server ?? 'KR'}
                   </span>
                 </span>
+                <span className="col-span-1 text-xs text-slate-500 font-bold">{s.format ?? 'BO3'}</span>
                 <span className="col-span-1 text-right text-[#00D2BE] text-xs">→</span>
               </a>
             )

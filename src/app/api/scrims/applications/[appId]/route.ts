@@ -44,7 +44,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
     const format = scrimPost.format ?? 'BO3'
     await supabase.from('scrim_posts').update({ status: 'matched' }).eq('id', app.scrim_post_id)
 
-    const mapCount = format === 'BO5' ? 5 : 3
+    const mapCount = format === 'BO5' ? 5 : format === 'BO1' ? 1 : 3
     const { data: newMatch, error: matchError } = await supabase.from('matches').insert({
       scrim_post_id: app.scrim_post_id,
       team1_id: scrimPost.team_id,

@@ -12,7 +12,7 @@ export default function PostScrimPage() {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
   const [game, setGame] = useState('valorant')
-  const [format, setFormat] = useState<'BO3' | 'BO5'>('BO3')
+  const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
   const [server, setServer] = useState<'KR' | 'AS'>('KR')
 
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
@@ -111,8 +111,8 @@ export default function PostScrimPage() {
           {/* 포맷 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">매치 포맷 *</label>
-            <div className="grid grid-cols-2 gap-2">
-              {(['BO3', 'BO5'] as const).map((f) => (
+            <div className="grid grid-cols-3 gap-2">
+              {(['BO1', 'BO3', 'BO5'] as const).map((f) => (
                 <button key={f} type="button" onClick={() => setFormat(f)}
                   className={`py-2.5 rounded text-sm font-semibold transition ${format === f ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   {f}
