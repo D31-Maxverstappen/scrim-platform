@@ -120,7 +120,7 @@ export default async function LolDashboardPage() {
                     {team.name[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold text-sm truncate">{team.name}</p>
+                    <p className="text-white font-black text-xl truncate">{team.name}</p>
                     {team.tier_avg && <p className="text-xs mt-0.5" style={{ color: GAME_COLOR }}>{team.tier_avg}</p>}
                     <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded" style={{ background: GAME_COLOR + '33', color: GAME_COLOR }}>
                       {myLolTeam?.role === 'captain' ? '캡틴' : '멤버'}
