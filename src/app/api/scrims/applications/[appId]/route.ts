@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createScrimVoiceChannels } from '@/lib/discord'
+import { notify } from '@/lib/notifications'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
   const { appId } = await params
@@ -95,7 +96,22 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
       await supabase.from('matches').update({ discord_channel_id: channelStr }).eq('id', newMatch.id)
     }
 
+    // 신청 팀 캡틴에게 수락 알림
+    const { data: applyingTeamData } = await supabase.from('teams').select('captain_id').eq('id', applyApp.applying_team_id).single()
+    if (applyingTeamData?.captain_id) {
+      await notify(applyingTeamData.captain_id, 'scrim_accepted', '스크림 신청이 수락됐어요!', '매치가 생성됐어요. 확인해보세요.', `/matches/${newMatch.id}`)
+    }
+
     return NextResponse.json({ success: true, matchId: newMatch.id })
+  }
+
+  // 거절 알림
+  const { data: applyAppForReject } = await supabase.from('scrim_applications').select('applying_team_id').eq('id', appId).single()
+  if (applyAppForReject?.applying_team_id) {
+    const { data: applyingTeamData } = await supabase.from('teams').select('captain_id').eq('id', applyAppForReject.applying_team_id).single()
+    if (applyingTeamData?.captain_id) {
+      await notify(applyingTeamData.captain_id, 'scrim_rejected', '스크림 신청이 거절됐어요', '다른 팀에게 신청해보세요.', null)
+    }
   }
 
   return NextResponse.json({ success: true })

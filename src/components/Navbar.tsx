@@ -6,6 +6,7 @@ import Image from 'next/image'
 import ThemeToggle from './ThemeToggle'
 import GameSwitcher from './GameSwitcher'
 import ProfileDropdown from './ProfileDropdown'
+import NotificationBell from './NotificationBell'
 import { createClient } from '@/lib/supabase/client'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }
@@ -105,6 +106,7 @@ export default function Navbar() {
       {/* 우측 */}
       <div className="shrink-0 flex items-center gap-3">
         <ThemeToggle />
+        <NotificationBell />
         <ProfileDropdown />
       </div>
     </nav>
