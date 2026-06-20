@@ -65,6 +65,21 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
     return () => stopTimer()
   }, [])
 
+  // 폴링: 'waiting' 상태일 때 5초마다 상태 확인 (Realtime 백업)
+  useEffect(() => {
+    if (status !== 'waiting') return
+    const poll = setInterval(async () => {
+      const res = await fetch(`/api/matchmaking/status?game_type=${gameType}`)
+      const data = await res.json()
+      if (data.status === 'matched' && data.matchId) {
+        stopTimer()
+        setStatus('matched')
+        setMatchId(data.matchId)
+      }
+    }, 5000)
+    return () => clearInterval(poll)
+  }, [status, gameType])
+
   const startTimer = () => {
     if (timerRef.current) return
     sinceRef.current = sinceRef.current ?? Date.now()
