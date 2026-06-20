@@ -87,7 +87,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                 <p className="text-slate-500 text-xs">{match.format}</p>
               </div>
               <div className="flex items-center gap-4">
-                {isCaptain && (
+                {isCaptain && match.status !== 'completed' && (
                   <div className="flex items-center gap-2">
                     <MatchScoreInput
                       matchId={id}
@@ -99,7 +99,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                       team2Name={team2?.name ?? '팀 2'}
                       initialMaps={maps ?? []}
                     />
-                    {match.status !== 'completed' && <MatchCancelButton matchId={id} />}
+                    <MatchCancelButton matchId={id} />
                   </div>
                 )}
                 <div className="text-right">
