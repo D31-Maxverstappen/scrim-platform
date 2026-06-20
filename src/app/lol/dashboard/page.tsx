@@ -8,6 +8,7 @@ import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
 import ReceivedApplications from '@/components/ReceivedApplications'
 import DiscordBanner from '@/components/DiscordBanner'
+import OnboardingChecklist from '@/components/OnboardingChecklist'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME = 'lol'
@@ -159,6 +160,32 @@ export default async function LolDashboardPage() {
               ))}
             </div>
 
+            <OnboardingChecklist steps={[
+              {
+                id: 'riot',
+                label: 'Riot 계정 연동',
+                desc: '리그 오브 레전드 닉네임과 티어를 등록하세요',
+                done: !!(profile?.lol_gamename || profile?.riot_gamename),
+                href: '/onboarding',
+                cta: '연동하기',
+              },
+              {
+                id: 'team',
+                label: '팀 가입 또는 생성',
+                desc: '팀이 있어야 스크림을 신청할 수 있어요',
+                done: !!team,
+                href: team ? `/teams/${team.id}` : '/teams/create',
+                cta: team ? '내 팀 보기' : '팀 만들기',
+              },
+              {
+                id: 'scrim',
+                label: '첫 스크림 신청',
+                desc: '스크림 게시판에서 상대 팀을 찾아보세요',
+                done: (allApplications ?? []).length > 0,
+                href: '/lol/scrims',
+                cta: '스크림 찾기',
+              },
+            ]} />
             <ScrimList scrims={recentScrims ?? []} game={GAME} />
 
             <ReceivedApplications initialApps={receivedApps} />

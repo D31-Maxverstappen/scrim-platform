@@ -111,55 +111,77 @@ function DoneStep({ valProfile, lolProfile, onGo }: {
 
   return (
     <div className="min-h-screen bg-[#07070b] flex items-center justify-center px-6">
-      <div className="w-full max-w-sm text-center">
-        <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-          <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h2 className="text-white font-bold text-xl mb-2">설정 완료!</h2>
-        <div className="flex flex-col gap-1.5 mb-6 text-sm">
-          {valProfile && <p className="text-[#ff4655]">VALORANT · {valProfile.gameName}#{valProfile.tagLine} · {valProfile.tier}</p>}
-          {lolProfile && <p className="text-[#c89b3c]">League of Legends · {lolProfile.gameName}#{lolProfile.tagLine} · {lolProfile.tier}</p>}
-          {!valProfile && !lolProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
+      <div className="w-full max-w-sm">
+        {/* 완료 헤더 */}
+        <div className="text-center mb-6">
+          <div className="w-14 h-14 rounded-full bg-[#00D2BE]/20 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-7 h-7 text-[#00D2BE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h2 className="text-white font-bold text-xl mb-1">프로필 설정 완료!</h2>
+          <div className="flex flex-col gap-1 text-xs mt-2">
+            {valProfile && <p className="text-[#ff4655]">VALORANT · {valProfile.gameName}#{valProfile.tagLine} · {valProfile.tier}</p>}
+            {lolProfile && <p className="text-[#c89b3c]">LoL · {lolProfile.gameName}#{lolProfile.tagLine} · {lolProfile.tier}</p>}
+            {!valProfile && !lolProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
+          </div>
         </div>
 
-        {/* Discord 서버 초대 카드 */}
-        <div className="bg-[#1e1e2e] border border-[#5865F2]/30 rounded-lg p-5 mb-4 text-left">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-[#5865F2]/20 rounded-full flex items-center justify-center shrink-0">
-              <svg className="w-5 h-5 text-[#5865F2]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"/>
-              </svg>
-            </div>
-            <div>
-              <p className="text-white font-bold text-sm">D31 공식 Discord 서버</p>
-              <p className="text-slate-500 text-xs">스크림 공지, 팀원 모집, 커뮤니티</p>
-            </div>
-          </div>
-          {inviteLoading ? (
-            <div className="w-full h-10 bg-white/5 rounded animate-pulse" />
-          ) : inviteUrl ? (
-            <a
-              href={inviteUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-[#5865F2] hover:bg-[#4752c4] text-white font-bold py-2.5 rounded transition text-sm"
-            >
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"/>
-              </svg>
-              서버 참여하기
+        {/* 다음 단계 */}
+        <div className="bg-[#111118] border border-white/5 rounded p-5 mb-4">
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">다음 단계</p>
+          <div className="flex flex-col gap-2">
+            <a href="/teams/create"
+              className="flex items-center gap-3 bg-[#00D2BE]/10 border border-[#00D2BE]/20 hover:border-[#00D2BE]/40 rounded px-4 py-3.5 transition group">
+              <div className="w-8 h-8 bg-[#00D2BE]/20 rounded flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-[#00D2BE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-white font-bold text-sm">새 팀 만들기</p>
+                <p className="text-slate-500 text-xs">팀을 만들고 캡틴이 되세요</p>
+              </div>
+              <span className="text-[#00D2BE] text-sm group-hover:translate-x-0.5 transition-transform">→</span>
             </a>
-          ) : (
-            <p className="text-slate-500 text-xs text-center">초대 링크를 불러올 수 없어요. 나중에 다시 시도해주세요.</p>
+            <a href="/teams"
+              className="flex items-center gap-3 bg-white/3 border border-white/5 hover:border-white/10 rounded px-4 py-3.5 transition group">
+              <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center shrink-0">
+                <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-white font-bold text-sm">팀 찾아 가입하기</p>
+                <p className="text-slate-500 text-xs">기존 팀에 합류하세요</p>
+              </div>
+              <span className="text-slate-500 text-sm group-hover:translate-x-0.5 transition-transform">→</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Discord */}
+        <div className="bg-[#1e1e2e] border border-[#5865F2]/30 rounded p-4 mb-4 flex items-center gap-3">
+          <div className="w-9 h-9 bg-[#5865F2]/20 rounded-full flex items-center justify-center shrink-0">
+            <svg className="w-4 h-4 text-[#5865F2]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026c.462-.62.874-1.275 1.226-1.963.021-.04.001-.088-.041-.104a13.201 13.201 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z"/>
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-bold text-xs">D31 Discord 서버</p>
+            <p className="text-slate-500 text-xs">팀원 모집, 커뮤니티</p>
+          </div>
+          {!inviteLoading && inviteUrl && (
+            <a href={inviteUrl} target="_blank" rel="noopener noreferrer"
+              className="bg-[#5865F2] hover:bg-[#4752c4] text-white text-xs font-bold px-3 py-1.5 rounded transition shrink-0">
+              참여
+            </a>
           )}
         </div>
 
-        <button onClick={onGo} className="w-full bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold py-3 rounded transition">
-          대시보드로 이동 →
+        <button onClick={onGo} className="w-full text-center text-slate-500 text-xs hover:text-slate-300 transition py-2">
+          나중에 → 대시보드로
         </button>
-        <p className="text-slate-600 text-xs mt-3">Discord 서버는 나중에 참여해도 돼요</p>
       </div>
     </div>
   )
