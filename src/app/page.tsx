@@ -116,6 +116,23 @@ export default function HomePage() {
             </a>
           </div>
 
+          {/* 기능 배지 */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+            {[
+              { icon: '⚡', label: '자동 매칭' },
+              { icon: '📋', label: '스크림 게시판' },
+              { icon: '🔍', label: 'LFT / LFP 모집' },
+              { icon: '🏆', label: '팀 리더보드' },
+              { icon: '👥', label: '팀 관리' },
+              { icon: '🔔', label: '실시간 알림' },
+            ].map((f) => (
+              <span key={f.label} className="flex items-center gap-1.5 bg-white/5 border border-white/8 text-slate-400 text-xs px-3 py-1.5 rounded-full">
+                <span>{f.icon}</span>
+                {f.label}
+              </span>
+            ))}
+          </div>
+
           {/* 모바일 전용 스탯 (lg 미만) */}
           <div className="flex lg:hidden gap-3 mt-10 w-full justify-center">
             <StatCard label="가입 유저" value={stats.users} />
