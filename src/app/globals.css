@@ -88,3 +88,28 @@ body {
 /* 스크롤바 */
 [data-theme="light"] ::-webkit-scrollbar-track { background: #f1f5f9; }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+
+/* 네온 그라데이션 보더 애니메이션 */
+@keyframes neon-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.neon-border-wrap {
+  background: linear-gradient(135deg, #00D2BE, #7B61FF, #FF6B9D, #00bfff, #00D2BE);
+  background-size: 300% 300%;
+  animation: neon-gradient-shift 4s ease infinite;
+}
+
+.neon-border-glow {
+  box-shadow: 0 0 24px rgba(0, 210, 190, 0.35), 0 0 48px rgba(123, 97, 255, 0.18), 0 0 80px rgba(0, 210, 190, 0.1);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.shimmer {
+  animation: shimmer 4s ease-in-out infinite;
+}
