@@ -20,8 +20,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     .from('matches')
     .select(`
       *,
-      team1:teams!team1_id(id, name, game_type, tier_avg),
-      team2:teams!team2_id(id, name, game_type, tier_avg),
+      team1:teams!team1_id(id, name, abbreviation, game_type, tier_avg),
+      team2:teams!team2_id(id, name, abbreviation, game_type, tier_avg),
       winner:teams!winner_id(id, name)
     `)
     .eq('id', id)
@@ -112,11 +112,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             {/* 팀 vs 팀 */}
             <div className="flex items-center justify-between gap-4">
               {/* 팀 1 */}
-              <div className="flex-1 text-left">
-                <p className={`text-2xl font-black ${winner?.id === team1?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
-                  {team1?.name ?? '—'}
-                </p>
-                <p className="text-slate-600 text-xs mt-1">{team1?.tier_avg ?? '—'}</p>
+              <div className="flex-1 flex items-center gap-4">
+                <div className={`w-16 h-16 shrink-0 rounded-xl flex items-center justify-center font-black text-2xl border border-white/10 ${winner?.id === team1?.id || match.status !== 'completed' ? 'bg-[#1a1a2e] text-white' : 'bg-[#13131f] text-slate-600'}`}>
+                  {(team1?.abbreviation || team1?.name || '?')[0].toUpperCase()}
+                </div>
+                <div>
+                  <p className={`text-xl font-black ${winner?.id === team1?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
+                    {team1?.name ?? '—'}
+                  </p>
+                  <p className="text-slate-600 text-xs mt-0.5">{team1?.tier_avg ?? '—'}</p>
+                </div>
               </div>
 
               {/* 스코어 */}
@@ -139,11 +144,16 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               </div>
 
               {/* 팀 2 */}
-              <div className="flex-1 text-right">
-                <p className={`text-2xl font-black ${winner?.id === team2?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
-                  {team2?.name ?? '—'}
-                </p>
-                <p className="text-slate-600 text-xs mt-1">{team2?.tier_avg ?? '—'}</p>
+              <div className="flex-1 flex items-center justify-end gap-4">
+                <div className="text-right">
+                  <p className={`text-xl font-black ${winner?.id === team2?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
+                    {team2?.name ?? '—'}
+                  </p>
+                  <p className="text-slate-600 text-xs mt-0.5">{team2?.tier_avg ?? '—'}</p>
+                </div>
+                <div className={`w-16 h-16 shrink-0 rounded-xl flex items-center justify-center font-black text-2xl border border-white/10 ${winner?.id === team2?.id || match.status !== 'completed' ? 'bg-[#1a1a2e] text-white' : 'bg-[#13131f] text-slate-600'}`}>
+                  {(team2?.abbreviation || team2?.name || '?')[0].toUpperCase()}
+                </div>
               </div>
             </div>
           </div>

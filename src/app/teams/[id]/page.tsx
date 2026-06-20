@@ -251,9 +251,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
         {/* ── 팀 헤더 (Liquipedia 스타일) ── */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-white/10">
           {/* 팀 로고 */}
-          <div className="w-28 h-28 shrink-0 border border-white/10 bg-[#13131f] flex items-center justify-center text-5xl font-black rounded"
+          <div className="w-36 h-36 shrink-0 border border-white/10 bg-[#13131f] flex items-center justify-center text-7xl font-black rounded-xl"
             style={{ color: gameColor }}>
-            {team.name[0].toUpperCase()}
+            {(team.abbreviation || team.name)[0].toUpperCase()}
           </div>
 
           {/* 팀 정보 */}
