@@ -32,10 +32,8 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
           setServer(data.server ?? 'KR')
           sinceRef.current = new Date(data.since).getTime()
           startTimer()
-        } else if (data.status === 'matched' && data.matchId) {
-          setStatus('matched')
-          setMatchId(data.matchId)
         }
+        // matched는 status route에서 완료된 매치면 idle로 반환하므로 별도 처리 불필요
       })
   }, [gameType])
 
@@ -51,8 +49,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
       }, (payload) => {
         if (payload.new.status === 'matched') {
           stopTimer()
-          setStatus('matched')
-          setMatchId(payload.new.match_id)
+          router.push(`/matches/${payload.new.match_id}`)
         }
       })
       .subscribe()
@@ -78,8 +75,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
         const data = await res.json()
         if (data.status === 'matched' && data.matchId) {
           stopTimer()
-          setStatus('matched')
-          setMatchId(data.matchId)
+          router.push(`/matches/${data.matchId}`)
         }
       } catch { /* ignore */ }
     }, 5000)
@@ -113,8 +109,8 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
       if (!res.ok) {
         setError(data.error ?? `오류 (${res.status})`)
       } else if (data.status === 'matched') {
-        setStatus('matched')
-        setMatchId(data.matchId)
+        stopTimer()
+        router.push(`/matches/${data.matchId}`)
       } else if (data.status === 'waiting') {
         setStatus('waiting')
         sinceRef.current = Date.now()

@@ -24,6 +24,15 @@ export async function GET(req: NextRequest) {
 
   if (!entry) return NextResponse.json({ status: 'idle' })
 
+  // 매치가 완료/취소됐으면 큐 정리 후 idle 반환
+  if (entry.status === 'matched' && entry.match_id) {
+    const { data: match } = await supabase.from('matches').select('status').eq('id', entry.match_id).single()
+    if (!match || match.status === 'completed' || match.status === 'cancelled') {
+      await supabase.from('matchmaking_queue').delete().eq('team_id', team.id)
+      return NextResponse.json({ status: 'idle' })
+    }
+  }
+
   return NextResponse.json({
     status: entry.status,
     matchId: entry.match_id,
