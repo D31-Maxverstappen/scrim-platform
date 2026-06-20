@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     entryId = entry.id
   }
 
-  // 상대 탐색 (어드민으로 RLS 우회): 같은 게임/서버/포맷, 티어 ±20, 가장 오래 기다린 팀
+  // 상대 탐색 (어드민으로 RLS 우회): 같은 게임/서버/포맷
   const { data: opponents } = await db
     .from('matchmaking_queue')
     .select('*, teams(id, name, captain_id)')
@@ -74,8 +74,6 @@ export async function POST(req: NextRequest) {
     .eq('format', format)
     .eq('status', 'waiting')
     .neq('team_id', team.id)
-    .gte('tier_rank', tier_rank - 20)
-    .lte('tier_rank', tier_rank + 20)
     .order('created_at', { ascending: true })
     .limit(1)
 

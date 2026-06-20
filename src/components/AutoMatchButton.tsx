@@ -174,7 +174,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
               <p className="text-slate-500 text-[10px]">{formatElapsed(elapsed)} 대기 중 · {format} · {server}</p>
             </div>
           </div>
-          <button onClick={handleCancel} className="text-slate-500 hover:text-red-400 text-[10px] font-semibold transition">취소</button>
+          <button onClick={handleCancel} className="text-slate-500 hover:text-red-400 text-[10px] font-semibold transition shrink-0">취소</button>
         </div>
       </div>
     )
