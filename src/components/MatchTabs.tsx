@@ -222,8 +222,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
       <div className="overflow-x-auto">
         {/* 팀 1 */}
         <div>
-          <div className="px-4 py-2 bg-white/2 border-b border-white/5">
-            <span className="text-white text-xs font-bold">{team1?.name}</span>
+          <div className="px-4 py-3 bg-white/2 border-b border-white/5">
+            <span className="text-white text-xl font-black">{team1?.name}</span>
           </div>
           <StatHeader />
           {padded1.map((item, i) =>
@@ -234,8 +234,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
         </div>
         {/* 팀 2 */}
         <div className="mt-2">
-          <div className="px-4 py-2 bg-white/2 border-b border-white/5">
-            <span className="text-white text-xs font-bold">{team2?.name}</span>
+          <div className="px-4 py-3 bg-white/2 border-b border-white/5">
+            <span className="text-white text-xl font-black">{team2?.name}</span>
           </div>
           <StatHeader />
           {padded2.map((item, i) =>
