@@ -253,7 +253,7 @@ export default function HomePage() {
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
             {[
-              { step: '01', title: '회원가입', desc: 'Discord 계정으로 1초 만에 가입하고 게임 닉네임과 티어를 등록해요.' },
+              { step: '01', title: '회원가입', desc: 'Discord 계정으로 간편하게 가입하고 게임 닉네임과 티어를 등록해요.' },
               { step: '02', title: '팀 만들기', desc: '직접 팀을 만들거나 공개 팀에 가입 신청을 해요.' },
               { step: '03', title: '스크림 잡기', desc: '게시판에 공고를 올리거나 자동 매칭으로 상대를 찾아요.' },
               { step: '04', title: '결과 입력', desc: '맵별 스코어를 입력하면 전적과 승률이 자동으로 기록돼요.' },
