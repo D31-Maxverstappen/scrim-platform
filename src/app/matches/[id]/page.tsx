@@ -192,8 +192,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         <RosterComparison
           team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
           team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
-          team1Name={team1?.name ?? '팀 1'}
-          team2Name={team2?.name ?? '팀 2'}
+          team1Name={team1?.abbreviation || team1?.name || '팀 1'}
+          team2Name={team2?.abbreviation || team2?.name || '팀 2'}
         />
 
         {/* ── 탭 + 콘텐츠 ── */}

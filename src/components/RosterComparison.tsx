@@ -80,10 +80,10 @@ export default function RosterComparison({ team1Members, team2Members, team1Name
 
       <div className="grid grid-cols-[1fr_auto_1fr] gap-0 p-4 gap-x-4">
         {/* 팀 1 이름 */}
-        <p className="text-white text-xs font-bold mb-3">{team1Name}</p>
+        <p className="text-white text-xl font-black mb-3 tracking-wide">{team1Name}</p>
         <div />
         {/* 팀 2 이름 */}
-        <p className="text-white text-xs font-bold mb-3 text-right">{team2Name}</p>
+        <p className="text-white text-xl font-black mb-3 text-right tracking-wide">{team2Name}</p>
 
         {/* 플레이어 rows */}
         {Array.from({ length: maxLen }).map((_, i) => {
