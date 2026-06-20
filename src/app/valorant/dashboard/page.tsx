@@ -10,6 +10,7 @@ import ReceivedApplications from '@/components/ReceivedApplications'
 import DiscordBanner from '@/components/DiscordBanner'
 import OnboardingChecklist from '@/components/OnboardingChecklist'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import AutoMatchButton from '@/components/AutoMatchButton'
 
 const GAME = 'valorant'
 const GAME_COLOR = '#ff4655'
@@ -141,6 +142,8 @@ export default async function ValorantDashboardPage() {
               </div>
               <span className="text-slate-600 group-hover:text-[#00D2BE] transition text-sm">→</span>
             </a>
+
+            {team && <AutoMatchButton teamId={team.id} gameType={GAME} />}
 
             <DiscordBanner compact />
           </aside>
