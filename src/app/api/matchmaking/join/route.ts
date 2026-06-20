@@ -37,30 +37,36 @@ export async function POST(req: NextRequest) {
 
   if (!team) return NextResponse.json({ error: '해당 게임의 팀 캡틴이어야 해요.' }, { status: 403 })
 
-  // 이미 큐에 있으면 현재 상태 반환
-  const { data: existing } = await supabase
+  const db = admin()
+  const tier_rank = tierToRank(team.tier_avg)
+
+  // 이미 큐에 있으면 → matched면 반환, waiting이면 상대 탐색 계속
+  const { data: existing } = await db
     .from('matchmaking_queue')
     .select('*')
     .eq('team_id', team.id)
     .single()
 
-  if (existing) {
-    return NextResponse.json({ status: existing.status, matchId: existing.match_id, queueId: existing.id })
+  if (existing?.status === 'matched') {
+    return NextResponse.json({ status: 'matched', matchId: existing.match_id })
   }
 
-  const tier_rank = tierToRank(team.tier_avg)
+  // 기존 waiting 엔트리가 없으면 새로 삽입
+  let entryId: string
+  if (existing) {
+    entryId = existing.id
+  } else {
+    const { data: entry, error } = await db
+      .from('matchmaking_queue')
+      .insert({ team_id: team.id, game_type, format, server, tier_rank, status: 'waiting' })
+      .select()
+      .single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    entryId = entry.id
+  }
 
-  // 큐에 등록
-  const { data: entry, error } = await supabase
-    .from('matchmaking_queue')
-    .insert({ team_id: team.id, game_type, format, server, tier_rank, status: 'waiting' })
-    .select()
-    .single()
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  // 상대 탐색: 같은 게임/서버/포맷, 티어 차이 ±20 이내, 가장 오래 기다린 팀
-  const { data: opponents } = await supabase
+  // 상대 탐색 (어드민으로 RLS 우회): 같은 게임/서버/포맷, 티어 ±20, 가장 오래 기다린 팀
+  const { data: opponents } = await db
     .from('matchmaking_queue')
     .select('*, teams(id, name, captain_id)')
     .eq('game_type', game_type)
@@ -74,14 +80,17 @@ export async function POST(req: NextRequest) {
     .limit(1)
 
   if (!opponents || opponents.length === 0) {
-    return NextResponse.json({ status: 'waiting', queueId: entry.id })
+    return NextResponse.json({ status: 'waiting', queueId: entryId })
   }
 
   const opponent = opponents[0]
   const opponentTeam = Array.isArray(opponent.teams) ? opponent.teams[0] : opponent.teams
 
-  // 매치 생성 (어드민 클라이언트로 RLS 우회)
-  const db = admin()
+  if (!opponentTeam) {
+    return NextResponse.json({ status: 'waiting', queueId: entryId })
+  }
+
+  // 매치 생성
   const now = new Date().toISOString()
   const { data: match, error: matchError } = await db
     .from('matches')
@@ -99,9 +108,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '매치 생성 실패: ' + matchError?.message }, { status: 500 })
   }
 
-  // 양팀 큐 상태 업데이트 (어드민 클라이언트로)
+  // 양팀 큐 상태 업데이트
   await Promise.all([
-    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', entry.id),
+    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', entryId),
     db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', opponent.id),
   ])
 
