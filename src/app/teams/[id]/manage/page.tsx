@@ -60,6 +60,8 @@ export default function ManageTeamPage() {
   const [editSaving, setEditSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
+  const [isOpen, setIsOpen] = useState(true)
+  const [isOpenSaving, setIsOpenSaving] = useState(false)
   const [inviteSearch, setInviteSearch] = useState('')
   const [inviteResults, setInviteResults] = useState<any[]>([])
   const [inviteStatus, setInviteStatus] = useState<Record<string, 'idle' | 'sent' | 'error'>>({})
@@ -77,6 +79,7 @@ export default function ManageTeamPage() {
     setTeam(t)
     setEditName(t.name ?? '')
     setEditAbbr(t.abbreviation ?? '')
+    setIsOpen(t.is_open !== false)
 
     const { data: m } = await supabase
       .from('team_members')
@@ -146,6 +149,15 @@ export default function ManageTeamPage() {
     await supabase.from('team_members').delete().eq('team_id', teamId).eq('user_id', userId)
     setMsg('멤버를 내보냈어요.')
     load()
+  }
+
+  const handleToggleOpen = async () => {
+    setIsOpenSaving(true)
+    const newVal = !isOpen
+    await supabase.from('teams').update({ is_open: newVal }).eq('id', teamId)
+    setIsOpen(newVal)
+    setIsOpenSaving(false)
+    setMsg(newVal ? '팀을 공개로 전환했어요.' : '팀을 초대 전용으로 전환했어요.')
   }
 
   const handleSaveInfo = async () => {
@@ -224,6 +236,27 @@ export default function ManageTeamPage() {
             >
               {editSaving ? '저장 중...' : '저장'}
             </button>
+
+            <div className="border-t border-white/5 pt-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white text-sm font-semibold">팀 공개 설정</p>
+                  <p className="text-slate-500 text-xs mt-0.5">
+                    {isOpen ? '공개 팀 — 누구든 가입 신청을 보낼 수 있어요' : '초대 전용 — 캡틴이 직접 초대해야 합류할 수 있어요'}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleToggleOpen}
+                  disabled={isOpenSaving}
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-50
+                    ${isOpen ? 'bg-[#00D2BE]' : 'bg-white/10'}`}
+                >
+                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200
+                    ${isOpen ? 'translate-x-7' : 'translate-x-1'}`} />
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 

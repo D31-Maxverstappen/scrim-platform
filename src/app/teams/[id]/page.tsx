@@ -26,7 +26,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses').eq('id', id).single()
+  const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses, is_open').eq('id', id).single()
   if (!team) notFound()
 
   const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }] = await Promise.all([
@@ -276,9 +276,14 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           </div>
 
           {/* 액션 버튼 */}
-          <div className="flex gap-2 shrink-0">
-            {!isMember && !isCaptain && (
+          <div className="flex gap-2 shrink-0 items-center">
+            {!isMember && !isCaptain && team.is_open !== false && (
               <JoinTeamButton teamId={id} hasPendingRequest={!!pendingRequest} />
+            )}
+            {!isMember && !isCaptain && team.is_open === false && (
+              <span className="text-slate-400 text-xs font-semibold px-4 py-2 border border-white/10 rounded bg-white/3">
+                🔒 초대 전용 팀
+              </span>
             )}
             {isMember && !isCaptain && (
               <LeaveTeamButton teamId={id} />

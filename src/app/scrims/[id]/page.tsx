@@ -91,7 +91,13 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 />
               )}
               {team?.captain_id === user.id && post.status === 'open' && (
-                <ScrimCancelButton scrimId={id} />
+                <div className="flex items-center gap-2">
+                  <a href={`/scrims/${id}/edit`}
+                    className="bg-white/5 hover:bg-white/10 text-slate-300 text-sm font-semibold px-4 py-2 rounded transition">
+                    수정
+                  </a>
+                  <ScrimCancelButton scrimId={id} />
+                </div>
               )}
             </div>
           </div>
