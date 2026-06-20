@@ -78,11 +78,14 @@ export default function HomePage() {
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
         <Image src="/logo.png" alt="D31" width={112} height={112} className="object-contain" />
-        {loggedIn && (
-          <a href="/dashboard" className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
-            홈으로
-          </a>
-        )}
+        <div className="hidden md:flex items-center gap-1 text-sm">
+          <a href="#features" className="text-slate-400 hover:text-white px-3 py-2 transition text-xs">기능 소개</a>
+          <a href="#howto" className="text-slate-400 hover:text-white px-3 py-2 transition text-xs">사용 방법</a>
+          <a href="#faq" className="text-slate-400 hover:text-white px-3 py-2 transition text-xs">FAQ</a>
+        </div>
+        <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded transition">
+          {loggedIn ? '홈으로' : '시작하기'}
+        </a>
       </nav>
 
       {/* 히어로 */}
@@ -133,6 +136,14 @@ export default function HomePage() {
             ))}
           </div>
 
+          {/* 스크롤 유도 */}
+          <a href="#features" className="mt-12 flex flex-col items-center gap-1 text-slate-600 hover:text-slate-400 transition group">
+            <span className="text-xs tracking-widest uppercase">자세히 보기</span>
+            <svg className="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+            </svg>
+          </a>
+
           {/* 모바일 전용 스탯 (lg 미만) */}
           <div className="flex lg:hidden gap-3 mt-10 w-full justify-center">
             <StatCard label="가입 유저" value={stats.users} />
@@ -181,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* ── 주요 기능 ── */}
-      <section className="relative z-10 px-6 py-24 max-w-5xl mx-auto w-full">
+      <section id="features" className="relative z-10 px-6 py-24 max-w-5xl mx-auto w-full">
         <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">Features</p>
         <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-4">필요한 건 다 있어요</h2>
         <p className="text-center text-slate-500 text-sm mb-14">스크림부터 팀 관리까지, 하나의 플랫폼에서</p>
@@ -235,7 +246,7 @@ export default function HomePage() {
       </section>
 
       {/* ── 이렇게 시작하세요 ── */}
-      <section className="relative z-10 px-6 py-24 border-t border-white/5 w-full">
+      <section id="howto" className="relative z-10 px-6 py-24 border-t border-white/5 w-full">
         <div className="max-w-4xl mx-auto">
           <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">How it works</p>
           <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-16">4단계로 첫 스크림까지</h2>
@@ -316,7 +327,7 @@ export default function HomePage() {
       </section>
 
       {/* ── FAQ ── */}
-      <section className="relative z-10 px-6 py-24 border-t border-white/5">
+      <section id="faq" className="relative z-10 px-6 py-24 border-t border-white/5">
         <div className="max-w-2xl mx-auto">
           <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">FAQ</p>
           <h2 className="text-center text-white font-black text-3xl mb-12">자주 묻는 질문</h2>
