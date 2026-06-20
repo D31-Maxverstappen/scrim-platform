@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { notify } from '@/lib/notifications'
+
+const admin = () => createAdminClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+)
 
 const TIER_RANK: Record<string, number> = {
   Iron: 10, Bronze: 20, Silver: 30, Gold: 40, Platinum: 50,
@@ -74,9 +80,10 @@ export async function POST(req: NextRequest) {
   const opponent = opponents[0]
   const opponentTeam = Array.isArray(opponent.teams) ? opponent.teams[0] : opponent.teams
 
-  // 매치 생성
+  // 매치 생성 (어드민 클라이언트로 RLS 우회)
+  const db = admin()
   const now = new Date().toISOString()
-  const { data: match, error: matchError } = await supabase
+  const { data: match, error: matchError } = await db
     .from('matches')
     .insert({
       team1_id: team.id,
@@ -89,13 +96,13 @@ export async function POST(req: NextRequest) {
     .single()
 
   if (matchError || !match) {
-    return NextResponse.json({ status: 'waiting', queueId: entry.id })
+    return NextResponse.json({ error: '매치 생성 실패: ' + matchError?.message }, { status: 500 })
   }
 
-  // 양팀 큐 상태 업데이트
+  // 양팀 큐 상태 업데이트 (어드민 클라이언트로)
   await Promise.all([
-    supabase.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', entry.id),
-    supabase.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', opponent.id),
+    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', entry.id),
+    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', opponent.id),
   ])
 
   // 알림 발송
