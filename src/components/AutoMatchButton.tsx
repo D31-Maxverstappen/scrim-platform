@@ -15,6 +15,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
   const [expanded, setExpanded] = useState(false)
   const [elapsed, setElapsed] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const sinceRef = useRef<number | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -80,22 +81,29 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
 
   const handleJoin = async () => {
     setLoading(true)
-    const res = await fetch('/api/matchmaking/join', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ game_type: gameType, format, server }),
-    })
-    const data = await res.json()
-    setLoading(false)
-    if (data.status === 'matched') {
-      setStatus('matched')
-      setMatchId(data.matchId)
-    } else if (data.status === 'waiting') {
-      setStatus('waiting')
-      sinceRef.current = Date.now()
-      startTimer()
-      setExpanded(false)
+    setError('')
+    try {
+      const res = await fetch('/api/matchmaking/join', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ game_type: gameType, format, server }),
+      })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error ?? '오류가 발생했어요.')
+      } else if (data.status === 'matched') {
+        setStatus('matched')
+        setMatchId(data.matchId)
+      } else if (data.status === 'waiting') {
+        setStatus('waiting')
+        sinceRef.current = Date.now()
+        startTimer()
+        setExpanded(false)
+      }
+    } catch {
+      setError('네트워크 오류가 발생했어요.')
     }
+    setLoading(false)
   }
 
   const handleCancel = async () => {
@@ -190,6 +198,9 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
               ))}
             </div>
           </div>
+          {error && (
+            <p className="text-red-400 text-[10px] bg-red-500/10 border border-red-500/20 rounded px-3 py-2">{error}</p>
+          )}
           <button
             onClick={handleJoin}
             disabled={loading}

@@ -84,7 +84,6 @@ export async function POST(req: NextRequest) {
       format,
       status: 'scheduled',
       match_date: now,
-      game_type,
     })
     .select()
     .single()
