@@ -90,7 +90,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? '오류가 발생했어요.')
+        setError(data.error ?? `오류 (${res.status})`)
       } else if (data.status === 'matched') {
         setStatus('matched')
         setMatchId(data.matchId)
@@ -99,9 +99,11 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
         sinceRef.current = Date.now()
         startTimer()
         setExpanded(false)
+      } else {
+        setError(`알 수 없는 응답: ${JSON.stringify(data)}`)
       }
-    } catch {
-      setError('네트워크 오류가 발생했어요.')
+    } catch (e: any) {
+      setError(`오류: ${e?.message ?? '알 수 없는 오류'}`)
     }
     setLoading(false)
   }
@@ -180,6 +182,10 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
         <span className={`text-slate-600 text-xs transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}>▾</span>
       </button>
 
+      {error && (
+        <p className="text-red-400 text-[10px] bg-red-500/10 border-t border-red-500/20 px-4 py-2">{error}</p>
+      )}
+
       {expanded && (
         <div className="border-t border-white/5 px-4 pb-4 pt-3 flex flex-col gap-3">
           <div className="flex items-center gap-3">
@@ -198,9 +204,6 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
               ))}
             </div>
           </div>
-          {error && (
-            <p className="text-red-400 text-[10px] bg-red-500/10 border border-red-500/20 rounded px-3 py-2">{error}</p>
-          )}
           <button
             onClick={handleJoin}
             disabled={loading}

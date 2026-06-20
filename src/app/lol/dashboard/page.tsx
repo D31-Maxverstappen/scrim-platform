@@ -143,7 +143,7 @@ export default async function LolDashboardPage() {
               <span className="text-slate-600 group-hover:text-[#00D2BE] transition text-sm">→</span>
             </a>
 
-            {team && <AutoMatchButton teamId={team.id} gameType={GAME} />}
+            {team && myLolTeam?.role === 'captain' && <AutoMatchButton teamId={team.id} gameType={GAME} />}
 
             <DiscordBanner compact />
           </aside>
