@@ -15,11 +15,13 @@ export default function CreateTeamPage() {
   const [name, setName] = useState('')
   const [abbr, setAbbr] = useState('')
 
-  const nameValid = name.length >= 3 && name.length <= 10
+  const nameEnglishOnly = /^[a-zA-Z0-9 _\-\.]+$/.test(name)
+  const nameValid = name.length >= 3 && name.length <= 10 && nameEnglishOnly
   const abbrValid = abbr.length >= 2 && abbr.length <= 5
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!nameEnglishOnly) { setError('팀 이름은 영어만 입력 가능해요.'); return }
     if (!nameValid) { setError('팀 이름은 3~10글자여야 해요.'); return }
     if (!abbrValid) { setError('팀 약자는 2~5글자여야 해요. (예: PRX, T1, GEN)'); return }
     setError('')
@@ -60,7 +62,10 @@ export default function CreateTeamPage() {
               placeholder="팀 풀네임 (3~10글자)"
               className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
             />
-            {name.length > 0 && name.length < 3 && (
+            {name.length > 0 && !nameEnglishOnly && (
+              <p className="text-red-400 text-xs mt-1">영어만 입력 가능해요</p>
+            )}
+            {name.length > 0 && nameEnglishOnly && name.length < 3 && (
               <p className="text-slate-600 text-xs mt-1">최소 3글자 이상 입력해주세요</p>
             )}
           </div>
