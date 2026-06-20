@@ -31,7 +31,7 @@ export default async function ValorantDashboardPage() {
     { data: allApplications },
   ] = await Promise.all([
     supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, lol_gamename, lol_tagline, lol_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
-    supabase.from('team_members').select('role, teams(id, name, game_type, tier_avg, captain_id)').eq('user_id', user.id),
+    supabase.from('team_members').select('role, teams(id, name, abbreviation, game_type, tier_avg, captain_id)').eq('user_id', user.id),
     supabase.from('users').select('id', { count: 'exact', head: true }),
     supabase.from('teams').select('id', { count: 'exact', head: true }).eq('game_type', GAME),
     supabase.from('teams').select('id, name, game_type, tier_avg, wins, losses').eq('game_type', GAME).limit(50),
@@ -117,10 +117,10 @@ export default async function ValorantDashboardPage() {
                 <a href={`/teams/${team.id}`} className="flex items-center gap-3 group hover:bg-white/3 -mx-4 -mb-4 px-4 pb-4 pt-1 transition">
                   <div className="w-14 h-14 shrink-0 rounded-lg flex items-center justify-center font-black text-2xl border border-white/10"
                     style={{ background: GAME_COLOR + '18', color: GAME_COLOR }}>
-                    {team.name[0].toUpperCase()}
+                    {(team.abbreviation || team.name)[0].toUpperCase()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-black text-xl truncate">{team.name}</p>
+                    <p className="text-white font-black text-xl truncate">{team.abbreviation || team.name}</p>
                     {team.tier_avg && <p className="text-xs mt-0.5" style={{ color: GAME_COLOR }}>{team.tier_avg}</p>}
                     <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded" style={{ background: GAME_COLOR + '33', color: GAME_COLOR }}>
                       {myValTeam?.role === 'captain' ? '캡틴' : '멤버'}
