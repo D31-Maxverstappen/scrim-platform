@@ -130,32 +130,36 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
   }
 
   const chip = (active: boolean) =>
-    `px-3 py-1 text-xs font-bold rounded transition cursor-pointer ${active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
+    `px-4 py-1.5 text-xs font-bold rounded-lg transition cursor-pointer ${active ? 'bg-[#00D2BE] text-white shadow-[0_0_10px_rgba(0,210,190,0.5)]' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
 
   // 대기 중
   if (status === 'waiting') {
     return (
-      <div className="relative rounded-lg overflow-hidden border border-[#00D2BE]/25 bg-[#0d1a19]">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00D2BE]/5 to-transparent pointer-events-none" />
-        <div className="relative flex items-center justify-between px-6 py-5">
-          <div className="flex items-center gap-5">
-            <div className="relative flex items-center justify-center w-11 h-11 shrink-0">
-              <div className="absolute w-11 h-11 rounded-full bg-[#00D2BE]/20 animate-ping" />
-              <div className="w-3 h-3 rounded-full bg-[#00D2BE]" />
+      <div className="neon-border-wrap neon-border-glow rounded-xl p-[2px]">
+        <div className="relative rounded-xl bg-[#0d1a19] overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#00D2BE]/8 via-transparent to-transparent pointer-events-none" />
+          <div className="relative flex items-center justify-between px-8 py-7 gap-6">
+            <div className="flex items-center gap-6">
+              <div className="relative flex items-center justify-center w-16 h-16 shrink-0">
+                <div className="absolute w-16 h-16 rounded-full bg-[#00D2BE]/20 animate-ping" />
+                <div className="absolute w-10 h-10 rounded-full bg-[#00D2BE]/10 animate-pulse" />
+                <div className="w-4 h-4 rounded-full bg-[#00D2BE] shadow-[0_0_16px_rgba(0,210,190,0.9)]" />
+              </div>
+              <div>
+                <p className="text-white font-black text-xl">상대팀 탐색 중...</p>
+                <p className="text-slate-400 text-sm mt-1">
+                  <span className="text-[#00D2BE] font-bold text-base">{fmt(elapsed)}</span>
+                  {' '}대기 중 &middot; {format} &middot; {server} 서버
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-white font-black text-base">상대팀 탐색 중...</p>
-              <p className="text-slate-400 text-sm mt-0.5">
-                <span className="text-[#00D2BE] font-bold">{fmt(elapsed)}</span> 대기 중 &middot; {format} &middot; {server} 서버
-              </p>
-            </div>
+            <button
+              onClick={handleCancel}
+              className="text-slate-500 hover:text-red-400 text-sm font-semibold transition px-5 py-2.5 rounded-lg hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 shrink-0"
+            >
+              취소
+            </button>
           </div>
-          <button
-            onClick={handleCancel}
-            className="text-slate-500 hover:text-red-400 text-sm font-semibold transition px-4 py-2 rounded hover:bg-red-500/10"
-          >
-            취소
-          </button>
         </div>
       </div>
     )
@@ -163,65 +167,72 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
 
   // 기본 상태
   return (
-    <div className="neon-border-wrap neon-border-glow rounded-lg p-[1px]">
-      <div className="relative rounded-lg bg-[#0e1c1b] overflow-hidden">
-        {/* 배경 그라데이션 오버레이 */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00D2BE]/8 via-transparent to-[#7B61FF]/5 pointer-events-none" />
-
+    <div className="neon-border-wrap neon-border-glow rounded-xl p-[2px]">
+      <div className="relative rounded-xl bg-[#0d1017] overflow-hidden">
+        {/* 배경 그라데이션 */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#00D2BE]/5 via-transparent to-[#7B61FF]/5 pointer-events-none" />
         {/* 스캔 라인 */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="shimmer absolute top-0 bottom-0 w-1/3 bg-gradient-to-r from-transparent via-[#00D2BE]/6 to-transparent" />
         </div>
 
-        <div className="relative flex items-center justify-between px-6 py-5 gap-6">
-          {/* 좌측: 타이틀 */}
-          <div className="flex items-center gap-4 shrink-0">
-            <div className="relative w-10 h-10 rounded-lg bg-[#00D2BE]/10 flex items-center justify-center shrink-0">
-              <div className="absolute inset-0 rounded-lg bg-[#00D2BE]/10 animate-pulse" />
-              <svg className="relative w-5 h-5 text-[#00D2BE] drop-shadow-[0_0_6px_rgba(0,210,190,0.9)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="relative px-8 py-8 flex flex-col gap-6">
+          {/* 상단: 아이콘 + 제목 */}
+          <div className="flex items-start gap-5">
+            <div className="relative w-14 h-14 rounded-xl bg-[#00D2BE]/10 border border-[#00D2BE]/20 flex items-center justify-center shrink-0">
+              <div className="absolute inset-0 rounded-xl bg-[#00D2BE]/10 animate-pulse" />
+              <svg className="relative w-7 h-7 text-[#00D2BE] drop-shadow-[0_0_8px_rgba(0,210,190,1)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <div>
-              <p className="text-white font-black text-sm drop-shadow-[0_0_10px_rgba(0,210,190,0.4)]">자동 매칭</p>
-              <p className="text-slate-500 text-xs mt-0.5">같은 서버·포맷의 팀을 자동으로 찾아드려요</p>
+            <div className="flex-1">
+              <div className="flex items-center gap-3">
+                <p className="text-white font-black text-xl drop-shadow-[0_0_12px_rgba(0,210,190,0.4)]">자동 매칭</p>
+                <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[10px] font-black rounded-full border border-[#00D2BE]/25 tracking-widest">
+                  BETA
+                </span>
+              </div>
+              <p className="text-slate-400 text-sm mt-1">조건에 맞는 상대 팀을 자동으로 찾아드려요. 팀원이 모두 접속한 상태에서 시작하세요.</p>
             </div>
           </div>
 
-          {/* 우측: 설정 + 버튼 */}
-          <div className="flex items-center gap-5">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-slate-500 shrink-0">포맷</span>
-                <div className="flex gap-1">
-                  {(['BO1', 'BO3', 'BO5'] as const).map(f => (
-                    <button key={f} type="button" onClick={() => setFormat(f)} className={chip(format === f)}>{f}</button>
-                  ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-slate-500 shrink-0">서버</span>
-                <div className="flex gap-1">
-                  {(['KR', 'AS'] as const).map(s => (
-                    <button key={s} type="button" onClick={() => setServer(s)} className={chip(server === s)}>{s}</button>
-                  ))}
-                </div>
+          {/* 구분선 */}
+          <div className="h-px bg-white/5" />
+
+          {/* 중간: 설정 옵션 */}
+          <div className="flex items-center gap-8 flex-wrap">
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-500 font-bold tracking-wide">경기 수</span>
+              <div className="flex gap-1.5">
+                {(['BO1', 'BO3', 'BO5'] as const).map(f => (
+                  <button key={f} type="button" onClick={() => setFormat(f)} className={chip(format === f)}>{f}</button>
+                ))}
               </div>
             </div>
-
-            <button
-              onClick={handleJoin}
-              disabled={loading}
-              className="bg-[#00D2BE] hover:bg-[#00b8a8] disabled:opacity-50 text-white font-black text-sm px-6 py-2.5 rounded-lg transition shrink-0 shadow-[0_0_20px_rgba(0,210,190,0.5)] hover:shadow-[0_0_32px_rgba(0,210,190,0.7)]"
-            >
-              {loading ? '탐색 중...' : '매칭 시작'}
-            </button>
+            <div className="w-px h-5 bg-white/10 hidden sm:block" />
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-slate-500 font-bold tracking-wide">서버</span>
+              <div className="flex gap-1.5">
+                {(['KR', 'AS'] as const).map(s => (
+                  <button key={s} type="button" onClick={() => setServer(s)} className={chip(server === s)}>{s}</button>
+                ))}
+              </div>
+            </div>
           </div>
+
+          {/* 하단: 매칭 버튼 */}
+          <button
+            onClick={handleJoin}
+            disabled={loading}
+            className="w-full bg-[#00D2BE] hover:bg-[#00c4b0] disabled:opacity-50 text-white font-black text-base py-4 rounded-xl transition-all duration-200 shadow-[0_0_24px_rgba(0,210,190,0.4)] hover:shadow-[0_0_40px_rgba(0,210,190,0.65)] hover:scale-[1.01] active:scale-[0.99]"
+          >
+            {loading ? '탐색 중...' : '⚡ 매칭 시작'}
+          </button>
+
+          {error && (
+            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2.5 -mt-2">{error}</p>
+          )}
         </div>
-
-        {error && (
-          <p className="text-red-400 text-xs bg-red-500/10 border-t border-red-500/20 px-6 py-2">{error}</p>
-        )}
       </div>
     </div>
   )
