@@ -19,6 +19,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [filterTier, setFilterTier] = useState('')
+  const [filterOpen, setFilterOpen] = useState(false)
 
   const allTiers = Array.from(new Set(
     posts.map((p: any) => {
@@ -51,41 +52,83 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
       active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500 hover:bg-white/10 hover:text-slate-300'
     }`
 
+  const activeCount = (server ? 1 : 0) + (format ? 1 : 0) + (filterTier ? 1 : 0)
+
+  const resetAll = () => {
+    setFilterTier('')
+    navigate({ game, server: '', format: '' })
+  }
+
   return (
     <>
-      {/* 게임 필터 */}
-      <div className="flex flex-wrap gap-2 mb-4">
-        {[['', '전체'], ['valorant', 'VALORANT'], ['lol', '리그 오브 레전드']].map(([val, label]) => (
-          <button key={val} onClick={() => navigate({ game: val, server, format })} className={chipCls(game === val)}>
-            {label}
+      {/* 상단 바: 게임 필터 + 필터 버튼 */}
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex gap-2">
+          {[['', '전체'], ['valorant', 'VALORANT'], ['lol', 'LoL']].map(([val, label]) => (
+            <button key={val} onClick={() => navigate({ game: val, server, format })} className={chipCls(game === val)}>
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-2">
+          {activeCount > 0 && (
+            <button onClick={resetAll} className="text-[10px] text-slate-500 hover:text-slate-300 transition">
+              초기화
+            </button>
+          )}
+          <button
+            onClick={() => setFilterOpen((v) => !v)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-semibold transition border
+              ${filterOpen || activeCount > 0
+                ? 'bg-[#00D2BE]/10 border-[#00D2BE]/40 text-[#00D2BE]'
+                : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'
+              }`}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h18M7 12h10M11 20h2" />
+            </svg>
+            필터
+            {activeCount > 0 && (
+              <span className="bg-[#00D2BE] text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                {activeCount}
+              </span>
+            )}
           </button>
-        ))}
+        </div>
       </div>
 
-      {/* 서버 / 포맷 / 티어 필터 */}
-      <div className="flex flex-wrap items-center gap-2 mb-6 bg-[#13131f] border border-white/5 rounded px-4 py-3">
-        <span className="text-[10px] text-slate-600 uppercase tracking-wider">서버</span>
-        {['KR', 'AS'].map((s) => (
-          <button key={s} onClick={() => navigate({ game, server: server === s ? '' : s, format })} className={smChipCls(server === s)}>{s}</button>
-        ))}
-
-        <span className="w-px h-3 bg-white/10 mx-1" />
-
-        <span className="text-[10px] text-slate-600 uppercase tracking-wider">포맷</span>
-        {['BO1', 'BO3', 'BO5'].map((f) => (
-          <button key={f} onClick={() => navigate({ game, server, format: format === f ? '' : f })} className={smChipCls(format === f)}>{f}</button>
-        ))}
-
-        {allTiers.length > 0 && (
-          <>
-            <span className="w-px h-3 bg-white/10 mx-1" />
-            <span className="text-[10px] text-slate-600 uppercase tracking-wider">티어</span>
-            {allTiers.map((tier) => (
-              <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={smChipCls(filterTier === tier)}>{tier}</button>
-            ))}
-          </>
-        )}
-      </div>
+      {/* 필터 패널 */}
+      {filterOpen && (
+        <div className="bg-[#13131f] border border-white/5 rounded px-5 py-4 mb-4 flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">서버</span>
+            <div className="flex gap-1.5">
+              {['KR', 'AS'].map((s) => (
+                <button key={s} onClick={() => navigate({ game, server: server === s ? '' : s, format })} className={smChipCls(server === s)}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">포맷</span>
+            <div className="flex gap-1.5">
+              {['BO1', 'BO3', 'BO5'].map((f) => (
+                <button key={f} onClick={() => navigate({ game, server, format: format === f ? '' : f })} className={smChipCls(format === f)}>{f}</button>
+              ))}
+            </div>
+          </div>
+          {allTiers.length > 0 && (
+            <div className="flex items-center gap-3">
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">티어</span>
+              <div className="flex flex-wrap gap-1.5">
+                {allTiers.map((tier) => (
+                  <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={smChipCls(filterTier === tier)}>{tier}</button>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 목록 */}
       {displayed.length === 0 ? (
