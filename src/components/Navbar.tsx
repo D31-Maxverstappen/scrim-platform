@@ -10,12 +10,14 @@ import NotificationBell from './NotificationBell'
 import { createClient } from '@/lib/supabase/client'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }
+type UserResult = { id: string; riot_gamename: string | null; tier: string | null; game_type: string | null; avatar_url: string | null }
 
 export default function Navbar() {
   const router = useRouter()
   const pathname = usePathname()
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState<TeamResult[]>([])
+  const [teams, setTeams] = useState<TeamResult[]>([])
+  const [users, setUsers] = useState<UserResult[]>([])
   const [open, setOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const fetchIdRef = useRef(0)
@@ -24,17 +26,19 @@ export default function Navbar() {
   const link = (path: string) => game ? `/${game}${path}` : path
 
   useEffect(() => {
-    if (!search.trim()) { setResults([]); setOpen(false); return }
+    if (!search.trim()) { setTeams([]); setUsers([]); setOpen(false); return }
     setOpen(true)
     const myId = ++fetchIdRef.current
-    createClient()
-      .from('teams')
-      .select('id, name, game_type, tier_avg')
-      .ilike('name', `%${search.trim()}%`)
-      .limit(6)
-      .then(({ data }) => {
-        if (fetchIdRef.current === myId) setResults(data ?? [])
-      })
+    const q = search.trim()
+    const supabase = createClient()
+    Promise.all([
+      supabase.from('teams').select('id, name, game_type, tier_avg').ilike('name', `%${q}%`).limit(4),
+      supabase.from('users').select('id, riot_gamename, tier, game_type, avatar_url').ilike('riot_gamename', `%${q}%`).limit(4),
+    ]).then(([{ data: teamData }, { data: userData }]) => {
+      if (fetchIdRef.current !== myId) return
+      setTeams(teamData ?? [])
+      setUsers((userData ?? []).filter((u) => u.riot_gamename))
+    })
   }, [search])
 
   useEffect(() => {
@@ -48,6 +52,7 @@ export default function Navbar() {
   }, [])
 
   const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+  const hasResults = teams.length > 0 || users.length > 0
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur border-b border-white/5 px-6 h-20 flex items-center gap-6">
@@ -75,30 +80,63 @@ export default function Navbar() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            onFocus={() => results.length > 0 && setOpen(true)}
-            placeholder="팀 이름"
+            onFocus={() => hasResults && setOpen(true)}
+            placeholder="팀 또는 유저 검색"
             className="w-full bg-white/5 border border-white/10 rounded pl-10 pr-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/60 focus:bg-white/8 transition"
           />
         </div>
 
-        {open && results.length > 0 && (
+        {open && hasResults && (
           <div className="absolute top-full mt-1 w-full bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50">
-            {results.map((t) => (
-              <button
-                key={t.id}
-                onMouseDown={() => { router.push(`/teams/${t.id}`); setSearch(''); setOpen(false) }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition text-left"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-semibold truncate">{t.name}</p>
-                  {t.tier_avg && <p className="text-slate-500 text-xs">{t.tier_avg}</p>}
-                </div>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-                  style={{ background: (GAME_COLOR[t.game_type] ?? '#00D2BE') + '22', color: GAME_COLOR[t.game_type] ?? '#00D2BE' }}>
-                  {t.game_type === 'valorant' ? 'VAL' : 'LoL'}
-                </span>
-              </button>
-            ))}
+            {teams.length > 0 && (
+              <>
+                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest">팀</p>
+                {teams.map((t) => (
+                  <button
+                    key={t.id}
+                    onMouseDown={() => { router.push(`/teams/${t.id}`); setSearch(''); setOpen(false) }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition text-left"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm font-semibold truncate">{t.name}</p>
+                      {t.tier_avg && <p className="text-slate-500 text-xs">{t.tier_avg}</p>}
+                    </div>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
+                      style={{ background: (GAME_COLOR[t.game_type] ?? '#00D2BE') + '22', color: GAME_COLOR[t.game_type] ?? '#00D2BE' }}>
+                      {t.game_type === 'valorant' ? 'VAL' : 'LoL'}
+                    </span>
+                  </button>
+                ))}
+              </>
+            )}
+            {users.length > 0 && (
+              <>
+                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest border-t border-white/5">유저</p>
+                {users.map((u) => (
+                  <button
+                    key={u.id}
+                    onMouseDown={() => { router.push(`/users/${u.id}`); setSearch(''); setOpen(false) }}
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition text-left"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden shrink-0 flex items-center justify-center text-xs font-bold text-white/40">
+                      {u.avatar_url
+                        ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" />
+                        : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm font-semibold truncate">{u.riot_gamename}</p>
+                      {u.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
+                    </div>
+                    {u.game_type && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
+                        style={{ background: (GAME_COLOR[u.game_type] ?? '#00D2BE') + '22', color: GAME_COLOR[u.game_type] ?? '#00D2BE' }}>
+                        {u.game_type === 'valorant' ? 'VAL' : 'LoL'}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </>
+            )}
           </div>
         )}
       </div>

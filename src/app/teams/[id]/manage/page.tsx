@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -60,6 +60,10 @@ export default function ManageTeamPage() {
   const [editSaving, setEditSaving] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleteInput, setDeleteInput] = useState('')
+  const [inviteSearch, setInviteSearch] = useState('')
+  const [inviteResults, setInviteResults] = useState<any[]>([])
+  const [inviteStatus, setInviteStatus] = useState<Record<string, 'idle' | 'sent' | 'error'>>({})
+  const inviteFetchRef = useRef(0)
 
   const supabase = createClient()
 
@@ -91,6 +95,26 @@ export default function ManageTeamPage() {
   }
 
   useEffect(() => { load() }, [teamId])
+
+  useEffect(() => {
+    if (!inviteSearch.trim()) { setInviteResults([]); return }
+    const myId = ++inviteFetchRef.current
+    supabase.from('users').select('id, riot_gamename, tier, avatar_url').ilike('riot_gamename', `%${inviteSearch.trim()}%`).limit(5)
+      .then(({ data }) => {
+        if (inviteFetchRef.current !== myId) return
+        setInviteResults((data ?? []).filter((u: any) => u.riot_gamename))
+      })
+  }, [inviteSearch])
+
+  const sendInvite = async (userId: string) => {
+    setInviteStatus(prev => ({ ...prev, [userId]: 'idle' }))
+    const res = await fetch(`/api/teams/${teamId}/invite`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ targetUserId: userId }),
+    })
+    setInviteStatus(prev => ({ ...prev, [userId]: res.ok ? 'sent' : 'error' }))
+  }
 
   const handleRequest = async (requestId: string, action: 'accept' | 'reject', role = 'player') => {
     const res = await fetch(`/api/teams/${teamId}/requests/${requestId}`, {
@@ -200,6 +224,44 @@ export default function ManageTeamPage() {
             >
               {editSaving ? '저장 중...' : '저장'}
             </button>
+          </div>
+        </section>
+
+        {/* 멤버 초대 */}
+        <section className="mb-8">
+          <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">멤버 초대</h2>
+          <div className="bg-[#13131f] border border-white/5 rounded p-5">
+            <input
+              value={inviteSearch}
+              onChange={(e) => setInviteSearch(e.target.value)}
+              placeholder="유저 게임 이름 검색..."
+              className="w-full bg-white/5 border border-white/10 px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition mb-3"
+            />
+            {inviteResults.length > 0 && (
+              <div className="flex flex-col gap-2">
+                {inviteResults.map((u: any) => (
+                  <div key={u.id} className="flex items-center gap-3 bg-white/3 rounded px-3 py-2.5">
+                    <div className="w-8 h-8 rounded-full bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black text-xs overflow-hidden shrink-0">
+                      {u.avatar_url ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm font-semibold truncate">{u.riot_gamename}</p>
+                      {u.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
+                    </div>
+                    {inviteStatus[u.id] === 'sent' ? (
+                      <span className="text-[#00D2BE] text-xs font-semibold">전송됨 ✓</span>
+                    ) : (
+                      <button onClick={() => sendInvite(u.id)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-3 py-1.5 rounded transition">
+                        초대
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {inviteSearch.trim() && inviteResults.length === 0 && (
+              <p className="text-slate-600 text-sm text-center py-2">검색 결과가 없어요</p>
+            )}
           </div>
         </section>
 
