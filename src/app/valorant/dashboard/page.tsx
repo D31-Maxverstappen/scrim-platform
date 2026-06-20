@@ -143,8 +143,6 @@ export default async function ValorantDashboardPage() {
               <span className="text-slate-600 group-hover:text-[#00D2BE] transition text-sm">→</span>
             </a>
 
-            {team && myValTeam?.role === 'captain' && <AutoMatchButton teamId={team.id} gameType={GAME} />}
-
             <DiscordBanner compact />
           </aside>
 
@@ -162,6 +160,8 @@ export default async function ValorantDashboardPage() {
                 </div>
               ))}
             </div>
+
+            {team && myValTeam?.role === 'captain' && <AutoMatchButton teamId={team.id} gameType={GAME} />}
 
             <OnboardingChecklist steps={[
               {
