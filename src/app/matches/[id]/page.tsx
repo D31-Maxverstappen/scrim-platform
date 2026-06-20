@@ -5,6 +5,7 @@ import MatchTabs from '@/components/MatchTabs'
 import RosterComparison from '@/components/RosterComparison'
 import MatchCancelButton from '@/components/MatchCancelButton'
 import MatchEndButton from '@/components/MatchEndButton'
+import MatchScoreInput from '@/components/MatchScoreInput'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
@@ -88,12 +89,15 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
               <div className="flex items-center gap-4">
                 {isCaptain && match.status !== 'completed' && (
                   <div className="flex items-center gap-2">
-                    <MatchEndButton
+                    <MatchScoreInput
                       matchId={id}
+                      format={match.format ?? 'BO3'}
+                      gameType={team1?.game_type ?? 'valorant'}
                       team1Id={team1?.id}
                       team1Name={team1?.name ?? '팀 1'}
                       team2Id={team2?.id}
                       team2Name={team2?.name ?? '팀 2'}
+                      initialMaps={maps ?? []}
                     />
                     <MatchCancelButton matchId={id} />
                   </div>
