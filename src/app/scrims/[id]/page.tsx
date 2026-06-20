@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import ScrimApplyButton from '@/components/ScrimApplyButton'
+import ScrimCancelButton from '@/components/ScrimCancelButton'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
@@ -80,14 +81,19 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
               <h1 className="text-white font-black text-2xl mb-1">{team?.name ?? '?'}</h1>
               {team?.tier_avg && <p className="text-slate-400 text-sm">Avg. {team.tier_avg}</p>}
             </div>
-            {!isMyTeam && post.status === 'open' && (
-              <ScrimApplyButton
-                scrimPostId={id}
-                myTeamId={myTeam?.id ?? null}
-                existingStatus={existingApp?.status ?? null}
-                gameType={post.game_type}
-              />
-            )}
+            <div className="flex items-center gap-3">
+              {!isMyTeam && post.status === 'open' && (
+                <ScrimApplyButton
+                  scrimPostId={id}
+                  myTeamId={myTeam?.id ?? null}
+                  existingStatus={existingApp?.status ?? null}
+                  gameType={post.game_type}
+                />
+              )}
+              {team?.captain_id === user.id && post.status === 'open' && (
+                <ScrimCancelButton scrimId={id} />
+              )}
+            </div>
           </div>
 
           <div className="mt-4 pt-4 border-t border-white/5 grid grid-cols-2 gap-4 text-sm">

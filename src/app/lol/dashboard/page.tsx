@@ -132,6 +132,15 @@ export default async function LolDashboardPage() {
               )}
             </div>
 
+            <a href="/scrims/applied"
+              className="bg-[#13131f] border border-white/5 rounded px-4 py-3 flex items-center justify-between hover:border-white/10 transition group">
+              <div>
+                <p className="text-white text-xs font-bold">내가 신청한 스크림</p>
+                <p className="text-slate-500 text-[10px] mt-0.5">신청 현황 확인</p>
+              </div>
+              <span className="text-slate-600 group-hover:text-[#00D2BE] transition text-sm">→</span>
+            </a>
+
             <DiscordBanner compact />
           </aside>
 
