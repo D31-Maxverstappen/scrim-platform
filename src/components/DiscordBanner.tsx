@@ -24,23 +24,27 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
 
   if (compact) {
     return (
-      <div className="bg-[#13131f] border border-[#5865F2]/20 rounded p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
-          <p className="text-slate-400 text-xs uppercase tracking-widest font-semibold">Discord</p>
+      <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Discord</p>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-xl bg-[#5865F2]/10 border border-[#5865F2]/20 flex items-center justify-center shrink-0">
+            <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
+          </div>
+          <div>
+            <p className="text-white text-xs font-bold">D31 공식 서버</p>
+            <p className="text-slate-600 text-[10px] mt-0.5">공지 · 팀원 모집 · 커뮤니티</p>
+          </div>
         </div>
-        <p className="text-white text-sm font-bold mb-0.5">D31 공식 서버</p>
-        <p className="text-slate-500 text-xs mb-3">공지 · 팀원 모집 · 커뮤니티</p>
         {loading ? (
-          <div className="h-8 bg-white/5 rounded animate-pulse" />
+          <div className="h-8 bg-white/[0.04] rounded-xl animate-pulse" />
         ) : (
           <a
             href={inviteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full bg-[#5865F2] hover:bg-[#4752c4] text-white font-bold py-2 rounded transition text-xs"
+            className="flex items-center justify-center gap-2 w-full bg-[#5865F2] hover:bg-[#4752c4] text-white font-bold py-2 rounded-xl transition text-xs"
           >
-            <DiscordIcon className="w-3.5 h-3.5" />
+            <DiscordIcon className="w-3 h-3" />
             서버 참여하기
           </a>
         )}
