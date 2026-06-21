@@ -24,16 +24,15 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  // LFT 중복 방지: 같은 유저의 활성 LFT 게시물이 이미 있으면 차단
+  // LFT 중복 방지
   if (type === 'lft') {
-    const { data: existing } = await admin
+    const { count } = await admin
       .from('recruitment_posts')
-      .select('id')
+      .select('id', { count: 'exact', head: true })
       .eq('user_id', user.id)
       .eq('type', 'lft')
       .eq('status', 'active')
-      .single()
-    if (existing) {
+    if (count && count > 0) {
       return NextResponse.json({ error: '이미 활성 팀 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
     }
   }
