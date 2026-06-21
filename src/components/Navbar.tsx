@@ -62,7 +62,7 @@ export default function Navbar() {
       {/* 네비 링크 */}
       <div className="hidden md:flex items-center gap-1 text-sm">
         <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 찾기</a>
-        <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">모집</a>
+        <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 또는 선수 찾기</a>
         <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">리더보드</a>
       </div>
 

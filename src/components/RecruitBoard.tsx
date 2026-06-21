@@ -192,7 +192,7 @@ export default function RecruitBoard({ posts, currentUserId, initialType, initia
         </div>
 
         <div className="flex gap-2">
-          {[['', '전체'], ['valorant', 'VALORANT'], ['lol', 'LoL']].map(([val, label]) => (
+          {[['', '전체'], ['valorant', 'VALORANT']].map(([val, label]) => (
             <button key={val} onClick={() => setGame(val)} className={chipCls(game === val)}>{label}</button>
           ))}
         </div>
