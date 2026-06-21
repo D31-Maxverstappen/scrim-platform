@@ -17,11 +17,18 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  const { data: posts } = await admin
-    .from('recruitment_posts')
-    .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url), teams(id, name, tier_avg, game_type)')
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
+  const [{ data: posts }, { data: myTeam }] = await Promise.all([
+    admin
+      .from('recruitment_posts')
+      .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url), teams(id, name, tier_avg, game_type, captain_id)')
+      .eq('status', 'active')
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('team_members')
+      .select('team_id')
+      .eq('user_id', user.id)
+      .single(),
+  ])
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -41,6 +48,7 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
         <RecruitBoard
           posts={posts ?? []}
           currentUserId={user.id}
+          currentUserHasTeam={!!myTeam}
           initialType={type ?? 'lft'}
           initialGame={game ?? ''}
         />

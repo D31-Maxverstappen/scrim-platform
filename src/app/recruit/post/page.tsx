@@ -26,7 +26,7 @@ function RecruitPostContent() {
 
   const [type, setType] = useState<'lft' | 'lfp'>(defaultType)
   const game = 'valorant'
-  const [tier, setTier] = useState('')
+  const [tiers, setTiers] = useState<string[]>([])
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
   const [discordTag, setDiscordTag] = useState('')
@@ -44,7 +44,7 @@ function RecruitPostContent() {
           if (profile?.discord_tag) setDiscordTag(profile.discord_tag)
           if (type === 'lft') {
             const t = profile?.val_tier ?? null
-            if (t) setTier(t)
+            if (t) setTiers([t])
           }
         })
       supabase.from('teams').select('id, name, tier_avg, game_type').eq('captain_id', user.id).eq('game_type', game).single()
@@ -56,6 +56,10 @@ function RecruitPostContent() {
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
   }
 
+  const toggleTier = (t: string) => {
+    setTiers((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t])
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (type === 'lfp' && !myTeam) { setError('해당 게임의 팀 캡틴이 아니에요.'); return }
@@ -65,7 +69,7 @@ function RecruitPostContent() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type, game_type: game, tier: tier || null,
+        type, game_type: game, tier: tiers.length ? tiers.join(',') : null,
         roles: roles.length ? roles : null,
         note: note || null,
         discord_tag: discordTag || null,
@@ -147,7 +151,7 @@ function RecruitPostContent() {
             </label>
             <div className="flex flex-wrap gap-1.5">
               {tierList.map((t) => (
-                <button key={t} type="button" onClick={() => setTier(tier === t ? '' : t)} className={chipCls(tier === t)}>{t}</button>
+                <button key={t} type="button" onClick={() => toggleTier(t)} className={chipCls(tiers.includes(t))}>{t}</button>
               ))}
             </div>
           </div>

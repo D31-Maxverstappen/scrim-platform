@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime()
@@ -15,6 +14,11 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(h / 24)}일 전`
 }
 
+function parseTiers(tier: string | null): string[] {
+  if (!tier) return []
+  return tier.split(',').map((t) => t.trim()).filter(Boolean)
+}
+
 function LftCard({ post, currentUserId, onClose, onDelete }: {
   post: any
   currentUserId: string
@@ -22,11 +26,10 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   onDelete: (id: string) => void
 }) {
   const u = Array.isArray(post.users) ? post.users[0] : post.users
-  const isVal = post.game_type === 'valorant'
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
-  const gameName = isVal ? (u?.val_gamename ?? u?.riot_gamename) : (u?.lol_gamename ?? u?.riot_gamename)
-  const tier = isVal ? (u?.val_tier ?? u?.tier) : (u?.lol_tier ?? u?.tier)
-  const displayTier = post.tier ?? tier
+  const gameName = u?.val_gamename ?? u?.riot_gamename
+  const profileTier = u?.val_tier ?? u?.tier
+  const tiers = parseTiers(post.tier) // 선택한 티어들
   const isOwn = post.user_id === currentUserId
 
   return (
@@ -41,13 +44,23 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-white font-bold text-sm truncate">{gameName ?? '—'}</p>
-          {displayTier && <p className="text-xs" style={{ color: gc }}>{displayTier}</p>}
+          {profileTier && tiers.length === 0 && (
+            <p className="text-xs" style={{ color: gc }}>{profileTier}</p>
+          )}
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-          style={{ background: gc + '22', color: gc }}>
-          {post.game_type === 'valorant' ? 'VAL' : 'LoL'}
-        </span>
+          style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
+
+      {/* 선택 티어 */}
+      {tiers.length > 0 && (
+        <div className="flex flex-wrap gap-1">
+          {tiers.map((t) => (
+            <span key={t} className="text-[10px] font-bold px-2 py-0.5 rounded"
+              style={{ background: gc + '22', color: gc }}>{t}</span>
+          ))}
+        </div>
+      )}
 
       {post.roles?.length > 0 && (
         <div className="flex flex-wrap gap-1">
@@ -79,15 +92,35 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   )
 }
 
-function LfpCard({ post, currentUserId, onClose, onDelete }: {
+function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }: {
   post: any
   currentUserId: string
+  currentUserHasTeam: boolean
   onClose: (id: string) => void
   onDelete: (id: string) => void
 }) {
   const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
   const isOwn = post.user_id === currentUserId
+  const tiers = parseTiers(post.tier)
+
+  const [applyState, setApplyState] = useState<'idle' | 'loading' | 'done'>('idle')
+
+  const handleApply = async () => {
+    setApplyState('loading')
+    const res = await fetch('/api/recruit/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ postId: post.id }),
+    })
+    setApplyState(res.ok ? 'done' : 'idle')
+    if (!res.ok) {
+      const d = await res.json()
+      alert(d.error ?? '오류가 발생했어요.')
+    }
+  }
+
+  const showApplyBtn = !isOwn && !currentUserHasTeam
 
   return (
     <div className={`bg-[#13131f] border rounded p-4 flex flex-col gap-3 relative ${isOwn ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
@@ -103,9 +136,7 @@ function LfpCard({ post, currentUserId, onClose, onDelete }: {
           {team?.tier_avg && <p className="text-xs text-slate-400">Avg. {team.tier_avg}</p>}
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-          style={{ background: gc + '22', color: gc }}>
-          {post.game_type === 'valorant' ? 'VAL' : 'LoL'}
-        </span>
+          style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
       {post.roles?.length > 0 && (
@@ -117,20 +148,43 @@ function LfpCard({ post, currentUserId, onClose, onDelete }: {
         </div>
       )}
 
-      {post.tier && (
-        <p className="text-xs text-slate-400">희망 티어: <span style={{ color: gc }}>{post.tier}</span></p>
+      {/* 희망 티어 (다중) */}
+      {tiers.length > 0 && (
+        <div className="flex flex-wrap gap-1 items-center">
+          <span className="text-[10px] text-slate-600">희망 티어</span>
+          {tiers.map((t) => (
+            <span key={t} className="text-[10px] font-bold px-2 py-0.5 rounded"
+              style={{ background: gc + '22', color: gc }}>{t}</span>
+          ))}
+        </div>
       )}
 
       {post.note && <p className="text-slate-400 text-xs leading-relaxed">{post.note}</p>}
 
-      <div className="flex items-center justify-between mt-auto pt-1 border-t border-white/5">
-        {post.discord_tag ? (
-          <span className="text-[#5865F2] text-xs font-semibold">{post.discord_tag}</span>
-        ) : (
-          <span className="text-slate-600 text-xs">Discord 미등록</span>
-        )}
-        <div className="flex items-center gap-2">
-          <span className="text-slate-600 text-[10px]">{timeAgo(post.created_at)}</span>
+      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          {post.discord_tag ? (
+            <span className="text-[#5865F2] text-xs font-semibold truncate">{post.discord_tag}</span>
+          ) : (
+            <span className="text-slate-600 text-xs">Discord 미등록</span>
+          )}
+          <span className="text-slate-600 text-[10px] shrink-0">{timeAgo(post.created_at)}</span>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          {showApplyBtn && (
+            applyState === 'done' ? (
+              <span className="text-[10px] font-bold text-green-400 bg-green-500/10 px-3 py-1.5 rounded">✓ 신청 완료</span>
+            ) : (
+              <button
+                onClick={handleApply}
+                disabled={applyState === 'loading'}
+                className="text-[10px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition"
+              >
+                {applyState === 'loading' ? '신청 중...' : '가입 신청'}
+              </button>
+            )
+          )}
           {isOwn && (
             <>
               <button onClick={() => onClose(post.id)} className="text-[10px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
@@ -143,13 +197,13 @@ function LfpCard({ post, currentUserId, onClose, onDelete }: {
   )
 }
 
-export default function RecruitBoard({ posts, currentUserId, initialType, initialGame }: {
+export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, initialType, initialGame }: {
   posts: any[]
   currentUserId: string
+  currentUserHasTeam: boolean
   initialType: string
   initialGame: string
 }) {
-  const router = useRouter()
   const [tab, setTab] = useState(initialType === 'lfp' ? 'lfp' : 'lft')
   const [game, setGame] = useState(initialGame)
   const [localPosts, setLocalPosts] = useState(posts)
@@ -213,7 +267,7 @@ export default function RecruitBoard({ posts, currentUserId, initialType, initia
           {filtered.map((post) =>
             tab === 'lft'
               ? <LftCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
-              : <LfpCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
+              : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} onClose={handleClose} onDelete={handleDelete} />
           )}
         </div>
       )}

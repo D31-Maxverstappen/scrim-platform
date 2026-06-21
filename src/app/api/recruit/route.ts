@@ -24,7 +24,26 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  const { data, error } = await admin.from('recruitment_posts').insert({
+  // LFT 중복 방지: 같은 유저의 활성 LFT 게시물이 이미 있으면 차단
+  if (type === 'lft') {
+    const { data: existing } = await admin
+      .from('recruitment_posts')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('type', 'lft')
+      .eq('status', 'active')
+      .single()
+    if (existing) {
+      return NextResponse.json({ error: '이미 활성 팀 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
+    }
+  }
+
+  const adminClient = admin
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  )
+
+  const { data, error } = await adminClient.from('recruitment_posts').insert({
     user_id: user.id,
     team_id: team_id ?? null,
     type,
