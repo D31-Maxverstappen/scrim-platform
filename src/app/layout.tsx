@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import "./globals.css";
+
+const pretendard = localFont({
+  src: "../../public/fonts/PretendardVariable.woff2",
+  variable: "--font-pretendard",
+  weight: "45 920",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "D31 - 발로란트 스크림 매칭 플랫폼",
@@ -35,7 +43,7 @@ export default function RootLayout({
           })();
         `}} />
       </head>
-      <body>
+      <body className={pretendard.variable}>
         {children}
         <footer className="border-t border-white/5 bg-[#07070b] py-10 mt-auto">
           <div className="max-w-6xl mx-auto px-6 flex flex-col gap-5">
