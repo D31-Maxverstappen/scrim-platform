@@ -30,6 +30,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const setLang = (l: Lang) => {
     setLangState(l)
     localStorage.setItem('lang', l)
+    document.cookie = `lang=${l};path=/;max-age=31536000`
   }
 
   return (

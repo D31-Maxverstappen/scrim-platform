@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import { getLang } from '@/lib/lang'
+import { t } from '@/lib/i18n'
 
 /* ── 티어 유틸 ── */
 const TIER_ORDER = [
@@ -37,6 +39,7 @@ export default async function LeaderboardPage({
 }: {
   searchParams: Promise<{ game?: string; tab?: string }>
 }) {
+  const lang = await getLang()
   const { game = 'valorant', tab = 'team' } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -94,7 +97,7 @@ export default async function LeaderboardPage({
         {/* 헤더 */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-white">Leaderboard</h1>
-          <p className="text-slate-400 text-sm mt-1">D31 랭킹</p>
+          <p className="text-slate-400 text-sm mt-1">{t('lb_title', lang)}</p>
         </div>
 
         {/* 게임 탭 */}
@@ -110,10 +113,10 @@ export default async function LeaderboardPage({
 
         {/* 카테고리 탭 */}
         <div className="flex border-b border-white/5 mb-6">
-          {[['team', '팀 랭킹'], ['player', '플레이어 랭킹']].map(([t, l]) => (
-            <a key={t} href={`/leaderboard?game=${game}&tab=${t}`}
-              className={`px-5 py-3 text-xs font-bold border-b-2 transition ${tab === t ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
-              {l}
+          {[['team', t('lb_team_rank', lang)], ['player', t('lb_player_rank', lang)]].map(([tabKey, label]) => (
+            <a key={tabKey} href={`/leaderboard?game=${game}&tab=${tabKey}`}
+              className={`px-5 py-3 text-xs font-bold border-b-2 transition ${tab === tabKey ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+              {label}
             </a>
           ))}
         </div>
@@ -123,7 +126,7 @@ export default async function LeaderboardPage({
           <>
             {teams.length === 0 ? (
               <div className="bg-[#13131f] border border-white/5 rounded p-12 text-center">
-                <p className="text-slate-600 text-sm">아직 매치 기록이 있는 팀이 없어요</p>
+                <p className="text-slate-600 text-sm">{t('lb_no_teams', lang)}</p>
                 <p className="text-slate-700 text-xs mt-1">스크림을 진행하고 결과를 입력하면 랭킹이 생겨요</p>
               </div>
             ) : (
@@ -131,10 +134,10 @@ export default async function LeaderboardPage({
                 {/* 헤더 */}
                 <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-widest">
                   <span className="col-span-1 text-center">#</span>
-                  <span className="col-span-4">팀</span>
-                  <span className="col-span-2 text-center">티어</span>
-                  <span className="col-span-2 text-center">전적</span>
-                  <span className="col-span-3 text-center">승률</span>
+                  <span className="col-span-4">{t('lb_col_team', lang)}</span>
+                  <span className="col-span-2 text-center">{t('lb_col_tier', lang)}</span>
+                  <span className="col-span-2 text-center">{t('lb_col_record', lang)}</span>
+                  <span className="col-span-3 text-center">{t('lb_col_winrate', lang)}</span>
                 </div>
                 {teams.map((t, i) => (
                   <a key={t.id} href={`/teams/${t.id}`}
@@ -184,14 +187,14 @@ export default async function LeaderboardPage({
 
             {sortedPlayers.length === 0 ? (
               <div className="bg-[#13131f] border border-white/5 rounded p-12 text-center text-slate-600 text-sm">
-                아직 등록된 플레이어가 없어요
+                {t('lb_no_players', lang)}
               </div>
             ) : (
               <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
                 <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-widest">
                   <span className="col-span-1 text-center">#</span>
-                  <span className="col-span-7">플레이어</span>
-                  <span className="col-span-4">티어</span>
+                  <span className="col-span-7">{t('lb_col_player', lang)}</span>
+                  <span className="col-span-4">{t('lb_col_tier', lang)}</span>
                 </div>
                 {sortedPlayers.map((u, i) => {
                   const isMe = u.id === user.id

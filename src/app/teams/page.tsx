@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import { getLang } from '@/lib/lang'
+import { t } from '@/lib/i18n'
 
 const GAME_LABEL: Record<string, string> = {
   valorant: 'VALORANT',
@@ -16,6 +18,7 @@ const GAME_COLOR: Record<string, string> = {
 }
 
 export default async function TeamsPage() {
+  const lang = await getLang()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -43,9 +46,9 @@ export default async function TeamsPage() {
 
         {/* 내 팀 */}
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-white font-bold text-xl">내 팀</h1>
+          <h1 className="text-white font-bold text-xl">{t('my_team_label', lang)}</h1>
           <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
-            + 팀 만들기
+            + {t('my_team_create', lang)}
           </a>
         </div>
 
@@ -66,7 +69,7 @@ export default async function TeamsPage() {
                     <div className="flex items-center gap-2">
                       {team.tier_avg && <span className="text-slate-400 text-xs">{team.tier_avg}</span>}
                       <span className="text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
-                        {m.role === 'captain' ? '캡틴' : '멤버'}
+                        {m.role === 'captain' ? t('my_team_captain', lang) : t('my_team_member', lang)}
                       </span>
                     </div>
                   </div>
@@ -79,9 +82,9 @@ export default async function TeamsPage() {
           </div>
         ) : (
           <div className="bg-[#13131f] border border-white/5 rounded p-10 text-center mb-10">
-            <p className="text-slate-500 text-sm mb-3">아직 소속된 팀이 없어요</p>
+            <p className="text-slate-500 text-sm mb-3">{t('my_team_no_team', lang)}</p>
             <a href="/teams/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
-              + 팀 만들기
+              + {t('my_team_create', lang)}
             </a>
           </div>
         )}
@@ -90,9 +93,9 @@ export default async function TeamsPage() {
         <h2 className="text-white font-bold text-xl mb-4">전체 팀</h2>
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
           <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
-            <span className="col-span-4">팀 이름</span>
-            <span className="col-span-3">게임</span>
-            <span className="col-span-3">평균 티어</span>
+            <span className="col-span-4">{t('lb_col_team', lang)}</span>
+            <span className="col-span-3">{t('team_game', lang)}</span>
+            <span className="col-span-3">{t('team_avg_tier', lang)}</span>
             <span className="col-span-2 text-right">가입</span>
           </div>
 
@@ -121,7 +124,7 @@ export default async function TeamsPage() {
             </div>
           ) : (
             <div className="text-center py-12 text-slate-600 text-sm">
-              등록된 팀이 없어요
+              {t('ranking_no_teams', lang)}
             </div>
           )}
         </div>

@@ -7,10 +7,13 @@ import MatchCancelButton from '@/components/MatchCancelButton'
 import MatchEndButton from '@/components/MatchEndButton'
 import MatchScoreInput from '@/components/MatchScoreInput'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import { getLang } from '@/lib/lang'
+import { t } from '@/lib/i18n'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
+  const lang = await getLang()
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -63,7 +66,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const gameColor = GAME_COLOR[team1?.game_type] ?? '#00D2BE'
   const matchDate = match.match_date
     ? new Date(match.match_date).toLocaleDateString('ko-KR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-    : '날짜 미정'
+    : t('match_undecided', lang)
   const matchTime = match.match_date
     ? new Date(match.match_date).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
     : ''
@@ -83,7 +86,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             {/* 날짜/포맷 */}
             <div className="flex items-start justify-between mb-8">
               <div>
-                <p className="text-[#00D2BE] text-xs font-bold uppercase tracking-widest mb-0.5">스크림 매치</p>
+                <p className="text-[#00D2BE] text-xs font-bold uppercase tracking-widest mb-0.5">{t('match_scrim_label', lang)}</p>
                 <p className="text-slate-500 text-xs">{match.format}</p>
               </div>
               <div className="flex items-center gap-4">
@@ -94,9 +97,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                       format={match.format ?? 'BO3'}
                       gameType={team1?.game_type ?? 'valorant'}
                       team1Id={team1?.id}
-                      team1Name={team1?.name ?? '팀 1'}
+                      team1Name={team1?.name ?? t('match_team1', lang)}
                       team2Id={team2?.id}
-                      team2Name={team2?.name ?? '팀 2'}
+                      team2Name={team2?.name ?? t('match_team2', lang)}
                       initialMaps={maps ?? []}
                     />
                     <MatchCancelButton matchId={id} />
@@ -139,7 +142,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   </div>
                 )}
                 <p className="text-slate-700 text-[10px] mt-2 uppercase tracking-widest">
-                  {match.status === 'completed' ? '종료' : match.status === 'ongoing' ? '진행 중' : '예정'}
+                  {match.status === 'completed' ? t('match_completed', lang) : match.status === 'ongoing' ? t('match_ongoing', lang) : t('match_scheduled', lang)}
                 </p>
               </div>
 
@@ -162,7 +165,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         {/* ── Discord 음성채널 ── */}
         {match.discord_channel_id && match.status !== 'completed' && (() => {
           const channelIds = match.discord_channel_id.split(',').filter(Boolean)
-          const labels = [team1?.name ?? '팀1', team2?.name ?? '팀2']
+          const labels = [team1?.name ?? t('match_team1', lang), team2?.name ?? t('match_team2', lang)]
           return (
             <div className="flex gap-3 mb-4">
               {channelIds.map((cid: string, i: number) => (
@@ -178,8 +181,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold text-xs">{labels[i] ?? `팀${i + 1}`} 대기실</p>
-                    <p className="text-slate-500 text-[10px]">팀원만 입장 가능</p>
+                    <p className="text-white font-bold text-xs">{labels[i] ?? `팀${i + 1}`} {t('match_waiting_room', lang)}</p>
+                    <p className="text-slate-500 text-[10px]">{t('match_team_only', lang)}</p>
                   </div>
                   <span className="text-[#5865F2] text-xs font-bold group-hover:translate-x-0.5 transition-transform">→</span>
                 </a>
@@ -192,8 +195,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         <RosterComparison
           team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
           team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
-          team1Name={team1?.abbreviation || team1?.name || '팀 1'}
-          team2Name={team2?.abbreviation || team2?.name || '팀 2'}
+          team1Name={team1?.abbreviation || team1?.name || t('match_team1', lang)}
+          team2Name={team2?.abbreviation || team2?.name || t('match_team2', lang)}
         />
 
         {/* ── 탭 + 콘텐츠 ── */}

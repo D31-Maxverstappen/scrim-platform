@@ -52,7 +52,17 @@ const translations = {
   manner_default:       { ko:'기본',              en:'Basic',           ja:'基本',            zh:'基础',         th:'พื้นฐาน',           pt:'Básico',            es:'Básico'           },
 
   // ── Onboarding Checklist ────────────────────────────────────────────
-  guide_title:          { ko:'시작 가이드',        en:'Getting Started', ja:'スタートガイド',  zh:'入门指南',     th:'คู่มือเริ่มต้น',    pt:'Guia de Início',    es:'Guía de Inicio'   },
+  guide_title:              { ko:'시작 가이드',              en:'Getting Started',         ja:'スタートガイド',          zh:'入门指南',          th:'คู่มือเริ่มต้น',          pt:'Guia de Início',              es:'Guía de Inicio'              },
+  onboard_step_riot_label:  { ko:'Riot 계정 연동',          en:'Link Riot Account',       ja:'Riotアカウント連携',      zh:'关联Riot账户',      th:'เชื่อมบัญชี Riot',       pt:'Vincular Conta Riot',         es:'Vincular Cuenta Riot'        },
+  onboard_step_riot_desc_val:{ ko:'발로란트 닉네임과 티어를 등록하세요', en:'Register your VALORANT name and tier', ja:'VALORANTのニックネームとティアを登録', zh:'注册你的VALORANT昵称和段位', th:'ลงทะเบียนชื่อและระดับ VALORANT ของคุณ', pt:'Registre seu nome e nível no VALORANT', es:'Registra tu nombre y nivel en VALORANT' },
+  onboard_step_riot_desc_lol:{ ko:'리그 오브 레전드 닉네임과 티어를 등록하세요', en:'Register your LoL name and tier', ja:'リーグ・オブ・レジェンドのニックネームとティアを登録', zh:'注册你的英雄联盟昵称和段位', th:'ลงทะเบียนชื่อและระดับ LoL ของคุณ', pt:'Registre seu nome e nível no LoL', es:'Registra tu nombre y nivel en LoL' },
+  onboard_step_riot_cta:    { ko:'연동하기',                en:'Link Now',                ja:'連携する',                zh:'立即关联',          th:'เชื่อมเลย',               pt:'Vincular Agora',              es:'Vincular Ahora'              },
+  onboard_step_team_label:  { ko:'팀 가입 또는 생성',       en:'Join or Create a Team',   ja:'チームに参加または作成',  zh:'加入或创建队伍',    th:'เข้าร่วมหรือสร้างทีม',    pt:'Entrar ou Criar um Time',     es:'Unirse o Crear un Equipo'    },
+  onboard_step_team_desc:   { ko:'팀이 있어야 스크림을 신청할 수 있어요', en:'You need a team to apply for scrims', ja:'スクリムを申請するにはチームが必要です', zh:'需要有队伍才能申请训练赛', th:'คุณต้องมีทีมเพื่อสมัครสคริม', pt:'Você precisa de um time para solicitar scrims', es:'Necesitas un equipo para solicitar scrims' },
+  onboard_step_team_view:   { ko:'내 팀 보기',              en:'View My Team',            ja:'マイチームを見る',        zh:'查看我的队伍',      th:'ดูทีมของฉัน',             pt:'Ver Meu Time',                es:'Ver Mi Equipo'               },
+  onboard_step_scrim_label: { ko:'첫 스크림 신청',          en:'Apply for First Scrim',   ja:'初めてのスクリム申請',    zh:'申请第一场训练赛',  th:'สมัครสคริมครั้งแรก',      pt:'Solicitar Primeiro Scrim',    es:'Solicitar Primer Scrim'      },
+  onboard_step_scrim_desc:  { ko:'스크림 게시판에서 상대 팀을 찾아보세요', en:'Find an opponent on the scrim board', ja:'スクリム掲示板で相手チームを探してみよう', zh:'在训练赛看板找对手队伍', th:'หาคู่แข่งในบอร์ดสคริม', pt:'Encontre um adversário no quadro de scrims', es:'Busca un adversario en el tablero de scrims' },
+  onboard_step_scrim_cta:   { ko:'스크림 찾기',             en:'Find Scrim',              ja:'スクリムを探す',          zh:'查找训练赛',        th:'หาสคริม',                  pt:'Encontrar Scrim',             es:'Buscar Scrim'                },
 
   // ── ScrimList ───────────────────────────────────────────────────────
   scrim_board:          { ko:'스크림 게시판',      en:'Scrim Board',     ja:'スクリム掲示板',  zh:'训练赛看板',   th:'บอร์ดสคริม',        pt:'Quadro de Scrims',  es:'Tablero de Scrims' },

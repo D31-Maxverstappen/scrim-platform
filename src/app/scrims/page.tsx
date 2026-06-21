@@ -3,8 +3,11 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import ScrimsBoardClient from '@/components/ScrimsBoardClient'
+import { getLang } from '@/lib/lang'
+import { t } from '@/lib/i18n'
 
 export default async function ScrimsPage({ searchParams }: { searchParams: Promise<{ game?: string; q?: string; server?: string; format?: string }> }) {
+  const lang = await getLang()
   const { game = '', q = '', server = '', format = '' } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -26,15 +29,15 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
     if (teamIds.length > 0) {
       query = query.in('team_id', teamIds)
     } else {
-      return renderPage([], game, server, format, q)
+      return renderPage([], game, server, format, q, lang)
     }
   }
 
   const { data: posts } = await query
-  return renderPage(posts ?? [], game, server, format, q)
+  return renderPage(posts ?? [], game, server, format, q, lang)
 }
 
-function renderPage(posts: any[], game: string, server: string, format: string, q: string) {
+function renderPage(posts: any[], game: string, server: string, format: string, q: string, lang: any) {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_posts"]} />
@@ -42,11 +45,11 @@ function renderPage(posts: any[], game: string, server: string, format: string, 
       <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
+            <h1 className="text-2xl font-bold text-white">{t('scrim_board', lang)}</h1>
             <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
           </div>
           <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
-            + 스크림 올리기
+            {t('scrim_post_btn', lang)}
           </a>
         </div>
 

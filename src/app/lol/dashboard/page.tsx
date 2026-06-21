@@ -11,11 +11,14 @@ import DiscordBanner from '@/components/DiscordBanner'
 import OnboardingChecklist from '@/components/OnboardingChecklist'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import AutoMatchButton from '@/components/AutoMatchButton'
+import { getLang } from '@/lib/lang'
+import { t } from '@/lib/i18n'
 
 const GAME = 'lol'
 const GAME_COLOR = '#c89b3c'
 
 export default async function LolDashboardPage() {
+  const lang = await getLang()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -103,7 +106,7 @@ export default async function LolDashboardPage() {
               <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">Manner Score</p>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-2xl font-black text-white">100</span>
-                <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">기본</span>
+                <span className="text-xs text-slate-500 bg-white/5 px-2 py-0.5 rounded">{t('manner_default', lang)}</span>
               </div>
               <div className="w-full bg-white/5 rounded-full h-1 mb-1">
                 <div className="h-1 rounded-full" style={{ width: '50%', background: GAME_COLOR }} />
@@ -123,16 +126,16 @@ export default async function LolDashboardPage() {
                     <p className="text-white font-black text-xl truncate">{team.abbreviation || team.name}</p>
                     {team.tier_avg && <p className="text-xs mt-0.5" style={{ color: GAME_COLOR }}>{team.tier_avg}</p>}
                     <span className="inline-block mt-1.5 text-xs px-2 py-0.5 rounded" style={{ background: GAME_COLOR + '33', color: GAME_COLOR }}>
-                      {myLolTeam?.role === 'captain' ? '캡틴' : '멤버'}
+                      {myLolTeam?.role === 'captain' ? t('my_team_captain', lang) : t('my_team_member', lang)}
                     </span>
                   </div>
                   <span className="text-slate-600 group-hover:text-[#c89b3c] text-lg transition shrink-0">→</span>
                 </a>
               ) : (
                 <div className="flex flex-col gap-2">
-                  <p className="text-slate-600 text-xs">LoL 팀 없음</p>
+                  <p className="text-slate-600 text-xs">{t('my_team_no_team', lang)}</p>
                   <a href="/teams/create" className="text-center text-white text-xs font-bold py-2 transition rounded" style={{ background: GAME_COLOR }}>
-                    팀 만들기
+                    {t('my_team_create', lang)}
                   </a>
                 </div>
               )}
@@ -141,8 +144,8 @@ export default async function LolDashboardPage() {
             <a href="/scrims/applied"
               className="bg-[#13131f] border border-white/5 rounded px-4 py-3 flex items-center justify-between hover:border-white/10 transition group">
               <div>
-                <p className="text-white text-xs font-bold">내가 신청한 스크림</p>
-                <p className="text-slate-500 text-[10px] mt-0.5">신청 현황 확인</p>
+                <p className="text-white text-xs font-bold">{t('dash_applied_scrims', lang)}</p>
+                <p className="text-slate-500 text-[10px] mt-0.5">{t('dash_check_status', lang)}</p>
               </div>
               <span className="text-slate-600 group-hover:text-[#00D2BE] transition text-sm">→</span>
             </a>
@@ -154,9 +157,9 @@ export default async function LolDashboardPage() {
           <main className="flex-1 flex flex-col gap-4 min-w-0">
             <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden flex divide-x divide-white/5">
               {[
-                { label: '가입 유저 수', value: userCount ?? '—' },
-                { label: 'LoL 팀', value: teamCount ?? '—' },
-                { label: '평균 매너점수', value: '100' },
+                { label: t('dash_users', lang), value: userCount ?? '—' },
+                { label: t('dash_teams', lang), value: teamCount ?? '—' },
+                { label: t('dash_avg_manner', lang), value: '100' },
               ].map((s) => (
                 <div key={s.label} className="flex-1 p-4">
                   <p className="text-slate-500 text-xs mb-1">{s.label}</p>
@@ -170,27 +173,27 @@ export default async function LolDashboardPage() {
             <OnboardingChecklist steps={[
               {
                 id: 'riot',
-                label: 'Riot 계정 연동',
-                desc: '리그 오브 레전드 닉네임과 티어를 등록하세요',
+                label: t('onboard_step_riot_label', lang),
+                desc: t('onboard_step_riot_desc_lol', lang),
                 done: !!(profile?.lol_gamename || profile?.riot_gamename),
                 href: '/onboarding',
-                cta: '연동하기',
+                cta: t('onboard_step_riot_cta', lang),
               },
               {
                 id: 'team',
-                label: '팀 가입 또는 생성',
-                desc: '팀이 있어야 스크림을 신청할 수 있어요',
+                label: t('onboard_step_team_label', lang),
+                desc: t('onboard_step_team_desc', lang),
                 done: !!team,
                 href: team ? `/teams/${team.id}` : '/teams/create',
-                cta: team ? '내 팀 보기' : '팀 만들기',
+                cta: team ? t('onboard_step_team_view', lang) : t('my_team_create', lang),
               },
               {
                 id: 'scrim',
-                label: '첫 스크림 신청',
-                desc: '스크림 게시판에서 상대 팀을 찾아보세요',
+                label: t('onboard_step_scrim_label', lang),
+                desc: t('onboard_step_scrim_desc', lang),
                 done: (allApplications ?? []).length > 0,
                 href: '/lol/scrims',
-                cta: '스크림 찾기',
+                cta: t('onboard_step_scrim_cta', lang),
               },
             ]} />
             <ScrimList scrims={recentScrims ?? []} game={GAME} />
@@ -200,11 +203,11 @@ export default async function LolDashboardPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/5">
-                  <p className="text-white font-bold text-xs uppercase tracking-widest">최근 매치</p>
+                  <p className="text-white font-bold text-xs uppercase tracking-widest">{t('dash_recent_matches', lang)}</p>
                 </div>
                 {recentMatches.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-10 text-slate-600">
-                    <p className="text-xs">매치 기록이 없어요</p>
+                    <p className="text-xs">{t('dash_no_matches', lang)}</p>
                   </div>
                 ) : (
                   <div className="divide-y divide-white/5">
@@ -213,9 +216,9 @@ export default async function LolDashboardPage() {
                       const t2 = Array.isArray(m.team2) ? m.team2[0] : m.team2
                       const w = Array.isArray(m.winner) ? m.winner[0] : m.winner
                       const isWin = w?.id === team?.id
-                      const statusLabel = m.status === 'completed' ? (isWin ? '승' : '패') : m.status === 'ongoing' ? '진행 중' : '예정'
+                      const statusLabel = m.status === 'completed' ? (isWin ? t('win', lang) : t('loss', lang)) : m.status === 'ongoing' ? t('match_ongoing', lang) : t('match_scheduled', lang)
                       const statusColor = m.status === 'completed' ? (isWin ? 'text-[#c89b3c]' : 'text-slate-500') : 'text-slate-500'
-                      const date = m.match_date ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) : '날짜 미정'
+                      const date = m.match_date ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }) : t('tbd', lang)
                       return (
                         <a key={m.id} href={`/matches/${m.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-white/3 transition group">
                           <span className={`text-xs font-black w-6 text-center ${statusColor}`}>{statusLabel}</span>
