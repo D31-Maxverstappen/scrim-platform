@@ -135,16 +135,6 @@ export default function ManageTeamPage() {
     load()
   }
 
-  const handleIglToggle = async (userId: string, currentIsIgl: boolean) => {
-    if (!currentIsIgl) {
-      await supabase.from('team_members').update({ is_igl: false }).eq('team_id', teamId)
-      setMembers((prev) => prev.map((m) => ({ ...m, is_igl: false })))
-    }
-    await supabase.from('team_members').update({ is_igl: !currentIsIgl }).eq('team_id', teamId).eq('user_id', userId)
-    setMembers((prev) => prev.map((m) => m.user_id === userId ? { ...m, is_igl: !currentIsIgl } : m))
-    setMsg(!currentIsIgl ? 'IGL을 지정했어요.' : 'IGL을 해제했어요.')
-  }
-
   const handleKick = async (userId: string) => {
     if (!confirm('정말 내보낼까요?')) return
     await supabase.from('team_members').delete().eq('team_id', teamId).eq('user_id', userId)
@@ -337,15 +327,6 @@ export default function ManageTeamPage() {
                     <p className="text-white font-semibold text-sm">{u?.riot_gamename ?? '알 수 없음'}{u?.riot_tagline && <span className="text-slate-500 text-xs"> #{u.riot_tagline}</span>}</p>
                     {u?.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
                   </div>
-                  {/* IGL 토글 (코치 제외) */}
-                  {!['head_coach', 'coach'].includes(m.role) && (
-                    <button
-                      onClick={() => handleIglToggle(m.user_id, m.is_igl)}
-                      className={`text-[10px] font-black px-2.5 py-1 border transition ${m.is_igl ? 'border-[#00D2BE] text-[#00D2BE] bg-[#00D2BE]/10' : 'border-white/10 text-slate-600 hover:border-white/30 hover:text-slate-400'}`}
-                    >
-                      IGL
-                    </button>
-                  )}
                   {isCaptain ? (
                     <span className="text-xs font-bold px-3 py-1" style={{ color: '#00D2BE', background: '#00D2BE22' }}>Captain</span>
                   ) : (
@@ -368,9 +349,9 @@ export default function ManageTeamPage() {
             })}
           </div>
         </section>
-        {/* 위험 구역 */}
+        {/* 팀 삭제 */}
         <section className="mt-12">
-          <h2 className="text-red-500 font-bold text-sm uppercase tracking-widest mb-4">위험 구역</h2>
+          <h2 className="text-red-500 font-bold text-sm uppercase tracking-widest mb-4">팀 삭제</h2>
           <div className="bg-red-500/5 border border-red-500/20 rounded p-5">
             <p className="text-white font-semibold text-sm mb-1">팀 삭제</p>
             <p className="text-slate-400 text-xs mb-4">팀을 삭제하면 모든 멤버, 스크림 기록이 함께 삭제되며 복구할 수 없어요.</p>
