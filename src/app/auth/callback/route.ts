@@ -50,7 +50,6 @@ export async function GET(request: NextRequest) {
   if (!existing) {
     await supabase.from('users').insert({
       id: user.id,
-      email: user.email,
       riot_gamename: discordName,
       avatar_url: discordAvatar,
       discord_id: discordId ?? null,

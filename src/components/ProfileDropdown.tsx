@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 export default function ProfileDropdown() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [user, setUser] = useState<{ name: string; email: string; avatar: string | null; teamId: string | null } | null>(null)
+  const [user, setUser] = useState<{ name: string; avatar: string | null; teamId: string | null } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
   const supabase = useRef(createClient()).current
 
@@ -28,7 +28,6 @@ export default function ProfileDropdown() {
         .single()
       setUser({
         name: profile?.val_gamename ?? profile?.riot_gamename ?? u.user_metadata?.full_name ?? '유저',
-        email: u.email ?? '',
         avatar: profile?.avatar_url ?? null,
         teamId: member?.team_id ?? null,
       })
@@ -77,7 +76,6 @@ export default function ProfileDropdown() {
           {/* 유저 정보 */}
           <div className="px-4 py-3 border-b border-white/5">
             <p className="text-white text-sm font-bold truncate">{user?.name ?? '...'}</p>
-            <p className="text-slate-500 text-xs truncate">{user?.email ?? ''}</p>
           </div>
 
           {/* 메뉴 */}

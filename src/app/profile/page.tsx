@@ -48,7 +48,7 @@ export default async function ProfilePage() {
           <AvatarUpload
             userId={user.id}
             initialUrl={profile?.avatar_url ?? null}
-            initials={profile?.riot_gamename?.[0]?.toUpperCase() ?? user.email?.[0]?.toUpperCase() ?? '?'}
+            initials={profile?.riot_gamename?.[0]?.toUpperCase() ?? '?'}
           />
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
@@ -80,7 +80,6 @@ export default async function ProfilePage() {
             <div className="mt-3">
               <CountrySelect initialCountry={profile?.country ?? null} />
             </div>
-            <p className="text-slate-600 text-xs mt-2">{user.email}</p>
           </div>
         </div>
 
