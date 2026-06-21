@@ -64,17 +64,16 @@ export default async function LeaderboardPage({
   /* ── 플레이어 랭킹 데이터 ── */
   const { data: players } = await supabase
     .from('users')
-    .select('id, riot_gamename, riot_tagline, val_gamename, lol_gamename, val_tier, lol_tier, tier, avatar_url, game_type')
-    .eq('game_type', game)
+    .select('id, riot_gamename, riot_tagline, val_gamename, val_tier, tier, avatar_url, game_type')
+    .eq('game_type', 'valorant')
     .not('riot_gamename', 'is', null)
     .limit(200)
 
-  const isVal = game === 'valorant'
   const sortedPlayers = (players ?? [])
     .map((u) => ({
       ...u,
-      displayTier: isVal ? (u.val_tier ?? u.tier) : (u.lol_tier ?? u.tier),
-      displayName: isVal ? (u.val_gamename ?? u.riot_gamename) : (u.lol_gamename ?? u.riot_gamename),
+      displayTier: u.val_tier ?? u.tier,
+      displayName: u.val_gamename ?? u.riot_gamename,
     }))
     .filter((u) => u.displayTier)
     .sort((a, b) => tierRank(a.displayTier) - tierRank(b.displayTier))
@@ -82,8 +81,8 @@ export default async function LeaderboardPage({
   const myTeamRank = teams.findIndex((t) => false) // 나중에 내 팀 강조
   const myPlayerRank = sortedPlayers.findIndex((u) => u.id === user.id)
 
-  const gameLabel = isVal ? 'VALORANT' : 'League of Legends'
-  const gameColor = isVal ? '#ff4655' : '#c89b3c'
+  const gameLabel = 'VALORANT'
+  const gameColor = '#ff4655'
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
@@ -97,16 +96,6 @@ export default async function LeaderboardPage({
           <p className="text-slate-400 text-sm mt-1">D31 랭킹</p>
         </div>
 
-        {/* 게임 탭 */}
-        <div className="flex gap-2 mb-5">
-          {[['valorant', 'VALORANT'], ['lol', 'League of Legends']].map(([v, l]) => (
-            <a key={v} href={`/leaderboard?game=${v}&tab=${tab}`}
-              className={`px-4 py-2 rounded text-sm font-semibold transition ${game === v ? 'text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}
-              style={game === v ? { background: gameColor + '33', color: gameColor } : {}}>
-              {l}
-            </a>
-          ))}
-        </div>
 
         {/* 카테고리 탭 */}
         <div className="flex border-b border-white/5 mb-6">

@@ -53,8 +53,7 @@ export async function createTeamAction(formData: FormData) {
   // users 테이블 upsert
   await supabase.from('users').upsert({
     id: user.id,
-    summoner_name: user.user_metadata?.full_name ?? user.email ?? '유저',
-    game_type: game_type as 'valorant' | 'lol',
+    game_type: 'valorant',
   }, { onConflict: 'id' })
 
   // 팀 생성
@@ -88,7 +87,7 @@ export async function createTeamAction(formData: FormData) {
 
   // Discord 팀 역할 생성 + 캡틴에게 부여
   try {
-    const teamColor = game_type === 'valorant' ? 0xFF4655 : 0xC89B3C
+    const teamColor = 0xFF4655
     const discordRoleId = await createDiscordRole(abbreviation, teamColor)
     if (discordRoleId) {
       const admin = createAdminClient(

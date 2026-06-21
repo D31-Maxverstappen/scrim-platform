@@ -8,7 +8,7 @@ import MatchEndButton from '@/components/MatchEndButton'
 import MatchScoreInput from '@/components/MatchScoreInput'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 export default async function MatchPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -32,14 +32,14 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const [{ data: maps }, { data: stats }, { data: team1Members }, { data: team2Members }] = await Promise.all([
     supabase.from('match_maps').select('id, match_id, map_number, map_name, team1_score, team2_score, round_results').eq('match_id', id).order('map_number'),
     supabase.from('match_player_stats')
-      .select('*, users(riot_gamename, val_gamename, lol_gamename, avatar_url, country)')
+      .select('*, users(riot_gamename, val_gamename, avatar_url, country)')
       .eq('match_id', id),
     supabase.from('team_members')
-      .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
+      .select('user_id, role, is_igl, users(val_gamename, riot_gamename, val_tier, tier, country, avatar_url)')
       .eq('team_id', match.team1_id)
       .neq('role', 'coach'),
     supabase.from('team_members')
-      .select('user_id, role, is_igl, users(val_gamename, lol_gamename, riot_gamename, val_tier, lol_tier, tier, country, avatar_url)')
+      .select('user_id, role, is_igl, users(val_gamename, riot_gamename, val_tier, tier, country, avatar_url)')
       .eq('team_id', match.team2_id)
       .neq('role', 'coach'),
   ])

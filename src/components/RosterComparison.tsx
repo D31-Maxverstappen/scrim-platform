@@ -6,10 +6,8 @@ type Member = {
   is_igl: boolean
   users: {
     val_gamename: string | null
-    lol_gamename: string | null
     riot_gamename: string | null
     val_tier: string | null
-    lol_tier: string | null
     tier: string | null
     country: string | null
     avatar_url: string | null
@@ -18,8 +16,8 @@ type Member = {
 
 function PlayerCard({ member, flip = false }: { member: Member; flip?: boolean }) {
   const u = member.users
-  const name = u?.val_gamename ?? u?.lol_gamename ?? u?.riot_gamename ?? '알 수 없음'
-  const tier = u?.val_tier ?? u?.lol_tier ?? u?.tier ?? null
+  const name = u?.val_gamename ?? u?.riot_gamename ?? '알 수 없음'
+  const tier = u?.val_tier ?? u?.tier ?? null
 
   return (
     <div className={`flex items-center gap-2.5 px-3 py-2.5 border border-white/8 bg-[#0d0d14] hover:border-white/20 transition ${flip ? 'flex-row-reverse' : ''}`}>

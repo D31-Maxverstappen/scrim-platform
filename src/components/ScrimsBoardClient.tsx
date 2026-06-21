@@ -160,7 +160,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
                   </div>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
                     <span className="font-semibold" style={{ color: gc }}>
-                      {post.game_type === 'valorant' ? 'VALORANT' : 'League of Legends'}
+                      VALORANT
                     </span>
                     {post.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
                   </div>

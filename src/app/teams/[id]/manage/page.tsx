@@ -171,7 +171,7 @@ export default function ManageTeamPage() {
   const handleDelete = async () => {
     if (deleteInput !== team?.name) return
     const res = await fetch(`/api/teams/${teamId}`, { method: 'DELETE' })
-    if (res.ok) router.replace(team?.game_type === 'lol' ? '/lol/teams' : '/valorant/teams')
+    if (res.ok) router.replace('/valorant/teams')
     else {
       const data = await res.json()
       setMsg('삭제 실패: ' + (data.error ?? '알 수 없는 오류'))

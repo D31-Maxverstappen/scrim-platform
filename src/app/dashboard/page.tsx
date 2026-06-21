@@ -8,7 +8,5 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: profile } = await supabase.from('users').select('game_type').eq('id', user.id).single()
-  const game = profile?.game_type === 'lol' ? 'lol' : 'valorant'
-  redirect(`/${game}/dashboard`)
+  redirect('/valorant/dashboard')
 }

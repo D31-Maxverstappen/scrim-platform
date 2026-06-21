@@ -17,7 +17,7 @@ export default function ProfileDropdown() {
       if (!u) return
       const { data: profile } = await supabase
         .from('users')
-        .select('avatar_url, riot_gamename, val_gamename, lol_gamename')
+        .select('avatar_url, riot_gamename, val_gamename')
         .eq('id', u.id)
         .single()
       const { data: member } = await supabase
@@ -27,7 +27,7 @@ export default function ProfileDropdown() {
         .eq('role', 'captain')
         .single()
       setUser({
-        name: profile?.val_gamename ?? profile?.lol_gamename ?? profile?.riot_gamename ?? u.user_metadata?.full_name ?? '유저',
+        name: profile?.val_gamename ?? profile?.riot_gamename ?? u.user_metadata?.full_name ?? '유저',
         email: u.email ?? '',
         avatar: profile?.avatar_url ?? null,
         teamId: member?.team_id ?? null,

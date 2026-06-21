@@ -25,19 +25,16 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  const gameFields = gameType === 'valorant'
-    ? { val_gamename: gameName, val_tagline: tagLine, val_tier: tier ?? null }
-    : { lol_gamename: gameName, lol_tagline: tagLine, lol_tier: tier ?? null }
-
   await supabase.from('users').upsert({
     id: user.id,
-    summoner_name: `${gameName}#${tagLine}`,
     riot_puuid: account.puuid,
     riot_gamename: gameName,
     riot_tagline: tagLine,
-    game_type: gameType,
+    game_type: 'valorant',
+    val_gamename: gameName,
+    val_tagline: tagLine,
+    val_tier: tier ?? null,
     tier: tier ?? null,
-    ...gameFields,
   }, { onConflict: 'id' })
 
   // Discord 역할 부여 (discord_id 있는 경우)
@@ -47,9 +44,8 @@ export async function POST(req: NextRequest) {
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
     )
-    const prefix = gameType === 'valorant' ? 'VAL' : 'LoL'
-    const gameRoleName = gameType === 'valorant' ? 'VALORANT Player' : 'League of Legends Player'
-    const tierRoleName = `${prefix} ${tier}`
+    const gameRoleName = 'VALORANT Player'
+    const tierRoleName = `VAL ${tier}`
 
     const [gameRoleId, tierRoleId] = await Promise.all([
       getRoleId(admin, gameRoleName),

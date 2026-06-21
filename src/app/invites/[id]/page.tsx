@@ -3,8 +3,8 @@ import { redirect, notFound } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import InviteActions from '@/components/InviteActions'
 
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 export default async function InvitePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

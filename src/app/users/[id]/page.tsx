@@ -4,8 +4,8 @@ import Navbar from '@/components/Navbar'
 import { FlagImg } from '@/components/CountrySelect'
 import InviteButton from '@/components/InviteButton'
 
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -15,7 +15,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
 
   const { data: profile } = await supabase
     .from('users')
-    .select('id, riot_gamename, riot_tagline, val_gamename, val_tagline, val_tier, lol_gamename, lol_tagline, lol_tier, tier, game_type, avatar_url, country')
+    .select('id, riot_gamename, riot_tagline, val_gamename, val_tagline, val_tier, tier, game_type, avatar_url, country')
     .eq('id', id)
     .single()
 
@@ -31,10 +31,9 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
   const iAmCaptain = myTeam?.role === 'captain'
   const isMe = id === me.id
   const gc = GAME_COLOR[profile.game_type ?? ''] ?? '#00D2BE'
-  const isVal = profile.game_type === 'valorant'
-  const gameName = isVal ? (profile.val_gamename ?? profile.riot_gamename) : (profile.lol_gamename ?? profile.riot_gamename)
-  const tagline = isVal ? (profile.val_tagline ?? profile.riot_tagline) : (profile.lol_tagline ?? profile.riot_tagline)
-  const tier = isVal ? profile.val_tier : profile.lol_tier
+  const gameName = profile.val_gamename ?? profile.riot_gamename
+  const tagline = profile.val_tagline ?? profile.riot_tagline
+  const tier = profile.val_tier ?? profile.tier
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">

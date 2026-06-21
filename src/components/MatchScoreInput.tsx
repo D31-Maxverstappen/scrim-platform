@@ -175,7 +175,7 @@ export default function MatchScoreInput({
                     </div>
                   </div>
                 ) : (
-                  /* LoL: 승/패 버튼 */
+                  /* 승/패 버튼 */
                   <div className="flex gap-2">
                     <button
                       onClick={() => { set(i, 't1', m.t1 === '1' ? '' : '1'); set(i, 't2', m.t1 === '1' ? '' : '0') }}

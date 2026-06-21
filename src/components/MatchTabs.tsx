@@ -57,7 +57,7 @@ function StatHeader({ playerLabel }: { playerLabel: string }) {
 
 function StatRow({ stat, gameName }: { stat: any; gameName: string }) {
   const u = stat.users
-  const name = u?.val_gamename ?? u?.lol_gamename ?? u?.riot_gamename ?? '—'
+  const name = u?.val_gamename ?? u?.riot_gamename ?? '—'
   const rating = stat.deaths > 0 ? (stat.kills / stat.deaths).toFixed(2) : stat.kills.toFixed(2)
   const plusMinus = stat.kills - stat.deaths
 
@@ -94,7 +94,7 @@ function StatRow({ stat, gameName }: { stat: any; gameName: string }) {
 
 function EmptyStatRow({ member }: { member: any | null }) {
   const u = member?.users ?? null
-  const name = u?.val_gamename ?? u?.lol_gamename ?? u?.riot_gamename ?? null
+  const name = u?.val_gamename ?? u?.riot_gamename ?? null
 
   return (
     <div className="grid items-center px-4 py-2.5 border-b border-white/5"

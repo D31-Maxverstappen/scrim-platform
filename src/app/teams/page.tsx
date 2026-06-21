@@ -7,12 +7,10 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_LABEL: Record<string, string> = {
   valorant: 'VALORANT',
-  lol: 'League of Legends',
 }
 
 const GAME_COLOR: Record<string, string> = {
   valorant: '#ff4655',
-  lol: '#c89b3c',
 }
 
 export default async function TeamsPage() {

@@ -14,8 +14,7 @@ const TIER_COLOR: Record<string, string> = {
 }
 
 const GAME_LABEL: Record<string, string> = {
-  lol: 'League of Legends',
-  valorant: 'Valorant',
+  valorant: 'VALORANT',
 }
 
 export default async function ProfilePage() {

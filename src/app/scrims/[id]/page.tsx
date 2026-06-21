@@ -5,8 +5,8 @@ import ScrimApplyButton from '@/components/ScrimApplyButton'
 import ScrimCancelButton from '@/components/ScrimCancelButton'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 function formatDate(dt: string | null) {
   if (!dt) return '미정'

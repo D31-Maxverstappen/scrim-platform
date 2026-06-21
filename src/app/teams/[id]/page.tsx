@@ -8,8 +8,8 @@ import TeamPageTabs from '@/components/TeamPageTabs'
 import { FlagImg } from '@/components/CountrySelect'
 import TeamChat from '@/components/TeamChat'
 
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 const ROLE_LABEL: Record<string, string> = {
   captain: 'CAPTAIN', igl: 'IGL', player: 'PLAYER',
   head_coach: 'HEAD COACH', coach: 'COACH',
@@ -31,7 +31,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
   const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }, { data: anyMembership }] = await Promise.all([
     supabase.from('team_members')
-      .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
+      .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, country)')
       .eq('team_id', id),
     supabase.from('team_join_requests').select('id')
       .eq('team_id', id).eq('user_id', user.id).eq('status', 'pending').single(),
@@ -325,10 +325,8 @@ function RosterCard({ member, currentUserId, isVal }: {
   const u = member.users
   const roleColor = ROLE_COLOR[member.role] ?? '#94a3b8'
   const isMe = member.user_id === currentUserId
-  const gameName = isVal
-    ? (u?.val_gamename ?? u?.riot_gamename ?? null)
-    : (u?.lol_gamename ?? u?.riot_gamename ?? null)
-  const tier = isVal ? (u?.val_tier ?? u?.tier ?? null) : (u?.lol_tier ?? u?.tier ?? null)
+  const gameName = u?.val_gamename ?? u?.riot_gamename ?? null
+  const tier = u?.val_tier ?? u?.tier ?? null
   return (
     <div className={`border flex items-center gap-3 px-3 py-2.5 ${isMe ? 'border-[#00D2BE]/40 bg-[#0d1a19]' : 'border-white/10 bg-[#13131f]'}`}>
       {/* 아바타 — 작은 정사각형 */}

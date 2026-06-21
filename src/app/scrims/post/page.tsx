@@ -5,7 +5,6 @@ import { createScrimAction } from '@/app/actions'
 
 const GAMES = [
   { value: 'valorant', label: 'VALORANT' },
-  { value: 'lol', label: 'League of Legends' },
 ]
 
 export default function PostScrimPage() {
