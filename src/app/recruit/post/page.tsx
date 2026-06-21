@@ -26,7 +26,8 @@ function RecruitPostContent() {
 
   const [type, setType] = useState<'lft' | 'lfp'>(defaultType)
   const game = 'valorant'
-  const [tiers, setTiers] = useState<string[]>([])
+  const [tier, setTier] = useState('')       // LFT 단일
+  const [tiers, setTiers] = useState<string[]>([]) // LFP 다중
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
   const [discordTag, setDiscordTag] = useState('')
@@ -44,7 +45,7 @@ function RecruitPostContent() {
           if (profile?.discord_tag) setDiscordTag(profile.discord_tag)
           if (type === 'lft') {
             const t = profile?.val_tier ?? null
-            if (t) setTiers([t])
+            if (t) setTier(t)
           }
         })
       supabase.from('teams').select('id, name, tier_avg, game_type').eq('captain_id', user.id).eq('game_type', game).single()
@@ -69,7 +70,8 @@ function RecruitPostContent() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type, game_type: game, tier: tiers.length ? tiers.join(',') : null,
+        type, game_type: game,
+        tier: type === 'lft' ? (tier || null) : (tiers.length ? tiers.join(',') : null),
         roles: roles.length ? roles : null,
         note: note || null,
         discord_tag: discordTag || null,
@@ -104,12 +106,12 @@ function RecruitPostContent() {
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">유형 *</label>
             <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => { setType('lft'); setRoles([]) }}
+              <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]) }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFT
                 <span className="text-[10px] opacity-70 font-normal">팀 구함</span>
               </button>
-              <button type="button" onClick={() => { setType('lfp'); setRoles([]) }}
+              <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier('') }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFP
                 <span className="text-[10px] opacity-70 font-normal">선수 구함</span>
@@ -148,11 +150,17 @@ function RecruitPostContent() {
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 티어' : '희망 티어'}
+              {type === 'lfp' && <span className="text-slate-500 font-normal ml-1">(복수 선택)</span>}
             </label>
             <div className="flex flex-wrap gap-1.5">
-              {tierList.map((t) => (
-                <button key={t} type="button" onClick={() => toggleTier(t)} className={chipCls(tiers.includes(t))}>{t}</button>
-              ))}
+              {type === 'lft'
+                ? tierList.map((t) => (
+                    <button key={t} type="button" onClick={() => setTier(tier === t ? '' : t)} className={chipCls(tier === t)}>{t}</button>
+                  ))
+                : tierList.map((t) => (
+                    <button key={t} type="button" onClick={() => toggleTier(t)} className={chipCls(tiers.includes(t))}>{t}</button>
+                  ))
+              }
             </div>
           </div>
 
