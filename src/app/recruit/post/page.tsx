@@ -163,7 +163,7 @@ function RecruitPostContent() {
           {/* 포지션/역할 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
-              {type === 'lft' ? '내 포지션' : '모집 포지션'} <span className="text-slate-500 font-normal">(복수 선택)</span>
+              {type === 'lft' ? '내 포지션' : '모집 포지션'} <span className="text-slate-500 font-normal">(복수 선택 가능)</span>
             </label>
             <div className="flex flex-wrap gap-1.5">
               {roleList.map((r) => (

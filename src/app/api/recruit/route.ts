@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  // LFT 중복 방지
+  // LFT/LFP 중복 방지
   if (type === 'lft') {
     const { count } = await admin
       .from('recruitment_posts')
@@ -34,6 +34,18 @@ export async function POST(req: NextRequest) {
       .eq('status', 'active')
     if (count && count > 0) {
       return NextResponse.json({ error: '이미 활성 팀 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
+    }
+  }
+
+  if (type === 'lfp' && team_id) {
+    const { count } = await admin
+      .from('recruitment_posts')
+      .select('id', { count: 'exact', head: true })
+      .eq('team_id', team_id)
+      .eq('type', 'lfp')
+      .eq('status', 'active')
+    if (count && count > 0) {
+      return NextResponse.json({ error: '이미 활성 선수 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
     }
   }
 
