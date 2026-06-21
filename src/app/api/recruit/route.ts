@@ -38,12 +38,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const adminClient = admin
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  )
-
-  const { data, error } = await adminClient.from('recruitment_posts').insert({
+  const { data, error } = await admin.from('recruitment_posts').insert({
     user_id: user.id,
     team_id: team_id ?? null,
     type,
