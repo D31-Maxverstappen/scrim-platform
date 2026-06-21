@@ -55,7 +55,7 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
         ))}
       </div>
 
-      <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
+      <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         {filtered.length === 0 ? (
           <div className="py-16 text-center text-slate-700 text-xs">
             {tab === 'pending' ? '미처리 신고가 없어요' : '처리된 신고가 없어요'}

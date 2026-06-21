@@ -28,8 +28,8 @@ export default function AdminTeamsClient({ teams }: { teams: any[] }) {
         <h1 className="text-white font-black text-2xl">팀 관리</h1>
       </div>
 
-      <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/[0.04]">
+      <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+        <div className="grid grid-cols-12 gap-2 px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
           {['팀 이름', '게임', '캡틴', '멤버', '평균 티어', ''].map((h, i) => (
             <span key={i} className={`text-[10px] font-black uppercase tracking-[0.15em] text-slate-700 ${
               i === 0 ? 'col-span-3' : i === 1 ? 'col-span-1' : i === 2 ? 'col-span-3' : i === 3 ? 'col-span-1' : i === 4 ? 'col-span-2' : 'col-span-2'

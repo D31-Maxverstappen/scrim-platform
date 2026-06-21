@@ -62,8 +62,8 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
         </form>
       </div>
 
-      <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/[0.04]">
+      <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+        <div className="grid grid-cols-12 gap-2 px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
           {['닉네임', '티어', '가입일', '상태', ''].map((h, i) => (
             <span key={i} className={`text-[10px] font-black uppercase tracking-[0.15em] text-slate-700 ${i === 0 ? 'col-span-4' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-2'}`}>{h}</span>
           ))}
