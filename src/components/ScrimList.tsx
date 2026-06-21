@@ -32,14 +32,16 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
     }`
 
   return (
-    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
+    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
 
       {/* 헤더 */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
         <div className="flex items-center gap-3">
           <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">스크림 게시판</p>
-          <span className="flex items-center gap-1.5 text-[10px] text-green-400 font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+          <span className="flex items-center gap-1.5 text-[10px] text-green-400 font-bold"
+            style={{ textShadow: '0 0 8px rgba(74,222,128,0.7)' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"
+              style={{ boxShadow: '0 0 6px rgba(74,222,128,0.9)' }} />
             LIVE
           </span>
         </div>

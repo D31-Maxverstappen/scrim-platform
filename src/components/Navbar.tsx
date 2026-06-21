@@ -71,6 +71,7 @@ export default function Navbar() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
+            filter: 'drop-shadow(0 0 10px rgba(192,57,43,0.35))',
           }}
         >
           D31
@@ -82,6 +83,7 @@ export default function Navbar() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
+            filter: 'drop-shadow(0 0 10px rgba(192,57,43,0.5))',
           }}
         >
           .GG

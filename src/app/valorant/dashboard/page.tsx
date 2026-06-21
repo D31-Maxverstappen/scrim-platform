@@ -11,6 +11,7 @@ import DiscordBanner from '@/components/DiscordBanner'
 import OnboardingChecklist from '@/components/OnboardingChecklist'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import AutoMatchButton from '@/components/AutoMatchButton'
+import StatCounter from '@/components/StatCounter'
 
 const GAME = 'valorant'
 
@@ -86,11 +87,11 @@ export default async function ValorantDashboardPage() {
       <div className="pt-24 max-w-7xl mx-auto px-6 pb-16">
 
         {/* ── 인사 헤더 ── */}
-        <div className="mb-10 flex items-end justify-between">
+        <div className="mb-10 flex items-end justify-between animate-fade-in-up" style={{ animationDelay: '0ms' }}>
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">VALORANT DASHBOARD</p>
             <h1 className="text-white font-black text-3xl tracking-tight">
-              안녕하세요, <span className="text-[#ff4655]">{displayName}</span>님
+              안녕하세요, <span className="text-[#ff4655]" style={{ textShadow: '0 0 24px rgba(255,70,85,0.4)' }}>{displayName}</span>님
             </h1>
           </div>
           <span className="text-xs text-slate-600 hidden sm:block">
@@ -100,11 +101,21 @@ export default async function ValorantDashboardPage() {
 
         {/* ── 상단 통계 ── */}
         <div className="grid grid-cols-3 gap-4 mb-8">
-          {STATS.map((s) => (
-            <div key={s.label} className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl px-6 py-5">
+          {[
+            { label: '가입 유저', value: userCount ?? 0, sub: '명', delay: 80 },
+            { label: '활동 팀',   value: teamCount ?? 0, sub: '팀', delay: 160 },
+            { label: '매너 점수', value: 100,            sub: '/ 200', delay: 240 },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl px-6 py-5 stat-card-glow animate-fade-in-up cursor-default"
+              style={{ animationDelay: `${s.delay}ms` }}
+            >
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-3">{s.label}</p>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-4xl font-black text-white leading-none">{s.value}</span>
+                <span className="text-4xl font-black text-white leading-none">
+                  <StatCounter value={s.value} />
+                </span>
                 <span className="text-sm text-slate-500">{s.sub}</span>
               </div>
             </div>
@@ -115,18 +126,18 @@ export default async function ValorantDashboardPage() {
         <div className="flex gap-6 items-start">
 
           {/* 사이드바 */}
-          <aside className="w-68 shrink-0 flex flex-col gap-3" style={{ width: '272px' }}>
+          <aside className="w-68 shrink-0 flex flex-col gap-3 animate-fade-in-up" style={{ width: '272px', animationDelay: '300ms' }}>
 
-            <ProfileCard
+            <div className="card-glow rounded-2xl transition-all duration-300"><ProfileCard
               userId={user.id}
               avatarUrl={profile?.avatar_url ?? null}
               valGamename={profile?.val_gamename ?? profile?.riot_gamename ?? null}
               valTagline={profile?.val_tagline ?? profile?.riot_tagline ?? null}
               valTier={profile?.val_tier ?? (profile?.game_type === 'valorant' ? profile?.tier : null) ?? null}
-            />
+            /></div>
 
             {/* 매너 점수 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5">
+            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5 card-glow transition-all duration-300">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
               <div className="flex items-baseline gap-1.5 mb-3">
                 <span className="text-3xl font-black text-white">100</span>
@@ -139,7 +150,7 @@ export default async function ValorantDashboardPage() {
             </div>
 
             {/* 내 팀 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5">
+            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5 card-glow transition-all duration-300">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Team</p>
               {team ? (
                 <a href={`/teams/${team.id}`} className="flex items-center gap-3 group">
@@ -193,7 +204,7 @@ export default async function ValorantDashboardPage() {
           </aside>
 
           {/* 메인 콘텐츠 */}
-          <main className="flex-1 flex flex-col gap-5 min-w-0">
+          <main className="flex-1 flex flex-col gap-5 min-w-0 animate-fade-in-up" style={{ animationDelay: '380ms' }}>
 
             {team && myValTeam?.role === 'captain' && (
               <AutoMatchButton teamId={team.id} gameType={GAME} />
@@ -237,7 +248,7 @@ export default async function ValorantDashboardPage() {
             <div className="grid grid-cols-2 gap-5">
 
               {/* 최근 매치 */}
-              <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
+              <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
                 <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
                   <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">최근 매치</p>
                 </div>

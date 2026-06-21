@@ -50,7 +50,7 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
   }).slice(0, 5)
 
   return (
-    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
+    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
       {/* 헤더 */}
       <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
         <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">팀 랭킹</p>
