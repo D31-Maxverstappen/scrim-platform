@@ -53,10 +53,39 @@ export default function Navbar() {
   const hasResults = teams.length > 0 || users.length > 0
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6 relative">
       {/* 로고 */}
       <a href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
         <Image src="/logo.png" alt="D31" width={52} height={52} className="object-contain" />
+      </a>
+
+      {/* 중앙 워드마크 */}
+      <a
+        href={game ? `/${game}/dashboard` : '/dashboard'}
+        className="absolute left-1/2 -translate-x-1/2 select-none"
+      >
+        <span
+          className="text-xl font-black tracking-tight"
+          style={{
+            background: 'linear-gradient(135deg, #d4d4d4 0%, #c0c0c0 40%, #c0392b 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          D31
+        </span>
+        <span
+          className="text-xl font-black tracking-tight"
+          style={{
+            background: 'linear-gradient(135deg, #c0392b 0%, #96281b 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          .GG
+        </span>
       </a>
 
       {/* 네비 링크 */}
