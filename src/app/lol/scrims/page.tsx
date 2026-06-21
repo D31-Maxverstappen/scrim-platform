@@ -2,8 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
-import { getLang } from '@/lib/lang'
-import { t } from '@/lib/i18n'
 
 function formatDate(dt: string | null) {
   if (!dt) return null
@@ -12,7 +10,6 @@ function formatDate(dt: string | null) {
 }
 
 export default async function LolScrimsPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const lang = await getLang()
   const { q = '' } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -49,11 +46,11 @@ export default async function LolScrimsPage({ searchParams }: { searchParams: Pr
             <div className="flex items-center gap-3 mb-1">
               <span className="text-xs font-black text-[#c89b3c] uppercase tracking-widest">LEAGUE OF LEGENDS</span>
             </div>
-            <h1 className="text-2xl font-bold text-white">{t('scrim_board', lang)}</h1>
+            <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">리그 오브 레전드 스크림 상대를 구해보세요</p>
           </div>
           <a href="/scrims/post" className="bg-[#c89b3c] hover:bg-[#b08a35] text-white px-4 py-2 rounded text-sm font-semibold transition">
-            {t('scrim_post_btn', lang)}
+            + 스크림 올리기
           </a>
         </div>
 
@@ -62,7 +59,7 @@ export default async function LolScrimsPage({ searchParams }: { searchParams: Pr
             <p className="text-3xl mb-4">🎮</p>
             {q ? (
               <>
-                <p className="font-semibold">"{q}" {t('scrim_no_results', lang)}</p>
+                <p className="font-semibold">"{q}" 조건에 맞는 스크림이 없어요</p>
                 <p className="text-sm mt-1">다른 팀 이름으로 검색해보세요</p>
               </>
             ) : (
@@ -70,7 +67,7 @@ export default async function LolScrimsPage({ searchParams }: { searchParams: Pr
                 <p className="font-semibold">현재 모집 중인 LoL 스크림이 없어요</p>
                 <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
                 <a href="/scrims/post" className="mt-6 inline-block bg-[#c89b3c]/20 hover:bg-[#c89b3c]/30 text-[#c89b3c] text-sm px-5 py-2.5 rounded transition">
-                  {t('scrim_post_btn', lang)}
+                  + 스크림 올리기
                 </a>
               </>
             )}
@@ -86,7 +83,7 @@ export default async function LolScrimsPage({ searchParams }: { searchParams: Pr
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-white font-bold text-sm group-hover:text-[#c89b3c] transition">
-                        {team?.name ?? t('unknown_player', lang)}
+                        {team?.name ?? '—'}
                       </span>
                       {team?.tier_avg && <span className="text-slate-500 text-xs">· {team.tier_avg}</span>}
                       {post.format && (
@@ -98,7 +95,7 @@ export default async function LolScrimsPage({ searchParams }: { searchParams: Pr
                       {post.note && <span className="truncate max-w-[240px]">{post.note}</span>}
                     </div>
                   </div>
-                  <span className="text-[#c89b3c] text-xs font-bold shrink-0">{t('scrim_apply', lang)} →</span>
+                  <span className="text-[#c89b3c] text-xs font-bold shrink-0">신청 →</span>
                 </a>
               )
             })}

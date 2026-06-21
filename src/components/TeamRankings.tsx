@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 const TIER_ORDER: Record<string, number> = {
   Challenger: 0, Grandmaster: 1, Master: 2, Radiant: 2,
@@ -31,13 +29,12 @@ type Team = {
 }
 
 export default function TeamRankings({ teams, game }: { teams: Team[]; game?: string }) {
-  const { lang } = useLang()
   const [tab, setTab] = useState('tier')
 
   const TABS = [
-    { key: 'tier', label: t('ranking_avg_tier', lang) },
-    { key: 'winrate', label: t('ranking_winrate', lang) },
-    { key: 'activity', label: t('ranking_activity', lang) },
+    { key: 'tier', label: '평균 티어' },
+    { key: 'winrate', label: '승률' },
+    { key: 'activity', label: '스크림 활동' },
   ]
 
   const filtered = game ? teams.filter((t) => t.game_type === game) : teams
@@ -57,7 +54,7 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
     <div className="bg-[#13131f] border border-white/5 overflow-hidden">
       {/* 헤더 */}
       <div className="px-4 pt-3 pb-0 border-b border-white/5">
-        <p className="text-white font-bold text-xs uppercase tracking-widest mb-2">{t('ranking_title', lang)}</p>
+        <p className="text-white font-bold text-xs uppercase tracking-widest mb-2">팀 랭킹</p>
         <div className="flex gap-0">
           {TABS.map((tab_item) => (
             <button key={tab_item.key} onClick={() => setTab(tab_item.key)}
@@ -70,15 +67,15 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
 
       {/* 컬럼 헤더 */}
       <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-wider">
-        <span className="col-span-1">{t('ranking_col_rank', lang)}</span>
+        <span className="col-span-1">순위</span>
         <span className="col-span-2">Game</span>
-        <span className="col-span-6">{t('ranking_col_team', lang)}</span>
-        <span className="col-span-3 text-right">{t('ranking_col_value', lang)}</span>
+        <span className="col-span-6">팀 이름</span>
+        <span className="col-span-3 text-right">수치</span>
       </div>
 
       {sorted.length === 0 ? (
         <div className="flex items-center justify-center py-10 text-slate-600 text-xs">
-          {t('ranking_no_teams', lang)}
+          아직 팀이 없어요
         </div>
       ) : (
         <div className="flex flex-col divide-y divide-white/5">

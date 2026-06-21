@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 const GAME_COLOR: Record<string, string> = {
   lol: '#c89b3c', valorant: '#ff4655',
@@ -17,7 +15,6 @@ const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'A
 const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
 
 export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
-  const { lang } = useLang()
   const [tab, setTab] = useState(game ?? 'valorant')
   const [filterServer, setFilterServer] = useState('')
   const [filterFormat, setFilterFormat] = useState('')
@@ -62,7 +59,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
             </button>
           ))}
           {game && (
-            <span className="py-3.5 text-xs font-bold text-white">{t('scrim_board', lang)}</span>
+            <span className="py-3.5 text-xs font-bold text-white">스크림 게시판</span>
           )}
         </div>
         <div className="flex items-center gap-3">
@@ -81,7 +78,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
                     : 'bg-white/5 border-white/10 text-slate-500 hover:bg-white/10'
                   }`}
               >
-                {t('scrim_filter', lang)}
+                필터
                 {activeCount > 0 && (
                   <span className="bg-[#00D2BE] text-black text-[9px] font-black w-3.5 h-3.5 rounded-full flex items-center justify-center">
                     {activeCount}
@@ -90,7 +87,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
               </button>
             )
           })()}
-          <a href={allLink} className="text-xs hover:underline" style={{ color: gameColor }}>{t('scrim_view_all', lang)}</a>
+          <a href={allLink} className="text-xs hover:underline" style={{ color: gameColor }}>전체 보기 →</a>
         </div>
       </div>
 
@@ -98,21 +95,21 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
       {filterOpen && (
         <div className="flex flex-wrap items-center gap-3 px-4 py-3 border-b border-white/5 bg-white/2">
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-slate-600 uppercase tracking-wider">{t('scrim_server', lang)}</span>
+            <span className="text-[10px] text-slate-600 uppercase tracking-wider">서버</span>
             {['KR', 'AS'].map((s) => (
               <button key={s} onClick={() => setFilterServer(filterServer === s ? '' : s)} className={chipCls(filterServer === s)}>{s}</button>
             ))}
           </div>
           <span className="w-px h-3 bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-slate-600 uppercase tracking-wider">{t('scrim_format', lang)}</span>
+            <span className="text-[10px] text-slate-600 uppercase tracking-wider">포맷</span>
             {['BO1', 'BO3', 'BO5'].map((f) => (
               <button key={f} onClick={() => setFilterFormat(filterFormat === f ? '' : f)} className={chipCls(filterFormat === f)}>{f}</button>
             ))}
           </div>
           <span className="w-px h-3 bg-white/10" />
           <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[10px] text-slate-600 uppercase tracking-wider">{t('scrim_filter_tier', lang)}</span>
+            <span className="text-[10px] text-slate-600 uppercase tracking-wider">티어</span>
             {tiers.map((tier) => (
               <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={chipCls(filterTier === tier)}>{tier}</button>
             ))}
@@ -122,20 +119,20 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
 
       {/* 테이블 헤더 */}
       <div className="grid grid-cols-12 gap-2 px-4 py-2.5 border-b border-white/10 text-xs text-slate-600 uppercase tracking-wider">
-        <span className="col-span-3">{t('scrim_team_name', lang)}</span>
-        <span className="col-span-2">{t('scrim_avg_tier', lang)}</span>
-        <span className="col-span-3">{t('scrim_preferred_time', lang)}</span>
-        <span className="col-span-2">{t('scrim_server', lang)}</span>
-        <span className="col-span-1">{t('scrim_format', lang)}</span>
-        <span className="col-span-1 text-right">{t('scrim_apply', lang)}</span>
+        <span className="col-span-3">팀 이름</span>
+        <span className="col-span-2">평균 티어</span>
+        <span className="col-span-3">희망 시간</span>
+        <span className="col-span-2">서버</span>
+        <span className="col-span-1">포맷</span>
+        <span className="col-span-1 text-right">신청</span>
       </div>
 
       {/* 스크림 목록 */}
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-slate-600">
-          <p className="text-sm mb-1">{t('scrim_no_results', lang)}</p>
+          <p className="text-sm mb-1">조건에 맞는 스크림이 없어요</p>
           <a href="/scrims/post" className="mt-3 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-xs font-semibold px-5 py-2 transition">
-            {t('scrim_post_btn', lang)}
+            + 스크림 올리기
           </a>
         </div>
       ) : (
@@ -144,7 +141,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
             const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
             const date = s.preferred_date
               ? new Date(s.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-              : t('scrim_undecided', lang)
+              : '미정'
             return (
               <a
                 key={s.id}

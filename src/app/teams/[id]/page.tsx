@@ -7,8 +7,6 @@ import LeaveTeamButton from '@/components/LeaveTeamButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
 import { FlagImg } from '@/components/CountrySelect'
 import TeamChat from '@/components/TeamChat'
-import { getLang } from '@/lib/lang'
-import { t } from '@/lib/i18n'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'League of Legends' }
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
@@ -23,7 +21,6 @@ const ROLE_COLOR: Record<string, string> = {
 
 
 export default async function TeamDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const lang = await getLang()
   const { id } = await params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -101,28 +98,28 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <aside className="w-56 shrink-0 flex flex-col gap-4">
         <div className="bg-[#13131f] border border-white/5 rounded">
           <div className="px-4 py-2.5 border-b border-white/5">
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{t('team_info', lang)}</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">팀 정보</p>
           </div>
           <div className="px-4 py-3 flex flex-col gap-2.5 text-xs">
             <div className="flex justify-between">
-              <span className="text-slate-500">{t('team_game', lang)}</span>
+              <span className="text-slate-500">게임</span>
               <span className="font-bold" style={{ color: gameColor }}>{GAME_LABEL[team.game_type] ?? team.game_type}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">{t('team_avg_tier', lang)}</span>
+              <span className="text-slate-500">평균 티어</span>
               <span className="text-white">{team.tier_avg ?? '—'}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">{t('team_members_label', lang)}</span>
+              <span className="text-slate-500">멤버</span>
               <span className="text-white">{members?.length ?? 0}명</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">{t('team_players', lang)}</span>
+              <span className="text-slate-500">선수</span>
               <span className="text-white">{players.length}명</span>
             </div>
             {staff.length > 0 && (
               <div className="flex justify-between">
-                <span className="text-slate-500">{t('team_staff', lang)}</span>
+                <span className="text-slate-500">스태프</span>
                 <span className="text-white">{staff.length}명</span>
               </div>
             )}
@@ -131,18 +128,18 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
         <div className="bg-[#13131f] border border-white/5 rounded">
           <div className="px-4 py-2.5 border-b border-white/5">
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{t('team_records', lang)}</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">전적</p>
           </div>
           <div className="px-4 py-4">
             <div className="flex items-center gap-3 mb-3">
               <div className="text-center">
                 <p className="text-2xl font-black text-white">{team.wins ?? 0}</p>
-                <p className="text-[10px] text-slate-500 uppercase">{t('team_win', lang)}</p>
+                <p className="text-[10px] text-slate-500 uppercase">승</p>
               </div>
               <span className="text-slate-700 text-lg">–</span>
               <div className="text-center">
                 <p className="text-2xl font-black text-slate-500">{team.losses ?? 0}</p>
-                <p className="text-[10px] text-slate-500 uppercase">{t('team_loss', lang)}</p>
+                <p className="text-[10px] text-slate-500 uppercase">패</p>
               </div>
             </div>
             {total > 0 && (
@@ -150,7 +147,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
                 <div className="w-full bg-white/5 rounded h-1 mb-1.5">
                   <div className="h-1 rounded bg-[#00D2BE]" style={{ width: `${Math.round((team.wins / total) * 100)}%` }} />
                 </div>
-                <p className="text-xs text-slate-500">{t('team_winrate', lang)} {Math.round((team.wins / total) * 100)}%</p>
+                <p className="text-xs text-slate-500">승률 {Math.round((team.wins / total) * 100)}%</p>
               </>
             )}
           </div>
@@ -165,13 +162,13 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       <div className="flex-1 min-w-0">
         <div className="bg-[#13131f] border border-white/5 rounded">
           <div className="px-4 py-2.5 border-b border-white/5">
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{t('tab_stats', lang)}</p>
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">통계</p>
           </div>
           <div className="grid grid-cols-3 divide-x divide-white/5">
             {[
-              { label: t('team_total_scrims', lang), value: '—' },
-              { label: t('team_winrate', lang), value: total > 0 ? `${Math.round((team.wins / total) * 100)}%` : '—' },
-              { label: t('team_avg_tier', lang), value: team.tier_avg ?? '—' },
+              { label: '총 스크림', value: '—' },
+              { label: '승률', value: total > 0 ? `${Math.round((team.wins / total) * 100)}%` : '—' },
+              { label: '평균 티어', value: team.tier_avg ?? '—' },
             ].map((s) => (
               <div key={s.label} className="px-6 py-5 text-center">
                 <p className="text-2xl font-black text-white mb-1">{s.value}</p>
@@ -188,14 +185,14 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const matchesContent = (
     <div className="bg-[#13131f] border border-white/5 rounded">
       <div className="px-4 py-2.5 border-b border-white/5">
-        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">{t('team_recent_matches', lang)}</p>
+        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">최근 매치</p>
       </div>
       {allMatches.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 text-slate-600 gap-2">
           <svg className="w-8 h-8 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
           </svg>
-          <p className="text-sm">{t('team_no_matches', lang)}</p>
+          <p className="text-sm">아직 매치 기록이 없어요</p>
         </div>
       ) : (
         <div className="divide-y divide-white/5">
@@ -207,7 +204,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             const isScheduled = m.status === 'scheduled'
             const date = m.match_date
               ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
-              : t('tbd', lang)
+              : '미정'
             return (
               <a key={m.id} href={`/matches/${m.id}`}
                 className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/3 transition group">
@@ -234,7 +231,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
                     isDraw ? 'bg-slate-500/10 text-slate-400' :
                     isOngoing ? 'bg-yellow-500/10 text-yellow-400' :
                     'bg-white/5 text-slate-500'}`}>
-                  {isWin ? t('win', lang) : isLoss ? t('loss', lang) : isDraw ? '무' : isOngoing ? t('match_ongoing', lang) : t('match_scheduled', lang)}
+                  {isWin ? '승' : isLoss ? '패' : isDraw ? '무' : isOngoing ? '진행 중' : '예정'}
                 </span>
                 <span className="text-slate-700 text-xs group-hover:text-slate-500 transition">→</span>
               </a>
@@ -285,7 +282,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             )}
             {!isMember && !isCaptain && team.is_open === false && (
               <span className="text-slate-400 text-xs font-semibold px-4 py-2 border border-white/10 rounded bg-white/3">
-                {t('team_invite_only', lang)}
+                🔒 초대 전용 팀
               </span>
             )}
             {isMember && !isCaptain && (
@@ -294,7 +291,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             {isCaptain && (
               <a href={`/teams/${id}/manage`}
                 className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2 rounded transition">
-                {t('team_manage_btn', lang)}
+                팀 관리
               </a>
             )}
           </div>

@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 type Step = {
   id: string
@@ -14,7 +12,6 @@ type Step = {
 }
 
 export default function OnboardingChecklist({ steps }: { steps: Step[] }) {
-  const { lang } = useLang()
   const [dismissed, setDismissed] = useState(false)
   const doneCount = steps.filter((s) => s.done).length
   const allDone = doneCount === steps.length
@@ -28,7 +25,7 @@ export default function OnboardingChecklist({ steps }: { steps: Step[] }) {
       {/* 헤더 */}
       <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/5">
         <div className="flex items-center gap-3">
-          <span className="text-white text-xs font-bold">{t('guide_title', lang)}</span>
+          <span className="text-white text-xs font-bold">시작 가이드</span>
           <span className="text-[#00D2BE] text-xs font-black">{doneCount}/{steps.length}</span>
         </div>
         <div className="flex items-center gap-3">

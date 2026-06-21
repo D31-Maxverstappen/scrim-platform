@@ -1,8 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 export default function TeamPageTabs({
   overviewContent,
@@ -15,14 +13,13 @@ export default function TeamPageTabs({
   matchesContent: React.ReactNode
   chatContent: React.ReactNode
 }) {
-  const { lang } = useLang()
   const [tab, setTab] = useState('overview')
 
   const TABS = [
-    { key: 'overview', label: t('team_tab_overview', lang) },
-    { key: 'stats', label: t('team_tab_stats', lang) },
-    { key: 'matches', label: t('team_tab_matches', lang) },
-    { key: 'chat', label: t('team_tab_chat', lang) },
+    { key: 'overview', label: '개요' },
+    { key: 'stats', label: '통계' },
+    { key: 'matches', label: '매치' },
+    { key: 'chat', label: '채팅' },
   ]
 
   const content =

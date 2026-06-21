@@ -3,8 +3,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 type Notif = {
   id: string
@@ -18,7 +16,6 @@ type Notif = {
 
 export default function NotificationBell() {
   const router = useRouter()
-  const { lang } = useLang()
   const [open, setOpen] = useState(false)
   const [notifs, setNotifs] = useState<Notif[]>([])
   const [userId, setUserId] = useState<string | null>(null)
@@ -96,14 +93,14 @@ export default function NotificationBell() {
       {open && (
         <div className="absolute right-0 top-full mt-2 w-80 bg-[#13131f] border border-white/10 rounded shadow-xl z-50 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-3 border-b border-white/5">
-            <p className="text-white text-xs font-bold uppercase tracking-widest">{t('notif_title', lang)}</p>
+            <p className="text-white text-xs font-bold uppercase tracking-widest">알림</p>
             {unread > 0 && (
-              <button onClick={markAllRead} className="text-[#00D2BE] text-xs hover:underline">{t('notif_mark_read', lang)}</button>
+              <button onClick={markAllRead} className="text-[#00D2BE] text-xs hover:underline">모두 읽음</button>
             )}
           </div>
 
           {notifs.length === 0 ? (
-            <div className="py-8 text-center text-slate-600 text-xs">{t('notif_none', lang)}</div>
+            <div className="py-8 text-center text-slate-600 text-xs">알림이 없어요</div>
           ) : (
             <div className="max-h-80 overflow-y-auto divide-y divide-white/5">
               {notifs.map(n => (

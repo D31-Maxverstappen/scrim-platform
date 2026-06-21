@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
 
@@ -20,7 +18,6 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
 }) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { lang } = useLang()
   const [filterTier, setFilterTier] = useState('')
   const [filterOpen, setFilterOpen] = useState(false)
 
@@ -77,7 +74,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
         <div className="flex items-center gap-2">
           {activeCount > 0 && (
             <button onClick={resetAll} className="text-[10px] text-slate-500 hover:text-slate-300 transition">
-              {t('scrim_filter_reset', lang)}
+              초기화
             </button>
           )}
           <button
@@ -91,7 +88,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h18M7 12h10M11 20h2" />
             </svg>
-            {t('scrim_filter', lang)}
+            필터
             {activeCount > 0 && (
               <span className="bg-[#00D2BE] text-black text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center">
                 {activeCount}
@@ -105,7 +102,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
       {filterOpen && (
         <div className="bg-[#13131f] border border-white/5 rounded px-5 py-4 mb-4 flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">{t('scrim_server', lang)}</span>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">서버</span>
             <div className="flex gap-1.5">
               {['KR', 'AS'].map((s) => (
                 <button key={s} onClick={() => navigate({ game, server: server === s ? '' : s, format })} className={smChipCls(server === s)}>{s}</button>
@@ -113,7 +110,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">{t('scrim_format', lang)}</span>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">포맷</span>
             <div className="flex gap-1.5">
               {['BO1', 'BO3', 'BO5'].map((f) => (
                 <button key={f} onClick={() => navigate({ game, server, format: format === f ? '' : f })} className={smChipCls(format === f)}>{f}</button>
@@ -122,7 +119,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
           </div>
           {allTiers.length > 0 && (
             <div className="flex items-center gap-3">
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">{t('scrim_filter_tier', lang)}</span>
+              <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">티어</span>
               <div className="flex flex-wrap gap-1.5">
                 {allTiers.map((tier) => (
                   <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={smChipCls(filterTier === tier)}>{tier}</button>
@@ -137,10 +134,10 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
       {displayed.length === 0 ? (
         <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded">
           <p className="text-3xl mb-4">🎮</p>
-          <p className="font-semibold">{t('scrim_no_results', lang)}</p>
+          <p className="font-semibold">조건에 맞는 스크림이 없어요</p>
           <p className="text-sm mt-1">필터를 바꾸거나 첫 번째로 올려보세요!</p>
           <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
-            {t('scrim_post_btn', lang)}
+            + 스크림 올리기
           </a>
         </div>
       ) : (
@@ -168,7 +165,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
                     {post.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
                   </div>
                 </div>
-                <span className="text-[#00D2BE] text-xs font-bold shrink-0">{t('scrim_apply_btn', lang)} →</span>
+                <span className="text-[#00D2BE] text-xs font-bold shrink-0">스크림 신청 →</span>
               </a>
             )
           })}

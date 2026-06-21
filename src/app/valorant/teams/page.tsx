@@ -4,11 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
-import { getLang } from '@/lib/lang'
-import { t } from '@/lib/i18n'
 
 export default async function ValorantTeamsPage() {
-  const lang = await getLang()
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -40,17 +37,17 @@ export default async function ValorantTeamsPage() {
             <div className="flex items-center gap-3 mb-1">
               <span className="text-xs font-black text-[#ff4655] uppercase tracking-widest">VALORANT</span>
             </div>
-            <h1 className="text-white font-bold text-xl">{t('nav_find_team', lang)}</h1>
+            <h1 className="text-white font-bold text-xl">팀 찾기</h1>
           </div>
           <a href="/teams/create" className="bg-[#ff4655] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-bold transition">
-            + {t('my_team_create', lang)}
+            + 팀 만들기
           </a>
         </div>
 
         {/* 내 발로란트 팀 */}
         {myValorantTeams.length > 0 && (
           <>
-            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-3">{t('my_team_label', lang)}</h2>
+            <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-3">My Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {myValorantTeams.map((m: any) => {
                 const team = m.teams
@@ -62,7 +59,7 @@ export default async function ValorantTeamsPage() {
                       <div className="flex items-center gap-2">
                         {team.tier_avg && <span className="text-slate-400 text-xs">{team.tier_avg}</span>}
                         <span className="text-xs bg-[#ff4655]/20 text-[#ff4655] px-2 py-0.5 rounded">
-                          {m.role === 'captain' ? t('my_team_captain', lang) : t('my_team_member', lang)}
+                          {m.role === 'captain' ? '캡틴' : '멤버'}
                         </span>
                       </div>
                     </div>
@@ -78,8 +75,8 @@ export default async function ValorantTeamsPage() {
         <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-3">전체 팀</h2>
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
           <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
-            <span className="col-span-5">{t('lb_col_team', lang)}</span>
-            <span className="col-span-4">{t('team_avg_tier', lang)}</span>
+            <span className="col-span-5">팀</span>
+            <span className="col-span-4">평균 티어</span>
             <span className="col-span-3 text-right">가입</span>
           </div>
           {allTeams && allTeams.length > 0 ? (
@@ -101,7 +98,7 @@ export default async function ValorantTeamsPage() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-slate-600 text-sm">{t('ranking_no_teams', lang)}</div>
+            <div className="text-center py-12 text-slate-600 text-sm">아직 팀이 없어요</div>
           )}
         </div>
       </div>

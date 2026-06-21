@@ -4,11 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RecruitBoard from '@/components/RecruitBoard'
-import { getLang } from '@/lib/lang'
-import { t } from '@/lib/i18n'
 
 export default async function RecruitPage({ searchParams }: { searchParams: Promise<{ type?: string; game?: string }> }) {
-  const lang = await getLang()
   const { type, game } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -26,12 +23,12 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
       <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-white font-black text-2xl">{t('recruit_title', lang)}</h1>
-            <p className="text-slate-500 text-sm mt-1">{t('recruit_desc', lang)}</p>
+            <h1 className="text-white font-black text-2xl">모집 게시판</h1>
+            <p className="text-slate-500 text-sm mt-1">팀을 찾거나 선수를 모집하세요</p>
           </div>
           <a href="/recruit/post"
             className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-bold px-5 py-2.5 rounded transition">
-            {t('recruit_post', lang)}
+            + 글 올리기
           </a>
         </div>
 

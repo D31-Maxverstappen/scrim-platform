@@ -2,8 +2,6 @@
 
 import { useState } from 'react'
 import { FlagImg } from './CountrySelect'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 const ROUND_COLORS: Record<string, string> = {
   W: '#00D2BE', L: '#ff4655', D: '#6b7280',
@@ -135,7 +133,6 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
   team1Members?: any[]
   team2Members?: any[]
 }) {
-  const { lang } = useLang()
   const [tab, setTab] = useState('overview')
   const [mapTab, setMapTab] = useState('all')
 
@@ -162,12 +159,12 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
       {/* 메인 탭 */}
       <div className="flex border-b border-white/10">
         {[
-          { key: 'overview', label: t('tab_overview', lang) },
-          { key: 'stats', label: t('tab_stats', lang) },
-        ].map((tb) => (
-          <button key={tb.key} onClick={() => setTab(tb.key)}
-            className={`px-6 py-3.5 text-xs font-bold border-b-2 transition ${tab === tb.key ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
-            {tb.label}
+          { key: 'overview', label: '개요' },
+          { key: 'stats', label: '통계' },
+        ].map((t) => (
+          <button key={t.key} onClick={() => setTab(t.key)}
+            className={`px-6 py-3.5 text-xs font-bold border-b-2 transition ${tab === t.key ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
+            {t.label}
           </button>
         ))}
       </div>
@@ -176,7 +173,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
       <div className="flex border-b border-white/10">
         <button onClick={() => setMapTab('all')}
           className={`px-5 py-2.5 text-xs font-semibold transition ${mapTab === 'all' ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
-          {t('map_all', lang)}
+          전체 맵
         </button>
         {maps.map((m, i) => (
           <button key={m.id} onClick={() => setMapTab(m.id)}
@@ -228,7 +225,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <div className="px-4 py-3 bg-white/2 border-b border-white/5">
             <span className="text-white text-xl font-black">{team1?.abbreviation || team1?.name}</span>
           </div>
-          <StatHeader playerLabel={t('stat_player', lang)} />
+          <StatHeader playerLabel="플레이어" />
           {padded1.map((item, i) =>
             hasStats1 && item
               ? <StatRow key={item.id ?? i} stat={item} gameName={team1?.name} />
@@ -240,7 +237,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <div className="px-4 py-3 bg-white/2 border-b border-white/5">
             <span className="text-white text-xl font-black">{team2?.abbreviation || team2?.name}</span>
           </div>
-          <StatHeader playerLabel={t('stat_player', lang)} />
+          <StatHeader playerLabel="플레이어" />
           {padded2.map((item, i) =>
             hasStats2 && item
               ? <StatRow key={item.id ?? i} stat={item} gameName={team2?.name} />

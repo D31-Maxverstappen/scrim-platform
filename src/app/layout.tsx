@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { LanguageProvider } from '@/contexts/LanguageContext'
-import 'flag-icons/css/flag-icons.min.css'
 
 export const metadata: Metadata = {
   title: "D31 - 스크림 매칭 플랫폼",
@@ -38,9 +36,7 @@ export default function RootLayout({
         `}} />
       </head>
       <body>
-        <LanguageProvider>
         {children}
-        </LanguageProvider>
         <footer className="border-t border-white/5 bg-[#07070b] py-6 mt-auto">
           <div className="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-600">
             <span>© 2026 D31. All rights reserved.</span>

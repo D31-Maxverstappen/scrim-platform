@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useLang } from '@/contexts/LanguageContext'
-import { t } from '@/lib/i18n'
 
 type Application = {
   id: string
@@ -16,7 +14,6 @@ const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c'
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT', lol: 'LoL' }
 
 export default function ReceivedApplications({ initialApps }: { initialApps: Application[] }) {
-  const { lang } = useLang()
   const [apps, setApps] = useState(initialApps)
   const [loading, setLoading] = useState<string | null>(null)
   const [accepting, setAccepting] = useState<string | null>(null)
@@ -40,7 +37,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
     setAccepting(null)
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
-      alert(err.error ?? t('error', lang))
+      alert(err.error ?? 'error')
       return
     }
     if (res.ok) {
@@ -76,7 +73,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
   return (
     <div className="bg-[#13131f] border border-white/5">
       <div className="px-4 py-3 border-b border-white/5 flex items-center justify-between">
-        <p className="text-white font-bold text-xs uppercase tracking-widest">{t('recv_title', lang)}</p>
+        <p className="text-white font-bold text-xs uppercase tracking-widest">받은 스크림 신청</p>
         {pending.length > 0 && (
           <span className="text-[10px] font-bold bg-[#00D2BE] text-white px-2 py-0.5">{pending.length}</span>
         )}
@@ -84,7 +81,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
 
       {apps.length === 0 ? (
         <div className="px-4 py-6 text-center text-slate-600 text-xs">
-          {t('recv_no_requests', lang)}
+          아직 들어온 요청이 없어요!
         </div>
       ) : (
       <div className="divide-y divide-white/5">
@@ -92,7 +89,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
           const gc = GAME_COLOR[app.applying_team.game_type] ?? '#00D2BE'
           const date = app.scrim_post.preferred_date
             ? new Date(app.scrim_post.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-            : t('scrim_undecided', lang)
+            : '미정'
 
           return (
             <div key={app.id} className="px-4 py-3 flex items-center gap-3">
@@ -104,7 +101,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                     <span className="text-slate-500 text-xs">{app.applying_team.tier_avg}</span>
                   )}
                 </div>
-                <p className="text-slate-600 text-[10px]">{t('recv_preferred_time', lang)} {date}</p>
+                <p className="text-slate-600 text-[10px]">희망 시간: {date}</p>
                 {app.scrim_post.note && (
                   <p className="text-slate-600 text-[10px] truncate">{app.scrim_post.note}</p>
                 )}
@@ -119,7 +116,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                         disabled={!!loading}
                         className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
                       >
-                        {loading === app.id + 'accept' ? '...' : t('recv_confirm', lang)}
+                        {loading === app.id + 'accept' ? '...' : '확정'}
                       </button>
                       <button onClick={() => setAccepting(null)} className="text-[10px] text-slate-600 hover:text-slate-400 transition">✕</button>
                     </div>
@@ -130,29 +127,29 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
                         disabled={!!loading}
                         className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition disabled:opacity-50"
                       >
-                        {t('recv_accept', lang)}
+                        수락
                       </button>
                       <button
                         onClick={() => handleReject(app.id)}
                         disabled={!!loading}
                         className="text-[10px] font-bold px-3 py-1.5 bg-white/5 text-slate-400 hover:bg-white/10 transition disabled:opacity-50"
                       >
-                        {loading === app.id + 'reject' ? '...' : t('recv_reject', lang)}
+                        {loading === app.id + 'reject' ? '...' : '거절'}
                       </button>
                     </>
                   )
                 ) : app.status === 'accepted' ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-green-400">{t('recv_accepted', lang)}</span>
+                    <span className="text-[10px] font-bold text-green-400">수락됨</span>
                     {matchLinks[app.id] && (
                       <a href={`/matches/${matchLinks[app.id]}`}
                         className="text-[10px] font-bold px-3 py-1.5 bg-[#00D2BE]/20 text-[#00D2BE] hover:bg-[#00D2BE]/30 transition">
-                        {t('recv_view_match', lang)}
+                        매치 보기 →
                       </a>
                     )}
                   </div>
                 ) : (
-                  <span className="text-[10px] font-bold text-slate-600">{t('recv_rejected', lang)}</span>
+                  <span className="text-[10px] font-bold text-slate-600">거절됨</span>
                 )}
               </div>
             </div>
