@@ -3,15 +3,10 @@
 import { useState, useTransition } from 'react'
 import { createTeamAction } from '@/app/actions'
 
-const GAMES = [
-  { value: 'valorant', label: '발로란트' },
-  { value: 'lol',      label: '리그 오브 레전드' },
-]
-
 export default function CreateTeamPage() {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
-  const [game, setGame] = useState('valorant')
+  const game = 'valorant'
   const [name, setName] = useState('')
   const [abbr, setAbbr] = useState('')
 
@@ -88,24 +83,6 @@ export default function CreateTeamPage() {
               className="w-full bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition font-bold tracking-widest"
             />
             <p className="text-slate-600 text-xs mt-1">Discord 스크림 채널명에 사용돼요</p>
-          </div>
-
-          <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
-            <div className="grid grid-cols-2 gap-2">
-              {GAMES.map((g) => (
-                <button
-                  key={g.value}
-                  type="button"
-                  onClick={() => setGame(g.value)}
-                  className={`py-2.5 text-sm font-semibold transition ${
-                    game === g.value ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'
-                  }`}
-                >
-                  {g.label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {error && (

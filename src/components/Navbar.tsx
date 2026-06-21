@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import ThemeToggle from './ThemeToggle'
-import GameSwitcher from './GameSwitcher'
 import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
 import { createClient } from '@/lib/supabase/client'
@@ -22,7 +21,7 @@ export default function Navbar() {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const fetchIdRef = useRef(0)
 
-  const game = pathname.startsWith('/valorant') ? 'valorant' : pathname.startsWith('/lol') ? 'lol' : null
+  const game = pathname.startsWith('/valorant') ? 'valorant' : null
   const link = (path: string) => game ? `/${game}${path}` : path
 
   useEffect(() => {
@@ -51,7 +50,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
   const hasResults = teams.length > 0 || users.length > 0
 
   return (
@@ -61,12 +59,8 @@ export default function Navbar() {
         <Image src="/logo.png" alt="D31" width={64} height={64} className="object-contain" />
       </a>
 
-      {/* 게임 스위처 */}
-      <GameSwitcher />
-
       {/* 네비 링크 */}
       <div className="hidden md:flex items-center gap-1 text-sm">
-        <a href={link('/scrims/post')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">스크림 올리기</a>
         <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 찾기</a>
         <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">모집</a>
         <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">리더보드</a>
@@ -102,10 +96,12 @@ export default function Navbar() {
                       <p className="text-white text-sm font-semibold truncate">{t.name}</p>
                       {t.tier_avg && <p className="text-slate-500 text-xs">{t.tier_avg}</p>}
                     </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-                      style={{ background: (GAME_COLOR[t.game_type] ?? '#00D2BE') + '22', color: GAME_COLOR[t.game_type] ?? '#00D2BE' }}>
-                      {t.game_type === 'valorant' ? 'VAL' : 'LoL'}
-                    </span>
+                    {t.game_type === 'valorant' && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
+                        style={{ background: '#ff455522', color: '#ff4655' }}>
+                        VAL
+                      </span>
+                    )}
                   </button>
                 ))}
               </>
@@ -128,10 +124,10 @@ export default function Navbar() {
                       <p className="text-white text-sm font-semibold truncate">{u.riot_gamename}</p>
                       {u.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
                     </div>
-                    {u.game_type && (
+                    {u.game_type === 'valorant' && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-                        style={{ background: (GAME_COLOR[u.game_type] ?? '#00D2BE') + '22', color: GAME_COLOR[u.game_type] ?? '#00D2BE' }}>
-                        {u.game_type === 'valorant' ? 'VAL' : 'LoL'}
+                        style={{ background: '#ff455522', color: '#ff4655' }}>
+                        VAL
                       </span>
                     )}
                   </button>

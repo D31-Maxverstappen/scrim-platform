@@ -40,7 +40,6 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     .single()
 
   const isPostingCaptain = team?.captain_id === user.id
-  const isApplicant = !isPostingCaptain && !!existingApp
 
   const { data: existingApp } = myTeam ? await supabase
     .from('scrim_applications')
@@ -48,6 +47,8 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     .eq('scrim_post_id', id)
     .eq('applying_team_id', myTeam.id)
     .single() : { data: null }
+
+  const isApplicant = !isPostingCaptain && !!existingApp
 
   // 신청 목록 (내가 올린 스크림의 팀장만)
   const { data: applications } = isPostingCaptain ? await supabase

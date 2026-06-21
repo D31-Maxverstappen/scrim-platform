@@ -30,7 +30,7 @@ export default async function ValorantDashboardPage() {
     { data: recentScrims },
     { data: allApplications },
   ] = await Promise.all([
-    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, lol_gamename, lol_tagline, lol_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
+    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, abbreviation, game_type, tier_avg, captain_id)').eq('user_id', user.id),
     supabase.from('users').select('id', { count: 'exact', head: true }),
     supabase.from('teams').select('id', { count: 'exact', head: true }).eq('game_type', GAME),
@@ -93,10 +93,6 @@ export default async function ValorantDashboardPage() {
               valGamename={profile?.val_gamename ?? profile?.riot_gamename ?? null}
               valTagline={profile?.val_tagline ?? profile?.riot_tagline ?? null}
               valTier={profile?.val_tier ?? (profile?.game_type === 'valorant' ? profile?.tier : null) ?? null}
-              lolGamename={profile?.lol_gamename ?? null}
-              lolTagline={profile?.lol_tagline ?? null}
-              lolTier={profile?.lol_tier ?? null}
-              primaryGame={GAME}
             />
 
             <div className="bg-[#13131f] border border-white/5 rounded p-4">

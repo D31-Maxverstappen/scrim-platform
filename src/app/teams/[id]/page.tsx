@@ -168,7 +168,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           </div>
           <div className="grid grid-cols-3 divide-x divide-white/5">
             {[
-              { label: '총 스크림', value: '—' },
+              { label: '총 스크림', value: allMatches.length > 0 ? String(allMatches.length) : '—' },
               { label: '승률', value: total > 0 ? `${Math.round((team.wins / total) * 100)}%` : '—' },
               { label: '평균 티어', value: team.tier_avg ?? '—' },
             ].map((s) => (

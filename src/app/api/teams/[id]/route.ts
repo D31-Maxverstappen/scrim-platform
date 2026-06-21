@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { deleteDiscordRole } from '@/lib/discord'
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: teamId } = await params
@@ -10,7 +11,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  const { data: team } = await supabase.from('teams').select('captain_id').eq('id', teamId).single()
+  const { data: team } = await supabase.from('teams').select('captain_id, discord_role_id').eq('id', teamId).single()
   if (!team) return NextResponse.json({ error: '팀을 찾을 수 없어요.' }, { status: 404 })
   if (team.captain_id !== user.id) return NextResponse.json({ error: '팀장만 삭제할 수 있어요.' }, { status: 403 })
 
@@ -68,6 +69,10 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   const { error: e9 } = await admin.from('teams').delete().eq('id', teamId)
   if (e9) return NextResponse.json({ error: 'teams: ' + e9.message }, { status: 500 })
+
+  if (team.discord_role_id) {
+    await deleteDiscordRole(team.discord_role_id)
+  }
 
   return NextResponse.json({ success: true })
 }

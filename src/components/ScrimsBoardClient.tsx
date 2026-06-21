@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
+const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 function formatDate(dt: string | null) {
   if (!dt) return null
@@ -64,7 +64,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
       {/* 상단 바: 게임 필터 + 필터 버튼 */}
       <div className="flex items-center justify-between gap-3 mb-4">
         <div className="flex gap-2">
-          {[['', '전체'], ['valorant', 'VALORANT'], ['lol', 'LoL']].map(([val, label]) => (
+          {[['', '전체'], ['valorant', 'VALORANT']].map(([val, label]) => (
             <button key={val} onClick={() => navigate({ game: val, server, format })} className={chipCls(game === val)}>
               {label}
             </button>

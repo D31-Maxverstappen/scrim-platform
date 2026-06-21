@@ -1,10 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { Suspense } from 'react'
 
-const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger', 'Unranked']
 const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant', 'Unranked']
 
 type GameProfile = { gameName: string; tagLine: string; tier: string }
@@ -94,9 +93,8 @@ function GameForm({
   )
 }
 
-function DoneStep({ valProfile, lolProfile, onGo }: {
+function DoneStep({ valProfile, onGo }: {
   valProfile: GameProfile | null
-  lolProfile: GameProfile | null
   onGo: () => void
 }) {
   const [inviteUrl, setInviteUrl] = useState<string | null>(null)
@@ -122,8 +120,7 @@ function DoneStep({ valProfile, lolProfile, onGo }: {
           <h2 className="text-white font-bold text-xl mb-1">프로필 설정 완료!</h2>
           <div className="flex flex-col gap-1 text-xs mt-2">
             {valProfile && <p className="text-[#ff4655]">VALORANT · {valProfile.gameName}#{valProfile.tagLine} · {valProfile.tier}</p>}
-            {lolProfile && <p className="text-[#c89b3c]">LoL · {lolProfile.gameName}#{lolProfile.tagLine} · {lolProfile.tier}</p>}
-            {!valProfile && !lolProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
+            {!valProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
           </div>
         </div>
 
@@ -189,17 +186,13 @@ function DoneStep({ valProfile, lolProfile, onGo }: {
 
 function OnboardingContent() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const add = searchParams.get('add') // 'lol' | 'valorant' | null
-  const [step, setStep] = useState<'val' | 'lol' | 'done'>(add === 'lol' ? 'lol' : 'val')
+  const [step, setStep] = useState<'val' | 'done'>('val')
   const [valProfile, setValProfile] = useState<GameProfile | null>(null)
-  const [lolProfile, setLolProfile] = useState<GameProfile | null>(null)
 
-  const handleValSave = (p: GameProfile) => { setValProfile(p); setStep('lol') }
-  const handleLolSave = (p: GameProfile) => { setLolProfile(p); setStep('done') }
+  const handleValSave = (p: GameProfile) => { setValProfile(p); setStep('done') }
 
   if (step === 'done') {
-    return <DoneStep valProfile={valProfile} lolProfile={lolProfile} onGo={() => router.replace('/dashboard')} />
+    return <DoneStep valProfile={valProfile} onGo={() => router.replace('/dashboard')} />
   }
 
   return (
@@ -209,26 +202,16 @@ function OnboardingContent() {
           <span className="font-black text-3xl tracking-widest text-[#00D2BE]">D31</span>
           <h1 className="text-white font-bold text-xl mt-4 mb-1">프로필 설정</h1>
           <div className="flex items-center justify-center gap-2 mt-3">
-            <div className={`w-8 h-1.5 rounded-full transition-all ${step === 'val' ? 'bg-[#ff4655]' : 'bg-[#ff4655]/80'}`} />
-            <div className={`w-8 h-1.5 rounded-full transition-all ${step === 'lol' ? 'bg-[#c89b3c]' : 'bg-white/10'}`} />
+            <div className="w-8 h-1.5 rounded-full bg-[#ff4655]" />
           </div>
         </div>
 
         <div className="bg-[#111118] border border-white/5 rounded p-6">
-          {step === 'val' && (
-            <GameForm
-              gameType="valorant" color="#ff4655" label="VALORANT"
-              tiers={VAL_TIERS} saved={valProfile}
-              onSave={handleValSave} onSkip={() => setStep('lol')}
-            />
-          )}
-          {step === 'lol' && (
-            <GameForm
-              gameType="lol" color="#c89b3c" label="League of Legends"
-              tiers={LOL_TIERS} saved={lolProfile}
-              onSave={handleLolSave} onSkip={() => setStep('done')}
-            />
-          )}
+          <GameForm
+            gameType="valorant" color="#ff4655" label="VALORANT"
+            tiers={VAL_TIERS} saved={valProfile}
+            onSave={handleValSave} onSkip={() => setStep('done')}
+          />
         </div>
 
         <button onClick={() => router.replace('/dashboard')} className="w-full text-center text-slate-600 text-xs mt-4 hover:text-slate-400 transition">

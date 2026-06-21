@@ -3,16 +3,14 @@
 import { useState } from 'react'
 
 const GAME_COLOR: Record<string, string> = {
-  lol: '#c89b3c', valorant: '#ff4655',
+  valorant: '#ff4655',
 }
 
 const TABS = [
   { key: 'valorant', label: 'VALORANT' },
-  { key: 'lol', label: 'League of Legends' },
 ]
 
 const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
-const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
 
 export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
   const [tab, setTab] = useState(game ?? 'valorant')
@@ -22,9 +20,9 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
   const [filterOpen, setFilterOpen] = useState(false)
 
   const activeGame = game ?? tab
-  const gameColor = activeGame === 'lol' ? '#c89b3c' : activeGame === 'valorant' ? '#ff4655' : '#00D2BE'
+  const gameColor = activeGame === 'valorant' ? '#ff4655' : '#00D2BE'
   const allLink = game ? `/${game}/scrims` : '/scrims'
-  const tiers = activeGame === 'lol' ? LOL_TIERS : VAL_TIERS
+  const tiers = VAL_TIERS
 
   const filtered = scrims
     .filter((s) => s.game_type === activeGame)

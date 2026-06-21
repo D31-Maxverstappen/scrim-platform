@@ -62,6 +62,14 @@ export async function removeDiscordRole(discordUserId: string, roleId: string): 
   return res.ok || res.status === 204
 }
 
+export async function deleteDiscordRole(roleId: string): Promise<boolean> {
+  const res = await fetch(
+    `https://discord.com/api/v10/guilds/${GUILD_ID}/roles/${roleId}`,
+    { method: 'DELETE', headers: { Authorization: `Bot ${BOT_TOKEN}` } },
+  )
+  return res.ok || res.status === 204
+}
+
 // ── 스크림 음성채널 생성 (팀별 각 1개) ──
 
 export async function createScrimVoiceChannels(
