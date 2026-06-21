@@ -10,6 +10,10 @@ const STATUS_STYLE: Record<string, string> = {
 }
 const STATUS_LABEL: Record<string, string> = { pending: '검토중', approved: '승인됨', rejected: '거절됨' }
 
+function displayName(a: any) {
+  return a.users?.val_gamename ?? a.users?.riot_gamename ?? a.users?.discord_id ?? '(알 수 없음)'
+}
+
 export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
@@ -47,7 +51,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
               <div key={a.id} className="px-5 py-4 flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-white text-sm font-bold">{a.email}</p>
+                    <p className="text-white text-sm font-bold">{displayName(a)}</p>
                     <p className="text-slate-600 text-[10px] mt-0.5">
                       {new Date(a.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
@@ -100,7 +104,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
                   {STATUS_LABEL[a.status]}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-xs font-semibold">{a.email}</p>
+                  <p className="text-white text-xs font-semibold">{displayName(a)}</p>
                   <p className="text-slate-500 text-xs mt-0.5 leading-relaxed line-clamp-2">{a.reason}</p>
                   {a.admin_note && (
                     <p className="text-slate-600 text-[10px] mt-1">메모: {a.admin_note}</p>

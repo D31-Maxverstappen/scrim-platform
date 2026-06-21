@@ -11,7 +11,7 @@ export default async function AdminAppealsPage() {
 
   const { data: appeals } = await admin
     .from('appeals')
-    .select('*')
+    .select('*, users(val_gamename, riot_gamename, discord_id)')
     .order('created_at', { ascending: false })
 
   return (

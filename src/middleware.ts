@@ -42,7 +42,9 @@ export async function middleware(request: NextRequest) {
 
   if (profile?.suspended) {
     await supabase.auth.signOut()
-    return NextResponse.redirect(new URL('/suspended', request.url))
+    const url = new URL('/suspended', request.url)
+    url.searchParams.set('uid', user.id)
+    return NextResponse.redirect(url)
   }
 
   return response

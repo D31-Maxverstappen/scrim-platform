@@ -7,33 +7,26 @@ const admin = createAdmin(
 )
 
 export async function POST(req: NextRequest) {
-  const { email, reason } = await req.json()
+  const { userId, reason } = await req.json()
 
-  if (!email || !reason) {
-    return NextResponse.json({ error: '이메일과 사유를 모두 입력해주세요.' }, { status: 400 })
+  if (!userId || !reason) {
+    return NextResponse.json({ error: '필수 파라미터가 누락되었습니다.' }, { status: 400 })
   }
   if (reason.length < 20) {
     return NextResponse.json({ error: '사유를 20자 이상 작성해주세요.' }, { status: 400 })
   }
 
-  // 이메일로 유저 찾기
-  const { data: authUsers } = await admin.auth.admin.listUsers()
-  const authUser = authUsers?.users.find((u) => u.email === email.trim().toLowerCase())
-  if (!authUser) {
-    return NextResponse.json({ error: '해당 이메일로 가입된 계정이 없습니다.' }, { status: 404 })
-  }
-
   // 정지된 계정인지 확인
-  const { data: profile } = await admin.from('users').select('suspended').eq('id', authUser.id).single()
+  const { data: profile } = await admin.from('users').select('suspended').eq('id', userId).single()
   if (!profile?.suspended) {
-    return NextResponse.json({ error: '정지되지 않은 계정입니다.' }, { status: 400 })
+    return NextResponse.json({ error: '정지된 계정이 아닙니다.' }, { status: 400 })
   }
 
   // 이미 대기 중인 이의 신청이 있는지 확인
   const { data: existing } = await admin
     .from('appeals')
     .select('id')
-    .eq('user_id', authUser.id)
+    .eq('user_id', userId)
     .eq('status', 'pending')
     .single()
 
@@ -42,8 +35,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { error } = await admin.from('appeals').insert({
-    email: email.trim().toLowerCase(),
-    user_id: authUser.id,
+    user_id: userId,
     reason: reason.trim(),
   })
 
