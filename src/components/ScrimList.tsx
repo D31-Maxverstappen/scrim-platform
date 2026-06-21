@@ -11,6 +11,7 @@ const TABS = [
 ]
 
 const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
+// 필터는 기본 티어명으로 그룹 매칭 (예: 'Platinum' → 'Platinum 1/2/3' 모두 포함)
 
 export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
   const [tab, setTab] = useState(game ?? 'valorant')
@@ -31,7 +32,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
     .filter((s) => {
       if (!filterTier) return true
       const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
-      return t?.tier_avg === filterTier
+      return (t?.tier_avg ?? '').startsWith(filterTier)
     })
 
   const chipCls = (active: boolean) =>

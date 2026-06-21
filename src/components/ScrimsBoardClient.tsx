@@ -31,7 +31,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
   const displayed = posts.filter((p: any) => {
     if (!filterTier) return true
     const t = Array.isArray(p.teams) ? p.teams[0] : p.teams
-    return t?.tier_avg === filterTier
+    return (t?.tier_avg ?? '').startsWith(filterTier)
   })
 
   const navigate = (params: Record<string, string>) => {

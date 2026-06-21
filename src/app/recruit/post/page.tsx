@@ -6,10 +6,18 @@ import { createClient } from '@/lib/supabase/client'
 import { Suspense } from 'react'
 
 const VAL_ROLES = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
-const LOL_ROLES = ['Top', 'Jungle', 'Mid', 'ADC', 'Support', 'IGL', 'Fill']
 
-const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
-const LOL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Emerald', 'Diamond', 'Master', 'Grandmaster', 'Challenger']
+const VAL_TIERS = [
+  'Iron 3', 'Iron 2', 'Iron 1',
+  'Bronze 3', 'Bronze 2', 'Bronze 1',
+  'Silver 3', 'Silver 2', 'Silver 1',
+  'Gold 3', 'Gold 2', 'Gold 1',
+  'Platinum 3', 'Platinum 2', 'Platinum 1',
+  'Diamond 3', 'Diamond 2', 'Diamond 1',
+  'Ascendant 3', 'Ascendant 2', 'Ascendant 1',
+  'Immortal 3', 'Immortal 2', 'Immortal 1',
+  'Radiant',
+]
 
 function RecruitPostContent() {
   const router = useRouter()
@@ -17,7 +25,7 @@ function RecruitPostContent() {
   const defaultType = searchParams.get('type') === 'lfp' ? 'lfp' : 'lft'
 
   const [type, setType] = useState<'lft' | 'lfp'>(defaultType)
-  const [game, setGame] = useState('valorant')
+  const game = 'valorant'
   const [tier, setTier] = useState('')
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
@@ -31,11 +39,11 @@ function RecruitPostContent() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return
-      supabase.from('users').select('val_tier, lol_tier, tier, discord_tag').eq('id', user.id).single()
+      supabase.from('users').select('val_tier, tier, discord_tag').eq('id', user.id).single()
         .then(({ data: profile }) => {
           if (profile?.discord_tag) setDiscordTag(profile.discord_tag)
           if (type === 'lft') {
-            const t = game === 'valorant' ? profile?.val_tier : profile?.lol_tier
+            const t = profile?.val_tier ?? null
             if (t) setTier(t)
           }
         })
@@ -72,8 +80,8 @@ function RecruitPostContent() {
     }
   }
 
-  const roleList = game === 'valorant' ? VAL_ROLES : LOL_ROLES
-  const tierList = game === 'valorant' ? VAL_TIERS : LOL_TIERS
+  const roleList = VAL_ROLES
+  const tierList = VAL_TIERS
 
   const chipCls = (active: boolean) =>
     `px-2.5 py-1 rounded text-xs font-semibold transition ${active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
@@ -102,19 +110,6 @@ function RecruitPostContent() {
                 LFP
                 <span className="text-[10px] opacity-70 font-normal">선수 구함</span>
               </button>
-            </div>
-          </div>
-
-          {/* 게임 */}
-          <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">게임 *</label>
-            <div className="grid grid-cols-2 gap-2">
-              {[['valorant', 'VALORANT'], ['lol', 'League of Legends']].map(([val, label]) => (
-                <button key={val} type="button" onClick={() => { setGame(val); setTier(''); setRoles([]) }}
-                  className={`py-2.5 rounded text-sm font-semibold transition ${game === val ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-                  {label}
-                </button>
-              ))}
             </div>
           </div>
 

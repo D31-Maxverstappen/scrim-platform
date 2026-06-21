@@ -14,15 +14,17 @@ const games = [
     desc: '5v5 Tactical FPS',
     href: '/valorant/dashboard',
     loginHref: '/login',
+    available: true,
   },
   {
-    name: 'LEAGUE OF LEGENDS',
-    color: '#c89b3c',
-    glow: 'rgba(200,155,60,0.4)',
-    bg: 'linear-gradient(135deg, #0d0e16 0%, #070810 100%)',
-    desc: '5v5 Strategy MOBA',
-    href: '/lol/dashboard',
-    loginHref: '/login',
+    name: '+ 추가 게임',
+    color: '#374151',
+    glow: 'rgba(55,65,81,0.2)',
+    bg: 'linear-gradient(135deg, #0d0d14 0%, #080810 100%)',
+    desc: '지원 예정',
+    href: '#',
+    loginHref: '#',
+    available: false,
   },
 ]
 
@@ -165,9 +167,9 @@ export default function HomePage() {
           {games.map((game) => (
             <a
               key={game.name}
-              href={loggedIn ? game.href : game.loginHref}
+              href={game.available ? (loggedIn ? game.href : game.loginHref) : '#'}
               style={{ background: game.bg }}
-              className="group relative flex items-center gap-6 rounded p-7 border border-white/5 hover:border-white/10 cursor-pointer transition-all duration-300 hover:scale-[1.02] overflow-hidden"
+              className={`group relative flex items-center gap-6 rounded p-7 border border-white/5 transition-all duration-300 overflow-hidden ${game.available ? 'hover:border-white/10 cursor-pointer hover:scale-[1.02]' : 'cursor-default opacity-50'}`}
             >
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
@@ -176,12 +178,14 @@ export default function HomePage() {
               <div className="relative z-10 flex-1">
                 <p className="font-black text-3xl tracking-widest mb-1" style={{ color: game.color }}>{game.name}</p>
                 <p className="text-slate-500 text-xs mb-4">{game.desc}</p>
-                <span
-                  className="text-xs font-bold px-3 py-1 rounded-full"
-                  style={{ background: game.color + '22', color: game.color }}
-                >
-                  스크림 찾기 →
-                </span>
+                {game.available && (
+                  <span
+                    className="text-xs font-bold px-3 py-1 rounded-full"
+                    style={{ background: game.color + '22', color: game.color }}
+                  >
+                    스크림 찾기 →
+                  </span>
+                )}
               </div>
             </a>
           ))}
@@ -315,7 +319,7 @@ export default function HomePage() {
             <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/30 rounded px-4 py-3 flex items-center justify-between">
               <div>
                 <p className="text-[#00D2BE] text-xs font-black">매칭 완료!</p>
-                <p className="text-slate-400 text-[10px]">EDITH과의 매치가 잡혔어요</p>
+                <p className="text-slate-400 text-[10px]">PHANTOM과의 매치가 잡혔어요</p>
               </div>
               <span className="bg-[#00D2BE] text-white text-[10px] font-bold px-2.5 py-1 rounded">매치 보기 →</span>
             </div>
@@ -332,7 +336,7 @@ export default function HomePage() {
           <div className="flex flex-col gap-3">
             {[
               { q: '무료인가요?', a: '네, 완전 무료예요. 가입부터 스크림 매칭, 팀 관리까지 모든 기능이 무료예요.' },
-              { q: '어떤 게임을 지원하나요?', a: '현재 VALORANT와 League of Legends를 지원해요. 추후 다른 게임도 추가될 예정이에요.' },
+              { q: '어떤 게임을 지원하나요?', a: '현재 VALORANT를 지원해요. 추후 다른 게임도 추가될 예정이에요.' },
               { q: '팀이 없어도 가입할 수 있나요?', a: '물론이에요. 가입 후 LFT(팀 구함) 게시판에 글을 올리거나, 공개 팀에 가입 신청을 할 수 있어요.' },
               { q: '스크림 결과는 어떻게 입력하나요?', a: '매치 페이지에서 맵별 스코어를 입력하면 자동으로 승패가 계산되고 팀 전적에 기록돼요.' },
               { q: '자동 매칭은 어떻게 작동하나요?', a: '팀 평균 티어를 기준으로 ±2단계 이내의 팀과 매칭해요. 같은 게임, 서버, 포맷을 선택한 팀 중 가장 오래 기다린 팀부터 매칭돼요.' },

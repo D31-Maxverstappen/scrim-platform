@@ -4,7 +4,17 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Suspense } from 'react'
 
-const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant', 'Unranked']
+const VAL_TIERS = [
+  'Iron 3', 'Iron 2', 'Iron 1',
+  'Bronze 3', 'Bronze 2', 'Bronze 1',
+  'Silver 3', 'Silver 2', 'Silver 1',
+  'Gold 3', 'Gold 2', 'Gold 1',
+  'Platinum 3', 'Platinum 2', 'Platinum 1',
+  'Diamond 3', 'Diamond 2', 'Diamond 1',
+  'Ascendant 3', 'Ascendant 2', 'Ascendant 1',
+  'Immortal 3', 'Immortal 2', 'Immortal 1',
+  'Radiant',
+]
 
 type GameProfile = { gameName: string; tagLine: string; tier: string }
 

@@ -9,16 +9,23 @@ const admin = () => createAdminClient(
 )
 
 const TIER_RANK: Record<string, number> = {
-  Iron: 10, Bronze: 20, Silver: 30, Gold: 40, Platinum: 50,
-  Emerald: 55, Diamond: 60, Ascendant: 65, Immortal: 75,
-  Master: 75, Grandmaster: 85, Radiant: 90, Challenger: 90,
-  Unranked: 30,
+  'Iron 3': 1,   'Iron 2': 2,   'Iron 1': 3,
+  'Bronze 3': 4, 'Bronze 2': 5, 'Bronze 1': 6,
+  'Silver 3': 7, 'Silver 2': 8, 'Silver 1': 9,
+  'Gold 3': 10,  'Gold 2': 11,  'Gold 1': 12,
+  'Platinum 3': 13, 'Platinum 2': 14, 'Platinum 1': 15,
+  'Diamond 3': 16,  'Diamond 2': 17,  'Diamond 1': 18,
+  'Ascendant 3': 19, 'Ascendant 2': 20, 'Ascendant 1': 21,
+  'Immortal 3': 22,  'Immortal 2': 23,  'Immortal 1': 24,
+  'Radiant': 25,
+  // 하위 호환 (구 포맷)
+  'Iron': 2, 'Bronze': 5, 'Silver': 8, 'Gold': 11, 'Platinum': 14,
+  'Diamond': 17, 'Ascendant': 20, 'Immortal': 23, 'Unranked': 8,
 }
 
 function tierToRank(tierAvg: string | null): number {
-  if (!tierAvg) return 30
-  const base = tierAvg.trim().split(' ')[0]
-  return TIER_RANK[base] ?? 30
+  if (!tierAvg) return 8
+  return TIER_RANK[tierAvg.trim()] ?? 8
 }
 
 export async function POST(req: NextRequest) {

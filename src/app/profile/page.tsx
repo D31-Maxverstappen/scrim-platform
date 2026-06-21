@@ -37,7 +37,7 @@ export default async function ProfilePage() {
 
   const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
 
-  const tierColor = TIER_COLOR[profile?.tier ?? ''] ?? 'text-slate-400'
+  const tierColor = TIER_COLOR[(profile?.tier ?? '').split(' ')[0]] ?? 'text-slate-400'
 
   return (
     <div className="min-h-screen bg-[#07070b]">
@@ -109,7 +109,7 @@ export default async function ProfilePage() {
                     {profile.val_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.val_tagline}</span>}
                   </p>
                   {profile.val_tier && (
-                    <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier] ?? 'text-slate-400'}`}>
+                    <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier.split(' ')[0]] ?? 'text-slate-400'}`}>
                       {profile.val_tier}
                     </p>
                   )}
