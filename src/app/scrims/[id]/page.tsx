@@ -66,7 +66,50 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
       <RealtimeRefresher tables={["scrim_posts", "scrim_applications"]} />
       <Navbar />
       <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
-        <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-6">← 스크림 목록</a>
+        <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-4">← 스크림 목록</a>
+
+        {/* 역할 배너 */}
+        {isPostingCaptain && (
+          <div className="flex items-center gap-2.5 mb-5 px-4 py-3 bg-[#00D2BE]/10 border border-[#00D2BE]/25 rounded">
+            <span className="w-2 h-2 rounded-full bg-[#00D2BE] shrink-0" />
+            <span className="text-[#00D2BE] font-black text-sm">내가 올린 스크림</span>
+            <span className="text-slate-400 text-xs">·</span>
+            <span className="text-slate-400 text-xs">신청 팀을 확인하고 수락/거절할 수 있어요</span>
+            {applications && applications.length > 0 && (
+              <span className="ml-auto bg-[#00D2BE] text-black text-xs font-black px-2.5 py-0.5 rounded-full shrink-0">
+                신청 {applications.length}건
+              </span>
+            )}
+          </div>
+        )}
+        {isApplicant && (
+          <div className={`flex items-center gap-2.5 mb-5 px-4 py-3 rounded border ${
+            existingApp?.status === 'accepted' ? 'bg-green-500/10 border-green-500/25' :
+            existingApp?.status === 'rejected' ? 'bg-red-500/10 border-red-500/20' :
+            'bg-yellow-500/10 border-yellow-500/20'
+          }`}>
+            <span className={`w-2 h-2 rounded-full shrink-0 ${
+              existingApp?.status === 'accepted' ? 'bg-green-400' :
+              existingApp?.status === 'rejected' ? 'bg-red-400' :
+              'bg-yellow-400'
+            }`} />
+            <span className={`font-black text-sm ${
+              existingApp?.status === 'accepted' ? 'text-green-400' :
+              existingApp?.status === 'rejected' ? 'text-red-400' :
+              'text-yellow-400'
+            }`}>내가 신청한 스크림</span>
+            <span className="text-slate-400 text-xs">·</span>
+            <span className="text-slate-400 text-xs">{myTeam?.name}</span>
+            <span className={`ml-auto text-xs font-black px-2.5 py-0.5 rounded-full shrink-0 ${
+              existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
+              existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+              'bg-yellow-500/20 text-yellow-400'
+            }`}>
+              {existingApp?.status === 'accepted' ? '✓ 수락됨' :
+               existingApp?.status === 'rejected' ? '✗ 거절됨' : '⏳ 검토 중'}
+            </span>
+          </div>
+        )}
 
         {/* 포스트 헤더 */}
         <div className="bg-[#13131f] border border-white/5 rounded p-6 mb-6">
@@ -210,25 +253,49 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
           {isApplicant && (
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="w-1.5 h-4 rounded-full bg-yellow-400" />
-                <h2 className="text-white font-bold text-sm uppercase tracking-widest">내 신청 현황</h2>
+                <span className={`w-1.5 h-4 rounded-full ${
+                  existingApp?.status === 'accepted' ? 'bg-green-400' :
+                  existingApp?.status === 'rejected' ? 'bg-red-400' :
+                  'bg-yellow-400'
+                }`} />
+                <h2 className="text-white font-bold text-sm uppercase tracking-widest">신청 현황</h2>
               </div>
-              <div className={`rounded p-5 border ${
+              <div className={`rounded p-5 border flex flex-col gap-4 ${
                 existingApp?.status === 'accepted' ? 'bg-green-500/10 border-green-500/30' :
                 existingApp?.status === 'rejected' ? 'bg-red-500/10 border-red-500/20' :
                 'bg-yellow-500/10 border-yellow-500/20'
               }`}>
-                <p className="text-slate-400 text-xs mb-2">신청 팀</p>
-                <p className="text-white font-bold text-sm mb-3">{myTeam?.name ?? '—'}</p>
-                <div className={`inline-flex items-center gap-1.5 text-xs font-black px-3 py-1.5 rounded-full ${
-                  existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
-                  existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
-                  'bg-yellow-500/20 text-yellow-400'
-                }`}>
-                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
-                  {existingApp?.status === 'accepted' ? '수락됨' :
-                   existingApp?.status === 'rejected' ? '거절됨' : '검토 중'}
+                <div>
+                  <p className="text-slate-500 text-xs mb-1">신청 팀</p>
+                  <p className="text-white font-bold text-sm">{myTeam?.name ?? '—'}</p>
                 </div>
+                <div>
+                  <p className="text-slate-500 text-xs mb-2">상태</p>
+                  <div className={`inline-flex items-center gap-1.5 text-sm font-black px-3 py-1.5 rounded-full ${
+                    existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
+                    existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                    'bg-yellow-500/20 text-yellow-400'
+                  }`}>
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                    {existingApp?.status === 'accepted' ? '수락됨' :
+                     existingApp?.status === 'rejected' ? '거절됨' : '검토 중'}
+                  </div>
+                </div>
+                {existingApp?.status === 'accepted' && (
+                  <p className="text-green-400/70 text-xs border-t border-green-500/20 pt-3">
+                    상대 팀이 신청을 수락했어요! 디스코드 등으로 일정을 조율해 보세요.
+                  </p>
+                )}
+                {existingApp?.status === 'rejected' && (
+                  <p className="text-red-400/70 text-xs border-t border-red-500/20 pt-3">
+                    아쉽지만 이번엔 어려울 것 같아요. 다른 스크림을 찾아보세요.
+                  </p>
+                )}
+                {existingApp?.status === 'pending' && (
+                  <p className="text-yellow-400/60 text-xs border-t border-yellow-500/20 pt-3">
+                    상대 팀의 수락을 기다리고 있어요.
+                  </p>
+                )}
               </div>
             </div>
           )}
