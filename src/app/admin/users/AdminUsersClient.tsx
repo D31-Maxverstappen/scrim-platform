@@ -85,7 +85,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
                       {name[0]?.toUpperCase() ?? '?'}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-white text-xs font-semibold truncate">{name}</p>
+                      <a href={`/admin/users/${u.id}`} className="text-white text-xs font-semibold truncate hover:text-[#00D2BE] transition">{name}</a>
                       {u.is_admin && <span className="text-[9px] font-bold text-[#00D2BE]">ADMIN</span>}
                     </div>
                   </div>
