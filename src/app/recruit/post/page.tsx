@@ -19,6 +19,16 @@ const VAL_TIERS = [
   'Radiant',
 ]
 
+const TIER_COLORS: Record<string, string> = {
+  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0',
+  Gold: '#E8B84B', Platinum: '#4FD1C5', Diamond: '#6FA8DC',
+  Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
+}
+
+function getTierColor(tier: string) {
+  return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
+}
+
 function RecruitPostContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -26,8 +36,9 @@ function RecruitPostContent() {
 
   const [type, setType] = useState<'lft' | 'lfp'>(defaultType)
   const game = 'valorant'
-  const [tier, setTier] = useState('')       // LFT 단일
-  const [tiers, setTiers] = useState<string[]>([]) // LFP 다중
+  const [tier, setTier] = useState('')              // LFT 단일
+  const [tiers, setTiers] = useState<string[]>([]) // LFP 다중 (범위)
+  const [anchorTier, setAnchorTier] = useState<string | null>(null) // 범위 시작점
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
   const [discordTag, setDiscordTag] = useState('')
@@ -57,8 +68,23 @@ function RecruitPostContent() {
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
   }
 
-  const toggleTier = (t: string) => {
-    setTiers((prev) => prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t])
+  // LFP 범위 선택: 첫 클릭 = 앵커, 두 번째 클릭 = 범위 채우기, 앵커 재클릭 = 초기화
+  const handleTierClick = (t: string) => {
+    if (!anchorTier || tiers.length === 0) {
+      setAnchorTier(t)
+      setTiers([t])
+      return
+    }
+    if (anchorTier === t) {
+      setAnchorTier(null)
+      setTiers([])
+      return
+    }
+    const ai = VAL_TIERS.indexOf(anchorTier)
+    const ti = VAL_TIERS.indexOf(t)
+    const start = Math.min(ai, ti)
+    const end = Math.max(ai, ti)
+    setTiers(VAL_TIERS.slice(start, end + 1))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -106,12 +132,12 @@ function RecruitPostContent() {
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">유형 *</label>
             <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]) }}
+              <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]); setAnchorTier(null) }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFT
                 <span className="text-[10px] opacity-70 font-normal">팀 구함</span>
               </button>
-              <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier('') }}
+              <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFP
                 <span className="text-[10px] opacity-70 font-normal">선수 구함</span>
@@ -150,16 +176,39 @@ function RecruitPostContent() {
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 티어' : '희망 티어'}
-              {type === 'lfp' && <span className="text-slate-500 font-normal ml-1">(복수 선택)</span>}
+              {type === 'lfp' && (
+                <span className="text-slate-600 font-normal ml-1 text-xs">
+                  {tiers.length === 0 ? '— 첫 티어 클릭 후 끝 티어 클릭으로 범위 선택' : `${tiers.length}개 선택됨`}
+                </span>
+              )}
             </label>
             <div className="flex flex-wrap gap-1.5">
               {type === 'lft'
-                ? tierList.map((t) => (
-                    <button key={t} type="button" onClick={() => setTier(tier === t ? '' : t)} className={chipCls(tier === t)}>{t}</button>
-                  ))
-                : tierList.map((t) => (
-                    <button key={t} type="button" onClick={() => toggleTier(t)} className={chipCls(tiers.includes(t))}>{t}</button>
-                  ))
+                ? tierList.map((t) => {
+                    const color = getTierColor(t)
+                    const active = tier === t
+                    return (
+                      <button key={t} type="button" onClick={() => setTier(tier === t ? '' : t)}
+                        className="px-2.5 py-1 rounded text-xs font-semibold transition border"
+                        style={active
+                          ? { background: color + '33', color, borderColor: color }
+                          : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderColor: 'transparent' }
+                        }>{t}</button>
+                    )
+                  })
+                : tierList.map((t) => {
+                    const color = getTierColor(t)
+                    const selected = tiers.includes(t)
+                    const isAnchor = t === anchorTier
+                    return (
+                      <button key={t} type="button" onClick={() => handleTierClick(t)}
+                        className="px-2.5 py-1 rounded text-xs font-semibold transition border"
+                        style={selected
+                          ? { background: color + '33', color, borderColor: isAnchor ? color : color + '66' }
+                          : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderColor: 'transparent' }
+                        }>{t}</button>
+                    )
+                  })
               }
             </div>
           </div>

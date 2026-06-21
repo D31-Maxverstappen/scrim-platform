@@ -4,6 +4,49 @@ import { useState } from 'react'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
+const TIER_COLORS: Record<string, string> = {
+  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0',
+  Gold: '#E8B84B', Platinum: '#4FD1C5', Diamond: '#6FA8DC',
+  Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
+}
+
+const VAL_TIERS = [
+  'Iron 3','Iron 2','Iron 1','Bronze 3','Bronze 2','Bronze 1',
+  'Silver 3','Silver 2','Silver 1','Gold 3','Gold 2','Gold 1',
+  'Platinum 3','Platinum 2','Platinum 1','Diamond 3','Diamond 2','Diamond 1',
+  'Ascendant 3','Ascendant 2','Ascendant 1','Immortal 3','Immortal 2','Immortal 1','Radiant',
+]
+
+function getTierColor(tier: string) {
+  return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
+}
+
+// 연속 범위를 "시작 ~ 끝"으로 축약, 비연속은 그룹별 표시
+function formatTierDisplay(tierStr: string | null): Array<{ text: string; color: string }> {
+  if (!tierStr) return []
+  const selected = tierStr.split(',').map((t) => t.trim()).filter(Boolean)
+  if (selected.length === 0) return []
+
+  const sorted = [...selected].sort((a, b) => VAL_TIERS.indexOf(a) - VAL_TIERS.indexOf(b))
+
+  const groups: string[][] = []
+  let current = [sorted[0]]
+  for (let i = 1; i < sorted.length; i++) {
+    if (VAL_TIERS.indexOf(sorted[i]) === VAL_TIERS.indexOf(sorted[i - 1]) + 1) {
+      current.push(sorted[i])
+    } else {
+      groups.push(current)
+      current = [sorted[i]]
+    }
+  }
+  groups.push(current)
+
+  return groups.map((g) => {
+    if (g.length === 1) return { text: g[0], color: getTierColor(g[0]) }
+    return { text: `${g[0]} ~ ${g[g.length - 1]}`, color: getTierColor(g[0]) }
+  })
+}
+
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime()
   const m = Math.floor(diff / 60000)
@@ -14,10 +57,6 @@ function timeAgo(dateStr: string) {
   return `${Math.floor(h / 24)}일 전`
 }
 
-function parseTiers(tier: string | null): string[] {
-  if (!tier) return []
-  return tier.split(',').map((t) => t.trim()).filter(Boolean)
-}
 
 function LftCard({ post, currentUserId, onClose, onDelete }: {
   post: any
@@ -29,7 +68,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
   const gameName = u?.val_gamename ?? u?.riot_gamename
   const profileTier = u?.val_tier ?? u?.tier
-  const tiers = parseTiers(post.tier) // 선택한 티어들
+  const tierDisplay = formatTierDisplay(post.tier)
   const isOwn = post.user_id === currentUserId
 
   return (
@@ -44,20 +83,20 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-white font-bold text-sm truncate">{gameName ?? '—'}</p>
-          {profileTier && tiers.length === 0 && (
-            <p className="text-xs" style={{ color: gc }}>{profileTier}</p>
+          {tierDisplay.length === 0 && profileTier && (
+            <p className="text-xs" style={{ color: getTierColor(profileTier) }}>{profileTier}</p>
           )}
         </div>
         <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
-      {/* 선택 티어 */}
-      {tiers.length > 0 && (
+      {/* 티어 (단일 or 범위 축약) */}
+      {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1">
-          {tiers.map((t) => (
-            <span key={t} className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: gc + '22', color: gc }}>{t}</span>
+          {tierDisplay.map((d, i) => (
+            <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded border"
+              style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
           ))}
         </div>
       )}
@@ -102,7 +141,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
   const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
   const isOwn = post.user_id === currentUserId
-  const tiers = parseTiers(post.tier)
+  const tierDisplay = formatTierDisplay(post.tier)
 
   const [applyState, setApplyState] = useState<'idle' | 'loading' | 'done'>('idle')
 
@@ -148,13 +187,13 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
         </div>
       )}
 
-      {/* 희망 티어 (다중) */}
-      {tiers.length > 0 && (
+      {/* 희망 티어 (범위 축약 표시) */}
+      {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
-          <span className="text-[10px] text-slate-600">희망 티어</span>
-          {tiers.map((t) => (
-            <span key={t} className="text-[10px] font-bold px-2 py-0.5 rounded"
-              style={{ background: gc + '22', color: gc }}>{t}</span>
+          <span className="text-[10px] text-slate-600 shrink-0">희망 티어</span>
+          {tierDisplay.map((d, i) => (
+            <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded border"
+              style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
           ))}
         </div>
       )}
