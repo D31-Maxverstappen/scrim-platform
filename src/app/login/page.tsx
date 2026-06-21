@@ -1,13 +1,18 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 
 function LoginForm() {
   const [loading, setLoading] = useState(false)
+  const [emailLoading, setEmailLoading] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [emailError, setEmailError] = useState('')
   const searchParams = useSearchParams()
+  const router = useRouter()
   const error = searchParams.get('error')
   const url = searchParams.get('url')
 
@@ -21,6 +26,20 @@ function LoginForm() {
         scopes: 'identify email',
       },
     })
+  }
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setEmailError('')
+    setEmailLoading(true)
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      setEmailError('이메일 또는 비밀번호가 올바르지 않아요')
+      setEmailLoading(false)
+    } else {
+      router.push('/valorant/dashboard')
+    }
   }
 
   return (
@@ -50,9 +69,38 @@ function LoginForm() {
             {loading ? '연결 중...' : 'Discord로 로그인 / 회원가입'}
           </button>
 
-          <p className="text-center text-slate-400 text-xs">
-            Discord 계정으로 간편하게 회원가입할 수 있어요
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-slate-600 text-xs">또는</span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+
+          <form onSubmit={handleEmailLogin} className="flex flex-col gap-3">
+            <input
+              type="email"
+              placeholder="이메일"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+            />
+            <input
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder:text-slate-600 focus:outline-none focus:border-white/30"
+            />
+            {emailError && <p className="text-red-400 text-xs">{emailError}</p>}
+            <button
+              type="submit"
+              disabled={emailLoading}
+              className="w-full bg-white/10 hover:bg-white/15 disabled:opacity-50 text-white font-semibold py-3 rounded transition text-sm"
+            >
+              {emailLoading ? '로그인 중...' : '이메일로 로그인'}
+            </button>
+          </form>
 
           {error && (
             <div className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded px-3 py-2 break-all">
