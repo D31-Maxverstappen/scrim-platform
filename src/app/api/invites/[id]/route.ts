@@ -19,6 +19,24 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     if (alreadyMember) return NextResponse.json({ error: '이미 다른 팀에 소속되어 있어요.' }, { status: 400 })
 
     await supabase.from('team_members').insert({ team_id: invite.team_id, user_id: user.id, role: 'player' })
+    await supabase.from('team_invites').update({ status: 'accepted' }).eq('id', id)
+
+    // 다른 팀 pending 신청 전부 취소
+    await supabase
+      .from('team_join_requests')
+      .update({ status: 'rejected' })
+      .eq('user_id', user.id)
+      .eq('status', 'pending')
+
+    // 다른 팀 pending 초대 전부 취소
+    await supabase
+      .from('team_invites')
+      .update({ status: 'declined' })
+      .eq('invited_user_id', user.id)
+      .eq('status', 'pending')
+      .neq('id', id)
+
+    return NextResponse.json({ success: true, action })
   }
 
   await supabase.from('team_invites').update({ status: action === 'accept' ? 'accepted' : 'declined' }).eq('id', id)

@@ -20,12 +20,37 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!request) return NextResponse.json({ error: '신청을 찾을 수 없어요.' }, { status: 404 })
 
   if (action === 'accept') {
+    // 이미 다른 팀에 소속됐는지 확인
+    const { data: alreadyMember } = await supabase
+      .from('team_members').select('id').eq('user_id', request.user_id).maybeSingle()
+    if (alreadyMember) {
+      // 신청을 자동 취소 처리하고 에러 반환
+      await supabase.from('team_join_requests').update({ status: 'rejected' }).eq('id', requestId)
+      return NextResponse.json({ error: '해당 유저는 이미 다른 팀에 소속되어 있어요. 신청이 자동 취소되었습니다.' }, { status: 400 })
+    }
+
     await supabase.from('team_members').insert({
       team_id: teamId,
       user_id: request.user_id,
       role: role ?? 'player',
     })
     await supabase.from('team_join_requests').update({ status: 'accepted' }).eq('id', requestId)
+
+    // 해당 유저의 다른 팀 pending 신청 전부 취소
+    await supabase
+      .from('team_join_requests')
+      .update({ status: 'rejected' })
+      .eq('user_id', request.user_id)
+      .eq('status', 'pending')
+      .neq('id', requestId)
+
+    // 해당 유저에게 온 다른 팀 pending 초대도 전부 취소
+    await supabase
+      .from('team_invites')
+      .update({ status: 'declined' })
+      .eq('invited_user_id', request.user_id)
+      .eq('status', 'pending')
+
     await recalcTierAvg(supabase, teamId)
 
     // Discord 팀 역할 부여

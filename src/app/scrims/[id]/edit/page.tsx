@@ -104,15 +104,15 @@ export default function ScrimEditPage() {
                 ))}
               </div>
               <select value={hour} onChange={(e) => setHour(e.target.value)}
-                className="flex-1 bg-white/5 border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
+                className="flex-1 bg-[#1e1e2e] border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
-                  <option key={h} value={h}>{h}시</option>
+                  <option key={h} value={h} className="bg-[#1e1e2e] text-white">{h}시</option>
                 ))}
               </select>
               <select value={minute} onChange={(e) => setMinute(e.target.value)}
-                className="flex-1 bg-white/5 border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
+                className="flex-1 bg-[#1e1e2e] border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
                 {['00', '10', '20', '30', '40', '50'].map((m) => (
-                  <option key={m} value={m}>{m}분</option>
+                  <option key={m} value={m} className="bg-[#1e1e2e] text-white">{m}분</option>
                 ))}
               </select>
             </div>

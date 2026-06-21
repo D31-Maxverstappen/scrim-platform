@@ -139,10 +139,10 @@ export default function MatchScoreInput({
                     <select
                       value={m.map_name}
                       onChange={(e) => set(i, 'map_name', e.target.value)}
-                      className="ml-auto bg-white/5 border border-white/10 text-white text-xs px-2 py-1 rounded focus:outline-none focus:border-[#00D2BE]"
+                      className="ml-auto bg-[#1e1e2e] border border-white/10 text-white text-xs px-2 py-1 rounded focus:outline-none focus:border-[#00D2BE]"
                     >
-                      <option value="">맵 선택</option>
-                      {VAL_MAPS.map((v) => <option key={v} value={v}>{v}</option>)}
+                      <option value="" className="bg-[#1e1e2e] text-white">맵 선택</option>
+                      {VAL_MAPS.map((v) => <option key={v} value={v} className="bg-[#1e1e2e] text-white">{v}</option>)}
                     </select>
                   )}
                 </div>

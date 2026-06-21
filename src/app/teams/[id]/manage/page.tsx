@@ -33,9 +33,9 @@ function RequestRow({ r, onAction }: { r: any, onAction: (id: string, action: 'a
       <select
         value={selectedRole}
         onChange={(e) => setSelectedRole(e.target.value)}
-        className="bg-white/5 border border-white/10  px-3 py-1.5 text-white text-xs focus:outline-none"
+        className="bg-[#1e1e2e] border border-white/10  px-3 py-1.5 text-white text-xs focus:outline-none"
       >
-        {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
+        {ROLES.map(role => <option key={role} value={role} className="bg-[#1e1e2e] text-white">{ROLE_LABEL[role]}</option>)}
       </select>
       <button onClick={() => onAction(r.id, 'accept', selectedRole)} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2  transition">
         수락
@@ -352,10 +352,10 @@ export default function ManageTeamPage() {
                       <select
                         value={m.role}
                         onChange={(e) => handleRoleChange(m.user_id, e.target.value)}
-                        className="bg-white/5 border border-white/10 px-3 py-1.5 text-xs focus:outline-none"
+                        className="bg-[#1e1e2e] border border-white/10 px-3 py-1.5 text-xs focus:outline-none"
                         style={{ color: ROLE_COLOR[m.role] ?? '#94a3b8' }}
                       >
-                        {ROLES.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
+                        {ROLES.map(role => <option key={role} value={role} className="bg-[#1e1e2e] text-white">{ROLE_LABEL[role]}</option>)}
                       </select>
                       <button onClick={() => handleKick(m.user_id)} className="text-xs text-slate-600 hover:text-red-400 transition px-2">
                         내보내기
