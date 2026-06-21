@@ -195,7 +195,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
                   BETA
                 </span>
               </div>
-              <p className="text-slate-400 text-sm mt-1">조건에 맞는 상대 팀을 자동으로 찾아드려요. 팀원이 모두 접속한 상태에서 시작하세요.</p>
+              <p className="text-slate-400 text-sm mt-1">{t('auto_match_desc', lang)}</p>
             </div>
           </div>
 

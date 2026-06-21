@@ -19,17 +19,23 @@ const LanguageContext = createContext<{
   setLang: (lang: Lang) => void
 }>({ lang: 'ko', setLang: () => {} })
 
+const VALID: Lang[] = ['ko', 'en', 'ja', 'zh', 'th', 'pt', 'es']
+
+function readLangCookie(): Lang {
+  const match = document.cookie.split(';').find(c => c.trim().startsWith('lang='))
+  const val = match?.split('=')[1] as Lang | undefined
+  return val && VALID.includes(val) ? val : 'ko'
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLangState] = useState<Lang>('ko')
 
   useEffect(() => {
-    const saved = localStorage.getItem('lang') as Lang | null
-    if (saved) setLangState(saved)
+    setLangState(readLangCookie())
   }, [])
 
   const setLang = (l: Lang) => {
     setLangState(l)
-    localStorage.setItem('lang', l)
     document.cookie = `lang=${l};path=/;max-age=31536000`
   }
 

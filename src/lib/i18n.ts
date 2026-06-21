@@ -33,6 +33,7 @@ const translations = {
 
   // ── AutoMatchButton ─────────────────────────────────────────────────
   auto_match_title:     { ko:'자동 매칭',         en:'Auto Match',      ja:'自動マッチング',  zh:'自动匹配',     th:'จับคู่อัตโนมัติ',   pt:'Partida Automática', es:'Emparejamiento Automático' },
+  auto_match_desc:      { ko:'조건에 맞는 상대 팀을 자동으로 찾아드려요. 팀원이 모두 접속한 상태에서 시작하세요.', en:'We automatically find the right opponent for you. Make sure all team members are online before starting.', ja:'条件に合う相手チームを自動で見つけます。全メンバーが接続した状態で開始してください。', zh:'自动为您寻找合适的对手队伍。请确保所有队员都在线后再开始。', th:'เราจะหาทีมคู่แข่งที่เหมาะสมโดยอัตโนมัติ ตรวจสอบให้แน่ใจว่าสมาชิกทุกคนออนไลน์ก่อนเริ่ม', pt:'Encontramos automaticamente o adversário ideal para você. Certifique-se de que todos os membros estejam online antes de começar.', es:'Encontramos automáticamente al adversario adecuado para ti. Asegúrate de que todos los miembros estén en línea antes de empezar.' },
   auto_match_count:     { ko:'경기 수',           en:'Games',           ja:'試合数',          zh:'局数',         th:'จำนวนเกม',          pt:'Partidas',          es:'Partidas'         },
   auto_match_server:    { ko:'서버',              en:'Server',          ja:'サーバー',        zh:'服务器',       th:'เซิร์ฟเวอร์',       pt:'Servidor',          es:'Servidor'         },
   auto_match_start:     { ko:'⚡ 매칭 시작',      en:'⚡ Start Match',  ja:'⚡ マッチ開始',   zh:'⚡ 开始匹配',  th:'⚡ เริ่มจับคู่',    pt:'⚡ Iniciar Partida', es:'⚡ Iniciar Partida' },
