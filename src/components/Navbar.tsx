@@ -53,23 +53,61 @@ export default function Navbar() {
   const hasResults = teams.length > 0 || users.length > 0
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0f]/95 backdrop-blur border-b border-white/5 px-6 h-20 flex items-center gap-6">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6 relative">
       {/* 로고 */}
       <a href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
-        <Image src="/logo.png" alt="D31" width={64} height={64} className="object-contain" />
+        <Image src="/logo.png" alt="D31" width={52} height={52} className="object-contain" />
+      </a>
+
+      {/* 중앙 워드마크 */}
+      <a
+        href={game ? `/${game}/dashboard` : '/dashboard'}
+        className="absolute left-1/2 -translate-x-1/2 select-none"
+      >
+        <span
+          className="text-xl font-black tracking-tight"
+          style={{
+            background: 'linear-gradient(135deg, #d4d4d4 0%, #c0c0c0 40%, #c0392b 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          D31
+        </span>
+        <span
+          className="text-xl font-black tracking-tight"
+          style={{
+            background: 'linear-gradient(135deg, #c0392b 0%, #96281b 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}
+        >
+          .GG
+        </span>
       </a>
 
       {/* 네비 링크 */}
-      <div className="hidden md:flex items-center gap-1 text-sm">
-        <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 목록</a>
-        <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 또는 선수 찾기</a>
-        <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">리더보드</a>
+      <div className="hidden md:flex items-center gap-0.5 text-sm">
+        {[
+          { href: link('/teams'), label: '팀 목록' },
+          { href: '/recruit', label: '팀 또는 선수 찾기' },
+          { href: '/leaderboard', label: '리더보드' },
+        ].map((item) => (
+          <a key={item.href} href={item.href}
+            className={`text-slate-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/[0.04] ${
+              pathname === item.href ? 'text-white bg-white/[0.04]' : ''
+            }`}>
+            {item.label}
+          </a>
+        ))}
       </div>
 
       {/* 검색 */}
-      <div ref={wrapperRef} className="flex-1 max-w-md mx-auto relative">
+      <div ref={wrapperRef} className="ml-auto w-64 relative">
         <div className="relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
           </svg>
           <input
@@ -77,30 +115,28 @@ export default function Navbar() {
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => hasResults && setOpen(true)}
             placeholder="팀 또는 유저 검색"
-            className="w-full bg-white/5 border border-white/10 rounded pl-10 pr-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/60 focus:bg-white/8 transition"
+            className="w-full bg-white/[0.04] border border-white/[0.08] rounded-xl pl-9 pr-4 py-2 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-[#00D2BE]/40 transition"
           />
         </div>
 
         {open && hasResults && (
-          <div className="absolute top-full mt-1 w-full bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50">
+          <div className="absolute top-full mt-2 w-full bg-[#0d0d1a] border border-white/[0.08] rounded-2xl overflow-hidden shadow-2xl z-50">
             {teams.length > 0 && (
               <>
-                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest">팀</p>
+                <p className="px-4 pt-3 pb-1.5 text-[10px] font-black text-slate-700 uppercase tracking-[0.15em]">팀</p>
                 {teams.map((t) => (
                   <button
                     key={t.id}
                     onMouseDown={() => { router.push(`/teams/${t.id}`); setSearch(''); setOpen(false) }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition text-left"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm font-semibold truncate">{t.name}</p>
-                      {t.tier_avg && <p className="text-slate-500 text-xs">{t.tier_avg}</p>}
+                      <p className="text-white text-xs font-semibold truncate">{t.name}</p>
+                      {t.tier_avg && <p className="text-slate-600 text-[10px]">{t.tier_avg}</p>}
                     </div>
                     {t.game_type === 'valorant' && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-                        style={{ background: '#ff455522', color: '#ff4655' }}>
-                        VAL
-                      </span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0"
+                        style={{ background: '#ff455518', color: '#ff4655' }}>VAL</span>
                     )}
                   </button>
                 ))}
@@ -108,27 +144,25 @@ export default function Navbar() {
             )}
             {users.length > 0 && (
               <>
-                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest border-t border-white/5">유저</p>
+                <p className="px-4 pt-3 pb-1.5 text-[10px] font-black text-slate-700 uppercase tracking-[0.15em] border-t border-white/[0.04]">유저</p>
                 {users.map((u) => (
                   <button
                     key={u.id}
                     onMouseDown={() => { router.push(`/users/${u.id}`); setSearch(''); setOpen(false) }}
-                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/5 transition text-left"
+                    className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.04] transition text-left"
                   >
-                    <div className="w-7 h-7 rounded-full bg-white/5 overflow-hidden shrink-0 flex items-center justify-center text-xs font-bold text-white/40">
+                    <div className="w-7 h-7 rounded-full bg-white/[0.05] overflow-hidden shrink-0 flex items-center justify-center text-xs font-bold text-white/40">
                       {u.avatar_url
                         ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" />
                         : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-white text-sm font-semibold truncate">{u.riot_gamename}</p>
-                      {u.tier && <p className="text-slate-500 text-xs">{u.tier}</p>}
+                      <p className="text-white text-xs font-semibold truncate">{u.riot_gamename}</p>
+                      {u.tier && <p className="text-slate-600 text-[10px]">{u.tier}</p>}
                     </div>
                     {u.game_type === 'valorant' && (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
-                        style={{ background: '#ff455522', color: '#ff4655' }}>
-                        VAL
-                      </span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0"
+                        style={{ background: '#ff455518', color: '#ff4655' }}>VAL</span>
                     )}
                   </button>
                 ))}
@@ -139,7 +173,7 @@ export default function Navbar() {
       </div>
 
       {/* 우측 */}
-      <div className="shrink-0 flex items-center gap-3">
+      <div className="shrink-0 flex items-center gap-2">
         <ThemeToggle />
         <NotificationBell />
         <ProfileDropdown />

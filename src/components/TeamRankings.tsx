@@ -8,9 +8,6 @@ const TIER_ORDER: Record<string, number> = {
   Platinum: 5, Ascendant: 5, Gold: 6, Silver: 7, Bronze: 8, Iron: 9, Unranked: 99,
 }
 
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655', lol: '#c89b3c' }
-const GAME_LABEL: Record<string, string> = { valorant: 'VAL', lol: 'LoL' }
-
 function tierScore(tier_avg: string | null) {
   if (!tier_avg) return 999
   const base = tier_avg.split(' ')[0]
@@ -28,14 +25,16 @@ type Team = {
   scrim_count: number
 }
 
+const TABS = [
+  { key: 'tier', label: '티어' },
+  { key: 'winrate', label: '승률' },
+  { key: 'activity', label: '활동' },
+]
+
+const MEDALS = ['🥇', '🥈', '🥉']
+
 export default function TeamRankings({ teams, game }: { teams: Team[]; game?: string }) {
   const [tab, setTab] = useState('tier')
-
-  const TABS = [
-    { key: 'tier', label: '평균 티어' },
-    { key: 'winrate', label: '승률' },
-    { key: 'activity', label: '스크림 활동' },
-  ]
 
   const filtered = game ? teams.filter((t) => t.game_type === game) : teams
   const sorted = [...filtered].sort((a, b) => {
@@ -51,52 +50,55 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
   }).slice(0, 5)
 
   return (
-    <div className="bg-[#13131f] border border-white/5 overflow-hidden">
+    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
       {/* 헤더 */}
-      <div className="px-4 pt-3 pb-0 border-b border-white/5">
-        <p className="text-white font-bold text-xs uppercase tracking-widest mb-2">팀 랭킹</p>
-        <div className="flex gap-0">
-          {TABS.map((tab_item) => (
-            <button key={tab_item.key} onClick={() => setTab(tab_item.key)}
-              className={`px-3 py-2 text-xs font-semibold border-b-2 transition ${tab === tab_item.key ? 'border-[#00D2BE] text-white' : 'border-transparent text-slate-500 hover:text-slate-300'}`}>
-              {tab_item.label}
+      <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
+        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">팀 랭킹</p>
+        <div className="flex gap-1 bg-white/[0.04] rounded-lg p-0.5">
+          {TABS.map((t) => (
+            <button key={t.key} onClick={() => setTab(t.key)}
+              className={`px-2.5 py-1 text-[10px] font-bold rounded-md transition ${
+                tab === t.key ? 'bg-[#00D2BE]/20 text-[#00D2BE]' : 'text-slate-600 hover:text-slate-400'
+              }`}>
+              {t.label}
             </button>
           ))}
         </div>
       </div>
 
-      {/* 컬럼 헤더 */}
-      <div className="grid grid-cols-12 gap-2 px-4 py-2 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-wider">
-        <span className="col-span-1">순위</span>
-        <span className="col-span-2">Game</span>
-        <span className="col-span-6">팀 이름</span>
-        <span className="col-span-3 text-right">수치</span>
-      </div>
-
       {sorted.length === 0 ? (
-        <div className="flex items-center justify-center py-10 text-slate-600 text-xs">
+        <div className="flex items-center justify-center py-12 text-slate-700 text-xs">
           아직 팀이 없어요
         </div>
       ) : (
-        <div className="flex flex-col divide-y divide-white/5">
+        <div className="divide-y divide-white/[0.04]">
           {sorted.map((team, i) => {
-            const gc = GAME_COLOR[team.game_type] ?? '#00D2BE'
             const total = team.wins + team.losses
             const winrate = total === 0 ? null : Math.round((team.wins / total) * 100)
 
             return (
-              <a key={team.id} href={`/teams/${team.id}`} className="grid grid-cols-12 gap-2 px-4 py-2.5 hover:bg-white/5 transition items-center group">
-                <span className={`col-span-1 text-xs font-black text-center ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-orange-400' : 'text-slate-600'}`}>
-                  {i + 1}
+              <a key={team.id} href={`/teams/${team.id}`}
+                className="flex items-center gap-3 px-5 py-3.5 hover:bg-white/[0.03] transition group">
+                <span className="w-6 text-center text-xs shrink-0">
+                  {i < 3
+                    ? <span className="text-sm">{MEDALS[i]}</span>
+                    : <span className="text-slate-700 font-bold">{i + 1}</span>
+                  }
                 </span>
-                <span className="col-span-2 text-xs font-bold" style={{ color: gc }}>{GAME_LABEL[team.game_type]}</span>
-                <span className="col-span-5 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{team.name}</span>
-                <span className="col-span-3 text-right text-slate-500 text-xs shrink-0">
+                <div className="flex-1 min-w-0">
+                  <p className="text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">
+                    {team.name}
+                  </p>
+                  {tab === 'winrate' && total > 0 && (
+                    <p className="text-slate-700 text-[10px]">{team.wins}승 {team.losses}패</p>
+                  )}
+                </div>
+                <span className="text-xs font-bold shrink-0 text-slate-400">
                   {tab === 'tier' && (team.tier_avg ?? '—')}
                   {tab === 'winrate' && (winrate !== null ? `${winrate}%` : '—')}
-                  {tab === 'activity' && team.scrim_count}
+                  {tab === 'activity' && `${team.scrim_count}회`}
                 </span>
-                <span className="col-span-1 text-right text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
+                <span className="text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
               </a>
             )
           })}
