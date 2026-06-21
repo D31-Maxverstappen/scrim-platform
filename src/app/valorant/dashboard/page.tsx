@@ -135,7 +135,7 @@ export default async function ValorantDashboardPage() {
             </div>
 
             <a href="/scrims/applied"
-              className="bg-[#13131f] border border-white/5 rounded px-4 py-3 flex items-center justify-between hover:border-white/10 transition group">
+              className="bg-[#13131f] border border-white/5 rounded px-4 py-3 flex items-center justify-between hover:border-white/10 transition-[border-color] group">
               <div>
                 <p className="text-white text-xs font-bold">내 스크림</p>
                 <p className="text-slate-500 text-[10px] mt-0.5">받은 · 신청한 스크림 관리</p>
