@@ -102,12 +102,13 @@ export default function ManageTeamPage() {
   useEffect(() => {
     if (!inviteSearch.trim()) { setInviteResults([]); return }
     const myId = ++inviteFetchRef.current
-    supabase.from('users').select('id, riot_gamename, tier, avatar_url').ilike('riot_gamename', `%${inviteSearch.trim()}%`).limit(5)
+    const memberIds = new Set(members.map((m: any) => m.user_id))
+    supabase.from('users').select('id, riot_gamename, tier, avatar_url').ilike('riot_gamename', `%${inviteSearch.trim()}%`).limit(10)
       .then(({ data }) => {
         if (inviteFetchRef.current !== myId) return
-        setInviteResults((data ?? []).filter((u: any) => u.riot_gamename))
+        setInviteResults((data ?? []).filter((u: any) => u.riot_gamename && !memberIds.has(u.id)))
       })
-  }, [inviteSearch])
+  }, [inviteSearch, members])
 
   const sendInvite = async (userId: string) => {
     setInviteStatus(prev => ({ ...prev, [userId]: 'idle' }))
@@ -249,10 +250,10 @@ export default function ManageTeamPage() {
                   type="button"
                   onClick={handleToggleOpen}
                   disabled={isOpenSaving}
-                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-50
-                    ${isOpen ? 'bg-[#00D2BE]' : 'bg-white/10'}`}
+                  className={`relative w-12 h-6 rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-50 overflow-hidden shrink-0
+                    ${isOpen ? 'bg-[#00D2BE]' : 'bg-slate-600'}`}
                 >
-                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200
+                  <span className={`absolute top-1 left-0 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200
                     ${isOpen ? 'translate-x-7' : 'translate-x-1'}`} />
                 </button>
               </div>
