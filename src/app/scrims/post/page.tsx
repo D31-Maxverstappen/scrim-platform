@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { createScrimAction } from '@/app/actions'
+import { VAL_TIERS } from '@/lib/tiers'
 
 const GAMES = [
   { value: 'valorant', label: 'VALORANT' },
@@ -13,6 +14,8 @@ export default function PostScrimPage() {
   const [game, setGame] = useState('valorant')
   const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
   const [server, setServer] = useState<'KR' | 'AS'>('KR')
+  const [tierMin, setTierMin] = useState('')
+  const [tierMax, setTierMax] = useState('')
 
   const today = new Date().toISOString().split('T')[0]
   const [date, setDate] = useState(today)
@@ -20,9 +23,14 @@ export default function PostScrimPage() {
   const [minute, setMinute] = useState('00')
   const [ampm, setAmpm] = useState<'오전' | '오후'>('오후')
 
+  const availableMax = tierMin ? VAL_TIERS.slice(VAL_TIERS.indexOf(tierMin)) : VAL_TIERS
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!date) { setError('희망 날짜를 선택해주세요.'); return }
+    if (tierMin && tierMax && VAL_TIERS.indexOf(tierMin) > VAL_TIERS.indexOf(tierMax)) {
+      setError('최소 티어가 최대 티어보다 높을 수 없어요.'); return
+    }
     setError('')
 
     let h = parseInt(hour)
@@ -41,6 +49,8 @@ export default function PostScrimPage() {
     formData.set('preferred_time', time)
     formData.set('format', format)
     formData.set('server', server)
+    formData.set('tier_min', tierMin)
+    formData.set('tier_max', tierMax)
 
     startTransition(async () => {
       const result = await createScrimAction(formData)
@@ -88,7 +98,6 @@ export default function PostScrimPage() {
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">희망 시간 *</label>
             <div className="flex items-center gap-2">
-              {/* 오전/오후 토글 */}
               <div className="flex rounded overflow-hidden border border-white/10 shrink-0">
                 {(['오전', '오후'] as const).map((v) => (
                   <button key={v} type="button" onClick={() => setAmpm(v)}
@@ -97,14 +106,12 @@ export default function PostScrimPage() {
                   </button>
                 ))}
               </div>
-              {/* 시 */}
               <select value={hour} onChange={(e) => setHour(e.target.value)}
                 className="flex-1 bg-[#1e1e2e] border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((h) => (
                   <option key={h} value={h} className="bg-[#1e1e2e] text-white">{h}시</option>
                 ))}
               </select>
-              {/* 분 */}
               <select value={minute} onChange={(e) => setMinute(e.target.value)}
                 className="flex-1 bg-[#1e1e2e] border border-white/10 rounded px-3 py-3 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
                 {['00', '10', '20', '30', '40', '50'].map((m) => (
@@ -138,6 +145,56 @@ export default function PostScrimPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* 상대 팀 티어 조건 */}
+          <div>
+            <label className="text-slate-300 text-sm font-semibold block mb-1">상대 팀 티어 조건</label>
+            <p className="text-slate-600 text-xs mb-2">설정하지 않으면 모든 티어에서 신청 가능해요</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <p className="text-slate-500 text-xs mb-1">최소 티어</p>
+                <select
+                  value={tierMin}
+                  onChange={(e) => { setTierMin(e.target.value); setTierMax('') }}
+                  className="w-full bg-[#13131f] border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
+                  <option value="" className="bg-[#13131f]">제한 없음</option>
+                  {VAL_TIERS.map((t) => (
+                    <option key={t} value={t} className="bg-[#13131f]">{t}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <p className="text-slate-500 text-xs mb-1">최대 티어</p>
+                <select
+                  value={tierMax}
+                  onChange={(e) => setTierMax(e.target.value)}
+                  className="w-full bg-[#13131f] border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition">
+                  <option value="" className="bg-[#13131f]">제한 없음</option>
+                  {availableMax.map((t) => (
+                    <option key={t} value={t} className="bg-[#13131f]">{t}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {(tierMin || tierMax) && (
+              <p className="text-[#00D2BE] text-xs mt-1.5">
+                {tierMin && tierMax ? `${tierMin} ~ ${tierMax} 팀만 신청 가능` :
+                 tierMin ? `${tierMin} 이상 팀만 신청 가능` :
+                 `${tierMax} 이하 팀만 신청 가능`}
+              </p>
+            )}
+          </div>
+
+          {/* 메모 */}
+          <div>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">메모</label>
+            <textarea
+              name="note"
+              placeholder="추가 조건이나 연락 방법 등을 적어주세요 (선택)"
+              rows={3}
+              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition resize-none"
+            />
           </div>
 
           {error && (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { notify } from '@/lib/notifications'
+import { inTierRange } from '@/lib/tiers'
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: scrimPostId } = await params
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   // 스크림 포스트 존재 확인
   const { data: post } = await supabase
     .from('scrim_posts')
-    .select('id, status, team_id')
+    .select('id, status, team_id, tier_min, tier_max')
     .eq('id', scrimPostId)
     .single()
 
@@ -22,8 +23,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   if (post.team_id === teamId) return NextResponse.json({ error: '자신의 팀에 신청할 수 없어요.' }, { status: 400 })
 
   // 신청 팀의 캡틴인지 확인
-  const { data: team } = await supabase.from('teams').select('captain_id, name').eq('id', teamId).single()
+  const { data: team } = await supabase.from('teams').select('captain_id, name, tier_avg').eq('id', teamId).single()
   if (team?.captain_id !== user.id) return NextResponse.json({ error: '팀 캡틴만 신청할 수 있어요.' }, { status: 403 })
+
+  // 티어 조건 체크
+  if (!inTierRange(team?.tier_avg, post.tier_min, post.tier_max)) {
+    return NextResponse.json({
+      error: `티어 조건을 충족하지 않아요. (요구: ${post.tier_min ?? ''}${post.tier_min && post.tier_max ? ' ~ ' : ''}${post.tier_max ?? ''})`,
+    }, { status: 400 })
+  }
 
   // 중복 신청 확인
   const { data: existing } = await supabase

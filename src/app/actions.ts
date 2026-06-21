@@ -117,6 +117,8 @@ export async function createScrimAction(formData: FormData) {
   const note = formData.get('note') as string
   const format = (formData.get('format') as string) || 'BO3'
   const server = (formData.get('server') as string) || 'KR'
+  const tier_min = (formData.get('tier_min') as string) || null
+  const tier_max = (formData.get('tier_max') as string) || null
 
   const { data: myTeam } = await supabase
     .from('teams')
@@ -141,6 +143,8 @@ export async function createScrimAction(formData: FormData) {
       server,
       status: 'open',
       format,
+      tier_min: tier_min || null,
+      tier_max: tier_max || null,
     })
 
   if (postError) return { error: postError.message }
