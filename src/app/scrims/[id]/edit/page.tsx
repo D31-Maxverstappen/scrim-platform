@@ -75,7 +75,7 @@ export default function ScrimEditPage() {
         <div className="mb-8">
           <a href={`/scrims/${id}`} className="text-slate-500 text-sm hover:text-slate-300 transition">← 뒤로</a>
           <h1 className="text-white font-bold text-2xl mt-3">스크림 수정</h1>
-          <p className="text-slate-400 text-sm mt-1">일정, 포맷, 서버를 변경할 수 있어요</p>
+          <p className="text-slate-400 text-sm mt-1">일정, 경기 수, 서버를 변경할 수 있어요</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded p-6 flex flex-col gap-5">
@@ -118,9 +118,9 @@ export default function ScrimEditPage() {
             </div>
           </div>
 
-          {/* 포맷 */}
+          {/* 경기 수 */}
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">매치 포맷 *</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">경기 수 *</label>
             <div className="grid grid-cols-3 gap-2">
               {(['BO1', 'BO3', 'BO5'] as const).map((f) => (
                 <button key={f} type="button" onClick={() => setFormat(f)}

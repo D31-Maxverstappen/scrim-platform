@@ -110,7 +110,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">포맷</span>
+            <span className="text-[10px] text-slate-500 uppercase tracking-wider w-10 shrink-0">경기 수</span>
             <div className="flex gap-1.5">
               {['BO1', 'BO3', 'BO5'].map((f) => (
                 <button key={f} onClick={() => navigate({ game, server, format: format === f ? '' : f })} className={smChipCls(format === f)}>{f}</button>

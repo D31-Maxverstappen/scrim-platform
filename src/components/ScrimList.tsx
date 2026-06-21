@@ -102,7 +102,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
           </div>
           <span className="w-px h-3 bg-white/10" />
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] text-slate-600 uppercase tracking-wider">포맷</span>
+            <span className="text-[10px] text-slate-600 uppercase tracking-wider">경기 수</span>
             {['BO1', 'BO3', 'BO5'].map((f) => (
               <button key={f} onClick={() => setFilterFormat(filterFormat === f ? '' : f)} className={chipCls(filterFormat === f)}>{f}</button>
             ))}
@@ -123,7 +123,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
         <span className="col-span-2">평균 티어</span>
         <span className="col-span-3">희망 시간</span>
         <span className="col-span-2">서버</span>
-        <span className="col-span-1">포맷</span>
+        <span className="col-span-1">경기 수</span>
         <span className="col-span-1 text-right">신청</span>
       </div>
 

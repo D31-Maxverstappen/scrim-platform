@@ -34,12 +34,13 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
   // 내 팀이 이미 신청했는지 확인
   const { data: myTeam } = await supabase
     .from('teams')
-    .select('id')
+    .select('id, name')
     .eq('captain_id', user.id)
     .eq('game_type', post.game_type)
     .single()
 
-  const isMyTeam = team?.captain_id === user.id || myTeam?.id === team?.id
+  const isPostingCaptain = team?.captain_id === user.id
+  const isApplicant = !isPostingCaptain && !!existingApp
 
   const { data: existingApp } = myTeam ? await supabase
     .from('scrim_applications')
@@ -48,8 +49,8 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     .eq('applying_team_id', myTeam.id)
     .single() : { data: null }
 
-  // 신청 목록 (팀장만 볼 수 있음)
-  const { data: applications } = isMyTeam ? await supabase
+  // 신청 목록 (내가 올린 스크림의 팀장만)
+  const { data: applications } = isPostingCaptain ? await supabase
     .from('scrim_applications')
     .select('id, status, created_at, teams(id, name, tier_avg)')
     .eq('scrim_post_id', id)
@@ -82,7 +83,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
               {team?.tier_avg && <p className="text-slate-400 text-sm">Avg. {team.tier_avg}</p>}
             </div>
             <div className="flex items-center gap-3">
-              {!isMyTeam && post.status === 'open' && (
+              {!isPostingCaptain && post.status === 'open' && (
                 <ScrimApplyButton
                   scrimPostId={id}
                   myTeamId={myTeam?.id ?? null}
@@ -90,7 +91,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                   gameType={post.game_type}
                 />
               )}
-              {team?.captain_id === user.id && post.status === 'open' && (
+              {isPostingCaptain && post.status === 'open' && (
                 <div className="flex items-center gap-2">
                   <a href={`/scrims/${id}/edit`}
                     className="bg-white/5 hover:bg-white/10 text-slate-300 text-sm font-semibold px-4 py-2 rounded transition">
@@ -167,14 +168,16 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
 
-          {/* 신청 목록 (팀장만) */}
-          {isMyTeam && (
+          {/* 받은 신청 (내가 올린 스크림 — 팀장 전용) */}
+          {isPostingCaptain && (
             <div>
-              <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">
-                Applications {applications && applications.length > 0 && (
-                  <span className="ml-2 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded-full">{applications.length}</span>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-1.5 h-4 rounded-full bg-[#00D2BE]" />
+                <h2 className="text-white font-bold text-sm uppercase tracking-widest">받은 신청</h2>
+                {applications && applications.length > 0 && (
+                  <span className="ml-1 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded-full">{applications.length}</span>
                 )}
-              </h2>
+              </div>
               {!applications || applications.length === 0 ? (
                 <div className="bg-[#13131f] border border-white/5 rounded p-6 text-center text-slate-600 text-sm">
                   아직 신청이 없어요
@@ -199,6 +202,33 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                   })}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* 내 신청 현황 (내가 신청한 스크림) */}
+          {isApplicant && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-1.5 h-4 rounded-full bg-yellow-400" />
+                <h2 className="text-white font-bold text-sm uppercase tracking-widest">내 신청 현황</h2>
+              </div>
+              <div className={`rounded p-5 border ${
+                existingApp?.status === 'accepted' ? 'bg-green-500/10 border-green-500/30' :
+                existingApp?.status === 'rejected' ? 'bg-red-500/10 border-red-500/20' :
+                'bg-yellow-500/10 border-yellow-500/20'
+              }`}>
+                <p className="text-slate-400 text-xs mb-2">신청 팀</p>
+                <p className="text-white font-bold text-sm mb-3">{myTeam?.name ?? '—'}</p>
+                <div className={`inline-flex items-center gap-1.5 text-xs font-black px-3 py-1.5 rounded-full ${
+                  existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
+                  existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
+                  'bg-yellow-500/20 text-yellow-400'
+                }`}>
+                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                  {existingApp?.status === 'accepted' ? '수락됨' :
+                   existingApp?.status === 'rejected' ? '거절됨' : '검토 중'}
+                </div>
+              </div>
             </div>
           )}
         </div>

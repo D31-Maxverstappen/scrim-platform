@@ -7,6 +7,17 @@ const ROUND_COLORS: Record<string, string> = {
   W: '#00D2BE', L: '#ff4655', D: '#6b7280',
 }
 
+const VAL_MAP_ABBR: Record<string, string> = {
+  Ascent: 'ASC', Bind: 'BIND', Haven: 'HVN', Icebox: 'ICE',
+  Breeze: 'BRZ', Fracture: 'FRC', Pearl: 'PRL', Lotus: 'LTS',
+  Sunset: 'SNS', Abyss: 'ABY', Split: 'SPL', Corrode: 'CRD',
+}
+const mapAbbr = (name: string | null | undefined) =>
+  name ? (VAL_MAP_ABBR[name] ?? name.slice(0, 4).toUpperCase()) : 'TBD'
+
+const teamAbbr = (t: any) =>
+  t?.abbreviation || t?.name?.slice(0, 3).toUpperCase() || '?'
+
 const GRID = '2fr 1fr 1fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr'
 
 // 멤버 배열을 항상 5개로 맞춤 (부족하면 null로 채움)
@@ -61,7 +72,7 @@ function StatRow({ stat, gameName }: { stat: any; gameName: string }) {
         <div>
           <div className="flex items-center gap-1">
             <FlagImg code={u?.country} size={12} />
-            <span className="text-white text-xs font-semibold">{name}</span>
+            <a href={`/users/${stat.user_id}`} className="text-white text-xs font-semibold hover:text-[#00D2BE] transition">{name}</a>
           </div>
           <span className="text-slate-600 text-[10px]">{gameName}</span>
         </div>
@@ -93,7 +104,7 @@ function EmptyStatRow({ member }: { member: any | null }) {
         {name ? (
           <div className="flex items-center gap-1">
             <FlagImg code={u?.country} size={12} />
-            <span className="text-white text-xs font-semibold">{name}</span>
+            <a href={`/users/${member?.user_id}`} className="text-white text-xs font-semibold hover:text-[#00D2BE] transition">{name}</a>
           </div>
         ) : (
           <div className="h-3 w-20 bg-white/5" />
@@ -179,7 +190,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <button key={m.id} onClick={() => setMapTab(m.id)}
             className={`px-5 py-2.5 text-xs font-semibold transition border-l border-white/5 ${mapTab === m.id ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
             <span className="text-slate-600 mr-1">{i + 1}</span>
-            {m.map_name || 'TBD'}
+            {mapAbbr(m.map_name)}
           </button>
         ))}
       </div>
@@ -189,7 +200,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
         <div className="px-6 py-4 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <p className="text-white font-black text-lg">{team1?.name}</p>
+              <a href={`/teams/${team1?.id}`} className="text-white font-black text-lg hover:text-[#00D2BE] transition">{teamAbbr(team1)}</a>
               <p className="text-slate-600 text-xs">{t1Score} / {t1Score + t2Score > 0 ? t1Score + t2Score : 0}</p>
             </div>
             <div className="text-center">
@@ -197,7 +208,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
               <p className="text-white font-black text-2xl mt-1">{t1Score} — {t2Score}</p>
             </div>
             <div className="text-right">
-              <p className="text-white font-black text-lg">{team2?.name}</p>
+              <a href={`/teams/${team2?.id}`} className="text-white font-black text-lg hover:text-[#00D2BE] transition">{teamAbbr(team2)}</a>
               <p className="text-slate-600 text-xs">{t2Score} / {t1Score + t2Score > 0 ? t1Score + t2Score : 0}</p>
             </div>
           </div>
@@ -212,8 +223,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
                 ))}
               </div>
             </div>
-            <RoundTimeline results={selectedMap.round_results} label={team1?.name?.slice(0, 3).toUpperCase() ?? 'T1'} />
-            <RoundTimeline results={null} label={team2?.name?.slice(0, 3).toUpperCase() ?? 'T2'} />
+            <RoundTimeline results={selectedMap.round_results} label={teamAbbr(team1)} />
+            <RoundTimeline results={null} label={teamAbbr(team2)} />
           </div>
         </div>
       )}
@@ -223,7 +234,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
         {/* 팀 1 */}
         <div>
           <div className="px-4 py-3 bg-white/2 border-b border-white/5">
-            <span className="text-white text-xl font-black">{team1?.abbreviation || team1?.name}</span>
+            <a href={`/teams/${team1?.id}`} className="text-white text-xl font-black hover:text-[#00D2BE] transition">{team1?.abbreviation || team1?.name}</a>
           </div>
           <StatHeader playerLabel="플레이어" />
           {padded1.map((item, i) =>
@@ -235,7 +246,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
         {/* 팀 2 */}
         <div className="mt-2">
           <div className="px-4 py-3 bg-white/2 border-b border-white/5">
-            <span className="text-white text-xl font-black">{team2?.abbreviation || team2?.name}</span>
+            <a href={`/teams/${team2?.id}`} className="text-white text-xl font-black hover:text-[#00D2BE] transition">{team2?.abbreviation || team2?.name}</a>
           </div>
           <StatHeader playerLabel="플레이어" />
           {padded2.map((item, i) =>

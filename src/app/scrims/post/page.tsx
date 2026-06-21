@@ -15,7 +15,8 @@ export default function PostScrimPage() {
   const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
   const [server, setServer] = useState<'KR' | 'AS'>('KR')
 
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const today = new Date().toISOString().split('T')[0]
+  const [date, setDate] = useState(today)
   const [hour, setHour] = useState('8')
   const [minute, setMinute] = useState('00')
   const [ampm, setAmpm] = useState<'오전' | '오후'>('오후')
@@ -29,6 +30,11 @@ export default function PostScrimPage() {
     if (ampm === '오전' && h === 12) h = 0
     if (ampm === '오후' && h !== 12) h += 12
     const time = `${String(h).padStart(2, '0')}:${minute}`
+
+    if (new Date(`${date}T${time}:00`) < new Date()) {
+      setError('현재 시간보다 과거는 선택할 수 없어요.')
+      return
+    }
 
     const formData = new FormData(e.currentTarget)
     formData.set('game_type', game)
@@ -73,6 +79,7 @@ export default function PostScrimPage() {
             <input
               type="date"
               value={date}
+              min={today}
               onChange={(e) => setDate(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
             />
@@ -108,9 +115,9 @@ export default function PostScrimPage() {
             </div>
           </div>
 
-          {/* 포맷 */}
+          {/* 경기 수 */}
           <div>
-            <label className="text-slate-300 text-sm font-semibold block mb-2">매치 포맷 *</label>
+            <label className="text-slate-300 text-sm font-semibold block mb-2">경기 수 *</label>
             <div className="grid grid-cols-3 gap-2">
               {(['BO1', 'BO3', 'BO5'] as const).map((f) => (
                 <button key={f} type="button" onClick={() => setFormat(f)}
