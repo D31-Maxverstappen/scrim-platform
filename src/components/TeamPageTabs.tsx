@@ -1,13 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-
-const TABS = [
-  { key: 'overview', label: '개요' },
-  { key: 'stats', label: '통계' },
-  { key: 'matches', label: '매치' },
-  { key: 'chat', label: '채팅' },
-]
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 export default function TeamPageTabs({
   overviewContent,
@@ -20,7 +15,15 @@ export default function TeamPageTabs({
   matchesContent: React.ReactNode
   chatContent: React.ReactNode
 }) {
+  const { lang } = useLang()
   const [tab, setTab] = useState('overview')
+
+  const TABS = [
+    { key: 'overview', label: t('team_tab_overview', lang) },
+    { key: 'stats', label: t('team_tab_stats', lang) },
+    { key: 'matches', label: t('team_tab_matches', lang) },
+    { key: 'chat', label: t('team_tab_chat', lang) },
+  ]
 
   const content =
     tab === 'overview' ? overviewContent :
@@ -33,17 +36,17 @@ export default function TeamPageTabs({
       {/* 탭 바 */}
       <div className="border-b border-white/10 mb-6">
         <div className="flex">
-          {TABS.map((t) => (
+          {TABS.map((tab_item) => (
             <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
+              key={tab_item.key}
+              onClick={() => setTab(tab_item.key)}
               className={`px-6 py-3.5 text-sm font-semibold border-b-2 transition ${
-                tab === t.key
+                tab === tab_item.key
                   ? 'border-[#00D2BE] text-white'
                   : 'border-transparent text-slate-500 hover:text-slate-300'
               }`}
             >
-              {t.label}
+              {tab_item.label}
             </button>
           ))}
         </div>

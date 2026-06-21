@@ -9,6 +9,7 @@ import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
 import { createClient } from '@/lib/supabase/client'
 import { useLang, LANGUAGES } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }
 type UserResult = { id: string; riot_gamename: string | null; tier: string | null; game_type: string | null; avatar_url: string | null }
@@ -74,10 +75,10 @@ export default function Navbar() {
 
       {/* 네비 링크 */}
       <div className="hidden md:flex items-center gap-1 text-sm">
-        <a href={link('/scrims/post')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">스크림 올리기</a>
-        <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">팀 찾기</a>
-        <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">모집</a>
-        <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">리더보드</a>
+        <a href={link('/scrims/post')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">{t('nav_scrims_post', lang)}</a>
+        <a href={link('/teams')} className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">{t('nav_find_team', lang)}</a>
+        <a href="/recruit" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">{t('nav_recruit', lang)}</a>
+        <a href="/leaderboard" className="text-slate-400 hover:text-white hover:bg-white/5 px-3 py-2 transition">{t('nav_leaderboard', lang)}</a>
       </div>
 
       {/* 검색 */}
@@ -90,7 +91,7 @@ export default function Navbar() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => hasResults && setOpen(true)}
-            placeholder="팀 또는 유저 검색"
+            placeholder={t('nav_search_placeholder', lang)}
             className="w-full bg-white/5 border border-white/10 rounded pl-10 pr-4 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/60 focus:bg-white/8 transition"
           />
         </div>
@@ -99,7 +100,7 @@ export default function Navbar() {
           <div className="absolute top-full mt-1 w-full bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50">
             {teams.length > 0 && (
               <>
-                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest">팀</p>
+                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('nav_teams_section', lang)}</p>
                 {teams.map((t) => (
                   <button
                     key={t.id}
@@ -120,7 +121,7 @@ export default function Navbar() {
             )}
             {users.length > 0 && (
               <>
-                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest border-t border-white/5">유저</p>
+                <p className="px-4 pt-2.5 pb-1 text-[10px] font-bold text-slate-600 uppercase tracking-widest border-t border-white/5">{t('nav_users_section', lang)}</p>
                 {users.map((u) => (
                   <button
                     key={u.id}
@@ -158,21 +159,21 @@ export default function Navbar() {
             onClick={() => setLangOpen(!langOpen)}
             className="flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-white/5 px-2.5 py-1.5 rounded transition text-sm"
           >
-            <span>{currentLang.flag}</span>
+            <span className={`fi fi-${currentLang.fi} rounded-none`} style={{ width: 20, height: 14, display: 'inline-block' }} />
             <span className="text-xs font-bold uppercase">{currentLang.code}</span>
             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
             </svg>
           </button>
           {langOpen && (
-            <div className="absolute right-0 top-full mt-1 bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50 w-40">
+            <div className="absolute right-0 top-full mt-1 bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50 w-44">
               {LANGUAGES.map((l) => (
                 <button
                   key={l.code}
                   onClick={() => { setLang(l.code); setLangOpen(false) }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2.5 hover:bg-white/5 transition text-left ${lang === l.code ? 'text-white bg-white/5' : 'text-slate-400'}`}
                 >
-                  <span>{l.flag}</span>
+                  <span className={`fi fi-${l.fi} rounded-none shrink-0`} style={{ width: 20, height: 14, display: 'inline-block' }} />
                   <span className="text-xs font-semibold">{l.label}</span>
                   {lang === l.code && <span className="ml-auto text-[#00D2BE] text-xs">✓</span>}
                 </button>

@@ -4,14 +4,14 @@ import { createContext, useContext, useState, useEffect } from 'react'
 
 export type Lang = 'ko' | 'en' | 'ja' | 'zh' | 'th' | 'pt' | 'es'
 
-export const LANGUAGES: { code: Lang; label: string; flag: string }[] = [
-  { code: 'ko', label: '한국어', flag: '🇰🇷' },
-  { code: 'en', label: 'English', flag: '🇺🇸' },
-  { code: 'ja', label: '日本語', flag: '🇯🇵' },
-  { code: 'zh', label: '中文', flag: '🇨🇳' },
-  { code: 'th', label: 'ภาษาไทย', flag: '🇹🇭' },
-  { code: 'pt', label: 'Português', flag: '🇧🇷' },
-  { code: 'es', label: 'Español', flag: '🇪🇸' },
+export const LANGUAGES: { code: Lang; label: string; fi: string }[] = [
+  { code: 'ko', label: '한국어', fi: 'kr' },
+  { code: 'en', label: 'English', fi: 'us' },
+  { code: 'ja', label: '日本語', fi: 'jp' },
+  { code: 'zh', label: '中文', fi: 'cn' },
+  { code: 'th', label: 'ภาษาไทย', fi: 'th' },
+  { code: 'pt', label: 'Português', fi: 'br' },
+  { code: 'es', label: 'Español', fi: 'es' },
 ]
 
 const LanguageContext = createContext<{

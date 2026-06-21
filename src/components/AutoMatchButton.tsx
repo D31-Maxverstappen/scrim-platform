@@ -3,11 +3,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { useLang } from '@/contexts/LanguageContext'
+import { t } from '@/lib/i18n'
 
 type Status = 'idle' | 'waiting' | 'matched'
 
 export default function AutoMatchButton({ teamId, gameType }: { teamId: string; gameType: string }) {
   const router = useRouter()
+  const { lang } = useLang()
   const [status, setStatus] = useState<Status>('idle')
   const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
   const [server, setServer] = useState<'KR' | 'AS'>('KR')
@@ -96,7 +99,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
       })
       const data = await res.json()
       if (!res.ok) {
-        setError(data.error ?? `오류 (${res.status})`)
+        setError(data.error ?? `error (${res.status})`)
       } else if (data.status === 'matched') {
         stopTimer()
         router.push(`/matches/${data.matchId}`)
@@ -105,10 +108,10 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
         sinceRef.current = Date.now()
         startTimer()
       } else {
-        setError(`알 수 없는 응답: ${JSON.stringify(data)}`)
+        setError(`unknown response: ${JSON.stringify(data)}`)
       }
     } catch (e: any) {
-      setError(`오류: ${e?.message ?? '알 수 없는 오류'}`)
+      setError(`error: ${e?.message ?? 'unknown error'}`)
     }
     setLoading(false)
   }
@@ -126,7 +129,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
   const fmt = (s: number) => {
     const m = Math.floor(s / 60)
     const sec = s % 60
-    return m > 0 ? `${m}분 ${String(sec).padStart(2, '0')}초` : `${sec}초`
+    return m > 0 ? `${m}m ${String(sec).padStart(2, '0')}s` : `${sec}s`
   }
 
   const chip = (active: boolean) =>
@@ -146,10 +149,10 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
                 <div className="w-4 h-4 rounded-full bg-[#00D2BE] shadow-[0_0_16px_rgba(0,210,190,0.9)]" />
               </div>
               <div>
-                <p className="text-white font-black text-xl">상대팀 탐색 중...</p>
+                <p className="text-white font-black text-xl">{t('auto_match_waiting', lang)}</p>
                 <p className="text-slate-400 text-sm mt-1">
                   <span className="text-[#00D2BE] font-bold text-base">{fmt(elapsed)}</span>
-                  {' '}대기 중 &middot; {format} &middot; {server} 서버
+                  {' '}&middot; {format} &middot; {server}
                 </p>
               </div>
             </div>
@@ -157,7 +160,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
               onClick={handleCancel}
               className="text-slate-500 hover:text-red-400 text-sm font-semibold transition px-5 py-2.5 rounded-lg hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 shrink-0"
             >
-              취소
+              {t('auto_match_cancel', lang)}
             </button>
           </div>
         </div>
@@ -187,7 +190,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-3">
-                <p className="text-white font-black text-xl drop-shadow-[0_0_12px_rgba(0,210,190,0.4)]">자동 매칭</p>
+                <p className="text-white font-black text-xl drop-shadow-[0_0_12px_rgba(0,210,190,0.4)]">{t('auto_match_title', lang)}</p>
                 <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[10px] font-black rounded-full border border-[#00D2BE]/25 tracking-widest">
                   BETA
                 </span>
@@ -202,7 +205,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
           {/* 중간: 설정 옵션 */}
           <div className="flex items-center gap-8 flex-wrap">
             <div className="flex items-center gap-3">
-              <span className="text-xs text-slate-500 font-bold tracking-wide">경기 수</span>
+              <span className="text-xs text-slate-500 font-bold tracking-wide">{t('auto_match_count', lang)}</span>
               <div className="flex gap-1.5">
                 {(['BO1', 'BO3', 'BO5'] as const).map(f => (
                   <button key={f} type="button" onClick={() => setFormat(f)} className={chip(format === f)}>{f}</button>
@@ -211,7 +214,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
             </div>
             <div className="w-px h-5 bg-white/10 hidden sm:block" />
             <div className="flex items-center gap-3">
-              <span className="text-xs text-slate-500 font-bold tracking-wide">서버</span>
+              <span className="text-xs text-slate-500 font-bold tracking-wide">{t('auto_match_server', lang)}</span>
               <div className="flex gap-1.5">
                 {(['KR', 'AS'] as const).map(s => (
                   <button key={s} type="button" onClick={() => setServer(s)} className={chip(server === s)}>{s}</button>
@@ -226,7 +229,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
             disabled={loading}
             className="w-full bg-[#00D2BE] hover:bg-[#00c4b0] disabled:opacity-50 text-white font-black text-base py-4 rounded-xl transition-all duration-200 shadow-[0_0_24px_rgba(0,210,190,0.4)] hover:shadow-[0_0_40px_rgba(0,210,190,0.65)] hover:scale-[1.01] active:scale-[0.99]"
           >
-            {loading ? '탐색 중...' : '⚡ 매칭 시작'}
+            {loading ? t('auto_match_searching', lang) : t('auto_match_start', lang)}
           </button>
 
           {error && (

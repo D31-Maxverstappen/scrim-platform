@@ -106,10 +106,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '매치 생성 실패: ' + matchError?.message }, { status: 500 })
   }
 
-  // 양팀 큐 상태 업데이트
+  // 매칭 완료 → 큐 엔트리 삭제 (중복 매치 방지)
   await Promise.all([
-    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', entryId),
-    db.from('matchmaking_queue').update({ status: 'matched', match_id: match.id }).eq('id', opponent.id),
+    db.from('matchmaking_queue').delete().eq('id', entryId),
+    db.from('matchmaking_queue').delete().eq('id', opponent.id),
   ])
 
   // 알림 발송
