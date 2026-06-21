@@ -74,6 +74,21 @@ body {
 [data-theme="light"] .hover\:bg-white\/5:hover { background-color: var(--bg-input) !important; }
 [data-theme="light"] .hover\:bg-white\/10:hover { background-color: rgba(0,0,0,0.07) !important; }
 
+/* 랜딩 페이지 배경 (#07070b) */
+[data-theme="light"] .bg-\[\#07070b\] { background-color: var(--bg-base) !important; }
+[data-theme="light"] .bg-\[\#07070b\]\/80 { background-color: var(--navbar-bg) !important; }
+
+/* 자동 매칭 컴포넌트 / 목업 */
+[data-theme="light"] .bg-\[\#0d1017\] { background-color: var(--bg-card) !important; }
+[data-theme="light"] .bg-\[\#0d1a19\] { background-color: var(--bg-card-alt) !important; }
+[data-theme="light"] .bg-white\/3 { background-color: rgba(0,0,0,0.03) !important; }
+[data-theme="light"] .border-white\/8 { border-color: rgba(0,0,0,0.08) !important; }
+[data-theme="light"] .border-white\/20 { border-color: rgba(0,0,0,0.20) !important; }
+[data-theme="light"] .divide-white\/5 > * + * { border-color: rgba(0,0,0,0.05) !important; }
+
+/* 히어로 어두운 그라데이션 오버레이 — 라이트 모드에서 숨김 */
+[data-theme="light"] .landing-hero-overlay { display: none !important; }
+
 /* 네브바 */
 [data-theme="light"] nav { background-color: var(--navbar-bg) !important; border-bottom-color: rgba(0,0,0,0.07) !important; }
 

@@ -71,7 +71,7 @@ export default function HomePage() {
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/70 via-[#07070b]/60 to-[#07070b]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/70 via-[#07070b]/60 to-[#07070b] landing-hero-overlay" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px]" />
       </div>
 
