@@ -29,7 +29,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses, is_open').eq('id', id).single()
   if (!team) notFound()
 
-  const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }] = await Promise.all([
+  const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }, { data: anyMembership }] = await Promise.all([
     supabase.from('team_members')
       .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, lol_gamename, lol_tier, country)')
       .eq('team_id', id),
@@ -41,6 +41,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
     supabase.from('matches')
       .select('id, status, format, match_date, winner_id, team1_id, team2_id, team1:teams!team1_id(id, name)')
       .eq('team2_id', id).order('match_date', { ascending: false }).limit(20),
+    supabase.from('team_members').select('id').eq('user_id', user.id).maybeSingle(),
   ])
 
   const allMatches = [
@@ -50,6 +51,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
   const isCaptain = team.captain_id === user.id
   const isMember = members?.some((m: any) => m.user_id === user.id)
+  const hasAnyTeam = !!anyMembership
 
   const players = members?.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
   const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
@@ -277,10 +279,10 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
           {/* 액션 버튼 */}
           <div className="flex gap-2 shrink-0 items-center">
-            {!isMember && !isCaptain && team.is_open !== false && (
+            {!isMember && !isCaptain && !hasAnyTeam && team.is_open !== false && (
               <JoinTeamButton teamId={id} hasPendingRequest={!!pendingRequest} />
             )}
-            {!isMember && !isCaptain && team.is_open === false && (
+            {!isMember && !isCaptain && !hasAnyTeam && team.is_open === false && (
               <span className="text-slate-400 text-xs font-semibold px-4 py-2 border border-white/10 rounded bg-white/3">
                 🔒 초대 전용 팀
               </span>

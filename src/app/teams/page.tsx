@@ -44,9 +44,15 @@ export default async function TeamsPage() {
         {/* 내 팀 */}
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-white font-bold text-xl">My Team</h1>
-          <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
-            + 팀 만들기
-          </a>
+          {myTeams && myTeams.length > 0 ? (
+            <span className="text-xs font-bold px-4 py-2 rounded border border-[#00D2BE]/30 bg-[#00D2BE]/10 text-[#00D2BE]">
+              팀 소속 중
+            </span>
+          ) : (
+            <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
+              + 팀 만들기
+            </a>
+          )}
         </div>
 
         {myTeams && myTeams.length > 0 ? (

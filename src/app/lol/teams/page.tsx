@@ -39,9 +39,15 @@ export default async function LolTeamsPage() {
             </div>
             <h1 className="text-white font-bold text-xl">팀 찾기</h1>
           </div>
-          <a href="/teams/create" className="bg-[#c89b3c] hover:bg-[#b08a35] text-white px-4 py-2 rounded text-sm font-bold transition">
-            + 팀 만들기
-          </a>
+          {(myTeams ?? []).length > 0 ? (
+            <span className="text-xs font-bold px-4 py-2 rounded border border-[#c89b3c]/30 bg-[#c89b3c]/10 text-[#c89b3c]">
+              팀 소속 중
+            </span>
+          ) : (
+            <a href="/teams/create" className="bg-[#c89b3c] hover:bg-[#b08a35] text-white px-4 py-2 rounded text-sm font-bold transition">
+              + 팀 만들기
+            </a>
+          )}
         </div>
 
         {/* 내 LoL 팀 */}
