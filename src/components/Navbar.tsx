@@ -8,6 +8,7 @@ import GameSwitcher from './GameSwitcher'
 import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
 import { createClient } from '@/lib/supabase/client'
+import { useLang, LANGUAGES } from '@/contexts/LanguageContext'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }
 type UserResult = { id: string; riot_gamename: string | null; tier: string | null; game_type: string | null; avatar_url: string | null }
@@ -19,8 +20,12 @@ export default function Navbar() {
   const [teams, setTeams] = useState<TeamResult[]>([])
   const [users, setUsers] = useState<UserResult[]>([])
   const [open, setOpen] = useState(false)
+  const [langOpen, setLangOpen] = useState(false)
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const langRef = useRef<HTMLDivElement>(null)
   const fetchIdRef = useRef(0)
+  const { lang, setLang } = useLang()
+  const currentLang = LANGUAGES.find((l) => l.code === lang)!
 
   const game = pathname.startsWith('/valorant') ? 'valorant' : pathname.startsWith('/lol') ? 'lol' : null
   const link = (path: string) => game ? `/${game}${path}` : path
@@ -45,6 +50,9 @@ export default function Navbar() {
     const handler = (e: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
         setOpen(false)
+      }
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false)
       }
     }
     document.addEventListener('mousedown', handler)
@@ -144,6 +152,34 @@ export default function Navbar() {
 
       {/* 우측 */}
       <div className="shrink-0 flex items-center gap-3">
+        {/* 언어 선택 */}
+        <div ref={langRef} className="relative">
+          <button
+            onClick={() => setLangOpen(!langOpen)}
+            className="flex items-center gap-1.5 text-slate-400 hover:text-white hover:bg-white/5 px-2.5 py-1.5 rounded transition text-sm"
+          >
+            <span>{currentLang.flag}</span>
+            <span className="text-xs font-bold uppercase">{currentLang.code}</span>
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          {langOpen && (
+            <div className="absolute right-0 top-full mt-1 bg-[#13131f] border border-white/10 rounded overflow-hidden shadow-xl z-50 w-40">
+              {LANGUAGES.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => { setLang(l.code); setLangOpen(false) }}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 hover:bg-white/5 transition text-left ${lang === l.code ? 'text-white bg-white/5' : 'text-slate-400'}`}
+                >
+                  <span>{l.flag}</span>
+                  <span className="text-xs font-semibold">{l.label}</span>
+                  {lang === l.code && <span className="ml-auto text-[#00D2BE] text-xs">✓</span>}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <ThemeToggle />
         <NotificationBell />
         <ProfileDropdown />
