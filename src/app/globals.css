@@ -104,6 +104,42 @@ body {
 [data-theme="light"] ::-webkit-scrollbar-track { background: #f1f5f9; }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: #cbd5e1; }
 
+/* ── ui-redesign 신규 색상 라이트 모드 오버라이드 ── */
+/* 페이지 배경 */
+[data-theme="light"] .bg-\[\#070711\] { background-color: var(--bg-base) !important; }
+[data-theme="light"] .bg-\[\#070711\]\/95 { background-color: var(--navbar-bg) !important; }
+
+/* 카드 배경 */
+[data-theme="light"] .bg-\[\#0d0d1a\] { background-color: var(--bg-card) !important; }
+
+/* 보더 — bracket opacity 변형 */
+[data-theme="light"] .border-white\/\[0\.04\] { border-color: rgba(0,0,0,0.05) !important; }
+[data-theme="light"] .border-white\/\[0\.05\] { border-color: var(--border) !important; }
+[data-theme="light"] .border-white\/\[0\.06\] { border-color: rgba(0,0,0,0.08) !important; }
+[data-theme="light"] .border-white\/\[0\.08\] { border-color: rgba(0,0,0,0.10) !important; }
+
+/* 배경 — bracket opacity 변형 */
+[data-theme="light"] .bg-white\/\[0\.02\] { background-color: rgba(0,0,0,0.02) !important; }
+[data-theme="light"] .bg-white\/\[0\.03\] { background-color: rgba(0,0,0,0.03) !important; }
+[data-theme="light"] .bg-white\/\[0\.04\] { background-color: var(--bg-input) !important; }
+[data-theme="light"] .bg-white\/\[0\.05\] { background-color: var(--bg-input) !important; }
+[data-theme="light"] .bg-white\/\[0\.08\] { background-color: var(--bg-input-hover) !important; }
+
+/* hover 배경 */
+[data-theme="light"] .hover\:bg-white\/\[0\.02\]:hover { background-color: rgba(0,0,0,0.02) !important; }
+[data-theme="light"] .hover\:bg-white\/\[0\.03\]:hover { background-color: rgba(0,0,0,0.03) !important; }
+[data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: var(--bg-input) !important; }
+[data-theme="light"] .hover\:bg-white\/\[0\.08\]:hover { background-color: var(--bg-input-hover) !important; }
+
+/* divide (구분선) */
+[data-theme="light"] .divide-white\/\[0\.04\] > * + * { border-color: rgba(0,0,0,0.05) !important; }
+
+/* 텍스트 — slate-700 (새로 추가된 muted 레벨) */
+[data-theme="light"] .text-slate-700 { color: #94a3b8 !important; }
+
+/* 네브바 새 배경 */
+[data-theme="light"] .bg-\[\#070711\]\/95 { background-color: var(--navbar-bg) !important; }
+
 /* 네온 그라데이션 보더 애니메이션 */
 @keyframes neon-gradient-shift {
   0%, 100% { background-position: 0% 50%; }
