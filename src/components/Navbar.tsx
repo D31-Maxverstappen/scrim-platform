@@ -105,7 +105,7 @@ export default function Navbar() {
       </div>
 
       {/* 검색 */}
-      <div ref={wrapperRef} className="flex-1 max-w-sm mx-auto relative">
+      <div ref={wrapperRef} className="ml-auto w-64 relative">
         <div className="relative">
           <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
