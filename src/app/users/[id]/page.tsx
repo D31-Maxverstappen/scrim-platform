@@ -69,13 +69,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
               </div>
             </div>
             {!isMe && iAmCaptain && myTeamData && (
-              <InviteButton
-                teamId={myTeamData.id}
-                teamName={myTeamData.name}
-                targetUserId={id}
-                targetUserName={gameName ?? '이 유저'}
-                targetUserTeamId={userTeam?.id ?? null}
-              />
+              <InviteButton type="team" targetId={myTeamData.id} userId={me.id} />
             )}
           </div>
         </div>
