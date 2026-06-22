@@ -1,5 +1,6 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+import { randomUUID } from 'crypto'
 
 const admin = createAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,9 +25,10 @@ export async function POST(req: Request) {
 
   if (existing) return NextResponse.json({ token: existing.token })
 
+  const token = randomUUID()
   const { data, error } = await admin
     .from('invite_links')
-    .insert({ type, target_id: targetId, created_by: userId })
+    .insert({ type, target_id: targetId, created_by: userId, token })
     .select('token')
     .single()
 

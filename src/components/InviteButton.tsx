@@ -15,17 +15,25 @@ export default function InviteButton({
 
   const handleClick = async () => {
     setState('loading')
-    const res = await fetch('/api/invite', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, targetId, userId }),
-    })
-    if (!res.ok) { setState('idle'); return }
-    const { token } = await res.json()
-    const url = `${window.location.origin}/invite/${token}`
-    await navigator.clipboard.writeText(url)
-    setState('copied')
-    setTimeout(() => setState('idle'), 2000)
+    try {
+      const res = await fetch('/api/invite', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, targetId, userId }),
+      })
+      if (!res.ok) { setState('idle'); return }
+      const { token } = await res.json()
+      const url = `${window.location.origin}/invite/${token}`
+      try {
+        await navigator.clipboard.writeText(url)
+      } catch {
+        prompt('아래 링크를 복사하세요', url)
+      }
+      setState('copied')
+      setTimeout(() => setState('idle'), 2000)
+    } catch {
+      setState('idle')
+    }
   }
 
   return (
