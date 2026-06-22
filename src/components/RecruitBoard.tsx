@@ -119,6 +119,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
           <span className="text-slate-600 text-[10px]">{timeAgo(post.created_at)}</span>
           {isOwn && (
             <>
+              <a href={`/recruit/post/edit/${post.id}`} className="text-[10px] text-slate-500 hover:text-white transition font-semibold">수정</a>
               <button onClick={() => onClose(post.id)} className="text-[10px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
               <button onClick={() => onDelete(post.id)} className="text-[10px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
             </>
@@ -223,6 +224,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           )}
           {isOwn && (
             <>
+              <a href={`/recruit/post/edit/${post.id}`} className="text-[10px] text-slate-500 hover:text-white transition font-semibold">수정</a>
               <button onClick={() => onClose(post.id)} className="text-[10px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
               <button onClick={() => onDelete(post.id)} className="text-[10px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
             </>

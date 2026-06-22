@@ -19,8 +19,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const { data: post } = await admin.from('recruitment_posts').select('user_id').eq('id', id).single()
   if (!post || post.user_id !== user.id) return NextResponse.json({ error: '권한이 없어요.' }, { status: 403 })
 
-  const { status } = await req.json()
-  await admin.from('recruitment_posts').update({ status }).eq('id', id)
+  const body = await req.json()
+  const { status, tier, roles, note, discord_tag } = body
+
+  if (status) {
+    await admin.from('recruitment_posts').update({ status }).eq('id', id)
+  } else {
+    await admin.from('recruitment_posts').update({ tier, roles, note, discord_tag }).eq('id', id)
+  }
   return NextResponse.json({ success: true })
 }
 
