@@ -9,6 +9,7 @@ const NAV = [
   { href: '/admin/teams', label: '팀 관리' },
   { href: '/admin/reports', label: '신고 관리' },
   { href: '/admin/appeals', label: '이의 신청' },
+  { href: '/admin/inquiries', label: '문의 관리' },
 ]
 
 export default function AdminSidebar() {
