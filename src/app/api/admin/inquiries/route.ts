@@ -1,4 +1,5 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 import { notify } from '@/lib/notifications'
 
@@ -7,7 +8,18 @@ const admin = createAdmin(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 
+async function checkAdmin() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data } = await admin.from('users').select('is_admin').eq('id', user.id).single()
+  return data?.is_admin ? user : null
+}
+
 export async function PATCH(req: Request) {
+  const adminUser = await checkAdmin()
+  if (!adminUser) return NextResponse.json({ error: '권한 없음' }, { status: 403 })
+
   const { id, adminReply } = await req.json()
 
   if (!id) return NextResponse.json({ error: 'id 필요' }, { status: 400 })
