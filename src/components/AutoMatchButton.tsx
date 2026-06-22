@@ -6,6 +6,23 @@ import { createClient } from '@/lib/supabase/client'
 
 type Status = 'idle' | 'waiting' | 'matched'
 
+const TIER_COLORS: Record<string, { bg: string; color: string; border: string }> = {
+  Iron:       { bg: 'rgba(138,138,138,0.15)', color: '#a0a0a0', border: 'rgba(138,138,138,0.35)' },
+  Bronze:     { bg: 'rgba(160,92,41,0.15)',   color: '#cd7f32', border: 'rgba(160,92,41,0.35)'   },
+  Silver:     { bg: 'rgba(192,192,192,0.15)', color: '#c0c0c0', border: 'rgba(192,192,192,0.35)' },
+  Gold:       { bg: 'rgba(212,168,67,0.15)',  color: '#d4a843', border: 'rgba(212,168,67,0.35)'  },
+  Platinum:   { bg: 'rgba(32,196,168,0.15)',  color: '#20c4a8', border: 'rgba(32,196,168,0.35)'  },
+  Diamond:    { bg: 'rgba(75,192,232,0.15)',  color: '#4bc0e8', border: 'rgba(75,192,232,0.35)'  },
+  Ascendant:  { bg: 'rgba(39,169,94,0.15)',   color: '#27a95e', border: 'rgba(39,169,94,0.35)'   },
+  Immortal:   { bg: 'rgba(196,65,60,0.15)',   color: '#e05c5c', border: 'rgba(196,65,60,0.35)'   },
+  Radiant:    { bg: 'rgba(240,229,122,0.15)', color: '#f0e57a', border: 'rgba(240,229,122,0.35)' },
+}
+
+function getTierStyle(tierAvg: string) {
+  const base = tierAvg.split(' ')[0]
+  return TIER_COLORS[base] ?? { bg: 'rgba(255,255,255,0.06)', color: '#94a3b8', border: 'rgba(255,255,255,0.1)' }
+}
+
 export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId: string; gameType: string; tierAvg?: string | null }) {
   const router = useRouter()
   const [status, setStatus] = useState<Status>('idle')
@@ -199,11 +216,15 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
               </div>
               <div className="flex items-center gap-3 mt-1 flex-wrap">
                 <p className="text-slate-400 text-sm">조건에 맞는 상대 팀을 자동으로 찾아드려요.</p>
-                {tierAvg && (
-                  <span className="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.08]">
-                    내 팀 평균 {tierAvg}
-                  </span>
-                )}
+                {tierAvg && (() => {
+                  const s = getTierStyle(tierAvg)
+                  return (
+                    <span className="shrink-0 text-[11px] font-black px-2.5 py-0.5 rounded-full"
+                      style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}` }}>
+                      내 팀 평균 {tierAvg}
+                    </span>
+                  )
+                })()}
               </div>
             </div>
           </div>
