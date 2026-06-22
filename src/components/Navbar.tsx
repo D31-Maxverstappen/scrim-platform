@@ -6,6 +6,7 @@ import Image from 'next/image'
 import ThemeToggle from './ThemeToggle'
 import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
+import SuspendedWatcher from './SuspendedWatcher'
 import { createClient } from '@/lib/supabase/client'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }
@@ -18,8 +19,13 @@ export default function Navbar() {
   const [teams, setTeams] = useState<TeamResult[]>([])
   const [users, setUsers] = useState<UserResult[]>([])
   const [open, setOpen] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const fetchIdRef = useRef(0)
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null))
+  }, [])
 
   const game = pathname.startsWith('/valorant') ? 'valorant' : null
   const link = (path: string) => game ? `/${game}${path}` : path
@@ -53,6 +59,8 @@ export default function Navbar() {
   const hasResults = teams.length > 0 || users.length > 0
 
   return (
+    <>
+    {userId && <SuspendedWatcher userId={userId} />}
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6 relative">
       {/* 로고 */}
       <a href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
@@ -183,5 +191,6 @@ export default function Navbar() {
         <ProfileDropdown />
       </div>
     </nav>
+    </>
   )
 }
