@@ -96,6 +96,7 @@ export default function Navbar() {
           { href: link('/teams'), label: '팀 목록' },
           { href: '/recruit', label: '팀 또는 선수 찾기' },
           { href: '/leaderboard', label: '리더보드' },
+          { href: '/support', label: '문의' },
         ].map((item) => (
           <a key={item.href} href={item.href}
             className={`text-slate-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/[0.04] ${
