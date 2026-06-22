@@ -84,9 +84,7 @@ export default function HomePage() {
           <span className="text-xl font-black tracking-tight text-white">D31</span>
           <span className="text-xl font-black tracking-tight text-[#00D2BE]">.GG</span>
         </a>
-        <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded transition">
-          {loggedIn ? '대시보드' : '시작하기'}
-        </a>
+        <div className="w-20" />
       </nav>
 
       {/* 히어로 */}
@@ -113,7 +111,7 @@ export default function HomePage() {
           </p>
           <div className="flex gap-3">
             <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-              {loggedIn ? '대시보드로 →' : '로그인 / 회원가입'}
+              {loggedIn ? '홈으로' : '로그인 / 회원가입'}
             </a>
           </div>
 
