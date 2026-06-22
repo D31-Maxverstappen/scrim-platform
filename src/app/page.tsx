@@ -80,8 +80,12 @@ export default function HomePage() {
       {/* 네비바 */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
         <Image src="/logo.png" alt="D31" width={112} height={112} className="object-contain" />
-        <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded transition">
-          {loggedIn ? '홈으로' : '시작하기'}
+        <a href="/" className="absolute left-1/2 -translate-x-1/2 select-none">
+          <span className="text-xl font-black tracking-tight text-white">D31</span>
+          <span className="text-xl font-black tracking-tight text-[#00D2BE]">.GG</span>
+        </a>
+        <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded transition">
+          {loggedIn ? '대시보드' : '시작하기'}
         </a>
       </nav>
 
@@ -108,11 +112,8 @@ export default function HomePage() {
             실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
           </p>
           <div className="flex gap-3">
-            <a href={loggedIn ? '/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-              {loggedIn ? '홈으로' : '로그인 / 회원가입'}
-            </a>
-            <a href="/scrims" className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold px-8 py-3.5 rounded transition text-sm">
-              스크림 둘러보기
+            <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
+              {loggedIn ? '대시보드로 →' : '로그인 / 회원가입'}
             </a>
           </div>
 
