@@ -31,15 +31,14 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
   if (!invite) return NextResponse.redirect(`${origin}/dashboard`)
 
   if (invite.type === 'team') {
-    // 이미 멤버인지 확인
-    const { data: already } = await admin
+    // 이미 어떤 팀이든 소속된 경우 → 가입 불가, 팀 페이지로만 이동
+    const { data: existingMembership } = await admin
       .from('team_members')
-      .select('id')
-      .eq('team_id', invite.target_id)
+      .select('team_id')
       .eq('user_id', user.id)
       .maybeSingle()
 
-    if (!already) {
+    if (!existingMembership) {
       await admin.from('team_members').insert({
         team_id: invite.target_id,
         user_id: user.id,
