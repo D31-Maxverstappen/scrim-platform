@@ -21,10 +21,10 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
 
   return (
     <div className="sticky top-16 z-40 backdrop-blur-sm border-b" style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
-      <div className="max-w-7xl mx-auto px-6 h-11 flex items-center gap-0">
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-0">
 
         {/* 진행도 */}
-        <span className="text-[10px] font-black text-slate-400 mr-5 shrink-0 tabular-nums">
+        <span className="text-xs font-black text-slate-400 mr-6 shrink-0 tabular-nums">
           {doneCount}<span className="text-slate-500">/{steps.length}</span>
         </span>
 
@@ -37,7 +37,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
             )}
             <div className="flex items-center gap-1.5 shrink-0">
               {/* 원 */}
-              <div className={`w-[17px] h-[17px] rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
+              <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                 step.done
                   ? 'bg-[#00D2BE] border-[#00D2BE]'
                   : i === currentIdx
@@ -54,7 +54,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
               </div>
 
               {/* 라벨 */}
-              <span className={`text-[11px] font-bold ${
+              <span className={`text-xs font-bold ${
                 step.done
                   ? 'text-slate-500 line-through decoration-slate-600'
                   : i === currentIdx
@@ -66,7 +66,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
 
               {/* 현재 단계 CTA */}
               {!step.done && i === currentIdx && (
-                <a href={step.href} className="text-[10px] text-[#00D2BE] font-bold hover:underline ml-1 shrink-0">
+                <a href={step.href} className="text-xs text-[#00D2BE] font-bold hover:underline ml-1 shrink-0">
                   {step.cta} →
                 </a>
               )}
