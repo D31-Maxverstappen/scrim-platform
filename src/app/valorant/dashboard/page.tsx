@@ -263,14 +263,14 @@ export default async function ValorantDashboardPage() {
             <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
-                <Link href="/inhouse" className="text-[10px] font-bold text-[#00D2BE] hover:underline">
+                <Link href="/inhouse" className="text-[10px] font-bold text-slate-400 hover:text-white transition">
                   전체 보기 →
                 </Link>
               </div>
               {inhouseRooms.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-slate-700">
                   <p className="text-xs font-semibold mb-1">모집 중인 내전이 없어요</p>
-                  <Link href="/inhouse/create" className="mt-2 text-[#00D2BE] text-xs font-bold hover:underline">
+                  <Link href="/inhouse/create" className="mt-2 text-slate-400 hover:text-white text-xs font-bold transition">
                     + 방 만들기
                   </Link>
                 </div>

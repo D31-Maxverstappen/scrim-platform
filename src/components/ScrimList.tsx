@@ -61,7 +61,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
               </span>
             )}
           </button>
-          <a href={allLink} className="text-[10px] font-bold hover:underline" style={{ color: gameColor }}>
+          <a href={allLink} className="text-[10px] font-bold text-slate-400 hover:text-white transition">
             전체 보기 →
           </a>
         </div>
@@ -106,7 +106,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-14 text-slate-700">
           <p className="text-sm font-semibold mb-1">조건에 맞는 스크림이 없어요</p>
-          <a href="/scrims/post" className="mt-3 text-[#00D2BE] text-xs font-bold hover:underline">
+          <a href="/scrims/post" className="mt-3 text-slate-400 hover:text-white text-xs font-bold transition">
             + 스크림 올리기
           </a>
         </div>
