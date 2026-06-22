@@ -60,8 +60,10 @@ export async function POST(req: NextRequest) {
 
   // 기존 waiting 엔트리가 없으면 새로 삽입
   let entryId: string
+  let queuedAt: string
   if (existing) {
     entryId = existing.id
+    queuedAt = existing.created_at
   } else {
     const { data: entry, error } = await db
       .from('matchmaking_queue')
@@ -70,9 +72,14 @@ export async function POST(req: NextRequest) {
       .single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     entryId = entry.id
+    queuedAt = entry.created_at
   }
 
-  // 상대 탐색 (어드민으로 RLS 우회): 같은 게임/서버/포맷
+  // 대기 시간에 따른 티어 허용 범위 (Gradual Relaxation)
+  const waitSec = (Date.now() - new Date(queuedAt).getTime()) / 1000
+  const tierRange = waitSec < 30 ? 2 : waitSec < 120 ? 4 : 6
+
+  // 상대 탐색: 같은 게임/서버/포맷 + 티어 범위 제한
   const { data: opponents } = await db
     .from('matchmaking_queue')
     .select('*, teams(id, name, captain_id)')
@@ -81,6 +88,8 @@ export async function POST(req: NextRequest) {
     .eq('format', format)
     .eq('status', 'waiting')
     .neq('team_id', team.id)
+    .gte('tier_rank', tier_rank - tierRange)
+    .lte('tier_rank', tier_rank + tierRange)
     .order('created_at', { ascending: true })
     .limit(1)
 
