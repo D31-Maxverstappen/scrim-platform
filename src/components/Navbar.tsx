@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import ThemeToggle from './ThemeToggle'
 import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
@@ -63,12 +64,12 @@ export default function Navbar() {
     {userId && <SuspendedWatcher userId={userId} />}
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6 relative">
       {/* 로고 */}
-      <a href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
+      <Link href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
         <Image src="/logo.png" alt="D31" width={52} height={52} className="object-contain" />
-      </a>
+      </Link>
 
       {/* 중앙 워드마크 */}
-      <a
+      <Link
         href={game ? `/${game}/dashboard` : '/dashboard'}
         className="absolute left-1/2 -translate-x-1/2 select-none"
       >
@@ -96,7 +97,7 @@ export default function Navbar() {
         >
           .GG
         </span>
-      </a>
+      </Link>
 
       {/* 네비 링크 */}
       <div className="hidden md:flex items-center gap-0.5 text-sm">
@@ -107,12 +108,12 @@ export default function Navbar() {
           { href: '/valorant/calendar', label: '캘린더' },
           { href: '/support', label: '문의' },
         ].map((item) => (
-          <a key={item.href} href={item.href}
+          <Link key={item.href} href={item.href}
             className={`text-slate-500 hover:text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition hover:bg-white/[0.04] ${
               pathname === item.href ? 'text-white bg-white/[0.04]' : ''
             }`}>
             {item.label}
-          </a>
+          </Link>
         ))}
       </div>
 
