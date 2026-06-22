@@ -20,7 +20,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
   const currentIdx = steps.findIndex((s) => !s.done)
 
   return (
-    <div className="sticky top-16 z-40 bg-[#070711]/98 backdrop-blur-sm border-b border-white/[0.07]">
+    <div className="sticky top-16 z-40 backdrop-blur-sm border-b" style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
       <div className="max-w-7xl mx-auto px-6 h-11 flex items-center gap-0">
 
         {/* 진행도 */}
@@ -32,7 +32,8 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
         {steps.map((step, i) => (
           <Fragment key={step.id}>
             {i > 0 && (
-              <div className={`w-10 h-px mx-3 shrink-0 ${steps[i - 1].done ? 'bg-[#00D2BE]/40' : 'bg-white/[0.07]'}`} />
+              <div className={`w-10 h-px mx-3 shrink-0 ${steps[i - 1].done ? 'bg-[#00D2BE]/40' : ''}`}
+                style={steps[i - 1].done ? {} : { background: 'var(--border-input)' }} />
             )}
             <div className="flex items-center gap-1.5 shrink-0">
               {/* 원 */}
@@ -41,8 +42,8 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
                   ? 'bg-[#00D2BE] border-[#00D2BE]'
                   : i === currentIdx
                   ? 'border-[#00D2BE]/60 bg-[#00D2BE]/08'
-                  : 'border-white/[0.1]'
-              }`}>
+                  : ''
+              }`} style={!step.done && i !== currentIdx ? { borderColor: 'var(--border-input)' } : {}}>
                 {step.done ? (
                   <svg className="w-2 h-2 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
