@@ -8,21 +8,17 @@ export default function SuspendedWatcher({ userId }: { userId: string }) {
   const router = useRouter()
 
   useEffect(() => {
-    const supabase = createClient()
-
     const check = async () => {
-      const { data, error } = await supabase
-        .from('users')
-        .select('suspended')
-        .eq('id', userId)
-        .single()
-
-      if (error) return  // 네트워크 오류 등 일시적 실패는 무시
-
-      if (data?.suspended === true) {
-        await supabase.auth.signOut()
-        router.push(`/suspended?uid=${userId}`)
-      }
+      try {
+        const res = await fetch('/api/me/suspended')
+        if (!res.ok) return
+        const { suspended } = await res.json()
+        if (suspended) {
+          const supabase = createClient()
+          await supabase.auth.signOut()
+          router.push(`/suspended?uid=${userId}`)
+        }
+      } catch {}
     }
 
     const interval = setInterval(check, 5000)
