@@ -16,7 +16,9 @@ export default function ThemeToggle() {
     const next = theme === 'dark' ? 'light' : 'dark'
     setTheme(next)
     localStorage.setItem('theme', next)
+    document.documentElement.classList.add('theme-transitioning')
     document.documentElement.setAttribute('data-theme', next)
+    setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 250)
   }
 
   return (
