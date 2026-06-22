@@ -8,7 +8,7 @@ import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
 import ReceivedApplications from '@/components/ReceivedApplications'
 import DiscordBanner from '@/components/DiscordBanner'
-import OnboardingChecklist from '@/components/OnboardingChecklist'
+import OnboardingBar from '@/components/OnboardingBar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import AutoMatchButton from '@/components/AutoMatchButton'
 import StatCounter from '@/components/StatCounter'
@@ -94,12 +94,41 @@ export default async function ValorantDashboardPage() {
     { label: '매너 점수', value: '100', sub: '/ 200' },
   ]
 
+  const onboardingSteps = [
+    {
+      id: 'riot',
+      label: 'Riot 계정 연동',
+      done: !!(profile?.val_gamename || profile?.riot_gamename),
+      href: '/onboarding',
+      cta: '연동하기',
+    },
+    {
+      id: 'team',
+      label: '팀 가입 / 생성',
+      done: !!team,
+      href: team ? `/teams/${team.id}` : '/teams/create',
+      cta: team ? '내 팀 보기' : '팀 만들기',
+    },
+    {
+      id: 'scrim',
+      label: '첫 스크림 신청',
+      done: (allApplications ?? []).length > 0,
+      href: '/valorant/scrims',
+      cta: '스크림 찾기',
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-[#070711]">
       <RealtimeRefresher tables={["scrim_applications", "scrim_posts", "teams", "team_members", "matches"]} />
       <Navbar />
 
-      <div className="pt-24 max-w-7xl mx-auto px-6 pb-16">
+      {/* 온보딩 체크포인트 바 */}
+      <div className="pt-16">
+        <OnboardingBar steps={onboardingSteps} />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 pb-16 pt-8">
 
         {/* ── 인사 헤더 ── */}
         <div className="mb-10 flex items-end justify-between animate-fade-in-up" style={{ animationDelay: '0ms' }}>
@@ -224,33 +253,6 @@ export default async function ValorantDashboardPage() {
             {team && myValTeam?.role === 'captain' && (
               <AutoMatchButton teamId={team.id} gameType={GAME} />
             )}
-
-            <OnboardingChecklist steps={[
-              {
-                id: 'riot',
-                label: 'Riot 계정 연동',
-                desc: '발로란트 닉네임과 티어를 등록하세요',
-                done: !!(profile?.val_gamename || profile?.riot_gamename),
-                href: '/onboarding',
-                cta: '연동하기',
-              },
-              {
-                id: 'team',
-                label: '팀 가입 또는 생성',
-                desc: '팀이 있어야 스크림을 신청할 수 있어요',
-                done: !!team,
-                href: team ? `/teams/${team.id}` : '/teams/create',
-                cta: team ? '내 팀 보기' : '팀 만들기',
-              },
-              {
-                id: 'scrim',
-                label: '첫 스크림 신청',
-                desc: '스크림 게시판에서 상대 팀을 찾아보세요',
-                done: (allApplications ?? []).length > 0,
-                href: '/valorant/scrims',
-                cta: '스크림 찾기',
-              },
-            ]} />
 
             {/* 스크림 리스트 */}
             <div className="rounded-2xl overflow-hidden border border-white/[0.05]">
