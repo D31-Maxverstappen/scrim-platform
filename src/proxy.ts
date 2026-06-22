@@ -2,6 +2,13 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname
+
+  // 정지 페이지·로그인 페이지는 인증 체크 제외 (리다이렉트 루프 방지)
+  if (pathname.startsWith('/suspended') || pathname.startsWith('/login')) {
+    return NextResponse.next()
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -25,8 +32,24 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // 세션 토큰 자동 갱신 — 이 줄이 핵심
-  await supabase.auth.getUser()
+  // 세션 토큰 자동 갱신
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (user) {
+    // 정지 여부 확인
+    const { data: profile } = await supabase
+      .from('users')
+      .select('suspended')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.suspended) {
+      await supabase.auth.signOut()
+      const url = new URL('/suspended', request.url)
+      url.searchParams.set('uid', user.id)
+      return NextResponse.redirect(url)
+    }
+  }
 
   return supabaseResponse
 }
