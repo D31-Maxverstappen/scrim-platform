@@ -12,6 +12,7 @@ import OnboardingChecklist from '@/components/OnboardingChecklist'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import AutoMatchButton from '@/components/AutoMatchButton'
 import StatCounter from '@/components/StatCounter'
+import Link from 'next/link'
 
 const GAME = 'valorant'
 
@@ -29,6 +30,7 @@ export default async function ValorantDashboardPage() {
     { data: scrimCounts },
     { data: recentScrims },
     { data: allApplications },
+    { data: rawInhouseRooms },
   ] = await Promise.all([
     supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, abbreviation, game_type, tier_avg, captain_id)').eq('user_id', user.id),
@@ -38,6 +40,7 @@ export default async function ValorantDashboardPage() {
     supabase.from('scrim_posts').select('team_id').eq('game_type', GAME),
     supabase.from('scrim_posts').select('id, game_type, preferred_date, note, server, format, status, teams(name, tier_avg)').eq('status', 'open').eq('game_type', GAME).order('created_at', { ascending: false }).limit(8),
     supabase.from('scrim_applications').select('id, status, match_id, applying_team:teams!applying_team_id(id, name, tier_avg, game_type), scrim_post:scrim_posts!scrim_post_id(id, preferred_date, note, team_id)').order('created_at', { ascending: false }).limit(30),
+    supabase.from('inhouse_rooms').select('id, title, team_mode, status, tier_min, tier_max, max_players, scheduled_at, host:users!host_id(val_gamename, riot_gamename)').in('status', ['recruiting', 'full', 'ongoing']).order('created_at', { ascending: false }).limit(5),
   ])
 
   const myValTeam = (teamMember ?? []).map((m: any) => ({
@@ -69,6 +72,18 @@ export default async function ValorantDashboardPage() {
   const teamsWithActivity = (allTeams ?? []).map((t: any) => ({
     ...t,
     scrim_count: scrimCountMap[t.id] ?? 0,
+  }))
+
+  const inhouseRoomIds = (rawInhouseRooms ?? []).map((r: any) => r.id)
+  const { data: inhouseCounts } = inhouseRoomIds.length
+    ? await supabase.from('inhouse_participants').select('room_id').in('room_id', inhouseRoomIds)
+    : { data: [] }
+  const inhouseCountMap: Record<string, number> = {}
+  ;(inhouseCounts ?? []).forEach((p: any) => { inhouseCountMap[p.room_id] = (inhouseCountMap[p.room_id] ?? 0) + 1 })
+  const inhouseRooms = (rawInhouseRooms ?? []).map((r: any) => ({
+    ...r,
+    host: Array.isArray(r.host) ? r.host[0] : r.host,
+    participant_count: inhouseCountMap[r.id] ?? 0,
   }))
 
   const displayName = profile?.val_gamename ?? profile?.riot_gamename ?? '유저'
@@ -240,6 +255,70 @@ export default async function ValorantDashboardPage() {
             {/* 스크림 리스트 */}
             <div className="rounded-2xl overflow-hidden border border-white/[0.05]">
               <ScrimList scrims={recentScrims ?? []} game={GAME} />
+            </div>
+
+            {/* 내전 섹션 */}
+            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
+                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
+                <Link href="/inhouse" className="text-[10px] font-bold text-[#00D2BE] hover:underline">
+                  전체 보기 →
+                </Link>
+              </div>
+              {inhouseRooms.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-slate-700">
+                  <p className="text-xs font-semibold mb-1">모집 중인 내전이 없어요</p>
+                  <Link href="/inhouse/create" className="mt-2 text-[#00D2BE] text-xs font-bold hover:underline">
+                    + 방 만들기
+                  </Link>
+                </div>
+              ) : (
+                <div>
+                  {inhouseRooms.map((room: any, i: number) => {
+                    const STATUS_COLOR: Record<string, string> = {
+                      recruiting: 'bg-green-500/10 text-green-400',
+                      full: 'bg-yellow-500/10 text-yellow-400',
+                      ongoing: 'bg-[#00D2BE]/10 text-[#00D2BE]',
+                    }
+                    const STATUS_LABEL: Record<string, string> = {
+                      recruiting: '모집중', full: '인원마감', ongoing: '진행중',
+                    }
+                    const MODE_LABEL: Record<string, string> = {
+                      random: '랜덤', balanced: '밸런스', captain: '캡틴픽',
+                    }
+                    const scheduledStr = room.scheduled_at
+                      ? new Date(room.scheduled_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                      : null
+                    return (
+                      <Link key={room.id} href={`/inhouse/${room.id}`}
+                        className={`flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.03] transition group border-l-2 border-transparent hover:border-[#00D2BE]/60 ${i !== 0 ? 'border-t border-t-white/[0.04]' : ''}`}>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                            <span className="text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{room.title}</span>
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${STATUS_COLOR[room.status]}`}>
+                              {STATUS_LABEL[room.status]}
+                            </span>
+                            <span className="text-[10px] font-bold bg-white/5 text-slate-500 px-1.5 py-0.5 rounded">
+                              {MODE_LABEL[room.team_mode]}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[10px] text-slate-600">
+                            <span>방장: {room.host?.val_gamename ?? room.host?.riot_gamename ?? '—'}</span>
+                            {scheduledStr && <span>📅 {scheduledStr}</span>}
+                          </div>
+                        </div>
+                        <div className="shrink-0 text-right">
+                          <p className="text-white font-bold text-xs">
+                            {room.participant_count}<span className="text-slate-600 font-normal"> / {room.max_players}</span>
+                          </p>
+                          <p className="text-slate-700 text-[10px]">명</p>
+                        </div>
+                        <span className="text-slate-700 group-hover:text-[#00D2BE] text-xs transition shrink-0">→</span>
+                      </Link>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             <ReceivedApplications initialApps={receivedApps} />
