@@ -10,21 +10,20 @@ export default function SuspendedWatcher({ userId }: { userId: string }) {
   useEffect(() => {
     const supabase = createClient()
 
-    const channel = supabase
-      .channel(`suspended:${userId}`)
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'users', filter: `id=eq.${userId}` },
-        async (payload) => {
-          if (payload.new?.suspended === true) {
-            await supabase.auth.signOut()
-            router.push(`/suspended?uid=${userId}`)
-          }
-        }
-      )
-      .subscribe()
+    const check = async () => {
+      const { data } = await supabase
+        .from('users')
+        .select('suspended')
+        .eq('id', userId)
+        .single()
+      if (data?.suspended) {
+        await supabase.auth.signOut()
+        router.push(`/suspended?uid=${userId}`)
+      }
+    }
 
-    return () => { supabase.removeChannel(channel) }
+    const interval = setInterval(check, 5000)
+    return () => clearInterval(interval)
   }, [userId, router])
 
   return null
