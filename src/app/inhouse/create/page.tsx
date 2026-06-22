@@ -18,7 +18,7 @@ export default async function CreateInhousePage() {
           <h1 className="text-2xl font-bold text-white">내전 방 만들기</h1>
           <p className="text-slate-400 text-sm mt-1">방 설정 후 참가자를 모집하세요</p>
         </div>
-        <CreateRoomForm userId={user.id} />
+        <CreateRoomForm />
       </div>
     </div>
   )

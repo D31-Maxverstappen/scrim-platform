@@ -28,7 +28,7 @@ export default async function SupportPage() {
           <p className="text-slate-500 text-sm mt-1">궁금한 점이나 불편한 사항을 남겨주세요</p>
         </div>
 
-        <InquiryForm userId={user.id} displayName={displayName} />
+        <InquiryForm displayName={displayName} />
       </div>
     </div>
   )

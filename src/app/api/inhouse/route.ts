@@ -1,4 +1,5 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 const admin = createAdmin(
@@ -7,12 +8,16 @@ const admin = createAdmin(
 )
 
 export async function POST(req: Request) {
-  const { userId, title, teamMode, maxPlayers, tierMin, tierMax, scheduledAt, isPrivate } = await req.json()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  if (!userId || !title) return NextResponse.json({ error: '필수 값 누락' }, { status: 400 })
+  const { title, teamMode, maxPlayers, tierMin, tierMax, scheduledAt, isPrivate } = await req.json()
+
+  if (!title) return NextResponse.json({ error: '필수 값 누락' }, { status: 400 })
 
   const { data, error } = await admin.from('inhouse_rooms').insert({
-    host_id: userId,
+    host_id: user.id,
     title,
     team_mode: teamMode ?? 'random',
     max_players: maxPlayers ?? 10,
@@ -26,7 +31,7 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // 방장 자동 참가
-  await admin.from('inhouse_participants').insert({ room_id: data.id, user_id: userId })
+  await admin.from('inhouse_participants').insert({ room_id: data.id, user_id: user.id })
 
   return NextResponse.json({ id: data.id })
 }

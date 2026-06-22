@@ -10,7 +10,7 @@ const MODE_OPTIONS = [
   { value: 'captain', label: '캡틴픽', desc: '방장과 부방장이 번갈아 픽' },
 ]
 
-export default function CreateRoomForm({ userId }: { userId: string }) {
+export default function CreateRoomForm() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [mode, setMode] = useState('random')
@@ -30,7 +30,6 @@ export default function CreateRoomForm({ userId }: { userId: string }) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        userId,
         title: title.trim(),
         teamMode: mode,
         maxPlayers,

@@ -9,7 +9,7 @@ const SUBJECTS = [
   '기타',
 ]
 
-export default function InquiryForm({ userId, displayName }: { userId: string; displayName: string }) {
+export default function InquiryForm({ displayName }: { displayName: string }) {
   const [subject, setSubject] = useState(SUBJECTS[0])
   const [content, setContent] = useState('')
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
@@ -22,7 +22,7 @@ export default function InquiryForm({ userId, displayName }: { userId: string; d
     const res = await fetch('/api/inquiries', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, subject, content: content.trim() }),
+      body: JSON.stringify({ subject, content: content.trim() }),
     })
 
     setState(res.ok ? 'done' : 'error')

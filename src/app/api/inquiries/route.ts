@@ -1,4 +1,5 @@
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
 const admin = createAdmin(
@@ -7,14 +8,18 @@ const admin = createAdmin(
 )
 
 export async function POST(req: Request) {
-  const { userId, subject, content } = await req.json()
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  if (!userId || !subject || !content || content.trim().length < 10) {
+  const { subject, content } = await req.json()
+
+  if (!subject || !content || content.trim().length < 10) {
     return NextResponse.json({ error: '내용을 10자 이상 입력해 주세요.' }, { status: 400 })
   }
 
   const { error } = await admin.from('inquiries').insert({
-    user_id: userId,
+    user_id: user.id,
     subject,
     content: content.trim(),
   })
