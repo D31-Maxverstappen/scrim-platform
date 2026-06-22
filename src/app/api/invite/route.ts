@@ -14,21 +14,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: '필수 값 누락' }, { status: 400 })
   }
 
-  // 기존 초대 링크가 있으면 재사용
-  const { data: existing } = await admin
-    .from('invite_links')
-    .select('token')
-    .eq('type', type)
-    .eq('target_id', targetId)
-    .eq('created_by', userId)
-    .single()
-
-  if (existing) return NextResponse.json({ token: existing.token })
-
   const token = randomUUID()
   const { data, error } = await admin
     .from('invite_links')
-    .insert({ type, target_id: targetId, created_by: userId, token })
+    .upsert(
+      { type, target_id: targetId, created_by: userId, token },
+      { onConflict: 'type,target_id,created_by', ignoreDuplicates: false }
+    )
     .select('token')
     .single()
 
