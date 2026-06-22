@@ -87,9 +87,15 @@ function RecruitPostContent() {
     setTiers(VAL_TIERS.slice(start, end + 1))
   }
 
+  const DISCORD_REGEX = /^[\w.]{2,32}(#\d{4})?$/
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (type === 'lfp' && !myTeam) { setError('해당 게임의 팀 캡틴이 아니에요.'); return }
+    if (discordTag && !DISCORD_REGEX.test(discordTag)) {
+      setError('Discord 태그 형식이 올바르지 않아요. (예: username 또는 username#1234)')
+      return
+    }
     setLoading(true); setError('')
 
     const res = await fetch('/api/recruit', {
@@ -233,8 +239,15 @@ function RecruitPostContent() {
               value={discordTag}
               onChange={(e) => setDiscordTag(e.target.value)}
               placeholder="예: username#1234 또는 username"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              className={`w-full bg-white/5 border rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none transition ${
+                discordTag && !DISCORD_REGEX.test(discordTag)
+                  ? 'border-red-500/60 focus:border-red-500'
+                  : 'border-white/10 focus:border-[#00D2BE]'
+              }`}
             />
+            {discordTag && !DISCORD_REGEX.test(discordTag) && (
+              <p className="text-red-400 text-xs mt-1">올바른 형식: username 또는 username#1234</p>
+            )}
           </div>
 
           {error && (

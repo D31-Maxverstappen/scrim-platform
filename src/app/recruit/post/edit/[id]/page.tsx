@@ -70,8 +70,14 @@ export default function RecruitEditPage() {
     setTiers(VAL_TIERS.slice(Math.min(ai, ti), Math.max(ai, ti) + 1))
   }
 
+  const DISCORD_REGEX = /^[\w.]{2,32}(#\d{4})?$/
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (discordTag && !DISCORD_REGEX.test(discordTag)) {
+      setError('Discord 태그 형식이 올바르지 않아요. (예: username 또는 username#1234)')
+      return
+    }
     setLoading(true); setError('')
     const res = await fetch(`/api/recruit/${id}`, {
       method: 'PATCH',
@@ -164,7 +170,14 @@ export default function RecruitEditPage() {
             <label className="text-slate-300 text-sm font-semibold block mb-2">Discord 태그</label>
             <input value={discordTag} onChange={(e) => setDiscordTag(e.target.value)}
               placeholder="예: username#1234 또는 username"
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition" />
+              className={`w-full bg-white/5 border rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none transition ${
+                discordTag && !DISCORD_REGEX.test(discordTag)
+                  ? 'border-red-500/60 focus:border-red-500'
+                  : 'border-white/10 focus:border-[#00D2BE]'
+              }`} />
+            {discordTag && !DISCORD_REGEX.test(discordTag) && (
+              <p className="text-red-400 text-xs mt-1">올바른 형식: username 또는 username#1234</p>
+            )}
           </div>
 
           {error && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">{error}</p>}
