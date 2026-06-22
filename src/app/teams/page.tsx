@@ -4,6 +4,9 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import Pagination from '@/components/Pagination'
+
+const PAGE_SIZE = 20
 
 const GAME_LABEL: Record<string, string> = {
   valorant: 'VALORANT',
@@ -13,7 +16,12 @@ const GAME_COLOR: Record<string, string> = {
   valorant: '#ff4655',
 }
 
-export default async function TeamsPage() {
+export default async function TeamsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const { page: pageStr = '1' } = await searchParams
+  const page = Math.max(1, Number(pageStr) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -25,11 +33,11 @@ export default async function TeamsPage() {
     .eq('user_id', user.id)
 
   // 전체 팀 목록
-  const { data: allTeams } = await supabase
+  const { data: allTeams, count: teamCount } = await supabase
     .from('teams')
-    .select('id, name, game_type, tier_avg, captain_id')
+    .select('id, name, game_type, tier_avg, captain_id', { count: 'exact' })
     .order('created_at', { ascending: false })
-    .limit(20)
+    .range(from, to)
 
   const myTeamIds = new Set((myTeams ?? []).map((m: any) => m.teams?.id).filter(Boolean))
 
@@ -129,6 +137,7 @@ export default async function TeamsPage() {
             </div>
           )}
         </div>
+        <Pagination page={page} total={teamCount ?? 0} pageSize={PAGE_SIZE} basePath="/teams" />
 
       </div>
     </div>

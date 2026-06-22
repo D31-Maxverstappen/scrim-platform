@@ -2,6 +2,9 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import Pagination from '@/components/Pagination'
+
+const PAGE_SIZE = 20
 
 /* ── 티어 유틸 ── */
 const TIER_ORDER = [
@@ -35,50 +38,45 @@ function RankBadge({ rank }: { rank: number }) {
 export default async function LeaderboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ game?: string; tab?: string }>
+  searchParams: Promise<{ game?: string; tab?: string; page?: string }>
 }) {
-  const { game = 'valorant', tab = 'team' } = await searchParams
+  const { game = 'valorant', tab = 'team', page: pageStr = '1' } = await searchParams
+  const page = Math.max(1, Number(pageStr) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   /* ── 팀 랭킹 데이터 ── */
-  const { data: teamsRaw } = await supabase
+  const { data: teamsRaw, count: teamCount } = await supabase
     .from('teams')
-    .select('id, name, tier_avg, wins, losses, game_type')
+    .select('id, name, tier_avg, wins, losses, game_type', { count: 'exact' })
     .eq('game_type', game)
     .or('wins.gt.0,losses.gt.0')
     .order('wins', { ascending: false })
-    .limit(100)
+    .range(from, to)
 
-  const teams = (teamsRaw ?? [])
-    .map((t) => {
-      const total = (t.wins ?? 0) + (t.losses ?? 0)
-      return { ...t, total, winRate: total > 0 ? Math.round(((t.wins ?? 0) / total) * 100) : 0 }
-    })
-    .sort((a, b) => {
-      if (b.wins !== a.wins) return (b.wins ?? 0) - (a.wins ?? 0)
-      return b.winRate - a.winRate
-    })
+  const teams = (teamsRaw ?? []).map((t) => {
+    const total = (t.wins ?? 0) + (t.losses ?? 0)
+    return { ...t, total, winRate: total > 0 ? Math.round(((t.wins ?? 0) / total) * 100) : 0 }
+  })
 
   /* ── 플레이어 랭킹 데이터 ── */
-  const { data: players } = await supabase
+  const { data: players, count: playerCount } = await supabase
     .from('users')
-    .select('id, riot_gamename, riot_tagline, val_gamename, val_tier, tier, avatar_url, game_type')
+    .select('id, riot_gamename, riot_tagline, val_gamename, val_tier, tier, avatar_url, game_type', { count: 'exact' })
     .eq('game_type', 'valorant')
     .not('riot_gamename', 'is', null)
-    .limit(200)
+    .not('val_tier', 'is', null)
+    .range(from, to)
 
-  const sortedPlayers = (players ?? [])
-    .map((u) => ({
-      ...u,
-      displayTier: u.val_tier ?? u.tier,
-      displayName: u.val_gamename ?? u.riot_gamename,
-    }))
-    .filter((u) => u.displayTier)
-    .sort((a, b) => tierRank(a.displayTier) - tierRank(b.displayTier))
+  const sortedPlayers = (players ?? []).map((u) => ({
+    ...u,
+    displayTier: u.val_tier ?? u.tier,
+    displayName: u.val_gamename ?? u.riot_gamename,
+  }))
 
-  const myTeamRank = teams.findIndex((t) => false) // 나중에 내 팀 강조
   const myPlayerRank = sortedPlayers.findIndex((u) => u.id === user.id)
 
   const gameLabel = 'VALORANT'
@@ -157,6 +155,7 @@ export default async function LeaderboardPage({
                 ))}
               </div>
             )}
+            <Pagination page={page} total={teamCount ?? 0} pageSize={PAGE_SIZE} basePath="/leaderboard" params={{ game, tab: 'team' }} />
           </>
         )}
 
@@ -216,6 +215,7 @@ export default async function LeaderboardPage({
                 })}
               </div>
             )}
+            <Pagination page={page} total={playerCount ?? 0} pageSize={PAGE_SIZE} basePath="/leaderboard" params={{ game, tab: 'player' }} />
           </>
         )}
       </div>

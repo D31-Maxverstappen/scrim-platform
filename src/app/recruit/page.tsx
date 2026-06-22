@@ -5,9 +5,16 @@ import { createClient as createAdmin } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import RecruitBoard from '@/components/RecruitBoard'
+import Pagination from '@/components/Pagination'
 
-export default async function RecruitPage({ searchParams }: { searchParams: Promise<{ type?: string; game?: string }> }) {
-  const { type, game } = await searchParams
+const PAGE_SIZE = 20
+
+export default async function RecruitPage({ searchParams }: { searchParams: Promise<{ type?: string; game?: string; page?: string }> }) {
+  const { type = 'lft', game = '', page: pageStr = '1' } = await searchParams
+  const page = Math.max(1, Number(pageStr) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -17,12 +24,18 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  const [{ data: posts }, { data: myTeam }] = await Promise.all([
-    admin
-      .from('recruitment_posts')
-      .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url), teams(id, name, tier_avg, game_type, captain_id)')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false }),
+  let query = admin
+    .from('recruitment_posts')
+    .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url), teams(id, name, tier_avg, game_type, captain_id)', { count: 'exact' })
+    .eq('status', 'active')
+    .eq('type', type)
+    .order('created_at', { ascending: false })
+    .range(from, to)
+
+  if (game) query = (query as any).eq('game_type', game)
+
+  const [{ data: posts, count }, { data: myTeam }] = await Promise.all([
+    query,
     supabase
       .from('team_members')
       .select('team_id')
@@ -49,8 +62,15 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
           posts={posts ?? []}
           currentUserId={user.id}
           currentUserHasTeam={!!myTeam}
-          initialType={type ?? 'lft'}
-          initialGame={game ?? ''}
+          activeType={type}
+          activeGame={game}
+        />
+        <Pagination
+          page={page}
+          total={count ?? 0}
+          pageSize={PAGE_SIZE}
+          basePath="/recruit"
+          params={{ type, ...(game && { game }) }}
         />
       </div>
     </div>

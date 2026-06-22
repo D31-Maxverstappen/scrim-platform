@@ -3,7 +3,10 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import Pagination from '@/components/Pagination'
 import { inTierRange } from '@/lib/tiers'
+
+const PAGE_SIZE = 15
 
 function formatDate(dt: string | null) {
   if (!dt) return null
@@ -14,9 +17,12 @@ function formatDate(dt: string | null) {
 export default async function ValorantScrimsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; my_tier?: string }>
+  searchParams: Promise<{ q?: string; my_tier?: string; page?: string }>
 }) {
-  const { q = '', my_tier = '' } = await searchParams
+  const { q = '', my_tier = '', page: pageStr = '1' } = await searchParams
+  const page = Math.max(1, Number(pageStr) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
@@ -33,27 +39,33 @@ export default async function ValorantScrimsPage({
   const filterByTier = my_tier === '1'
 
   let posts: any[] = []
+  let total = 0
+
   if (q) {
     const { data: matched } = await supabase.from('teams').select('id').ilike('name', `%${q}%`)
     const teamIds = matched?.map((t: any) => t.id) ?? []
     if (teamIds.length > 0) {
-      const { data } = await supabase
+      const { data, count } = await supabase
         .from('scrim_posts')
-        .select('id, game_type, preferred_date, note, status, format, tier_min, tier_max, created_at, teams(id, name, tier_avg)')
+        .select('id, game_type, preferred_date, note, status, format, tier_min, tier_max, created_at, teams(id, name, tier_avg)', { count: 'exact' })
         .eq('status', 'open').eq('game_type', 'valorant').in('team_id', teamIds)
         .order('created_at', { ascending: false })
+        .range(from, to)
       posts = data ?? []
+      total = count ?? 0
     }
   } else {
-    const { data } = await supabase
+    const { data, count } = await supabase
       .from('scrim_posts')
-      .select('id, game_type, preferred_date, note, status, format, tier_min, tier_max, created_at, teams(id, name, tier_avg)')
+      .select('id, game_type, preferred_date, note, status, format, tier_min, tier_max, created_at, teams(id, name, tier_avg)', { count: 'exact' })
       .eq('status', 'open').eq('game_type', 'valorant')
       .order('created_at', { ascending: false })
+      .range(from, to)
     posts = data ?? []
+    total = count ?? 0
   }
 
-  // 내 티어 맞춤 필터
+  // 내 티어 맞춤 필터 (페이지 내에서만 적용)
   if (filterByTier && myTier) {
     posts = posts.filter((p) => inTierRange(myTier, p.tier_min, p.tier_max))
   }
@@ -176,6 +188,13 @@ export default async function ValorantScrimsPage({
             })}
           </div>
         )}
+        <Pagination
+          page={page}
+          total={total}
+          pageSize={PAGE_SIZE}
+          basePath="/valorant/scrims"
+          params={{ ...(q && { q }), ...(my_tier && { my_tier }) }}
+        />
       </div>
     </div>
   )

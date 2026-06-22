@@ -21,7 +21,6 @@ function getTierColor(tier: string) {
   return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
 }
 
-// 연속 범위를 "시작 ~ 끝"으로 축약, 비연속은 그룹별 표시
 function formatTierDisplay(tierStr: string | null): Array<{ text: string; color: string }> {
   if (!tierStr) return []
   const selected = tierStr.split(',').map((t) => t.trim()).filter(Boolean)
@@ -91,7 +90,6 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
-      {/* 티어 (단일 or 범위 축약) */}
       {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {tierDisplay.map((d, i) => (
@@ -187,7 +185,6 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
         </div>
       )}
 
-      {/* 희망 티어 (범위 축약 표시) */}
       {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
           <span className="text-[10px] text-slate-600 shrink-0">희망 티어</span>
@@ -236,23 +233,20 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
   )
 }
 
-export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, initialType, initialGame }: {
+export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, activeType, activeGame }: {
   posts: any[]
   currentUserId: string
   currentUserHasTeam: boolean
-  initialType: string
-  initialGame: string
+  activeType: string
+  activeGame: string
 }) {
-  const [tab, setTab] = useState(initialType === 'lfp' ? 'lfp' : 'lft')
-  const [game, setGame] = useState(initialGame)
   const [localPosts, setLocalPosts] = useState(posts)
-
-  const filtered = localPosts
-    .filter((p) => p.type === tab)
-    .filter((p) => !game || p.game_type === game)
 
   const chipCls = (active: boolean) =>
     `px-3 py-1.5 rounded text-xs font-semibold transition ${active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
+
+  const tabUrl = (type: string) => `/recruit?type=${type}${activeGame ? `&game=${activeGame}` : ''}`
+  const gameUrl = (game: string) => `/recruit?type=${activeType}${game ? `&game=${game}` : ''}`
 
   const handleClose = async (id: string) => {
     await fetch(`/api/recruit/${id}`, {
@@ -274,28 +268,28 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
       {/* 탭 + 게임 필터 */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex gap-1 bg-white/5 rounded p-1">
-          <button onClick={() => setTab('lft')}
-            className={`px-4 py-1.5 rounded text-xs font-bold transition ${tab === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
+          <a href={tabUrl('lft')}
+            className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
             LFT <span className="text-[10px] opacity-60 ml-1">팀 구함</span>
-          </button>
-          <button onClick={() => setTab('lfp')}
-            className={`px-4 py-1.5 rounded text-xs font-bold transition ${tab === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
+          </a>
+          <a href={tabUrl('lfp')}
+            className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
             LFP <span className="text-[10px] opacity-60 ml-1">선수 구함</span>
-          </button>
+          </a>
         </div>
 
         <div className="flex gap-2">
           {[['', '전체'], ['valorant', 'VALORANT']].map(([val, label]) => (
-            <button key={val} onClick={() => setGame(val)} className={chipCls(game === val)}>{label}</button>
+            <a key={val} href={gameUrl(val)} className={chipCls(activeGame === val)}>{label}</a>
           ))}
         </div>
       </div>
 
       {/* 카드 그리드 */}
-      {filtered.length === 0 ? (
+      {localPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-slate-600 bg-[#13131f] border border-white/5 rounded">
-          <p className="text-3xl mb-4">{tab === 'lft' ? '🎮' : '🔍'}</p>
-          <p className="font-semibold text-sm">{tab === 'lft' ? '팀을 찾는 선수가 없어요' : '선수를 찾는 팀이 없어요'}</p>
+          <p className="text-3xl mb-4">{activeType === 'lft' ? '🎮' : '🔍'}</p>
+          <p className="font-semibold text-sm">{activeType === 'lft' ? '팀을 찾는 선수가 없어요' : '선수를 찾는 팀이 없어요'}</p>
           <p className="text-xs mt-1">첫 번째로 올려보세요!</p>
           <a href="/recruit/post" className="mt-5 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
             + 글 올리기
@@ -303,8 +297,8 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filtered.map((post) =>
-            tab === 'lft'
+          {localPosts.map((post) =>
+            activeType === 'lft'
               ? <LftCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
               : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} onClose={handleClose} onDelete={handleDelete} />
           )}
