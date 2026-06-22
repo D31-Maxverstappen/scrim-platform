@@ -58,11 +58,13 @@ export default function ProfileDropdown() {
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 hover:opacity-80 transition focus:outline-none"
       >
-        <div className="w-8 h-8 rounded-full overflow-hidden bg-gradient-to-br from-[#00D2BE] to-purple-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
+        <div className="w-8 h-8 rounded-full overflow-hidden bg-white/[0.06] border border-dashed border-white/20 flex items-center justify-center shrink-0">
           {user?.avatar ? (
             <img src={user.avatar} alt="" className="w-full h-full object-cover" />
           ) : (
-            initials
+            <svg className="w-4 h-4 text-white/25" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
           )}
         </div>
         <svg className={`w-3 h-3 text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
