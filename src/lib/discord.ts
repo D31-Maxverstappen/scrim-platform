@@ -132,3 +132,11 @@ export async function deleteDiscordChannel(channelId: string): Promise<void> {
     headers: { Authorization: `Bot ${BOT_TOKEN}` },
   })
 }
+
+// 채널에서 특정 유저 권한 제거
+export async function removeChannelPermission(channelId: string, discordUserId: string): Promise<void> {
+  await fetch(`https://discord.com/api/v10/channels/${channelId}/permissions/${discordUserId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bot ${BOT_TOKEN}` },
+  })
+}
