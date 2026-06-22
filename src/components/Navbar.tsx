@@ -95,7 +95,6 @@ export default function Navbar() {
         {[
           { href: link('/teams'), label: '팀 목록' },
           { href: '/recruit', label: '팀 또는 선수 찾기' },
-          { href: '/inhouse', label: '내전' },
           { href: '/leaderboard', label: '리더보드' },
           { href: '/valorant/calendar', label: '캘린더' },
           { href: '/support', label: '문의' },
