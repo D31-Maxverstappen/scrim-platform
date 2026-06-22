@@ -59,9 +59,9 @@ function GameForm({
             value={gameName}
             onChange={(e) => setGameName(e.target.value)}
             placeholder="닉네임"
-            className="flex-1 bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition text-sm"
+            className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition text-sm"
           />
-          <div className="flex items-center gap-1 bg-white/5 border border-white/10 rounded px-3">
+          <div className="shrink-0 flex items-center gap-1 bg-white/5 border border-white/10 rounded px-3">
             <span className="text-slate-500 text-sm">#</span>
             <input
               value={tagLine}
