@@ -30,15 +30,19 @@ export default function InquiryForm({ displayName }: { displayName: string }) {
 
   if (state === 'done') {
     return (
-      <div className="bg-[#13131f] border border-[#00D2BE]/20 rounded-2xl p-10 text-center">
-        <p className="text-3xl mb-4">✅</p>
+      <div className="py-10 text-center">
+        <div className="w-12 h-12 rounded-full bg-[#00D2BE]/10 border border-[#00D2BE]/30 flex items-center justify-center mx-auto mb-5">
+          <svg className="w-6 h-6 text-[#00D2BE]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
         <p className="text-white font-bold text-lg">문의가 접수되었습니다</p>
         <p className="text-slate-500 text-sm mt-2">확인 후 빠르게 처리해 드릴게요, {displayName}님</p>
         <button
           onClick={() => { setContent(''); setState('idle') }}
           className="mt-6 text-xs text-slate-500 hover:text-white transition"
         >
-          추가 문의하기
+          추가 문의하기 →
         </button>
       </div>
     )

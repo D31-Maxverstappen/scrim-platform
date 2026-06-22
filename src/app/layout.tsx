@@ -45,18 +45,33 @@ export default function RootLayout({
       </head>
       <body className={pretendard.variable}>
         {children}
-        <footer className="border-t border-white/5 bg-[#07070b] py-10 mt-auto">
-          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-5">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex gap-5 text-xs text-slate-500">
-                <a href="/terms" className="hover:text-slate-300 transition">이용약관</a>
-                <a href="/privacy" className="hover:text-slate-300 transition">개인정보 처리방침</a>
-                <a href="/refund" className="hover:text-slate-300 transition">환불정책</a>
+        <footer className="border-t border-white/[0.08] bg-[#07070b] py-12 mt-auto">
+          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-8">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-8">
+              <div>
+                <span className="text-white font-black text-xl tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
+                <p className="text-slate-600 text-xs mt-1.5">대한민국 발로란트 스크림 매칭 플랫폼</p>
               </div>
-              <span className="text-xs text-slate-700">© 2026 D31. All rights reserved.</span>
+              <div className="flex flex-col sm:flex-row gap-8 text-xs text-slate-500">
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">서비스</span>
+                  <a href="/valorant/dashboard" className="hover:text-slate-300 transition">대시보드</a>
+                  <a href="/leaderboard" className="hover:text-slate-300 transition">리더보드</a>
+                  <a href="/recruit" className="hover:text-slate-300 transition">모집 게시판</a>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-700">고객지원</span>
+                  <a href="/support" className="hover:text-slate-300 transition">문의하기</a>
+                  <a href="/terms" className="hover:text-slate-300 transition">이용약관</a>
+                  <a href="/privacy" className="hover:text-slate-300 transition">개인정보 처리방침</a>
+                </div>
+              </div>
             </div>
-            <div className="border-t border-white/5 pt-5 text-[10px] text-slate-700 leading-relaxed max-w-3xl">
-              D31.GG is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Valorant. Valorant and Riot Games are trademarks or registered trademarks of Riot Games, Inc. Valorant © Riot Games, Inc.
+            <div className="border-t border-white/5 pt-6 flex flex-col gap-2">
+              <span className="text-xs text-slate-600">© 2026 D31. All rights reserved.</span>
+              <p className="text-[10px] text-slate-700 leading-relaxed max-w-3xl">
+                D31.GG is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Valorant. Valorant and Riot Games are trademarks or registered trademarks of Riot Games, Inc. Valorant © Riot Games, Inc.
+              </p>
             </div>
           </div>
         </footer>
