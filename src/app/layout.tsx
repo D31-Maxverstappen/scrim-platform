@@ -50,7 +50,6 @@ export default function RootLayout({
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <span className="text-white font-black text-xl tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
-                <p className="text-slate-600 text-xs mt-1">대한민국 발로란트 스크림 매칭 플랫폼</p>
               </div>
               <div className="flex gap-5 text-xs text-slate-500">
                 <a href="/support" className="hover:text-slate-300 transition">문의하기</a>
