@@ -24,8 +24,8 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
       <div className="max-w-7xl mx-auto px-6 h-11 flex items-center gap-0">
 
         {/* 진행도 */}
-        <span className="text-[10px] font-black text-slate-700 mr-5 shrink-0 tabular-nums">
-          {doneCount}<span className="text-slate-800">/{steps.length}</span>
+        <span className="text-[10px] font-black text-slate-400 mr-5 shrink-0 tabular-nums">
+          {doneCount}<span className="text-slate-500">/{steps.length}</span>
         </span>
 
         {/* 스텝 */}
@@ -48,17 +48,17 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
-                  <span className={`text-[9px] font-black leading-none ${i === currentIdx ? 'text-[#00D2BE]' : 'text-slate-700'}`}>{i + 1}</span>
+                  <span className={`text-[9px] font-black leading-none ${i === currentIdx ? 'text-[#00D2BE]' : 'text-slate-500'}`}>{i + 1}</span>
                 )}
               </div>
 
               {/* 라벨 */}
               <span className={`text-[11px] font-bold ${
                 step.done
-                  ? 'text-slate-700 line-through decoration-slate-800'
+                  ? 'text-slate-500 line-through decoration-slate-600'
                   : i === currentIdx
                   ? 'text-white'
-                  : 'text-slate-600'
+                  : 'text-slate-400'
               }`}>
                 {step.label}
               </span>
@@ -76,7 +76,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
         {/* 닫기 */}
         <button
           onClick={() => setDismissed(true)}
-          className="ml-auto text-slate-800 hover:text-slate-500 transition text-base leading-none shrink-0"
+          className="ml-auto text-slate-500 hover:text-slate-300 transition text-base leading-none shrink-0"
           aria-label="닫기"
         >
           ×
