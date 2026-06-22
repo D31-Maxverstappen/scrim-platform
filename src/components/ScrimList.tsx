@@ -27,12 +27,12 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
   const activeCount = (filterServer ? 1 : 0) + (filterFormat ? 1 : 0) + (filterTier ? 1 : 0)
 
   const chip = (active: boolean) =>
-    `px-2.5 py-1 text-[10px] font-bold rounded-lg transition cursor-pointer select-none ${
+    `px-2.5 py-1 text-[10px] font-bold rounded-sm transition cursor-pointer select-none ${
       active ? 'bg-[#00D2BE]/20 text-[#00D2BE] border border-[#00D2BE]/40' : 'bg-white/[0.04] text-slate-500 border border-transparent hover:bg-white/[0.08] hover:text-slate-300'
     }`
 
   return (
-    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
+    <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
 
       {/* 헤더 */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
@@ -48,10 +48,10 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
         <div className="flex items-center gap-3">
           <button
             onClick={() => setFilterOpen((v) => !v)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold transition border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold transition border ${
               filterOpen || activeCount > 0
                 ? 'bg-[#00D2BE]/10 border-[#00D2BE]/30 text-[#00D2BE]'
-                : 'bg-white/[0.04] border-white/[0.06] text-slate-500 hover:text-slate-300'
+                : 'bg-white/[0.04] border-white/[0.10] text-slate-500 hover:text-slate-300'
             }`}
           >
             필터

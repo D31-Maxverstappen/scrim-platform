@@ -152,7 +152,7 @@ export default async function ValorantDashboardPage() {
           ].map((s) => (
             <div
               key={s.label}
-              className="bg-[#0d0d1a] border border-white/[0.05] rounded-2xl px-6 py-5 stat-card-glow animate-fade-in-up cursor-default"
+              className="bg-[#0d0d1a] border border-white/[0.08] rounded px-6 py-5 stat-card-glow animate-fade-in-up cursor-default"
               style={{ animationDelay: `${s.delay}ms` }}
             >
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-3">{s.label}</p>
@@ -172,7 +172,7 @@ export default async function ValorantDashboardPage() {
           {/* 사이드바 */}
           <aside className="w-68 shrink-0 flex flex-col gap-3 animate-fade-in-up" style={{ width: '272px', animationDelay: '300ms' }}>
 
-            <div className="card-glow rounded-2xl transition-all duration-300"><ProfileCard
+            <div className="card-glow rounded transition-all duration-300"><ProfileCard
               userId={user.id}
               avatarUrl={profile?.avatar_url ?? null}
               valGamename={profile?.val_gamename ?? profile?.riot_gamename ?? null}
@@ -181,7 +181,7 @@ export default async function ValorantDashboardPage() {
             /></div>
 
             {/* 매너 점수 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5 card-glow transition-all duration-300">
+            <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
               <div className="flex items-baseline gap-1.5 mb-3">
                 <span className="text-3xl font-black text-white">100</span>
@@ -194,13 +194,13 @@ export default async function ValorantDashboardPage() {
             </div>
 
             {/* 내 팀 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5 card-glow transition-all duration-300">
+            <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Team</p>
               {team ? (
                 <div className="flex items-center gap-3">
                   {/* 로고: 캡틴→관리페이지, 멤버→팀페이지 */}
                   <a href={myValTeam?.role === 'captain' ? `/teams/${team.id}/manage` : `/teams/${team.id}`}
-                    className="group/logo relative w-12 h-12 shrink-0 rounded-xl overflow-hidden border border-dashed border-white/20 bg-white/[0.06] flex items-center justify-center">
+                    className="group/logo relative w-12 h-12 shrink-0 rounded overflow-hidden border border-dashed border-white/20 bg-white/[0.06] flex items-center justify-center">
                     <svg className="w-5 h-5 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -232,7 +232,7 @@ export default async function ValorantDashboardPage() {
                 <div className="flex flex-col gap-3">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
                   <a href="/teams/create"
-                    className="text-center text-white text-xs font-bold py-2 rounded-xl transition"
+                    className="text-center text-white text-xs font-bold py-2 rounded transition"
                     style={{ background: '#ff4655' }}>
                     팀 만들기
                   </a>
@@ -241,7 +241,7 @@ export default async function ValorantDashboardPage() {
             </div>
 
             {/* 빠른 링크 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden">
+            <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden">
               {[
                 { href: '/scrims/applied', label: '내 스크림', sub: '받은 · 신청한 스크림' },
                 { href: '/recruit', label: '팀 · 선수 찾기', sub: '모집 게시판' },
@@ -268,12 +268,12 @@ export default async function ValorantDashboardPage() {
             )}
 
             {/* 스크림 리스트 */}
-            <div className="rounded-2xl overflow-hidden border border-white/[0.05]">
+            <div className="rounded overflow-hidden border border-white/[0.08]">
               <ScrimList scrims={recentScrims ?? []} game={GAME} />
             </div>
 
             {/* 내전 섹션 */}
-            <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
+            <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
                 <Link href="/inhouse" className="text-[10px] font-bold text-slate-400 hover:text-white transition">
@@ -342,7 +342,7 @@ export default async function ValorantDashboardPage() {
             <div className="grid grid-cols-2 gap-5">
 
               {/* 최근 매치 */}
-              <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl overflow-hidden card-glow transition-all duration-300">
+              <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
                 <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
                   <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">최근 매치</p>
                 </div>

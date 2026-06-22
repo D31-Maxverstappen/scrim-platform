@@ -23,7 +23,7 @@ type Props = {
 
 export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline, valTier }: Props) {
   return (
-    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5">
+    <div className="bg-[#0d0d1a] border border-white/[0.06] rounded p-5">
       <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Profile</p>
 
       <div className="flex items-center gap-3">

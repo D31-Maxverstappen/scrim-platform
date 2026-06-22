@@ -152,13 +152,13 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
   }
 
   const chip = (active: boolean) =>
-    `px-4 py-1.5 text-xs font-bold rounded-lg transition cursor-pointer ${active ? 'bg-[#00D2BE] text-white shadow-[0_0_10px_rgba(0,210,190,0.5)]' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
+    `px-4 py-1.5 text-xs font-bold rounded-sm transition cursor-pointer ${active ? 'bg-[#00D2BE] text-white shadow-[0_0_10px_rgba(0,210,190,0.5)]' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
 
   // 대기 중
   if (status === 'waiting') {
     return (
-      <div className="neon-border-wrap neon-border-glow rounded-xl p-[2px]">
-        <div className="relative rounded-xl bg-[#0d1a19] overflow-hidden">
+      <div className="neon-border-wrap neon-border-glow rounded p-[2px]">
+        <div className="relative rounded bg-[#0d1a19] overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-[#00D2BE]/8 via-transparent to-transparent pointer-events-none" />
           <div className="relative flex items-center justify-between px-8 py-7 gap-6">
             <div className="flex items-center gap-6">
@@ -177,7 +177,7 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
             </div>
             <button
               onClick={handleCancel}
-              className="text-slate-500 hover:text-red-400 text-sm font-semibold transition px-5 py-2.5 rounded-lg hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 shrink-0"
+              className="text-slate-500 hover:text-red-400 text-sm font-semibold transition px-5 py-2.5 rounded-sm hover:bg-red-500/10 border border-white/5 hover:border-red-500/20 shrink-0"
             >
               취소
             </button>
@@ -189,8 +189,8 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
 
   // 기본 상태
   return (
-    <div className="neon-border-wrap neon-border-glow rounded-xl p-[2px]">
-      <div className="relative rounded-xl bg-[#0d1017] overflow-hidden">
+    <div className="neon-border-wrap neon-border-glow rounded p-[2px]">
+      <div className="relative rounded bg-[#0d1017] overflow-hidden">
         {/* 배경 그라데이션 */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#00D2BE]/5 via-transparent to-[#7B61FF]/5 pointer-events-none" />
         {/* 스캔 라인 */}
@@ -201,8 +201,8 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
         <div className="relative px-8 py-8 flex flex-col gap-6">
           {/* 상단: 아이콘 + 제목 */}
           <div className="flex items-start gap-5">
-            <div className="relative w-14 h-14 rounded-xl bg-[#00D2BE]/10 border border-[#00D2BE]/20 flex items-center justify-center shrink-0">
-              <div className="absolute inset-0 rounded-xl bg-[#00D2BE]/10 animate-pulse" />
+            <div className="relative w-14 h-14 rounded bg-[#00D2BE]/10 border border-[#00D2BE]/20 flex items-center justify-center shrink-0">
+              <div className="absolute inset-0 rounded bg-[#00D2BE]/10 animate-pulse" />
               <svg className="relative w-7 h-7 text-[#00D2BE] drop-shadow-[0_0_8px_rgba(0,210,190,1)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -257,13 +257,13 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
           <button
             onClick={handleJoin}
             disabled={loading}
-            className="w-full bg-[#00D2BE] hover:bg-[#00c4b0] disabled:opacity-50 text-white font-black text-base py-4 rounded-xl transition-all duration-200 shadow-[0_0_24px_rgba(0,210,190,0.4)] hover:shadow-[0_0_40px_rgba(0,210,190,0.65)] hover:scale-[1.01] active:scale-[0.99]"
+            className="w-full bg-[#00D2BE] hover:bg-[#00c4b0] disabled:opacity-50 text-white font-black text-base py-4 rounded transition-all duration-200 shadow-[0_0_24px_rgba(0,210,190,0.4)] hover:shadow-[0_0_40px_rgba(0,210,190,0.65)] hover:scale-[1.01] active:scale-[0.99]"
           >
             {loading ? '탐색 중...' : '⚡ 매칭 시작'}
           </button>
 
           {error && (
-            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-2.5 -mt-2">{error}</p>
+            <p className="text-red-400 text-xs bg-red-500/10 border border-red-500/20 rounded-sm px-4 py-2.5 -mt-2">{error}</p>
           )}
         </div>
       </div>
