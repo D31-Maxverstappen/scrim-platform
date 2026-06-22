@@ -38,13 +38,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
       .eq('user_id', user.id)
       .maybeSingle()
 
-    if (!existingMembership) {
-      await admin.from('team_members').insert({
-        team_id: invite.target_id,
-        user_id: user.id,
-        role: 'player',
-      })
+    if (existingMembership) {
+      return NextResponse.redirect(`${origin}/dashboard?error=already_in_team`)
     }
+
+    await admin.from('team_members').insert({
+      team_id: invite.target_id,
+      user_id: user.id,
+      role: 'player',
+    })
     return NextResponse.redirect(`${origin}/teams/${invite.target_id}`)
   }
 
