@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import InviteButton from '@/components/InviteButton'
 
 const STATUS_LABEL: Record<string, string> = {
   recruiting: '모집중', full: '인원마감', ongoing: '진행중', done: '종료',
@@ -101,9 +102,14 @@ export default function RoomClient({
             <Link href="/inhouse" className="text-xs text-slate-600 hover:text-slate-400 transition mb-2 block">← 내전 목록</Link>
             <h1 className="text-white font-bold text-xl">{room.title}</h1>
           </div>
-          <span className={`text-xs font-black px-3 py-1 rounded-full shrink-0 ${STATUS_COLOR[room.status]}`}>
-            {STATUS_LABEL[room.status]}
-          </span>
+          <div className="flex items-center gap-2 shrink-0">
+            {isHost && room.status === 'recruiting' && (
+              <InviteButton type="inhouse" targetId={room.id} userId={currentUserId} />
+            )}
+            <span className={`text-xs font-black px-3 py-1 rounded-full ${STATUS_COLOR[room.status]}`}>
+              {STATUS_LABEL[room.status]}
+            </span>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-3 text-xs text-slate-500">

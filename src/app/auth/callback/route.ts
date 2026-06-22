@@ -62,12 +62,22 @@ export async function GET(request: NextRequest) {
     }).eq('id', user.id)
   }
 
-  const redirectTo = (!existing || !existing.riot_puuid) ? '/onboarding' : '/dashboard'
+  const invitePending = request.cookies.get('invite_pending')?.value
+  let redirectTo: string
+  if (invitePending && existing?.riot_puuid) {
+    redirectTo = `/invite/${invitePending}`
+  } else {
+    redirectTo = (!existing || !existing.riot_puuid) ? '/onboarding' : '/dashboard'
+  }
+
   const response = NextResponse.redirect(`${origin}${redirectTo}`)
 
   pendingCookies.forEach(({ name, value, options }) => {
     response.cookies.set(name, value, options)
   })
+
+  // 초대 쿠키 소비
+  if (invitePending) response.cookies.delete('invite_pending')
 
   return response
 }

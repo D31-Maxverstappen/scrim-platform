@@ -1,0 +1,78 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@supabase/supabase-js'
+
+const admin = createAdmin(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+)
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ token: string }> }) {
+  const { token } = await params
+  const origin = new URL(req.url).origin
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // 로그인 안 된 경우 → 쿠키 저장 후 로그인 페이지로
+  if (!user) {
+    const res = NextResponse.redirect(`${origin}/login`)
+    res.cookies.set('invite_pending', token, { path: '/', maxAge: 30 * 60, httpOnly: true, sameSite: 'lax' })
+    return res
+  }
+
+  // 초대 링크 조회
+  const { data: invite } = await admin
+    .from('invite_links')
+    .select('type, target_id')
+    .eq('token', token)
+    .single()
+
+  if (!invite) return NextResponse.redirect(`${origin}/dashboard`)
+
+  if (invite.type === 'team') {
+    // 이미 멤버인지 확인
+    const { data: already } = await admin
+      .from('team_members')
+      .select('id')
+      .eq('team_id', invite.target_id)
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    if (!already) {
+      await admin.from('team_members').insert({
+        team_id: invite.target_id,
+        user_id: user.id,
+        role: 'player',
+      })
+    }
+    return NextResponse.redirect(`${origin}/teams/${invite.target_id}`)
+  }
+
+  if (invite.type === 'inhouse') {
+    const { data: room } = await admin
+      .from('inhouse_rooms')
+      .select('status, max_players')
+      .eq('id', invite.target_id)
+      .single()
+
+    if (room?.status === 'recruiting') {
+      const { count } = await admin
+        .from('inhouse_participants')
+        .select('id', { count: 'exact', head: true })
+        .eq('room_id', invite.target_id)
+
+      if ((count ?? 0) < room.max_players) {
+        await admin.from('inhouse_participants')
+          .upsert({ room_id: invite.target_id, user_id: user.id }, { onConflict: 'room_id,user_id', ignoreDuplicates: true })
+
+        if ((count ?? 0) + 1 >= room.max_players) {
+          await admin.from('inhouse_rooms').update({ status: 'full' }).eq('id', invite.target_id)
+        }
+      }
+    }
+    return NextResponse.redirect(`${origin}/inhouse/${invite.target_id}`)
+  }
+
+  return NextResponse.redirect(`${origin}/dashboard`)
+}

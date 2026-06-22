@@ -3,52 +3,42 @@
 import { useState } from 'react'
 
 export default function InviteButton({
-  teamId, teamName, targetUserId, targetUserName, targetUserTeamId
+  type,
+  targetId,
+  userId,
 }: {
-  teamId: string
-  teamName: string
-  targetUserId: string
-  targetUserName: string
-  targetUserTeamId: string | null
+  type: 'team' | 'inhouse'
+  targetId: string
+  userId: string
 }) {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle')
-  const [msg, setMsg] = useState('')
+  const [state, setState] = useState<'idle' | 'loading' | 'copied'>('idle')
 
-  if (targetUserTeamId) {
-    return <span className="text-slate-600 text-xs">이미 팀 소속</span>
-  }
-
-  const handleInvite = async () => {
-    setStatus('loading')
-    const res = await fetch(`/api/teams/${teamId}/invite`, {
+  const handleClick = async () => {
+    setState('loading')
+    const res = await fetch('/api/invite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ targetUserId }),
+      body: JSON.stringify({ type, targetId, userId }),
     })
-    const data = await res.json()
-    if (res.ok) {
-      setStatus('sent')
-      setMsg('초대를 보냈어요!')
-    } else {
-      setStatus('error')
-      setMsg(data.error ?? '오류가 발생했어요')
-    }
-  }
-
-  if (status === 'sent') {
-    return <span className="text-[#00D2BE] text-xs font-semibold">초대 전송됨 ✓</span>
+    if (!res.ok) { setState('idle'); return }
+    const { token } = await res.json()
+    const url = `${window.location.origin}/invite/${token}`
+    await navigator.clipboard.writeText(url)
+    setState('copied')
+    setTimeout(() => setState('idle'), 2000)
   }
 
   return (
-    <div className="flex flex-col items-end gap-1">
-      <button
-        onClick={handleInvite}
-        disabled={status === 'loading'}
-        className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white text-xs font-bold px-4 py-2 rounded transition shrink-0"
-      >
-        {status === 'loading' ? '보내는 중...' : `${teamName}으로 초대`}
-      </button>
-      {status === 'error' && <p className="text-red-400 text-xs">{msg}</p>}
-    </div>
+    <button
+      onClick={handleClick}
+      disabled={state === 'loading'}
+      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition ${
+        state === 'copied'
+          ? 'bg-green-500/10 text-green-400'
+          : 'bg-white/5 text-slate-400 hover:bg-white/10 hover:text-white'
+      } disabled:opacity-50`}
+    >
+      {state === 'copied' ? '✓ 복사됨' : state === 'loading' ? '생성 중...' : '🔗 초대 링크 복사'}
+    </button>
   )
 }

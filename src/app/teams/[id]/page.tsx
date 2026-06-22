@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import JoinTeamButton from '@/components/JoinTeamButton'
 import LeaveTeamButton from '@/components/LeaveTeamButton'
+import InviteButton from '@/components/InviteButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
 import { FlagImg } from '@/components/CountrySelect'
 import TeamChat from '@/components/TeamChat'
@@ -291,10 +292,13 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
               <LeaveTeamButton teamId={id} />
             )}
             {isCaptain && (
-              <a href={`/teams/${id}/manage`}
-                className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2 rounded transition">
-                팀 관리
-              </a>
+              <>
+                <InviteButton type="team" targetId={id} userId={user.id} />
+                <a href={`/teams/${id}/manage`}
+                  className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2 rounded transition">
+                  팀 관리
+                </a>
+              </>
             )}
           </div>
         </div>
