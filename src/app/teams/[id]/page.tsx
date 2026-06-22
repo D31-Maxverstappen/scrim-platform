@@ -27,7 +27,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses, is_open').eq('id', id).single()
+  const { data: team } = await supabase.from('teams').select('id, name, abbreviation, game_type, tier_avg, captain_id, wins, losses, is_open, logo_url').eq('id', id).single()
   if (!team) notFound()
 
   const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }, { data: anyMembership }] = await Promise.all([
@@ -254,9 +254,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
         {/* ── 팀 헤더 (Liquipedia 스타일) ── */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-white/10">
           {/* 팀 로고 */}
-          <div className="w-36 h-36 shrink-0 border border-white/10 bg-[#13131f] flex items-center justify-center text-7xl font-black rounded-xl"
+          <div className="w-36 h-36 shrink-0 border border-white/10 bg-[#13131f] flex items-center justify-center text-7xl font-black rounded-xl overflow-hidden"
             style={{ color: gameColor }}>
-            {(team.abbreviation || team.name)[0].toUpperCase()}
+            {team.logo_url
+              ? <img src={team.logo_url} alt={team.name} className="w-full h-full object-cover" />
+              : (team.abbreviation || team.name)[0].toUpperCase()
+            }
           </div>
 
           {/* 팀 정보 */}

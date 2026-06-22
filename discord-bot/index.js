@@ -45,7 +45,9 @@ async function refreshScrimChannels() {
     .neq('status', 'completed')
 
   data?.forEach((m) => {
-    if (m.discord_channel_id) scrimChannels.add(m.discord_channel_id)
+    if (m.discord_channel_id) {
+      m.discord_channel_id.split(',').filter(Boolean).forEach(id => scrimChannels.add(id.trim()))
+    }
   })
 }
 
@@ -172,10 +174,22 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
       await channel.delete('스크림 종료 - 모든 인원 퇴장')
       scrimChannels.delete(channelId)
 
-      await supabase
+      // discord_channel_id가 "id1,id2" 형태로 저장되므로 LIKE로 찾아서 해당 ID만 제거
+      const { data: matches } = await supabase
         .from('matches')
-        .update({ discord_channel_id: null })
-        .eq('discord_channel_id', channelId)
+        .select('id, discord_channel_id')
+        .like('discord_channel_id', `%${channelId}%`)
+
+      for (const match of matches ?? []) {
+        const remaining = match.discord_channel_id
+          .split(',').filter(Boolean).map(s => s.trim())
+          .filter(id => id !== channelId)
+          .join(',')
+        await supabase
+          .from('matches')
+          .update({ discord_channel_id: remaining || null })
+          .eq('id', match.id)
+      }
 
       console.log(`[D31 Bot] 스크림 채널 자동 삭제: ${channel.name}`)
     } catch (e) {

@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import TeamLogoUpload from '@/components/TeamLogoUpload'
 
 const ROLES = ['player', 'igl', 'head_coach', 'coach']
 const ROLE_LABEL: Record<string, string> = {
@@ -202,6 +203,16 @@ export default function ManageTeamPage() {
         <section className="mb-8">
           <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">팀 정보 수정</h2>
           <div className="bg-[#13131f] border border-white/5 rounded p-5 flex flex-col gap-4">
+            {/* 팀 로고 */}
+            <div>
+              <label className="text-slate-400 text-xs mb-2 block">팀 로고 <span className="text-slate-600">(클릭해서 변경, 최대 2MB)</span></label>
+              <TeamLogoUpload
+                teamId={teamId}
+                initialUrl={team?.logo_url ?? null}
+                fallbackLetter={(team?.abbreviation || team?.name)?.[0]?.toUpperCase() ?? '?'}
+                color="#00D2BE"
+              />
+            </div>
             <div>
               <label className="text-slate-400 text-xs mb-1.5 block">팀 이름</label>
               <input
