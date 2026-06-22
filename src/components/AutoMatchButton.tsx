@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 
 type Status = 'idle' | 'waiting' | 'matched'
 
-export default function AutoMatchButton({ teamId, gameType }: { teamId: string; gameType: string }) {
+export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId: string; gameType: string; tierAvg?: string | null }) {
   const router = useRouter()
   const [status, setStatus] = useState<Status>('idle')
   const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
@@ -197,7 +197,14 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
                   BETA
                 </span>
               </div>
-              <p className="text-slate-400 text-sm mt-1">조건에 맞는 상대 팀을 자동으로 찾아드려요. 팀원이 모두 접속한 상태에서 시작하세요.</p>
+              <div className="flex items-center gap-3 mt-1 flex-wrap">
+                <p className="text-slate-400 text-sm">조건에 맞는 상대 팀을 자동으로 찾아드려요.</p>
+                {tierAvg && (
+                  <span className="shrink-0 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-white/[0.06] text-slate-300 border border-white/[0.08]">
+                    내 팀 평균 {tierAvg}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
 

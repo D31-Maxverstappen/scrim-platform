@@ -251,7 +251,7 @@ export default async function ValorantDashboardPage() {
           <main className="flex-1 flex flex-col gap-5 min-w-0 animate-fade-in-up" style={{ animationDelay: '380ms' }}>
 
             {team && myValTeam?.role === 'captain' && (
-              <AutoMatchButton teamId={team.id} gameType={GAME} />
+              <AutoMatchButton teamId={team.id} gameType={GAME} tierAvg={team.tier_avg ?? undefined} />
             )}
 
             {/* 스크림 리스트 */}
