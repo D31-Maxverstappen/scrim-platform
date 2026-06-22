@@ -71,11 +71,13 @@ export default async function LeaderboardPage({
     .not('val_tier', 'is', null)
     .range(from, to)
 
-  const sortedPlayers = (players ?? []).map((u) => ({
-    ...u,
-    displayTier: u.val_tier ?? u.tier,
-    displayName: u.val_gamename ?? u.riot_gamename,
-  }))
+  const sortedPlayers = (players ?? [])
+    .map((u) => ({
+      ...u,
+      displayTier: u.val_tier ?? u.tier,
+      displayName: u.val_gamename ?? u.riot_gamename,
+    }))
+    .sort((a, b) => tierRank(a.displayTier) - tierRank(b.displayTier))
 
   const myPlayerRank = sortedPlayers.findIndex((u) => u.id === user.id)
 

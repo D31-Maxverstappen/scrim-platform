@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { recalcTierAvg } from '@/lib/tierUtils'
+import { assignDiscordRole } from '@/lib/discord'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -35,6 +37,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       .eq('invited_user_id', user.id)
       .eq('status', 'pending')
       .neq('id', id)
+
+    // 팀 평균 티어 갱신
+    await recalcTierAvg(supabase, invite.team_id)
+
+    // Discord 역할 부여
+    const { data: team } = await supabase.from('teams').select('discord_role_id').eq('id', invite.team_id).single()
+    const { data: profile } = await supabase.from('users').select('discord_id').eq('id', user.id).single()
+    if (team?.discord_role_id && profile?.discord_id) {
+      await assignDiscordRole(profile.discord_id, team.discord_role_id).catch(() => {})
+    }
 
     return NextResponse.json({ success: true, action })
   }

@@ -138,9 +138,13 @@ export default function ManageTeamPage() {
 
   const handleKick = async (userId: string) => {
     if (!confirm('정말 내보낼까요?')) return
-    await supabase.from('team_members').delete().eq('team_id', teamId).eq('user_id', userId)
-    setMsg('멤버를 내보냈어요.')
-    load()
+    const res = await fetch(`/api/teams/${teamId}/kick`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId }),
+    })
+    if (res.ok) { setMsg('멤버를 내보냈어요.'); load() }
+    else { const d = await res.json(); setMsg('오류: ' + (d.error ?? '알 수 없음')) }
   }
 
   const handleToggleOpen = async () => {

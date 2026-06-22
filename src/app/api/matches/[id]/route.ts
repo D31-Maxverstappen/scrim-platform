@@ -40,6 +40,15 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     ...(winner_id ? { winner_id } : {}),
   }).eq('id', id)
 
+  // 팀 전적 갱신
+  if (winner_id) {
+    const loserId = match.team1_id === winner_id ? match.team2_id : match.team1_id
+    await Promise.all([
+      supabase.rpc('increment_wins', { team_id: winner_id }),
+      supabase.rpc('increment_losses', { team_id: loserId }),
+    ])
+  }
+
   if (match.discord_channel_id) {
     await Promise.all(
       match.discord_channel_id.split(',').filter(Boolean).map((cid: string) => deleteDiscordChannel(cid))
