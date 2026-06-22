@@ -30,11 +30,6 @@ export async function PATCH(req: NextRequest) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // 정지 시 기존 세션 즉시 강제 종료
-  if (suspend) {
-    await admin.auth.admin.signOut(userId, 'global')
-  }
-
   return NextResponse.json({ ok: true })
 }
 
