@@ -66,14 +66,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#07070b] flex flex-col relative overflow-hidden">
 
-      {/* 배경 */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* 배경 - 히어로 섹션(첫 화면)만 커버 */}
+      <div className="pointer-events-none absolute top-0 left-0 right-0 h-screen overflow-hidden">
         <img
           src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=1920&q=60"
           alt=""
           className="absolute inset-0 w-full h-full object-cover object-center opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/70 via-[#07070b]/60 to-[#07070b] landing-hero-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/60 via-[#07070b]/70 to-[#07070b] landing-hero-overlay" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px]" />
       </div>
 
