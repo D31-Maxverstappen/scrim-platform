@@ -62,7 +62,7 @@ export default function Navbar() {
   return (
     <>
     {userId && <SuspendedWatcher userId={userId} />}
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6 relative">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#070711]/95 backdrop-blur-md border-b border-white/[0.06] px-6 h-16 flex items-center gap-6">
       {/* 로고 */}
       <Link href={game ? `/${game}/dashboard` : '/dashboard'} className="shrink-0 flex items-center">
         <Image src="/logo.png" alt="D31" width={52} height={52} className="object-contain" />
@@ -73,30 +73,8 @@ export default function Navbar() {
         href={game ? `/${game}/dashboard` : '/dashboard'}
         className="absolute left-1/2 -translate-x-1/2 select-none"
       >
-        <span
-          className="text-xl font-black tracking-tight"
-          style={{
-            background: 'linear-gradient(135deg, #d4d4d4 0%, #c0c0c0 40%, #c0392b 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 0 10px rgba(192,57,43,0.35))',
-          }}
-        >
-          D31
-        </span>
-        <span
-          className="text-xl font-black tracking-tight"
-          style={{
-            background: 'linear-gradient(135deg, #c0392b 0%, #96281b 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-            filter: 'drop-shadow(0 0 10px rgba(192,57,43,0.5))',
-          }}
-        >
-          .GG
-        </span>
+        <span className="text-xl font-black tracking-tight text-white">D31</span>
+        <span className="text-xl font-black tracking-tight text-[#00D2BE]">.GG</span>
       </Link>
 
       {/* 네비 링크 */}
