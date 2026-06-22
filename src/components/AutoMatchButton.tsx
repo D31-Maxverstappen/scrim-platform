@@ -16,6 +16,7 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
   const [error, setError] = useState('')
   const sinceRef = useRef<number | null>(null)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const isPollingRef = useRef(false)
   const supabase = createClient()
 
   useEffect(() => {
@@ -55,6 +56,8 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
   useEffect(() => {
     if (status !== 'waiting') return
     const poll = setInterval(async () => {
+      if (isPollingRef.current) return  // 이전 요청 진행 중이면 스킵
+      isPollingRef.current = true
       try {
         const res = await fetch('/api/matchmaking/join', {
           method: 'POST',
@@ -64,9 +67,11 @@ export default function AutoMatchButton({ teamId, gameType }: { teamId: string; 
         const data = await res.json()
         if (data.status === 'matched' && data.matchId) {
           stopTimer()
+          setStatus('matched')  // 즉시 폴링 중단
           router.push(`/matches/${data.matchId}`)
         }
       } catch { }
+      isPollingRef.current = false
     }, 5000)
     return () => clearInterval(poll)
   }, [status, gameType, format, server])

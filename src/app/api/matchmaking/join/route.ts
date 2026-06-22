@@ -99,6 +99,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ status: 'waiting', queueId: entryId })
   }
 
+  // 동시 요청 중복 방지: 이미 두 팀 간 매치가 존재하면 재사용
+  const fiveMinAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
+  const { data: dupMatch } = await db
+    .from('matches')
+    .select('id')
+    .or(
+      `and(team1_id.eq.${team.id},team2_id.eq.${opponentTeam.id}),` +
+      `and(team1_id.eq.${opponentTeam.id},team2_id.eq.${team.id})`
+    )
+    .eq('status', 'scheduled')
+    .gte('created_at', fiveMinAgo)
+    .maybeSingle()
+
+  if (dupMatch) {
+    return NextResponse.json({ status: 'matched', matchId: dupMatch.id })
+  }
+
   // 매치 생성
   const now = new Date().toISOString()
   const { data: match, error: matchError } = await db
