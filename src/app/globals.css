@@ -60,6 +60,14 @@ body {
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
+/* 사이드바는 테마 전환 트랜지션에서 완전히 제외 — 배경·글자·아이콘 모두 즉시 반영.
+   theme-transitioning 의 전역 0.2s 트랜지션이 사이드바 배경판에 걸려 혼자 늦게
+   바뀌던 딜레이를 물리적으로 제거 (transition 자체가 없으면 fade 불가). */
+.sidebar-outer,
+.sidebar-outer * {
+  transition: none !important;
+}
+
 /* ── Light mode overrides ── */
 /* 배경 */
 [data-theme="light"] .bg-\[\#0a0a0a\],
