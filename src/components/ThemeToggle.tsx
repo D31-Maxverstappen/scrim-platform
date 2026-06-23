@@ -26,7 +26,10 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="flex flex-col items-center gap-0.5 bg-white/5 hover:bg-white/10 px-2 py-1.5 transition text-slate-400 hover:text-white"
+      className="flex flex-col items-center gap-0.5 px-2 py-1.5 rounded transition"
+      style={{ background: 'var(--bg-input)', color: 'var(--text-secondary)' }}
+      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--bg-input-hover)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)' }}
+      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)' }}
       title={theme === 'dark' ? '라이트 모드' : '다크 모드'}
     >
       {theme === 'dark' ? (

@@ -127,15 +127,16 @@ export default function Sidebar() {
         style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
 
         {/* 로고 */}
-        <Link href="/valorant/dashboard" className="flex items-center gap-2.5 px-4 py-5 shrink-0">
+        <Link href="/valorant/dashboard" className="flex items-center gap-2.5 px-4 py-5 shrink-0"
+          style={{ color: 'var(--text-primary)' }}>
           <Image src="/logo.png" alt="D31" width={32} height={32} className="object-contain shrink-0" />
-          <span className="text-base font-black tracking-tight text-white">D31<span className="text-[#00D2BE]">.GG</span></span>
+          <span className="text-base font-black tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
         </Link>
 
         {/* 검색 */}
         <div ref={wrapperRef} className="px-3 mb-3 relative shrink-0">
           <div className="relative">
-            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: 'var(--text-muted)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
             <input
@@ -143,20 +144,29 @@ export default function Sidebar() {
               onChange={(e) => setSearch(e.target.value)}
               onFocus={() => hasResults && setOpen(true)}
               placeholder="검색"
-              className="w-full bg-white/[0.04] border border-white/[0.08] rounded pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-700 focus:outline-none focus:border-[#00D2BE]/40 transition"
+              className="w-full rounded pl-8 pr-3 py-1.5 text-xs focus:outline-none transition"
+              style={{
+                background: 'var(--bg-input)',
+                border: '1px solid var(--border-input)',
+                color: 'var(--text-primary)',
+              }}
             />
           </div>
           {open && hasResults && (
-            <div className="absolute top-full mt-1 left-3 right-3 bg-[#0d0d1a] border border-white/[0.08] rounded overflow-hidden z-50">
+            <div className="absolute top-full mt-1 left-3 right-3 rounded overflow-hidden z-50"
+              style={{ background: 'var(--bg-card)', border: '1px solid var(--border-input)' }}>
               {teams.length > 0 && (
                 <>
-                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black text-slate-700 uppercase tracking-widest">팀</p>
+                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>팀</p>
                   {teams.map((t) => (
                     <button key={t.id} onMouseDown={() => { router.push(`/teams/${t.id}`); setSearch(''); setOpen(false) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 hover:bg-white/[0.04] transition text-left">
+                      className="w-full flex items-center gap-2 px-3 py-2 transition text-left"
+                      style={{ color: 'var(--text-primary)' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-input)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = '')}>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-xs font-semibold truncate">{t.name}</p>
-                        {t.tier_avg && <p className="text-slate-600 text-[10px]">{t.tier_avg}</p>}
+                        <p className="text-xs font-semibold truncate">{t.name}</p>
+                        {t.tier_avg && <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{t.tier_avg}</p>}
                       </div>
                     </button>
                   ))}
@@ -164,16 +174,21 @@ export default function Sidebar() {
               )}
               {users.length > 0 && (
                 <>
-                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black text-slate-700 uppercase tracking-widest border-t border-white/[0.04]">유저</p>
+                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black uppercase tracking-widest border-t"
+                    style={{ color: 'var(--text-muted)', borderColor: 'var(--border)' }}>유저</p>
                   {users.map((u) => (
                     <button key={u.id} onMouseDown={() => { router.push(`/users/${u.id}`); setSearch(''); setOpen(false) }}
-                      className="w-full flex items-center gap-2 px-3 py-2 hover:bg-white/[0.04] transition text-left">
-                      <div className="w-6 h-6 rounded-full bg-white/[0.05] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold text-white/40">
+                      className="w-full flex items-center gap-2 px-3 py-2 transition text-left"
+                      style={{ color: 'var(--text-primary)' }}
+                      onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-input)')}
+                      onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                      <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold"
+                        style={{ background: 'var(--bg-input)', color: 'var(--text-muted)' }}>
                         {u.avatar_url ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-xs font-semibold truncate">{u.riot_gamename}</p>
-                        {u.tier && <p className="text-slate-600 text-[10px]">{u.tier}</p>}
+                        <p className="text-xs font-semibold truncate">{u.riot_gamename}</p>
+                        {u.tier && <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{u.tier}</p>}
                       </div>
                     </button>
                   ))}
@@ -192,11 +207,12 @@ export default function Sidebar() {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
             return (
               <Link key={item.href} href={item.href}
-                className={`flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold transition-all ${
-                  active
-                    ? 'bg-[#00D2BE]/10 text-[#00D2BE]'
-                    : 'text-slate-500 hover:text-white hover:bg-white/[0.04]'
-                }`}>
+                className="flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold transition-all"
+                style={active
+                  ? { background: 'rgba(0,210,190,0.10)', color: '#00D2BE' }
+                  : { color: 'var(--text-secondary)' }}
+                onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)' } }}
+                onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = ''; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)' } }}>
                 <span className="w-5 h-5 shrink-0">{item.icon}</span>
                 {item.label}
               </Link>
