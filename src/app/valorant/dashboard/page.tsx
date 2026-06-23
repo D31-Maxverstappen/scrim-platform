@@ -124,9 +124,7 @@ export default async function ValorantDashboardPage() {
       <Sidebar />
 
       {/* 온보딩 체크포인트 바 */}
-      <div className="pt-16">
-        <OnboardingBar steps={onboardingSteps} />
-      </div>
+      <OnboardingBar steps={onboardingSteps} />
 
       <div className="max-w-7xl mx-auto px-6 pb-16 pt-8">
 
