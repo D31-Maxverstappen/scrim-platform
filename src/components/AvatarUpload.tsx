@@ -50,7 +50,7 @@ export default function AvatarUpload({ userId, initialUrl, initials }: Props) {
   return (
     <div className="relative w-20 h-20 shrink-0 group cursor-pointer" onClick={() => inputRef.current?.click()}>
       {url ? (
-        <img src={url} alt="avatar" className="w-20 h-20 rounded object-cover" />
+        <img src={url} alt="avatar" className="w-20 h-20 rounded object-cover" onError={() => setUrl(null)} />
       ) : (
         <div className="w-20 h-20 rounded border border-dashed flex items-center justify-center"
           style={{ backgroundColor: 'var(--bg-input)', borderColor: 'var(--border-input)' }}>

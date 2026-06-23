@@ -18,8 +18,10 @@ export default function ThemeToggle() {
     localStorage.setItem('theme', next)
     document.documentElement.classList.add('theme-transitioning')
     requestAnimationFrame(() => {
-      document.documentElement.setAttribute('data-theme', next)
-      setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 300)
+      requestAnimationFrame(() => {
+        document.documentElement.setAttribute('data-theme', next)
+        setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 350)
+      })
     })
   }
 

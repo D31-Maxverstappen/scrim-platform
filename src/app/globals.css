@@ -47,7 +47,12 @@ body {
 /* 테마 전환 순간에만 모든 요소에 transition 적용 */
 .theme-transitioning,
 .theme-transitioning * {
-  transition: background-color 0.18s ease, color 0.15s ease, border-color 0.18s ease !important;
+  transition: background-color 0.22s ease, background 0.22s ease, color 0.18s ease, border-color 0.22s ease, fill 0.22s ease !important;
+}
+
+/* 사이드바 — CSS 변수 기반이라 자체 transition 상시 유지 */
+.sidebar-outer {
+  transition: background-color 0.22s ease, border-color 0.22s ease;
 }
 
 /* ── Light mode overrides ── */
