@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { getTierColor } from '@/lib/tiers'
 
 const VAL_ROLES = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
 const VAL_TIERS = [
@@ -11,11 +12,6 @@ const VAL_TIERS = [
   'Platinum 3', 'Platinum 2', 'Platinum 1', 'Diamond 3', 'Diamond 2', 'Diamond 1',
   'Ascendant 3', 'Ascendant 2', 'Ascendant 1', 'Immortal 3', 'Immortal 2', 'Immortal 1', 'Radiant',
 ]
-const TIER_COLORS: Record<string, string> = {
-  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0', Gold: '#E8B84B',
-  Platinum: '#4FD1C5', Diamond: '#6FA8DC', Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
-}
-function getTierColor(t: string) { return TIER_COLORS[t.split(' ')[0]] ?? '#94a3b8' }
 
 export default function RecruitEditPage() {
   const router = useRouter()

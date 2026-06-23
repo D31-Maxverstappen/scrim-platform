@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Suspense } from 'react'
+import { getTierColor } from '@/lib/tiers'
 
 const VAL_ROLES = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
 
@@ -18,16 +19,6 @@ const VAL_TIERS = [
   'Immortal 3', 'Immortal 2', 'Immortal 1',
   'Radiant',
 ]
-
-const TIER_COLORS: Record<string, string> = {
-  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0',
-  Gold: '#E8B84B', Platinum: '#4FD1C5', Diamond: '#6FA8DC',
-  Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
-}
-
-function getTierColor(tier: string) {
-  return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
-}
 
 function RecruitPostContent() {
   const router = useRouter()

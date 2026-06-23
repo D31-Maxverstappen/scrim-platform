@@ -29,3 +29,14 @@ export function inTierRange(
   if (maxIdx !== -1 && idx > maxIdx) return false
   return true
 }
+
+// 티어별 표시 색상 — 여러 컴포넌트에 중복돼 있던 동일 색상표를 한 곳으로 통합
+export const TIER_COLORS: Record<string, string> = {
+  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0',
+  Gold: '#E8B84B', Platinum: '#4FD1C5', Diamond: '#6FA8DC',
+  Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
+}
+
+export function getTierColor(tier: string): string {
+  return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
+}

@@ -1,14 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
-
-const TIER_COLORS: Record<string, string> = {
-  Iron: '#B0C4D8', Bronze: '#A57C52', Silver: '#C0C0C0',
-  Gold: '#E8B84B', Platinum: '#4FD1C5', Diamond: '#6FA8DC',
-  Ascendant: '#52BE80', Immortal: '#E74C3C', Radiant: '#F8D568',
-}
+import { GAME_COLOR } from '@/lib/games'
+import { getTierColor } from '@/lib/tiers'
 
 const VAL_TIERS = [
   'Iron 3','Iron 2','Iron 1','Bronze 3','Bronze 2','Bronze 1',
@@ -16,10 +10,6 @@ const VAL_TIERS = [
   'Platinum 3','Platinum 2','Platinum 1','Diamond 3','Diamond 2','Diamond 1',
   'Ascendant 3','Ascendant 2','Ascendant 1','Immortal 3','Immortal 2','Immortal 1','Radiant',
 ]
-
-function getTierColor(tier: string) {
-  return TIER_COLORS[tier.split(' ')[0]] ?? '#94a3b8'
-}
 
 function formatTierDisplay(tierStr: string | null): Array<{ text: string; color: string }> {
   if (!tierStr) return []
