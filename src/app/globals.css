@@ -47,7 +47,7 @@ body {
 /* 테마 전환 순간에만 모든 요소에 transition 적용 */
 .theme-transitioning,
 .theme-transitioning * {
-  transition: background-color 0.22s ease, background 0.22s ease, color 0.18s ease, border-color 0.22s ease, fill 0.22s ease !important;
+  transition: background-color 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease, fill 0.2s ease, stroke 0.2s ease !important;
 }
 
 /* 사이드바 — !important 방식으로 다른 요소들과 속도 통일 */
@@ -56,7 +56,7 @@ body {
   border-color: rgba(255, 255, 255, 0.06);
 }
 [data-theme="light"] .sidebar-outer {
-  background-color: rgba(255, 255, 255, 0.98) !important;
+  background-color: #ffffff !important;
   border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
@@ -204,6 +204,22 @@ body {
 .sidebar-nav-item.active {
   background: rgba(0, 210, 190, 0.10);
   color: #00D2BE;
+}
+
+/* 아바타/팀로고 업로드 플레이스홀더 — 라이트/다크 모두 카메라 아이콘이 또렷하게 보이도록 */
+.avatar-upload-ph {
+  background-color: var(--bg-input);
+  border-color: var(--border-input);
+}
+.avatar-upload-icon {
+  color: var(--text-secondary);
+}
+[data-theme="light"] .avatar-upload-ph {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  border-color: rgba(0, 0, 0, 0.20) !important;
+}
+[data-theme="light"] .avatar-upload-icon {
+  color: #475569 !important;
 }
 
 /* 누락된 라이트 모드 오버라이드 */
