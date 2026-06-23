@@ -129,8 +129,8 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
       } else {
         setError(`unknown response: ${JSON.stringify(data)}`)
       }
-    } catch (e: any) {
-      setError(`error: ${e?.message ?? 'unknown error'}`)
+    } catch (e) {
+      setError(`error: ${e instanceof Error ? e.message : 'unknown error'}`)
     }
     setLoading(false)
   }

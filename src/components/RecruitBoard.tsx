@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
+import type { RecruitPost } from '@/lib/types'
 
 const VAL_TIERS = [
   'Iron 3','Iron 2','Iron 1','Bronze 3','Bronze 2','Bronze 1',
@@ -11,7 +12,7 @@ const VAL_TIERS = [
   'Ascendant 3','Ascendant 2','Ascendant 1','Immortal 3','Immortal 2','Immortal 1','Radiant',
 ]
 
-function formatTierDisplay(tierStr: string | null): Array<{ text: string; color: string }> {
+function formatTierDisplay(tierStr: string | null | undefined): Array<{ text: string; color: string }> {
   if (!tierStr) return []
   const selected = tierStr.split(',').map((t) => t.trim()).filter(Boolean)
   if (selected.length === 0) return []
@@ -48,7 +49,7 @@ function timeAgo(dateStr: string) {
 
 
 function LftCard({ post, currentUserId, onClose, onDelete }: {
-  post: any
+  post: RecruitPost
   currentUserId: string
   onClose: (id: string) => void
   onDelete: (id: string) => void
@@ -89,7 +90,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
         </div>
       )}
 
-      {post.roles?.length > 0 && (
+      {post.roles && post.roles.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {post.roles.map((r: string) => (
             <span key={r} className="text-[10px] font-semibold bg-white/5 text-slate-400 px-2 py-0.5 rounded">{r}</span>
@@ -121,7 +122,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
 }
 
 function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }: {
-  post: any
+  post: RecruitPost
   currentUserId: string
   currentUserHasTeam: boolean
   onClose: (id: string) => void
@@ -167,7 +168,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
-      {post.roles?.length > 0 && (
+      {post.roles && post.roles.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
           <span className="text-[10px] text-slate-600">모집 포지션</span>
           {post.roles.map((r: string) => (
@@ -226,7 +227,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
 }
 
 export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, activeType, activeGame }: {
-  posts: any[]
+  posts: RecruitPost[]
   currentUserId: string
   currentUserHasTeam: boolean
   activeType: string

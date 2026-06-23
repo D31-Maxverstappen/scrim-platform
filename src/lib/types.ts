@@ -12,7 +12,7 @@ export type UserBrief = {
 }
 
 export type TeamBrief = {
-  id: string
+  id?: string
   name: string
   abbreviation?: string | null
   game_type?: string | null
@@ -49,4 +49,28 @@ export type TeamMemberBrief = {
   user_id: string
   role?: string
   users: UserBrief | null
+}
+
+// 스크림 게시글 — Supabase 조인 시 teams가 배열로 추론될 수 있어 둘 다 허용
+export type ScrimPost = {
+  id: string
+  game_type: string
+  server?: string | null
+  format?: string | null
+  preferred_date?: string | null
+  teams: TeamBrief | TeamBrief[] | null
+}
+
+// 팀원 모집 게시글 (LFT/LFP) — users/teams가 조인 시 배열로 추론될 수 있음
+export type RecruitPost = {
+  id: string
+  user_id: string
+  game_type: string
+  tier?: string | null
+  roles?: string[] | null
+  note?: string | null
+  discord_tag?: string | null
+  created_at: string
+  users?: UserBrief | UserBrief[] | null
+  teams?: TeamBrief | TeamBrief[] | null
 }

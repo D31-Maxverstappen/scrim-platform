@@ -43,7 +43,7 @@ export default function TeamChat({
       .limit(100)
       .then(({ data }) => {
         if (data) {
-          data.forEach((m: any) => seenIds.current.add(m.id))
+          data.forEach((m: { id: string }) => seenIds.current.add(m.id))
           setMessages(data as Message[])
         }
       })

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import type { ScrimPost } from '@/lib/types'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
@@ -11,7 +12,7 @@ function formatDate(dt: string | null) {
 }
 
 export default function ScrimsBoardClient({ posts, game, server, format }: {
-  posts: any[]
+  posts: ScrimPost[]
   game: string
   server: string
   format: string
@@ -22,13 +23,13 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
   const [filterOpen, setFilterOpen] = useState(false)
 
   const allTiers = Array.from(new Set(
-    posts.map((p: any) => {
+    posts.map((p) => {
       const t = Array.isArray(p.teams) ? p.teams[0] : p.teams
       return t?.tier_avg
-    }).filter(Boolean)
+    }).filter((t): t is string => Boolean(t))
   ))
 
-  const displayed = posts.filter((p: any) => {
+  const displayed = posts.filter((p) => {
     if (!filterTier) return true
     const t = Array.isArray(p.teams) ? p.teams[0] : p.teams
     return (t?.tier_avg ?? '').startsWith(filterTier)
@@ -142,7 +143,7 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          {displayed.map((post: any) => {
+          {displayed.map((post) => {
             const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
             const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
             return (

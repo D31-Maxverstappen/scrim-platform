@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import type { ScrimPost } from '@/lib/types'
 
 const VAL_TIERS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
 
-export default function ScrimList({ scrims, game }: { scrims: any[]; game?: string }) {
+export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?: string }) {
   const [filterServer, setFilterServer] = useState('')
   const [filterFormat, setFilterFormat] = useState('')
   const [filterTier, setFilterTier] = useState('')
@@ -112,7 +113,7 @@ export default function ScrimList({ scrims, game }: { scrims: any[]; game?: stri
         </div>
       ) : (
         <div>
-          {filtered.map((s: any, i: number) => {
+          {filtered.map((s, i) => {
             const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
             const date = s.preferred_date
               ? new Date(s.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
