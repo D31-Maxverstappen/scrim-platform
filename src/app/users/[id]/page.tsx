@@ -3,9 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import { FlagImg } from '@/components/CountrySelect'
 import InviteButton from '@/components/InviteButton'
-
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
+import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

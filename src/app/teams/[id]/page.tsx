@@ -8,9 +8,8 @@ import InviteButton from '@/components/InviteButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
 import { FlagImg } from '@/components/CountrySelect'
 import TeamChat from '@/components/TeamChat'
+import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 const ROLE_LABEL: Record<string, string> = {
   captain: 'CAPTAIN', igl: 'IGL', player: 'PLAYER',
   head_coach: 'HEAD COACH', coach: 'COACH',

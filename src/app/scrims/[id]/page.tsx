@@ -4,9 +4,7 @@ import Sidebar from '@/components/Sidebar'
 import ScrimApplyButton from '@/components/ScrimApplyButton'
 import ScrimCancelButton from '@/components/ScrimCancelButton'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
-
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
+import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 function formatDate(dt: string | null) {
   if (!dt) return '미정'

@@ -2,9 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import InviteActions from '@/components/InviteActions'
-
-const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
-const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
+import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 export default async function InvitePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params

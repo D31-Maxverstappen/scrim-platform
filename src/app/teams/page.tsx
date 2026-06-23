@@ -5,16 +5,9 @@ import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import Pagination from '@/components/Pagination'
+import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 const PAGE_SIZE = 20
-
-const GAME_LABEL: Record<string, string> = {
-  valorant: 'VALORANT',
-}
-
-const GAME_COLOR: Record<string, string> = {
-  valorant: '#ff4655',
-}
 
 export default async function TeamsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const { page: pageStr = '1' } = await searchParams

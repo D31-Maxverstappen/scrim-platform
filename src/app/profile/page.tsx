@@ -4,6 +4,7 @@ import Sidebar from '@/components/Sidebar'
 import AvatarUpload from '@/components/AvatarUpload'
 import CountrySelect from '@/components/CountrySelect'
 import DeleteAccountButton from '@/components/DeleteAccountButton'
+import { GAME_LABEL } from '@/lib/games'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: 'text-slate-400', Bronze: 'text-orange-700', Silver: 'text-slate-300',
@@ -11,10 +12,6 @@ const TIER_COLOR: Record<string, string> = {
   Diamond: 'text-blue-400', Master: 'text-purple-400', Grandmaster: 'text-red-400',
   Challenger: 'text-yellow-300', Ascendant: 'text-green-400', Immortal: 'text-red-500',
   Radiant: 'text-yellow-200', Unranked: 'text-slate-500',
-}
-
-const GAME_LABEL: Record<string, string> = {
-  valorant: 'VALORANT',
 }
 
 export default async function ProfilePage() {
