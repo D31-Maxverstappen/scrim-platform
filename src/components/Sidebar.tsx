@@ -123,7 +123,8 @@ export default function Sidebar() {
   return (
     <>
       {userId && <SuspendedWatcher userId={userId} />}
-      <aside className="fixed top-0 left-0 bottom-0 w-56 z-50 flex flex-col bg-[#070711] border-r border-white/[0.06]">
+      <aside className="fixed top-0 left-0 bottom-0 w-56 z-50 flex flex-col border-r"
+        style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
 
         {/* 로고 */}
         <Link href="/valorant/dashboard" className="flex items-center gap-2.5 px-4 py-5 shrink-0">
@@ -183,7 +184,7 @@ export default function Sidebar() {
         </div>
 
         {/* 구분선 */}
-        <div className="mx-3 mb-3 h-px bg-white/[0.06]" />
+        <div className="mx-3 mb-3 h-px" style={{ background: 'var(--border)' }} />
 
         {/* 네비 링크 */}
         <nav className="flex-1 flex flex-col gap-1 px-2 overflow-y-auto">
@@ -204,7 +205,7 @@ export default function Sidebar() {
         </nav>
 
         {/* 하단: 프로필 + 알림 + 테마 */}
-        <div className="shrink-0 border-t border-white/[0.06] px-3 py-3 flex items-center justify-between">
+        <div className="shrink-0 border-t px-3 py-3 flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
           <ProfileDropdown />
           <div className="flex items-center gap-1">
             <NotificationBell />

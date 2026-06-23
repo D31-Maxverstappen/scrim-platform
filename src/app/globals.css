@@ -178,6 +178,10 @@ body {
 [data-theme="light"] .hover\:bg-white\/\[0\.04\]:hover { background-color: var(--bg-input) !important; }
 [data-theme="light"] .hover\:bg-white\/\[0\.08\]:hover { background-color: var(--bg-input-hover) !important; }
 
+/* hover 텍스트 */
+[data-theme="light"] .hover\:text-white:hover { color: var(--text-primary) !important; }
+[data-theme="light"] .hover\:text-slate-300:hover { color: #334155 !important; }
+
 /* divide (구분선) */
 [data-theme="light"] .divide-white\/\[0\.04\] > * + * { border-color: rgba(0,0,0,0.05) !important; }
 
