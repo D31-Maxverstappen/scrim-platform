@@ -207,12 +207,7 @@ export default function Sidebar() {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
             return (
               <Link key={item.href} href={item.href}
-                className="flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold transition-all"
-                style={active
-                  ? { background: 'rgba(0,210,190,0.10)', color: '#00D2BE' }
-                  : { color: 'var(--text-secondary)' }}
-                onMouseEnter={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)'; (e.currentTarget as HTMLElement).style.color = 'var(--text-primary)' } }}
-                onMouseLeave={e => { if (!active) { (e.currentTarget as HTMLElement).style.background = ''; (e.currentTarget as HTMLElement).style.color = 'var(--text-secondary)' } }}>
+                className={`sidebar-nav-item flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold${active ? ' active' : ''}`}>
                 <span className="w-5 h-5 shrink-0">{item.icon}</span>
                 {item.label}
               </Link>

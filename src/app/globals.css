@@ -182,6 +182,27 @@ body {
 [data-theme="light"] .hover\:text-white:hover { color: var(--text-primary) !important; }
 [data-theme="light"] .hover\:text-slate-300:hover { color: #334155 !important; }
 
+/* 사이드바 nav 아이템 — CSS 변수 기반 hover/active */
+.sidebar-nav-item {
+  color: var(--text-secondary);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.sidebar-nav-item:hover {
+  background: var(--bg-input);
+  color: var(--text-primary);
+}
+.sidebar-nav-item.active {
+  background: rgba(0, 210, 190, 0.10);
+  color: #00D2BE;
+}
+
+/* 누락된 라이트 모드 오버라이드 */
+[data-theme="light"] .border-white\/\[0\.10\] { border-color: rgba(0,0,0,0.12) !important; }
+[data-theme="light"] .text-white\/40 { color: rgba(0,0,0,0.35) !important; }
+[data-theme="light"] .text-white\/20 { color: rgba(0,0,0,0.25) !important; }
+[data-theme="light"] .bg-white\/\[0\.06\] { background-color: rgba(0,0,0,0.05) !important; }
+[data-theme="light"] .border-white\/20 { border-color: rgba(0,0,0,0.20) !important; }
+
 /* divide (구분선) */
 [data-theme="light"] .divide-white\/\[0\.04\] > * + * { border-color: rgba(0,0,0,0.05) !important; }
 
