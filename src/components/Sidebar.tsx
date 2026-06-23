@@ -123,8 +123,7 @@ export default function Sidebar() {
   return (
     <>
       {userId && <SuspendedWatcher userId={userId} />}
-      <aside className="sidebar-outer fixed top-0 left-0 bottom-0 w-56 z-50 flex flex-col border-r"
-        style={{ backgroundColor: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
+      <aside className="sidebar-outer fixed top-0 left-0 bottom-0 w-56 z-50 flex flex-col border-r">
 
         {/* 로고 */}
         <Link href="/valorant/dashboard" className="flex items-center gap-2.5 px-4 py-5 shrink-0"
