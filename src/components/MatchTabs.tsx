@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { FlagImg } from './CountrySelect'
+import type { TeamBrief, MatchMap, MatchStat, TeamMemberBrief } from '@/lib/types'
 
 const ROUND_COLORS: Record<string, string> = {
   W: '#00D2BE', L: '#ff4655', D: '#6b7280',
@@ -15,13 +16,13 @@ const VAL_MAP_ABBR: Record<string, string> = {
 const mapAbbr = (name: string | null | undefined) =>
   name ? (VAL_MAP_ABBR[name] ?? name.slice(0, 4).toUpperCase()) : 'TBD'
 
-const teamAbbr = (t: any) =>
+const teamAbbr = (t: TeamBrief | null | undefined) =>
   t?.abbreviation || t?.name?.slice(0, 3).toUpperCase() || '?'
 
 const GRID = '2fr 1fr 1fr 1.5fr 1fr 1fr 1fr 1fr 1fr 1fr'
 
 // 멤버 배열을 항상 5개로 맞춤 (부족하면 null로 채움)
-function padTo5(arr: any[]): (any | null)[] {
+function padTo5<T>(arr: T[]): (T | null)[] {
   return [...arr, ...Array(Math.max(0, 5 - arr.length)).fill(null)]
 }
 
@@ -55,7 +56,7 @@ function StatHeader({ playerLabel }: { playerLabel: string }) {
   )
 }
 
-function StatRow({ stat, gameName }: { stat: any; gameName: string }) {
+function StatRow({ stat, gameName }: { stat: MatchStat; gameName: string }) {
   const u = stat.users
   const name = u?.val_gamename ?? u?.riot_gamename ?? '—'
   const rating = stat.deaths > 0 ? (stat.kills / stat.deaths).toFixed(2) : stat.kills.toFixed(2)
@@ -92,7 +93,7 @@ function StatRow({ stat, gameName }: { stat: any; gameName: string }) {
   )
 }
 
-function EmptyStatRow({ member }: { member: any | null }) {
+function EmptyStatRow({ member }: { member: TeamMemberBrief | null }) {
   const u = member?.users ?? null
   const name = u?.val_gamename ?? u?.riot_gamename ?? null
 
@@ -136,20 +137,20 @@ function RoundTimeline({ results, label }: { results: string | null; label: stri
 }
 
 export default function MatchTabs({ match, team1, team2, maps, stats, team1Members = [], team2Members = [] }: {
-  match: any
-  team1: any
-  team2: any
-  maps: any[]
-  stats: any[]
-  team1Members?: any[]
-  team2Members?: any[]
+  match: unknown
+  team1: TeamBrief | null
+  team2: TeamBrief | null
+  maps: MatchMap[]
+  stats: MatchStat[]
+  team1Members?: TeamMemberBrief[]
+  team2Members?: TeamMemberBrief[]
 }) {
   const [tab, setTab] = useState('overview')
   const [mapTab, setMapTab] = useState('all')
 
   const selectedMap = mapTab === 'all' ? null : maps.find((m) => m.id === mapTab)
 
-  const filterStats = (teamId: string) =>
+  const filterStats = (teamId: string | undefined) =>
     stats.filter((s) => s.team_id === teamId && (mapTab === 'all' || s.map_id === mapTab))
 
   const team1Stats = filterStats(team1?.id)
@@ -239,8 +240,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <StatHeader playerLabel="플레이어" />
           {padded1.map((item, i) =>
             hasStats1 && item
-              ? <StatRow key={item.id ?? i} stat={item} gameName={team1?.name} />
-              : <EmptyStatRow key={i} member={item} />
+              ? <StatRow key={(item as MatchStat).id ?? i} stat={item as MatchStat} gameName={team1?.name ?? ''} />
+              : <EmptyStatRow key={i} member={item as TeamMemberBrief | null} />
           )}
         </div>
         {/* 팀 2 */}
@@ -251,8 +252,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <StatHeader playerLabel="플레이어" />
           {padded2.map((item, i) =>
             hasStats2 && item
-              ? <StatRow key={item.id ?? i} stat={item} gameName={team2?.name} />
-              : <EmptyStatRow key={i} member={item} />
+              ? <StatRow key={(item as MatchStat).id ?? i} stat={item as MatchStat} gameName={team2?.name ?? ''} />
+              : <EmptyStatRow key={i} member={item as TeamMemberBrief | null} />
           )}
         </div>
       </div>
