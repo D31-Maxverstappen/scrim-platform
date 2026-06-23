@@ -20,8 +20,8 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
   const currentIdx = steps.findIndex((s) => !s.done)
 
   return (
-    <div className="sticky top-16 z-40 backdrop-blur-sm border-b" style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center gap-0">
+    <div className="sticky top-0 z-40 backdrop-blur-sm border-b" style={{ background: 'var(--navbar-bg)', borderColor: 'var(--border)' }}>
+      <div className="max-w-7xl mx-auto px-6 h-14 flex items-center gap-0">
 
         {/* 진행도 */}
         <span className="text-xs font-black text-slate-400 mr-6 shrink-0 tabular-nums">
@@ -32,7 +32,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
         {steps.map((step, i) => (
           <Fragment key={step.id}>
             {i > 0 && (
-              <div className={`w-10 h-px mx-3 shrink-0 ${steps[i - 1].done ? 'bg-[#00D2BE]/40' : ''}`}
+              <div className={`flex-1 min-w-16 h-px mx-4 ${steps[i - 1].done ? 'bg-[#00D2BE]/40' : ''}`}
                 style={steps[i - 1].done ? {} : { background: 'var(--border-input)' }} />
             )}
             <div className="flex items-center gap-1.5 shrink-0">
