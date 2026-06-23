@@ -195,7 +195,7 @@ body {
 /* 사이드바 nav 아이템 — CSS 변수 기반 hover/active */
 .sidebar-nav-item {
   color: var(--text-secondary);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease;
 }
 .sidebar-nav-item:hover {
   background: var(--bg-input);
