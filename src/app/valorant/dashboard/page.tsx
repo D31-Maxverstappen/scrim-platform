@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import ProfileCard from '@/components/ProfileCard'
 import TeamRankings from '@/components/TeamRankings'
 import ScrimList from '@/components/ScrimList'
@@ -119,9 +119,9 @@ export default async function ValorantDashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#070711]">
+    <div className="min-h-screen ml-56 bg-[#070711]">
       <RealtimeRefresher tables={["scrim_applications", "scrim_posts", "teams", "team_members", "matches"]} />
-      <Navbar />
+      <Sidebar />
 
       {/* 온보딩 체크포인트 바 */}
       <div className="pt-16">

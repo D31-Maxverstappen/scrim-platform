@@ -1,11 +1,11 @@
 import { Skeleton } from '@/components/Skeleton'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 
 export default function DashboardLoading() {
   return (
-    <div className="min-h-screen bg-[#0d0d14]">
-      <Navbar />
-      <div className="pt-28 max-w-7xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0d0d14]">
+      <Sidebar />
+      <div className="pt-6 max-w-7xl mx-auto px-6 py-8">
         <div className="flex gap-6">
 
           {/* 사이드바 */}

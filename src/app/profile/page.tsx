@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import AvatarUpload from '@/components/AvatarUpload'
 import CountrySelect from '@/components/CountrySelect'
 import DeleteAccountButton from '@/components/DeleteAccountButton'
@@ -39,9 +39,9 @@ export default async function ProfilePage() {
   const tierColor = TIER_COLOR[(profile?.tier ?? '').split(' ')[0]] ?? 'text-slate-400'
 
   return (
-    <div className="min-h-screen bg-[#07070b]">
-      <Navbar />
-      <div className="pt-28 max-w-3xl mx-auto px-6 py-10">
+    <div className="min-h-screen ml-56 bg-[#07070b]">
+      <Sidebar />
+      <div className="pt-6 max-w-3xl mx-auto px-6 py-10">
 
         {/* 프로필 헤더 */}
         <div className="bg-[#111118] border border-white/5 rounded p-8 flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-6">

@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import Link from 'next/link'
 
 const STATUS_LABEL: Record<string, string> = {
@@ -55,9 +55,9 @@ export default async function InhousePage() {
   }))
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">내전</h1>

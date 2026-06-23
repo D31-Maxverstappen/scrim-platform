@@ -1,11 +1,11 @@
 import { Skeleton } from '@/components/Skeleton'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 
 export default function MatchLoading() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         {/* 매치 헤더 */}
         <div className="border border-white/10 bg-[#13131f] mb-6 p-8">
           <div className="flex items-start justify-between mb-8">

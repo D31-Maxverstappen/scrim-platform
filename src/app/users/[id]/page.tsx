@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import { FlagImg } from '@/components/CountrySelect'
 import InviteButton from '@/components/InviteButton'
 
@@ -36,9 +36,9 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
   const tier = profile.val_tier ?? profile.tier
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-28 max-w-2xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-2xl mx-auto px-6 py-8">
 
         {/* 프로필 헤더 */}
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden mb-6">

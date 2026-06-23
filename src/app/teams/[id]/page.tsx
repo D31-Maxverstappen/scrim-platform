@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import JoinTeamButton from '@/components/JoinTeamButton'
 import LeaveTeamButton from '@/components/LeaveTeamButton'
@@ -246,10 +246,10 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   )
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["teams", "team_members", "team_join_requests", "matches"]} />
-      <Navbar />
-      <div className="pt-28 max-w-5xl mx-auto px-6 py-8">
+      <Sidebar />
+      <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
 
         {/* ── 팀 헤더 (Liquipedia 스타일) ── */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-white/10">

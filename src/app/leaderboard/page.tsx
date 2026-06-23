@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import Pagination from '@/components/Pagination'
 
@@ -85,10 +85,10 @@ export default async function LeaderboardPage({
   const gameColor = '#ff4655'
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={['teams', 'users']} />
-      <Navbar />
-      <div className="pt-28 max-w-3xl mx-auto px-6 py-8">
+      <Sidebar />
+      <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
 
         {/* 헤더 */}
         <div className="mb-6">

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import InviteActions from '@/components/InviteActions'
 
 const GAME_LABEL: Record<string, string> = { valorant: 'VALORANT' }
@@ -27,8 +27,8 @@ export default async function InvitePage({ params }: { params: Promise<{ id: str
   const total = (team?.wins ?? 0) + (team?.losses ?? 0)
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center px-6">
-      <Navbar />
+    <div className="min-h-screen ml-56 bg-[#0a0a0a] flex items-center justify-center px-6">
+      <Sidebar />
       <div className="w-full max-w-sm mt-20">
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
 

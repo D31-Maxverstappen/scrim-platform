@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import RoomClient from './RoomClient'
 
 export default async function InhouseRoomPage({ params }: { params: Promise<{ id: string }> }) {
@@ -35,9 +35,9 @@ export default async function InhouseRoomPage({ params }: { params: Promise<{ id
   const isParticipant = enriched.some((p: any) => p.user_id === user.id)
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-28 max-w-3xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
         <RoomClient
           room={{ ...room, host }}
           participants={enriched}

@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import ScrimsClient from './ScrimsClient'
 
@@ -57,10 +57,10 @@ export default async function ValorantScrimsPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_posts"]} />
-      <Navbar />
-      <div className="pt-28 max-w-4xl mx-auto px-6 py-8">
+      <Sidebar />
+      <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <div className="flex items-center gap-3 mb-1">

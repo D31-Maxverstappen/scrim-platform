@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
@@ -58,10 +58,10 @@ export default async function MyScrimsPage() {
   ])
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_applications", "scrim_posts"]} />
-      <Navbar />
-      <div className="pt-28 max-w-3xl mx-auto px-6 py-8">
+      <Sidebar />
+      <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
 
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -249,9 +249,9 @@ export default async function MyScrimsPage() {
 
 function EmptyState({ type }: { type: string }) {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-28 max-w-3xl mx-auto px-6 py-8 text-center text-slate-500">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-3xl mx-auto px-6 py-8 text-center text-slate-500">
         <p className="text-sm">팀에 소속되어 있지 않아요</p>
         <a href="/teams/create" className="mt-4 inline-block text-[#00D2BE] text-xs hover:underline">
           팀 만들기 →

@@ -1,11 +1,11 @@
 import { Skeleton } from '@/components/Skeleton'
-import Navbar from '@/components/Navbar'
+import Sidebar from '@/components/Sidebar'
 
 export default function TeamsLoading() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
-      <Navbar />
-      <div className="pt-24 max-w-5xl mx-auto px-6 py-8">
+    <div className="min-h-screen ml-56 bg-[#0a0a0a]">
+      <Sidebar />
+      <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <Skeleton className="h-5 w-24" />
           <Skeleton className="h-8 w-28" />
