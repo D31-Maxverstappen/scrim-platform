@@ -46,7 +46,7 @@ export async function recalcTierAvg(supabase: SupabaseClient, teamId: string) {
     .select('users(val_tier, tier, game_type), role')
     .eq('team_id', teamId)
 
-  const scores: number[] = ((members ?? []) as TeamMemberTierRow[])
+  const scores: number[] = ((members ?? []) as unknown as TeamMemberTierRow[])
     .filter((m) => !['head_coach', 'coach'].includes(m.role))
     .map((m) => {
       const u = m.users

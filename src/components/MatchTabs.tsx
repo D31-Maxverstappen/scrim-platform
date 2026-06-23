@@ -160,8 +160,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
   const t2Score = selectedMap?.team2_score ?? 0
   const mapName = selectedMap?.map_name ?? 'TBD'
 
-  const padded1 = padTo5(team1Stats.length > 0 ? team1Stats : team1Members)
-  const padded2 = padTo5(team2Stats.length > 0 ? team2Stats : team2Members)
+  const padded1 = padTo5<MatchStat | TeamMemberBrief>(team1Stats.length > 0 ? team1Stats : team1Members)
+  const padded2 = padTo5<MatchStat | TeamMemberBrief>(team2Stats.length > 0 ? team2Stats : team2Members)
   const hasStats1 = team1Stats.length > 0
   const hasStats2 = team2Stats.length > 0
 
