@@ -1,3 +1,10 @@
+import type { SupabaseClient } from '@supabase/supabase-js'
+
+type TeamMemberTierRow = {
+  role: string
+  users: { val_tier: string | null; tier: string | null; game_type: string | null } | null
+}
+
 export const TIER_LIST = [
   'Iron 3', 'Iron 2', 'Iron 1',
   'Bronze 3', 'Bronze 2', 'Bronze 1',
@@ -33,15 +40,15 @@ function scoreToTier(score: number): string {
   return TIER_LIST[idx]
 }
 
-export async function recalcTierAvg(supabase: any, teamId: string) {
+export async function recalcTierAvg(supabase: SupabaseClient, teamId: string) {
   const { data: members } = await supabase
     .from('team_members')
     .select('users(val_tier, tier, game_type), role')
     .eq('team_id', teamId)
 
-  const scores: number[] = (members ?? [])
-    .filter((m: any) => !['head_coach', 'coach'].includes(m.role))
-    .map((m: any) => {
+  const scores: number[] = ((members ?? []) as TeamMemberTierRow[])
+    .filter((m) => !['head_coach', 'coach'].includes(m.role))
+    .map((m) => {
       const u = m.users
       const t = u?.val_tier ?? u?.tier ?? null
       return tierScore(t)

@@ -44,7 +44,7 @@ export async function getLolTier(puuid: string): Promise<SummonerTier | { error:
     const body = await rankRes.text()
     return { error: `랭크 조회 실패 (${rankRes.status}): ${body}` }
   }
-  const ranks: any[] = await rankRes.json()
+  const ranks: { queueType: string; tier: string; rank: string; leaguePoints: number; wins: number; losses: number }[] = await rankRes.json()
   const solo = ranks.find((r) => r.queueType === 'RANKED_SOLO_5x5')
   if (!solo) return { error: `솔로랭크 기록 없음 (전체 큐: ${ranks.map(r => r.queueType).join(', ') || '없음'})` }
 

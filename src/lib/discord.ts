@@ -12,9 +12,9 @@ async function getOrCreateScrimCategory(): Promise<string | null> {
     headers: { Authorization: `Bot ${BOT_TOKEN}` },
   })
   if (!res.ok) return null
-  const channels = await res.json()
+  const channels: { id: string; type: number; name: string }[] = await res.json()
 
-  const existing = channels.find((c: any) => c.type === 4 && c.name === SCRIM_CATEGORY_NAME)
+  const existing = channels.find((c) => c.type === 4 && c.name === SCRIM_CATEGORY_NAME)
   if (existing) return existing.id
 
   const createRes = await fetch(`https://discord.com/api/v10/guilds/${GUILD_ID}/channels`, {
@@ -91,7 +91,7 @@ export async function createScrimVoiceChannels(
       })),
     ]
 
-    const body: any = {
+    const body: { name: string; type: number; permission_overwrites: typeof permissionOverwrites; parent_id?: string } = {
       name: teamAbbr,
       type: 2,
       permission_overwrites: permissionOverwrites,
