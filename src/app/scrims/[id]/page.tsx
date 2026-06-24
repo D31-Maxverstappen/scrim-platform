@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar'
 import ScrimApplyButton from '@/components/ScrimApplyButton'
 import ScrimCancelButton from '@/components/ScrimCancelButton'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import BookmarkButton from '@/components/BookmarkButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 function formatDate(dt: string | null) {
@@ -40,6 +41,13 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
 
   const isPostingCaptain = team?.captain_id === user.id
 
+  const { data: scrimBm } = await supabase
+    .from('bookmarks')
+    .select('id')
+    .eq('user_id', user.id).eq('target_type', 'scrim_post').eq('target_id', id)
+    .maybeSingle()
+  const isScrimBookmarked = !!scrimBm
+
   const { data: existingApp } = myTeam ? await supabase
     .from('scrim_applications')
     .select('id, status')
@@ -65,7 +73,10 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
       <RealtimeRefresher tables={["scrim_posts", "scrim_applications"]} />
       <Sidebar />
       <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
-        <Link href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-4">← 스크림 목록</Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition">← 스크림 목록</Link>
+          <BookmarkButton type="scrim_post" id={id} initial={isScrimBookmarked} variant="full" />
+        </div>
 
         {/* 역할 배너 */}
         {isPostingCaptain && (

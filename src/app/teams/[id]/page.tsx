@@ -6,6 +6,7 @@ import JoinTeamButton from '@/components/JoinTeamButton'
 import LeaveTeamButton from '@/components/LeaveTeamButton'
 import InviteButton from '@/components/InviteButton'
 import TeamPageTabs from '@/components/TeamPageTabs'
+import BookmarkButton from '@/components/BookmarkButton'
 import { FlagImg } from '@/components/CountrySelect'
 import TeamChat from '@/components/TeamChat'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
@@ -52,6 +53,13 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const isCaptain = team.captain_id === user.id
   const isMember = members?.some((m: any) => m.user_id === user.id)
   const hasAnyTeam = !!anyMembership
+
+  const { data: teamBm } = await supabase
+    .from('bookmarks')
+    .select('id')
+    .eq('user_id', user.id).eq('target_type', 'team').eq('target_id', id)
+    .maybeSingle()
+  const isTeamBookmarked = !!teamBm
 
   const players = members?.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
   const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
@@ -289,6 +297,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
           {/* 액션 버튼 */}
           <div className="flex gap-2 shrink-0 items-center">
+            <BookmarkButton type="team" id={id} initial={isTeamBookmarked} variant="full" />
             {!isMember && !isCaptain && !hasAnyTeam && team.is_open !== false && (
               <JoinTeamButton teamId={id} hasPendingRequest={!!pendingRequest} />
             )}
