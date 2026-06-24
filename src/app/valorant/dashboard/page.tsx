@@ -32,7 +32,7 @@ export default async function ValorantDashboardPage() {
     { data: allApplications },
     { data: rawInhouseRooms },
   ] = await Promise.all([
-    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country').eq('id', user.id).single(),
+    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, abbreviation, game_type, tier_avg, captain_id)').eq('user_id', user.id),
     supabase.from('users').select('id', { count: 'exact', head: true }),
     supabase.from('teams').select('id', { count: 'exact', head: true }).eq('game_type', GAME),
@@ -146,7 +146,7 @@ export default async function ValorantDashboardPage() {
           {[
             { label: '가입 유저', value: userCount ?? 0, sub: '명', delay: 80 },
             { label: '활동 팀',   value: teamCount ?? 0, sub: '팀', delay: 160 },
-            { label: '매너 점수', value: 100,            sub: '/ 200', delay: 240 },
+            { label: '매너 점수', value: profile?.manner_score ?? 100, sub: '/ 200', delay: 240 },
           ].map((s) => (
             <div
               key={s.label}
@@ -182,7 +182,7 @@ export default async function ValorantDashboardPage() {
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
               <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
               <div className="flex items-baseline gap-1.5 mb-3">
-                <span className="text-3xl font-black text-white">100</span>
+                <span className="text-3xl font-black text-white">{profile?.manner_score ?? 100}</span>
                 <span className="text-xs text-slate-500">/ 200</span>
               </div>
               <div className="w-full bg-white/[0.05] rounded-full h-1">

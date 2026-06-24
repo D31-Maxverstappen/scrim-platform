@@ -7,6 +7,7 @@ import MatchCancelButton from '@/components/MatchCancelButton'
 import MatchEndButton from '@/components/MatchEndButton'
 import MatchScoreInput from '@/components/MatchScoreInput'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import MannerRating from '@/components/MannerRating'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
@@ -56,6 +57,19 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     .eq('captain_id', user.id)
     .single()
   const isCaptain = !!captainTeam
+
+  // 매너 평가: 종료된 매치에서 캡틴이 상대 팀을 평가 (이미 평가했는지 조회)
+  const opponentTeam = captainTeam?.id === match.team1_id ? team2 : team1
+  let mannerRated = false
+  if (match.status === 'completed' && isCaptain) {
+    const { data: existing } = await supabase
+      .from('manner_logs')
+      .select('id')
+      .eq('match_id', id)
+      .eq('from_user_id', user.id)
+      .limit(1)
+    mannerRated = !!(existing && existing.length > 0)
+  }
 
   const team1Score = (maps ?? []).filter((m: any) => m.team1_score > m.team2_score).length
   const team2Score = (maps ?? []).filter((m: any) => m.team2_score > m.team1_score).length
@@ -158,6 +172,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+
+        {/* ── 매너 평가 (종료된 매치, 캡틴만) ── */}
+        {match.status === 'completed' && isCaptain && (
+          <MannerRating matchId={id} alreadyRated={mannerRated} opponentName={opponentTeam?.name ?? '상대 팀'} />
+        )}
 
         {/* ── Discord 음성채널 ── */}
         {match.discord_channel_id && match.status !== 'completed' && (() => {

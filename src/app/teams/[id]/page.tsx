@@ -31,7 +31,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
 
   const [{ data: members }, { data: pendingRequest }, { data: matches1 }, { data: matches2 }, { data: anyMembership }] = await Promise.all([
     supabase.from('team_members')
-      .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, country)')
+      .select('user_id, role, users(riot_gamename, riot_tagline, tier, avatar_url, game_type, val_gamename, val_tier, country, manner_score)')
       .eq('team_id', id),
     supabase.from('team_join_requests').select('id')
       .eq('team_id', id).eq('user_id', user.id).eq('status', 'pending').single(),
@@ -58,6 +58,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const gameColor = GAME_COLOR[team.game_type] ?? '#00D2BE'
   const isVal = team.game_type === 'valorant'
   const total = (team.wins ?? 0) + (team.losses ?? 0)
+  const teamManner = members && members.length
+    ? Math.round(members.reduce((sum: number, m: any) => {
+        const u = Array.isArray(m.users) ? m.users[0] : m.users
+        return sum + (u?.manner_score ?? 100)
+      }, 0) / members.length)
+    : 100
 
   // ── Overview 탭 ──
   const overviewContent = (
@@ -166,11 +172,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           <div className="px-4 py-2.5 border-b border-white/5">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">통계</p>
           </div>
-          <div className="grid grid-cols-3 divide-x divide-white/5">
+          <div className="grid grid-cols-4 divide-x divide-white/5">
             {[
               { label: '총 스크림', value: allMatches.length > 0 ? String(allMatches.length) : '—' },
               { label: '승률', value: total > 0 ? `${Math.round((team.wins / total) * 100)}%` : '—' },
               { label: '평균 티어', value: team.tier_avg ?? '—' },
+              { label: '매너 점수', value: `${teamManner}` },
             ].map((s) => (
               <div key={s.label} className="px-6 py-5 text-center">
                 <p className="text-2xl font-black text-white mb-1">{s.value}</p>
