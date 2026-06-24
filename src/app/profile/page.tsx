@@ -39,6 +39,23 @@ export default async function ProfilePage() {
   const losses = team?.losses ?? 0
   const winRate = wins + losses > 0 ? Math.round((wins / (wins + losses)) * 100) : null
 
+  // 최근 스크림: 소속 팀의 매치 (team1/team2 양쪽 조회 후 병합)
+  let recentMatches: { id: string; status: string | null; format: string | null; match_date: string | null; winner_id: string | null; opponent: { id: string; name: string } | null }[] = []
+  if (team?.id) {
+    const [{ data: m1 }, { data: m2 }] = await Promise.all([
+      supabase.from('matches')
+        .select('id, status, format, match_date, winner_id, team1_id, team2_id, team2:teams!team2_id(id, name)')
+        .eq('team1_id', team.id).order('match_date', { ascending: false }).limit(5),
+      supabase.from('matches')
+        .select('id, status, format, match_date, winner_id, team1_id, team2_id, team1:teams!team1_id(id, name)')
+        .eq('team2_id', team.id).order('match_date', { ascending: false }).limit(5),
+    ])
+    recentMatches = [
+      ...(m1 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2 })),
+      ...(m2 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1 })),
+    ].sort((a, b) => new Date(b.match_date ?? 0).getTime() - new Date(a.match_date ?? 0).getTime()).slice(0, 5)
+  }
+
   const tierColor = TIER_COLOR[(profile?.tier ?? '').split(' ')[0]] ?? 'text-slate-400'
 
   return (
@@ -185,14 +202,56 @@ export default async function ProfilePage() {
         <div className="bg-[#111118] border border-white/5 rounded overflow-hidden mb-6">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
             <h2 className="text-white font-bold text-sm">최근 스크림</h2>
-            <Link href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</Link>
+            <Link href={team ? `/teams/${team.id}` : '/scrims'} className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</Link>
           </div>
-          <div className="flex flex-col items-center justify-center py-16 text-slate-600">
-            <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
-            </svg>
-            <p className="text-sm">아직 스크림 기록이 없어요</p>
-          </div>
+          {recentMatches.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-slate-600">
+              <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-6l3-3 3 3v6M3 21h18" />
+              </svg>
+              <p className="text-sm">아직 스크림 기록이 없어요</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-white/5">
+              {recentMatches.map((m) => {
+                const isWin = m.status === 'completed' && m.winner_id === team?.id
+                const isDraw = m.status === 'completed' && !m.winner_id
+                const isLoss = m.status === 'completed' && !!m.winner_id && m.winner_id !== team?.id
+                const isOngoing = m.status === 'ongoing'
+                const date = m.match_date
+                  ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+                  : '미정'
+                return (
+                  <Link key={m.id} href={`/matches/${m.id}`}
+                    className="flex items-center gap-4 px-6 py-3.5 hover:bg-white/5 transition group">
+                    <div className={`w-8 h-8 shrink-0 flex items-center justify-center text-xs font-black rounded
+                      ${isWin ? 'bg-[#00D2BE]/20 text-[#00D2BE]' :
+                        isLoss ? 'bg-red-500/20 text-red-400' :
+                        isDraw ? 'bg-slate-500/20 text-slate-400' :
+                        isOngoing ? 'bg-yellow-500/20 text-yellow-400' :
+                        'bg-white/5 text-slate-600'}`}>
+                      {isWin ? 'W' : isLoss ? 'L' : isDraw ? 'D' : isOngoing ? '●' : '—'}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-white text-sm font-semibold truncate group-hover:text-[#00D2BE] transition">
+                        vs {m.opponent?.name ?? '?'}
+                      </p>
+                      <p className="text-slate-600 text-xs">{date} · {m.format ?? 'BO3'}</p>
+                    </div>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0
+                      ${isWin ? 'bg-[#00D2BE]/10 text-[#00D2BE]' :
+                        isLoss ? 'bg-red-500/10 text-red-400' :
+                        isDraw ? 'bg-slate-500/10 text-slate-400' :
+                        isOngoing ? 'bg-yellow-500/10 text-yellow-400' :
+                        'bg-white/5 text-slate-500'}`}>
+                      {isWin ? '승' : isLoss ? '패' : isDraw ? '무' : isOngoing ? '진행 중' : '예정'}
+                    </span>
+                    <span className="text-slate-700 text-xs group-hover:text-slate-500 transition">→</span>
+                  </Link>
+                )
+              })}
+            </div>
+          )}
         </div>
 
         {/* 회원탈퇴 */}
