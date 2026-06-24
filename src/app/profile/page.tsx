@@ -28,11 +28,16 @@ export default async function ProfilePage() {
 
   const { data: teamMember } = await supabase
     .from('team_members')
-    .select('role, teams(id, name, game_type, tier_avg)')
+    .select('role, teams(id, name, game_type, tier_avg, wins, losses)')
     .eq('user_id', user.id)
     .single()
 
-  const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string } | null | undefined
+  const team = (Array.isArray(teamMember?.teams) ? teamMember?.teams[0] : teamMember?.teams) as { id: string; name: string; game_type: string; tier_avg: string; wins: number; losses: number } | null | undefined
+
+  // 스크림 전적: 소속 팀 기준
+  const wins = team?.wins ?? 0
+  const losses = team?.losses ?? 0
+  const winRate = wins + losses > 0 ? Math.round((wins / (wins + losses)) * 100) : null
 
   const tierColor = TIER_COLOR[(profile?.tier ?? '').split(' ')[0]] ?? 'text-slate-400'
 
@@ -166,12 +171,12 @@ export default async function ProfilePage() {
           <div className="bg-[#111118] border border-white/5 rounded p-5">
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">스크림 전적</p>
             <div className="flex items-end gap-2 mb-1">
-              <span className="text-4xl font-black text-white">0</span>
+              <span className="text-4xl font-black text-white">{wins}</span>
               <span className="text-slate-500 text-sm mb-1">승</span>
-              <span className="text-4xl font-black text-slate-600">0</span>
+              <span className="text-4xl font-black text-slate-600">{losses}</span>
               <span className="text-slate-600 text-sm mb-1">패</span>
             </div>
-            <p className="text-slate-600 text-xs">승률 —</p>
+            <p className="text-slate-600 text-xs">승률 {winRate !== null ? `${winRate}%` : '—'}</p>
           </div>
 
         </div>
