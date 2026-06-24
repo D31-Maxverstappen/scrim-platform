@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -52,9 +53,9 @@ export default function RootLayout({
                 <span className="text-white font-black text-xl tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
               </div>
               <div className="flex gap-5 text-xs text-slate-500">
-                <a href="/support" className="hover:text-slate-300 transition">문의하기</a>
-                <a href="/terms" className="hover:text-slate-300 transition">이용약관</a>
-                <a href="/privacy" className="hover:text-slate-300 transition">개인정보 처리방침</a>
+                <Link href="/support" className="hover:text-slate-300 transition">문의하기</Link>
+                <Link href="/terms" className="hover:text-slate-300 transition">이용약관</Link>
+                <Link href="/privacy" className="hover:text-slate-300 transition">개인정보 처리방침</Link>
               </div>
             </div>
             <div className="border-t border-white/5 pt-4 flex flex-col gap-1.5">
