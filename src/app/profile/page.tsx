@@ -22,7 +22,7 @@ export default async function ProfilePage() {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country')
+    .select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score')
     .eq('id', user.id)
     .single()
 
@@ -135,11 +135,11 @@ export default async function ProfilePage() {
           {/* 매너 점수 */}
           <div className="bg-[#111118] border border-white/5 rounded p-5">
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">매너 점수</p>
-            <p className="text-4xl font-black text-white mb-2">100</p>
+            <p className="text-4xl font-black text-white mb-2">{profile?.manner_score ?? 100}</p>
             <div className="w-full bg-white/5 rounded h-1.5 mb-2">
-              <div className="bg-gradient-to-r from-[#00D2BE] to-[#00a896] h-1.5 rounded" style={{ width: '50%' }} />
+              <div className="bg-gradient-to-r from-[#00D2BE] to-[#00a896] h-1.5 rounded" style={{ width: `${((profile?.manner_score ?? 100) / 200) * 100}%` }} />
             </div>
-            <p className="text-slate-600 text-xs">기본 · 0~200pt</p>
+            <p className="text-slate-600 text-xs">0~200pt</p>
           </div>
 
           {/* 소속 팀 */}
