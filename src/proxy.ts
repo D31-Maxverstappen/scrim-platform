@@ -32,24 +32,10 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // 세션 토큰 자동 갱신
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (user) {
-    // 정지 여부 확인
-    const { data: profile } = await supabase
-      .from('users')
-      .select('suspended')
-      .eq('id', user.id)
-      .single()
-
-    if (profile?.suspended) {
-      await supabase.auth.signOut()
-      const url = new URL('/suspended', request.url)
-      url.searchParams.set('uid', user.id)
-      return NextResponse.redirect(url)
-    }
-  }
+  // 세션 토큰 자동 갱신 (호출만으로 만료 토큰 리프레시 + 쿠키 재설정)
+  // 정지(suspended) 여부는 클라이언트 SuspendedWatcher가 처리 —
+  // 매 페이지 이동마다 발생하던 DB 조회 1회를 제거해 전환 속도를 높임
+  await supabase.auth.getUser()
 
   return supabaseResponse
 }
