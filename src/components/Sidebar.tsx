@@ -24,6 +24,15 @@ const NAV = [
     ),
   },
   {
+    href: '/valorant/matches',
+    label: '내 전적',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" />
+      </svg>
+    ),
+  },
+  {
     href: '/valorant/scrims',
     label: '스크림',
     icon: (
