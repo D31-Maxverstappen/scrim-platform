@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import ThemeToggle from './ThemeToggle'
+// 라이트 모드 일시 비활성화 — 다크 모드 고정 (추후 재개 시 ThemeToggle import·렌더 복구)
+// import ThemeToggle from './ThemeToggle'
 import ProfileDropdown from './ProfileDropdown'
 import NotificationBell from './NotificationBell'
 import SuspendedWatcher from './SuspendedWatcher'
@@ -237,7 +238,7 @@ export default function Sidebar() {
           <ProfileDropdown />
           <div className="flex items-center gap-1">
             <NotificationBell />
-            <ThemeToggle />
+            {/* <ThemeToggle /> 라이트 모드 일시 비활성화 — 추후 재개 시 복구 */}
           </div>
         </div>
       </aside>

@@ -39,8 +39,9 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
-            var t = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', t);
+            // 라이트 모드 일시 비활성화 — 다크 모드 고정 (추후 라이트 모드 재개 시 아래로 복구)
+            // var t = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', 'dark');
           })();
         `}} />
       </head>
