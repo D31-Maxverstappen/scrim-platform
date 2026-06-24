@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { useState } from 'react'
 import Pagination from '@/components/Pagination'
+import BookmarkButton from '@/components/BookmarkButton'
 import { inTierRange } from '@/lib/tiers'
 
 function formatDate(dt: string | null) {
@@ -13,6 +14,7 @@ function formatDate(dt: string | null) {
 
 export default function ScrimsClient({
   posts,
+  bookmarkedIds,
   myTier,
   q,
   page,
@@ -20,6 +22,7 @@ export default function ScrimsClient({
   pageSize,
 }: {
   posts: any[]
+  bookmarkedIds: string[]
   myTier: string | null
   q: string
   page: number
@@ -27,6 +30,7 @@ export default function ScrimsClient({
   pageSize: number
 }) {
   const [filterByTier, setFilterByTier] = useState(false)
+  const bmSet = new Set(bookmarkedIds)
 
   const displayed = filterByTier && myTier
     ? posts.filter((p) => inTierRange(myTier, p.tier_min, p.tier_max))
@@ -123,6 +127,7 @@ export default function ScrimsClient({
                     {post.note && <span className="truncate max-w-[240px]">{post.note}</span>}
                   </div>
                 </div>
+                <BookmarkButton type="scrim_post" id={post.id} initial={bmSet.has(post.id)} />
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[#ff4655] text-xs font-bold">신청 →</span>
                   {!tierOk && myTier && (

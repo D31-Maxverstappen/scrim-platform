@@ -57,6 +57,13 @@ export default async function ValorantScrimsPage({
     total = count ?? 0
   }
 
+  const { data: bms } = await supabase
+    .from('bookmarks')
+    .select('target_id')
+    .eq('user_id', user.id)
+    .eq('target_type', 'scrim_post')
+  const bookmarkedIds = (bms ?? []).map((b: any) => b.target_id)
+
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_posts"]} />
@@ -77,6 +84,7 @@ export default async function ValorantScrimsPage({
 
         <ScrimsClient
           posts={posts}
+          bookmarkedIds={bookmarkedIds}
           myTier={myTier}
           q={q}
           page={page}

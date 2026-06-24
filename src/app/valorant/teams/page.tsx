@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
+import BookmarkButton from '@/components/BookmarkButton'
 
 export default async function ValorantTeamsPage() {
   const supabase = await createClient()
@@ -26,6 +27,13 @@ export default async function ValorantTeamsPage() {
 
   const myValorantTeams = (myTeams ?? []).filter((m: any) => m.teams?.game_type === 'valorant')
   const myTeamIds = new Set(myValorantTeams.map((m: any) => m.teams?.id).filter(Boolean))
+
+  const { data: teamBms } = await supabase
+    .from('bookmarks')
+    .select('target_id')
+    .eq('user_id', user.id)
+    .eq('target_type', 'team')
+  const bmTeamSet = new Set((teamBms ?? []).map((b: any) => b.target_id))
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -92,7 +100,8 @@ export default async function ValorantTeamsPage() {
                 <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
                   <a href={`/teams/${team.id}`} className="col-span-5 text-white font-semibold text-sm hover:text-[#ff4655] transition">{team.name}</a>
                   <span className="col-span-4 text-slate-400 text-xs">{team.tier_avg ?? '—'}</span>
-                  <div className="col-span-3 flex justify-end">
+                  <div className="col-span-3 flex justify-end items-center gap-2">
+                    <BookmarkButton type="team" id={team.id} initial={bmTeamSet.has(team.id)} />
                     {myTeamIds.has(team.id) ? (
                       <span className="text-xs text-[#ff4655]">소속 중</span>
                     ) : team.captain_id === user.id ? (
