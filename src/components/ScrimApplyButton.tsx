@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState } from 'react'
 
@@ -17,7 +18,7 @@ export default function ScrimApplyButton({
   if (!myTeamId) return (
     <div className="text-center text-sm text-slate-500">
       <p>신청하려면 먼저</p>
-      <a href="/teams" className="text-[#00D2BE] hover:underline">팀을 만드세요</a>
+      <Link href="/teams" className="text-[#00D2BE] hover:underline">팀을 만드세요</Link>
     </div>
   )
 

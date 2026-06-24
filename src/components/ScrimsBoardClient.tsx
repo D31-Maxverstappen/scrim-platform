@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -137,9 +138,9 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
           <p className="text-3xl mb-4">🎮</p>
           <p className="font-semibold">조건에 맞는 스크림이 없어요</p>
           <p className="text-sm mt-1">필터를 바꾸거나 첫 번째로 올려보세요!</p>
-          <a href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
+          <Link href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
             + 스크림 올리기
-          </a>
+          </Link>
         </div>
       ) : (
         <div className="flex flex-col gap-3">

@@ -1,9 +1,10 @@
+import Link from 'next/link'
 export default function TermsPage() {
   return (
     <div className="min-h-screen bg-[#07070b] text-slate-300">
       <div className="max-w-3xl mx-auto px-6 py-16">
 
-        <a href="/" className="text-slate-500 text-sm hover:text-slate-300 transition">← 메인으로</a>
+        <Link href="/" className="text-slate-500 text-sm hover:text-slate-300 transition">← 메인으로</Link>
 
         <h1 className="text-white font-black text-3xl mt-6 mb-2">이용약관</h1>
         <p className="text-slate-500 text-sm mb-12">최종 수정일: 2026년 6월 18일</p>

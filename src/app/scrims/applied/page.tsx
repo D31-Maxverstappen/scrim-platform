@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
@@ -68,7 +69,7 @@ export default async function MyScrimsPage() {
             <h1 className="text-2xl font-black text-white">내 스크림</h1>
             <p className="text-slate-500 text-sm mt-1">내가 올린 스크림과 신청한 스크림을 한눈에</p>
           </div>
-          <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">스크림 게시판 →</a>
+          <Link href="/scrims" className="text-[#00D2BE] text-xs hover:underline">스크림 게시판 →</Link>
         </div>
 
         <div className="flex flex-col gap-10">
@@ -89,9 +90,9 @@ export default async function MyScrimsPage() {
             {!myPosts || myPosts.length === 0 ? (
               <div className="bg-[#13131f] border border-white/5 rounded p-10 text-center text-slate-500">
                 <p className="text-sm">올린 스크림이 없어요</p>
-                <a href="/scrims/post" className="mt-3 inline-block text-[#00D2BE] text-xs hover:underline">
+                <Link href="/scrims/post" className="mt-3 inline-block text-[#00D2BE] text-xs hover:underline">
                   스크림 올리기 →
-                </a>
+                </Link>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
@@ -192,9 +193,9 @@ export default async function MyScrimsPage() {
             {!applications || applications.length === 0 ? (
               <div className="bg-[#13131f] border border-white/5 rounded p-10 text-center text-slate-500">
                 <p className="text-sm">신청한 스크림이 없어요</p>
-                <a href="/scrims" className="mt-3 inline-block text-[#00D2BE] text-xs hover:underline">
+                <Link href="/scrims" className="mt-3 inline-block text-[#00D2BE] text-xs hover:underline">
                   스크림 찾기 →
-                </a>
+                </Link>
               </div>
             ) : (
               <div className="flex flex-col gap-2">
@@ -253,9 +254,9 @@ function EmptyState({ type }: { type: string }) {
       <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-8 text-center text-slate-500">
         <p className="text-sm">팀에 소속되어 있지 않아요</p>
-        <a href="/teams/create" className="mt-4 inline-block text-[#00D2BE] text-xs hover:underline">
+        <Link href="/teams/create" className="mt-4 inline-block text-[#00D2BE] text-xs hover:underline">
           팀 만들기 →
-        </a>
+        </Link>
       </div>
     </div>
   )

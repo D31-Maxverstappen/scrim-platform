@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState } from 'react'
 import Pagination from '@/components/Pagination'
@@ -76,9 +77,9 @@ export default function ScrimsClient({
             <>
               <p className="font-semibold">현재 모집 중인 발로란트 스크림이 없어요</p>
               <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
-              <a href="/scrims/post" className="mt-6 inline-block bg-[#ff4655]/20 hover:bg-[#ff4655]/30 text-[#ff4655] text-sm px-5 py-2.5 rounded transition">
+              <Link href="/scrims/post" className="mt-6 inline-block bg-[#ff4655]/20 hover:bg-[#ff4655]/30 text-[#ff4655] text-sm px-5 py-2.5 rounded transition">
                 + 스크림 올리기
-              </a>
+              </Link>
             </>
           )}
         </div>

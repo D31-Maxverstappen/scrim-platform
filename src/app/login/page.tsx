@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
@@ -49,9 +50,9 @@ function LoginForm() {
 
       <div className="relative z-10 w-full max-w-sm mx-6">
         <div className="text-center mb-8">
-          <a href="/" className="flex justify-center">
+          <Link href="/" className="flex justify-center">
             <Image src="/logo.png" alt="D31" width={120} height={120} className="object-contain" />
-          </a>
+          </Link>
           <p className="text-slate-500 text-sm mt-2">Korea&apos;s First Scrim Platform</p>
         </div>
 
@@ -111,7 +112,7 @@ function LoginForm() {
         </div>
 
         <p className="text-center text-slate-400 text-xs mt-6">
-          <a href="/" className="hover:text-white transition">← 메인으로 돌아가기</a>
+          <Link href="/" className="hover:text-white transition">← 메인으로 돌아가기</Link>
         </p>
       </div>
     </div>

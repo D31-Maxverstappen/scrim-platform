@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
@@ -156,7 +157,7 @@ export default async function ProfilePage() {
             ) : (
               <div className="flex flex-col gap-2">
                 <p className="text-slate-600 text-sm">소속 팀 없음</p>
-                <a href="/teams/create" className="text-xs text-[#00D2BE] hover:underline">팀 만들기 →</a>
+                <Link href="/teams/create" className="text-xs text-[#00D2BE] hover:underline">팀 만들기 →</Link>
               </div>
             )}
           </div>
@@ -179,7 +180,7 @@ export default async function ProfilePage() {
         <div className="bg-[#111118] border border-white/5 rounded overflow-hidden mb-6">
           <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
             <h2 className="text-white font-bold text-sm">최근 스크림</h2>
-            <a href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</a>
+            <Link href="/scrims" className="text-[#00D2BE] text-xs hover:underline">전체 보기 →</Link>
           </div>
           <div className="flex flex-col items-center justify-center py-16 text-slate-600">
             <svg className="w-10 h-10 mb-3 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

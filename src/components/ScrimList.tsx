@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState } from 'react'
 import type { ScrimPost } from '@/lib/types'
@@ -107,9 +108,9 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-14 text-slate-700">
           <p className="text-sm font-semibold mb-1">조건에 맞는 스크림이 없어요</p>
-          <a href="/scrims/post" className="mt-3 text-slate-400 hover:text-white text-xs font-bold transition">
+          <Link href="/scrims/post" className="mt-3 text-slate-400 hover:text-white text-xs font-bold transition">
             + 스크림 올리기
-          </a>
+          </Link>
         </div>
       ) : (
         <div>

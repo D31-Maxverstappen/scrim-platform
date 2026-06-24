@@ -1,3 +1,4 @@
+import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
@@ -48,9 +49,9 @@ export default async function TeamsPage({ searchParams }: { searchParams: Promis
               팀 소속 중
             </span>
           ) : (
-            <a href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
+            <Link href="/teams/create" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-bold transition">
               + 팀 만들기
-            </a>
+            </Link>
           )}
         </div>
 
@@ -85,9 +86,9 @@ export default async function TeamsPage({ searchParams }: { searchParams: Promis
         ) : (
           <div className="bg-[#13131f] border border-white/5 rounded p-10 text-center mb-10">
             <p className="text-slate-500 text-sm mb-3">팀 없음</p>
-            <a href="/teams/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
+            <Link href="/teams/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
               + 팀 만들기
-            </a>
+            </Link>
           </div>
         )}
 

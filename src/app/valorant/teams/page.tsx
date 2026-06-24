@@ -1,3 +1,4 @@
+import Link from 'next/link'
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
@@ -44,9 +45,9 @@ export default async function ValorantTeamsPage() {
               팀 소속 중
             </span>
           ) : (
-            <a href="/teams/create" className="bg-[#ff4655] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-bold transition">
+            <Link href="/teams/create" className="bg-[#ff4655] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-bold transition">
               + 팀 만들기
-            </a>
+            </Link>
           )}
         </div>
 

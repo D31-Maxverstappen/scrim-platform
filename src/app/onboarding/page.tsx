@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -138,7 +139,7 @@ function DoneStep({ valProfile, onGo }: {
         <div className="bg-[#111118] border border-white/5 rounded p-5 mb-4">
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">다음 단계</p>
           <div className="flex flex-col gap-2">
-            <a href="/teams/create"
+            <Link href="/teams/create"
               className="flex items-center gap-3 bg-[#00D2BE]/10 border border-[#00D2BE]/20 hover:border-[#00D2BE]/40 rounded px-4 py-3.5 transition group">
               <div className="w-8 h-8 bg-[#00D2BE]/20 rounded flex items-center justify-center shrink-0">
                 <svg className="w-4 h-4 text-[#00D2BE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,8 +151,8 @@ function DoneStep({ valProfile, onGo }: {
                 <p className="text-slate-500 text-xs">팀을 만들고 캡틴이 되세요</p>
               </div>
               <span className="text-[#00D2BE] text-sm group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
-            <a href="/teams"
+            </Link>
+            <Link href="/teams"
               className="flex items-center gap-3 bg-white/3 border border-white/5 hover:border-white/10 rounded px-4 py-3.5 transition group">
               <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center shrink-0">
                 <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -163,7 +164,7 @@ function DoneStep({ valProfile, onGo }: {
                 <p className="text-slate-500 text-xs">기존 팀에 합류하세요</p>
               </div>
               <span className="text-slate-500 text-sm group-hover:translate-x-0.5 transition-transform">→</span>
-            </a>
+            </Link>
           </div>
         </div>
 

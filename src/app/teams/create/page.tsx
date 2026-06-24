@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 
 import { useState, useTransition } from 'react'
 import { createTeamAction } from '@/app/actions'
@@ -33,7 +34,7 @@ export default function CreateTeamPage() {
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="mb-8">
-          <a href="/teams" className="text-slate-500 text-sm hover:text-slate-300 transition">← 뒤로</a>
+          <Link href="/teams" className="text-slate-500 text-sm hover:text-slate-300 transition">← 뒤로</Link>
           <h1 className="text-white font-bold text-2xl mt-3">팀 만들기</h1>
           <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림을 시작하세요</p>
         </div>

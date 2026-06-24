@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
@@ -45,9 +46,9 @@ function renderPage(posts: any[], game: string, server: string, format: string, 
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">팀을 만들고 스크림 상대를 구해보세요</p>
           </div>
-          <a href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
+          <Link href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
             + 스크림 올리기
-          </a>
+          </Link>
         </div>
 
         {q && (

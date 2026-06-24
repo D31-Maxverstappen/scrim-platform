@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
@@ -64,7 +65,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
       <RealtimeRefresher tables={["scrim_posts", "scrim_applications"]} />
       <Sidebar />
       <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
-        <a href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-4">← 스크림 목록</a>
+        <Link href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition inline-block mb-4">← 스크림 목록</Link>
 
         {/* 역할 배너 */}
         {isPostingCaptain && (

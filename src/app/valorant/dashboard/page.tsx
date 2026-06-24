@@ -219,11 +219,11 @@ export default async function ValorantDashboardPage() {
               ) : (
                 <div className="flex flex-col gap-3">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
-                  <a href="/teams/create"
+                  <Link href="/teams/create"
                     className="text-center text-white text-xs font-bold py-2 rounded transition"
                     style={{ background: '#ff4655' }}>
                     팀 만들기
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
