@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Link from "next/link";
+import SidebarGate from "@/components/layout/SidebarGate";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -46,6 +47,7 @@ export default function RootLayout({
         `}} />
       </head>
       <body className={pretendard.variable}>
+        <SidebarGate />
         {children}
         <footer className="border-t border-white/[0.08] bg-[#07070b] py-7 mt-auto ml-56">
           <div className="max-w-6xl mx-auto px-6 flex flex-col gap-4">

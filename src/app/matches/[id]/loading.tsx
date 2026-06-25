@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function MatchLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         {/* 매치 헤더 */}
         <div className="border border-white/10 bg-[#13131f] mb-6 p-8">

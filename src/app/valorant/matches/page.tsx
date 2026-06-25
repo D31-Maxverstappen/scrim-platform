@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Sidebar from '@/components/layout/Sidebar'
 import { getTierColor } from '@/lib/tiers'
 import { GAME_COLOR } from '@/lib/games'
 import { MOCK_MATCHES, MOCK_RANK, summarize, type ValMatch } from '@/lib/valorantMatchMock'
@@ -42,7 +41,6 @@ export default async function ValorantMatchesPage() {
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
 
         {/* ── 페이지 제목 + 미리보기 배지 ── */}

@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import MatchTabs from '@/components/match/MatchTabs'
 import RosterComparison from '@/components/match/RosterComparison'
 import MatchCancelButton from '@/components/match/MatchCancelButton'
@@ -97,7 +96,6 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["matches", "match_maps", "match_player_stats"]} />
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
 
         {/* ── 매치 헤더 ── */}

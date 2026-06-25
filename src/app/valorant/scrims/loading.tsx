@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function ScrimsLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <Skeleton className="h-6 w-28" />

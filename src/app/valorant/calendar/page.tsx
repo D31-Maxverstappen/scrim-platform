@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import CalendarClient from './CalendarClient'
 
 export default async function CalendarPage({
@@ -34,7 +33,6 @@ export default async function CalendarPage({
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         <div className="mb-6">
           <span className="text-xs font-black text-[#ff4655] uppercase tracking-widest">VALORANT</span>

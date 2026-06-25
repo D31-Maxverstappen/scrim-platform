@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function TeamLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         {/* 팀 헤더 */}
         <div className="flex items-start gap-6 mb-8 pb-8 border-b border-white/10">

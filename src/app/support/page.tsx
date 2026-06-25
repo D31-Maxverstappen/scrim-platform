@@ -2,7 +2,6 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import InquiryForm from './InquiryForm'
 
 export default async function SupportPage() {
@@ -20,7 +19,6 @@ export default async function SupportPage() {
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-12">
         <div className="mb-10">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">SUPPORT</p>

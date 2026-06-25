@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import InviteActions from '@/components/team/InviteActions'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
@@ -26,7 +25,6 @@ export default async function InvitePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a] flex items-center justify-center px-6">
-      <Sidebar />
       <div className="w-full max-w-sm mt-20">
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
 

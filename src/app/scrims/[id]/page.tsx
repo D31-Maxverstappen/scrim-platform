@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import ScrimApplyButton from '@/components/scrim/ScrimApplyButton'
 import ScrimCancelButton from '@/components/scrim/ScrimCancelButton'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
@@ -78,7 +77,6 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_posts", "scrim_applications"]} />
-      <Sidebar />
       <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-4">
           <Link href="/scrims" className="text-slate-500 text-sm hover:text-slate-300 transition">← 스크림 목록</Link>

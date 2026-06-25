@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import RecruitBoard from '@/components/scrim/RecruitBoard'
 import Pagination from '@/components/common/Pagination'
 
@@ -45,7 +44,6 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>

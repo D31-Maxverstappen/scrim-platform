@@ -3,7 +3,6 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import BookmarkButton from '@/components/common/BookmarkButton'
 
@@ -38,7 +37,6 @@ export default async function ValorantTeamsPage() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["teams", "team_members"]} />
-      <Sidebar />
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
 
         <div className="flex items-center justify-between mb-6">

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
@@ -61,7 +60,6 @@ export default async function MyScrimsPage() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={["scrim_applications", "scrim_posts"]} />
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
 
         <div className="flex items-center justify-between mb-8">
@@ -251,7 +249,6 @@ export default async function MyScrimsPage() {
 function EmptyState({ type }: { type: string }) {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-8 text-center text-slate-500">
         <p className="text-sm">팀에 소속되어 있지 않아요</p>
         <Link href="/teams/create" className="mt-4 inline-block text-[#00D2BE] text-xs hover:underline">

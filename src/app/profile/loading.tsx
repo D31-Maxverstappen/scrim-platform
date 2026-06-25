@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function ProfileLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#07070b]">
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-10">
         {/* 헤더 */}
         <div className="bg-[#111118] border border-white/5 rounded p-8 flex items-center gap-6 mb-6">

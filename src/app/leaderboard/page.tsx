@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { GameType } from '@/lib/types'
-import Sidebar from '@/components/layout/Sidebar'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import Pagination from '@/components/common/Pagination'
 
@@ -88,7 +87,6 @@ export default async function LeaderboardPage({
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <RealtimeRefresher tables={['teams', 'users']} />
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
 
         {/* 헤더 */}

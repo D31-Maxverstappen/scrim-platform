@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Sidebar from '@/components/layout/Sidebar'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
 import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
@@ -60,7 +59,6 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen ml-56 bg-[#07070b]">
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-10">
 
         {/* 프로필 헤더 */}

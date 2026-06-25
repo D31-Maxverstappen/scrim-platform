@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function DashboardLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#070711]">
-      <Sidebar />
       <div className="max-w-7xl mx-auto px-6 pb-16 pt-8">
         <Skeleton className="h-7 w-48 mb-6" />
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">

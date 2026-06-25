@@ -1,6 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/layout/Sidebar'
 import { FlagImg } from '@/components/common/CountrySelect'
 import InviteButton from '@/components/team/InviteButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
@@ -35,7 +34,6 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-2xl mx-auto px-6 py-8">
 
         {/* 프로필 헤더 */}

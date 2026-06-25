@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/common/Skeleton'
-import Sidebar from '@/components/layout/Sidebar'
 
 export default function LeaderboardLoading() {
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="pt-6 max-w-3xl mx-auto px-6 py-8">
         <Skeleton className="h-7 w-32 mb-6" />
         <div className="flex flex-col gap-2">

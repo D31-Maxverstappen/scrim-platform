@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import Sidebar from '@/components/layout/Sidebar'
 import BookmarkButton from '@/components/common/BookmarkButton'
 
 export default async function BookmarksPage() {
@@ -39,7 +38,6 @@ export default async function BookmarksPage() {
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
-      <Sidebar />
       <div className="max-w-5xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-black text-white mb-1">즐겨찾기</h1>
         <p className="text-slate-500 text-sm mb-8">저장한 스크림과 팀을 모아봐요.</p>
