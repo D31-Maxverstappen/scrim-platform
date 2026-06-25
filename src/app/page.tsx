@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import Image from 'next/image'
 import DiscordBanner from '@/components/layout/DiscordBanner'
+import Reveal from '@/components/common/Reveal'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -220,9 +221,9 @@ export default function HomePage() {
       <section className="relative z-10 px-6 pb-32 max-w-4xl mx-auto w-full">
         <p className="text-center text-slate-600 text-xs font-semibold tracking-[0.3em] uppercase mb-8">지원 게임</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {games.map((game) => (
+          {games.map((game, i) => (
+            <Reveal key={game.name} delay={i * 90}>
             <a
-              key={game.name}
               href={game.available ? (loggedIn ? game.href : game.loginHref) : '#'}
               style={{ background: game.bg }}
               className={`group relative flex items-center gap-6 rounded p-7 border border-white/5 transition-all duration-300 overflow-hidden ${game.available ? 'hover:border-white/10 cursor-pointer hover:scale-[1.02]' : 'cursor-default opacity-50'}`}
@@ -244,25 +245,30 @@ export default function HomePage() {
                 )}
               </div>
             </a>
+            </Reveal>
           ))}
         </div>
       </section>
 
       {/* ── 주요 기능 ── */}
       <section id="features" className="relative z-10 px-6 py-24 max-w-5xl mx-auto w-full">
-        <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">Features</p>
-        <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-4">필요한 건 다 있어요</h2>
-        <p className="text-center text-slate-500 text-sm mb-14">스크림부터 팀 관리까지, 하나의 플랫폼에서</p>
+        <Reveal>
+          <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">Features</p>
+          <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-4">필요한 건 다 있어요</h2>
+          <p className="text-center text-slate-500 text-sm mb-14">스크림부터 팀 관리까지, 하나의 플랫폼에서</p>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {features.map((f) => (
-            <div key={f.title} className="bg-[#13131f] border border-white/5 rounded p-6 hover:border-white/10 transition">
+          {features.map((f, i) => (
+            <Reveal key={f.title} delay={i * 90}>
+            <div className="bg-[#13131f] border border-white/5 rounded p-6 hover:border-white/10 transition">
               <div className="w-12 h-12 rounded-lg bg-[#00D2BE]/15 flex items-center justify-center mb-5 text-[#00D2BE]">
                 {f.icon}
               </div>
               <h3 className="text-white font-bold text-sm mb-2">{f.title}</h3>
               <p className="text-slate-500 text-xs leading-relaxed">{f.desc}</p>
             </div>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -270,8 +276,10 @@ export default function HomePage() {
       {/* ── 이렇게 시작하세요 ── */}
       <section id="howto" className="relative z-10 px-6 py-24 border-t border-white/5 w-full">
         <div className="max-w-4xl mx-auto">
-          <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">How it works</p>
-          <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-16">4단계로 첫 스크림까지</h2>
+          <Reveal>
+            <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">How it works</p>
+            <h2 className="text-center text-white font-black text-3xl md:text-4xl mb-16">4단계로 첫 스크림까지</h2>
+          </Reveal>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
             <div className="hidden md:block absolute top-8 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
@@ -280,14 +288,14 @@ export default function HomePage() {
               { step: '02', title: '팀 만들기', desc: '직접 팀을 만들거나 공개 팀에 가입 신청을 해요.' },
               { step: '03', title: '스크림 잡기', desc: '게시판에 공고를 올리거나 자동 매칭으로 상대를 찾아요.' },
               { step: '04', title: '결과 입력', desc: '맵별 스코어를 입력하면 전적과 승률이 자동으로 기록돼요.' },
-            ].map((s) => (
-              <div key={s.step} className="flex flex-col items-center text-center">
+            ].map((s, i) => (
+              <Reveal key={s.step} delay={i * 90} className="flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-full bg-[#13131f] border border-white/10 flex items-center justify-center mb-4 relative z-10">
                   <span className="text-[#00D2BE] font-black text-lg">{s.step}</span>
                 </div>
                 <h3 className="text-white font-bold text-sm mb-2">{s.title}</h3>
                 <p className="text-slate-500 text-xs leading-relaxed">{s.desc}</p>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -296,7 +304,7 @@ export default function HomePage() {
       {/* ── 자동 매칭 하이라이트 ── */}
       <section className="relative z-10 px-6 py-24 border-t border-white/5">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <div>
+          <Reveal>
             <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">자동 매칭</p>
             <h2 className="text-white font-black text-3xl mb-5 leading-tight">상대 찾는 데<br />시간 낭비 없이</h2>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
@@ -311,8 +319,8 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
+          </Reveal>
+          <Reveal delay={120} className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-white text-xs font-bold">자동 매칭</span>
               <span className="text-[10px] text-slate-500">비슷한 티어 자동 탐색</span>
@@ -341,16 +349,18 @@ export default function HomePage() {
               </div>
               <span className="bg-[#00D2BE] text-white text-[10px] font-bold px-2.5 py-1 rounded">매치 보기 →</span>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── FAQ ── */}
       <section id="faq" className="relative z-10 px-6 py-24 border-t border-white/5">
         <div className="max-w-2xl mx-auto">
-          <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">FAQ</p>
-          <h2 className="text-center text-white font-black text-3xl mb-12">자주 묻는 질문</h2>
-          <div className="flex flex-col gap-3">
+          <Reveal>
+            <p className="text-center text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">FAQ</p>
+            <h2 className="text-center text-white font-black text-3xl mb-12">자주 묻는 질문</h2>
+          </Reveal>
+          <Reveal delay={90} className="flex flex-col gap-3">
             {[
               { q: '무료인가요?', a: '네, 완전 무료예요. 가입부터 스크림 매칭, 팀 관리까지 모든 기능이 무료예요.' },
               { q: '어떤 게임을 지원하나요?', a: '현재 VALORANT를 지원해요. 추후 다른 게임도 추가될 예정이에요.' },
@@ -369,7 +379,7 @@ export default function HomePage() {
                 </div>
               </details>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -378,15 +388,17 @@ export default function HomePage() {
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#00D2BE]/5 rounded-full blur-[100px]" />
         </div>
-        <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-4">지금 시작하세요</p>
-        <h2 className="text-white font-black text-4xl md:text-5xl mb-5">
-          다음 스크림 상대,<br />여기서 찾으세요
-        </h2>
-        <p className="text-slate-400 text-sm mb-10">무료 · 가입 1분 · 바로 시작</p>
-        <a href={loggedIn ? '/dashboard' : '/login'}
-          className="inline-block bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-10 py-4 rounded transition text-sm">
-          {loggedIn ? '대시보드로 →' : '무료로 시작하기 →'}
-        </a>
+        <Reveal>
+          <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-4">지금 시작하세요</p>
+          <h2 className="text-white font-black text-4xl md:text-5xl mb-5">
+            다음 스크림 상대,<br />여기서 찾으세요
+          </h2>
+          <p className="text-slate-400 text-sm mb-10">무료 · 가입 1분 · 바로 시작</p>
+          <a href={loggedIn ? '/dashboard' : '/login'}
+            className="inline-block bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-10 py-4 rounded transition text-sm">
+            {loggedIn ? '대시보드로 →' : '무료로 시작하기 →'}
+          </a>
+        </Reveal>
       </section>
 
       <DiscordBanner />
