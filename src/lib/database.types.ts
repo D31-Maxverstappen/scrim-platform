@@ -1216,7 +1216,6 @@ export type Database = {
           avatar_url: string | null
           country: string | null
           created_at: string
-          discord_access_token: string | null
           discord_id: string | null
           game_type: Database["public"]["Enums"]["game_type"]
           id: string
@@ -1243,7 +1242,6 @@ export type Database = {
           avatar_url?: string | null
           country?: string | null
           created_at?: string
-          discord_access_token?: string | null
           discord_id?: string | null
           game_type?: Database["public"]["Enums"]["game_type"]
           id: string
@@ -1270,7 +1268,6 @@ export type Database = {
           avatar_url?: string | null
           country?: string | null
           created_at?: string
-          discord_access_token?: string | null
           discord_id?: string | null
           game_type?: Database["public"]["Enums"]["game_type"]
           id?: string
