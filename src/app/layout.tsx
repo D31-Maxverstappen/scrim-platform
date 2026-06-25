@@ -35,17 +35,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 다크모드 고정: data-theme를 정적 지정해 서버=클라이언트 HTML 일치 → 하이드레이션 경고 원천 제거.
+  // 라이트모드 재개 시: <head>에 localStorage 읽는 인라인 스크립트 + <html>에 suppressHydrationWarning 추가.
   return (
-    <html lang="ko">
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: `
-          (function() {
-            // 라이트 모드 일시 비활성화 — 다크 모드 고정 (추후 라이트 모드 재개 시 아래로 복구)
-            // var t = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', 'dark');
-          })();
-        `}} />
-      </head>
+    <html lang="ko" data-theme="dark">
       <body className={pretendard.variable}>
         <SidebarGate />
         {children}
