@@ -22,8 +22,8 @@ export default function ScrimEditPage() {
   useEffect(() => {
     supabase.from('scrim_posts').select('*').eq('id', id).single().then(({ data }) => {
       if (!data) { router.replace('/scrims'); return }
-      setFormat(data.format ?? 'BO3')
-      setServer(data.server ?? 'KR')
+      setFormat((data.format ?? 'BO3') as 'BO1' | 'BO3' | 'BO5')
+      setServer((data.server ?? 'KR') as 'KR' | 'AS')
       if (data.preferred_date) {
         const d = new Date(data.preferred_date)
         setDate(d.toISOString().split('T')[0])

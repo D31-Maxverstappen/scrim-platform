@@ -8,6 +8,7 @@ import MatchEndButton from '@/components/MatchEndButton'
 import MatchScoreInput from '@/components/MatchScoreInput'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import MannerRating from '@/components/MannerRating'
+import type { MatchStat } from '@/lib/types'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
@@ -37,11 +38,11 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
       .eq('match_id', id),
     supabase.from('team_members')
       .select('user_id, role, is_igl, users(val_gamename, riot_gamename, val_tier, tier, country, avatar_url)')
-      .eq('team_id', match.team1_id)
+      .eq('team_id', match.team1_id as string)
       .neq('role', 'coach'),
     supabase.from('team_members')
       .select('user_id, role, is_igl, users(val_gamename, riot_gamename, val_tier, tier, country, avatar_url)')
-      .eq('team_id', match.team2_id)
+      .eq('team_id', match.team2_id as string)
       .neq('role', 'coach'),
   ])
 
@@ -49,11 +50,22 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const team2 = Array.isArray(match.team2) ? match.team2[0] : match.team2
   const winner = Array.isArray(match.winner) ? match.winner[0] : match.winner
 
+  // DB nullable 컬럼 → MatchStat(엄격) 경계 정규화
+  const safeStats: MatchStat[] = (stats ?? []).map((s) => ({
+    ...s,
+    user_id: s.user_id ?? '',
+    team_id: s.team_id ?? '',
+    map_id: s.map_id ?? '',
+    kills: s.kills ?? 0, deaths: s.deaths ?? 0, assists: s.assists ?? 0,
+    acs: s.acs ?? 0, kast: s.kast ?? 0, adr: s.adr ?? 0,
+    hs_pct: s.hs_pct ?? 0, fk: s.fk ?? 0, fd: s.fd ?? 0,
+  }))
+
   // 양 팀 중 하나의 캡틴인지 확인
   const { data: captainTeam } = await supabase
     .from('teams')
     .select('id')
-    .in('id', [match.team1_id, match.team2_id])
+    .in('id', [match.team1_id, match.team2_id].filter((v): v is string => !!v))
     .eq('captain_id', user.id)
     .single()
   const isCaptain = !!captainTeam
@@ -221,7 +233,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           team1={team1}
           team2={team2}
           maps={maps ?? []}
-          stats={stats ?? []}
+          stats={safeStats}
           team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
           team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
         />

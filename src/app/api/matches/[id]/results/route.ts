@@ -29,7 +29,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { data: captainCheck } = await supabase
     .from('teams')
     .select('id')
-    .in('id', [match.team1_id, match.team2_id])
+    .in('id', [match.team1_id, match.team2_id].filter((v): v is string => !!v))
     .eq('captain_id', user.id)
     .single()
   if (!captainCheck) return NextResponse.json({ error: '권한이 없어요.' }, { status: 403 })
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   // 팀 전적 반영
   if (winnerId) {
-    const loserId = winnerId === match.team1_id ? match.team2_id : match.team1_id
+    const loserId = (winnerId === match.team1_id ? match.team2_id : match.team1_id) as string
     await Promise.all([
       supabase.rpc('increment_wins', { team_id: winnerId }),
       supabase.rpc('increment_losses', { team_id: loserId }),

@@ -1,6 +1,12 @@
 // 공용 도메인 타입 — 여러 컴포넌트/페이지에서 재사용하는 데이터 형태 모음.
 // Supabase 쿼리 결과의 흔한 형태를 정의해 any 사용을 줄인다.
 
+import type { Database } from './database.types'
+
+// DB enum 정본 재사용 (매직 문자열 흩뿌리기 방지)
+export type GameType = Database['public']['Enums']['game_type']
+export type MemberRole = Database['public']['Enums']['member_role']
+
 export type UserBrief = {
   id?: string
   val_gamename?: string | null

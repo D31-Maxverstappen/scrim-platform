@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import type { GameType } from '@/lib/types'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
@@ -17,7 +18,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
     .eq('status', 'open')
     .order('created_at', { ascending: false })
 
-  if (game) query = query.eq('game_type', game)
+  if (game) query = query.eq('game_type', game as GameType)
   if (server) query = query.eq('server', server)
   if (format) query = query.eq('format', format)
 

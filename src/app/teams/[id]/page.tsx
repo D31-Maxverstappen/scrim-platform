@@ -161,9 +161,9 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             {total > 0 && (
               <>
                 <div className="w-full bg-white/5 rounded h-1 mb-1.5">
-                  <div className="h-1 rounded bg-[#00D2BE]" style={{ width: `${Math.round((team.wins / total) * 100)}%` }} />
+                  <div className="h-1 rounded bg-[#00D2BE]" style={{ width: `${Math.round(((team.wins ?? 0) / total) * 100)}%` }} />
                 </div>
-                <p className="text-xs text-slate-500">승률 {Math.round((team.wins / total) * 100)}%</p>
+                <p className="text-xs text-slate-500">승률 {Math.round(((team.wins ?? 0) / total) * 100)}%</p>
               </>
             )}
           </div>
@@ -183,7 +183,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           <div className="grid grid-cols-4 divide-x divide-white/5">
             {[
               { label: '총 스크림', value: allMatches.length > 0 ? String(allMatches.length) : '—' },
-              { label: '승률', value: total > 0 ? `${Math.round((team.wins / total) * 100)}%` : '—' },
+              { label: '승률', value: total > 0 ? `${Math.round(((team.wins ?? 0) / total) * 100)}%` : '—' },
               { label: '평균 티어', value: team.tier_avg ?? '—' },
               { label: '매너 점수', value: `${teamManner}` },
             ].map((s) => (

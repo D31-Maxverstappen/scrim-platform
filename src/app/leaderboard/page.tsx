@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import type { GameType } from '@/lib/types'
 import Sidebar from '@/components/Sidebar'
 import RealtimeRefresher from '@/components/RealtimeRefresher'
 import Pagination from '@/components/Pagination'
@@ -52,7 +53,7 @@ export default async function LeaderboardPage({
   const { data: teamsRaw, count: teamCount } = await supabase
     .from('teams')
     .select('id, name, tier_avg, wins, losses, game_type', { count: 'exact' })
-    .eq('game_type', game)
+    .eq('game_type', game as GameType)
     .or('wins.gt.0,losses.gt.0')
     .order('wins', { ascending: false })
     .range(from, to)

@@ -10,8 +10,8 @@ type Notif = {
   title: string
   body: string | null
   link: string | null
-  read: boolean
-  created_at: string
+  read: boolean | null
+  created_at: string | null
 }
 
 export default function NotificationBell() {
@@ -115,7 +115,7 @@ export default function NotificationBell() {
                       <p className="text-white text-xs font-semibold">{n.title}</p>
                       {n.body && <p className="text-slate-500 text-xs mt-0.5">{n.body}</p>}
                       <p className="text-slate-700 text-[10px] mt-1">
-                        {new Date(n.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                        {n.created_at ? new Date(n.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
                       </p>
                     </div>
                   </div>

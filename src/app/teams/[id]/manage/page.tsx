@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import type { MemberRole } from '@/lib/types'
 import TeamLogoUpload from '@/components/TeamLogoUpload'
 
 const ROLES = ['player', 'igl', 'head_coach', 'coach']
@@ -131,7 +132,7 @@ export default function ManageTeamPage() {
   }
 
   const handleRoleChange = async (userId: string, newRole: string) => {
-    await supabase.from('team_members').update({ role: newRole }).eq('team_id', teamId).eq('user_id', userId)
+    await supabase.from('team_members').update({ role: newRole as MemberRole }).eq('team_id', teamId).eq('user_id', userId)
     setMsg('역할을 변경했어요.')
     load()
   }

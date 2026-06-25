@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
   const { data: post } = await admin
     .from('recruitment_posts')
-    .select('id, team_id, user_id, teams(captain_id), users(riot_gamename, val_gamename, discord_tag)')
+    .select('id, team_id, user_id, teams(captain_id), users(riot_gamename, val_gamename)')
     .eq('id', postId)
     .single()
 
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
   // 내 프로필
   const { data: myProfile } = await supabase
     .from('users')
-    .select('riot_gamename, val_gamename, discord_tag')
+    .select('riot_gamename, val_gamename')
     .eq('id', user.id)
     .single()
 
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     captainId,
     'join_request',
     '팀 가입 신청이 왔어요!',
-    `${myName}님이 선수 모집 글에 가입 신청을 했어요.${myProfile?.discord_tag ? ` Discord: ${myProfile.discord_tag}` : ''}`,
+    `${myName}님이 선수 모집 글에 가입 신청을 했어요.`,
     post.team_id ? `/teams/${post.team_id}/manage` : `/recruit`,
   )
 

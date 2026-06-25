@@ -39,7 +39,7 @@ export default function RecruitEditPage() {
         const { data: { user } } = await supabase.auth.getUser()
         if (!user || data.user_id !== user.id) { router.push('/recruit'); return }
 
-        setType(data.type)
+        setType(data.type as 'lfp' | 'lft')
         setNote(data.note ?? '')
         setDiscordTag(data.discord_tag ?? '')
         setRoles(data.roles ?? [])

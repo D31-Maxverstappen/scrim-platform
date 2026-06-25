@@ -29,7 +29,7 @@ export default function MatchScoreInput({
   team1Name: string
   team2Id: string
   team2Name: string
-  initialMaps: { map_number: number; map_name: string; team1_score: number; team2_score: number }[]
+  initialMaps: { map_number: number | null; map_name: string | null; team1_score: number | null; team2_score: number | null }[]
 }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)

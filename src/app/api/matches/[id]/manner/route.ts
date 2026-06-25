@@ -31,7 +31,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   const { data: myTeam } = await supabase
     .from('teams')
     .select('id')
-    .in('id', [match.team1_id, match.team2_id])
+    .in('id', [match.team1_id, match.team2_id].filter((v): v is string => !!v))
     .eq('captain_id', user.id)
     .single()
   if (!myTeam) return NextResponse.json({ error: '평가 권한이 없어요. (팀 캡틴만 가능)' }, { status: 403 })

@@ -42,9 +42,8 @@ function RecruitPostContent() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return
-      supabase.from('users').select('val_tier, tier, discord_tag').eq('id', user.id).single()
+      supabase.from('users').select('val_tier, tier').eq('id', user.id).single()
         .then(({ data: profile }) => {
-          if (profile?.discord_tag) setDiscordTag(profile.discord_tag)
           if (type === 'lft') {
             const t = profile?.val_tier ?? null
             if (t) setTier(t)

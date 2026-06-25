@@ -17,12 +17,13 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
   // 신청 정보
   const { data: request } = await supabase.from('team_join_requests').select('user_id').eq('id', requestId).single()
-  if (!request) return NextResponse.json({ error: '신청을 찾을 수 없어요.' }, { status: 404 })
+  if (!request?.user_id) return NextResponse.json({ error: '신청을 찾을 수 없어요.' }, { status: 404 })
+  const requesterId = request.user_id
 
   if (action === 'accept') {
     // 이미 다른 팀에 소속됐는지 확인
     const { data: alreadyMember } = await supabase
-      .from('team_members').select('id').eq('user_id', request.user_id).maybeSingle()
+      .from('team_members').select('id').eq('user_id', requesterId).maybeSingle()
     if (alreadyMember) {
       // 신청을 자동 취소 처리하고 에러 반환
       await supabase.from('team_join_requests').update({ status: 'rejected' }).eq('id', requestId)
@@ -31,7 +32,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 
     await supabase.from('team_members').insert({
       team_id: teamId,
-      user_id: request.user_id,
+      user_id: requesterId,
       role: role ?? 'player',
     })
     await supabase.from('team_join_requests').update({ status: 'accepted' }).eq('id', requestId)
@@ -40,7 +41,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     await supabase
       .from('team_join_requests')
       .update({ status: 'rejected' })
-      .eq('user_id', request.user_id)
+      .eq('user_id', requesterId)
       .eq('status', 'pending')
       .neq('id', requestId)
 
@@ -48,7 +49,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     await supabase
       .from('team_invites')
       .update({ status: 'declined' })
-      .eq('invited_user_id', request.user_id)
+      .eq('invited_user_id', requesterId)
       .eq('status', 'pending')
 
     await recalcTierAvg(supabase, teamId)
@@ -56,7 +57,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     // Discord 팀 역할 부여
     if (team?.discord_role_id) {
       const { data: memberProfile } = await supabase
-        .from('users').select('discord_id').eq('id', request.user_id).single()
+        .from('users').select('discord_id').eq('id', requesterId).single()
       if (memberProfile?.discord_id) {
         await assignDiscordRole(memberProfile.discord_id, team.discord_role_id).catch(() => {})
       }

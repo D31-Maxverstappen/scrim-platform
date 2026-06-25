@@ -68,7 +68,7 @@ export default async function InvitePage({ params }: { params: Promise<{ id: str
               </div>
             )}
 
-            <InviteActions inviteId={id} status={invite.status} teamId={team?.id ?? ''} />
+            <InviteActions inviteId={id} status={invite.status ?? 'pending'} teamId={team?.id ?? ''} />
           </div>
         </div>
       </div>
