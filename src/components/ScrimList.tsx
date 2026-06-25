@@ -13,7 +13,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
   const [filterOpen, setFilterOpen] = useState(false)
 
   const activeGame = game ?? 'valorant'
-  const gameColor = '#ff4655'
+  const gameColor = '#00D2BE'
   const allLink = `/${activeGame}/scrims`
 
   const filtered = scrims

@@ -82,7 +82,7 @@ export default async function LeaderboardPage({
   const myPlayerRank = sortedPlayers.findIndex((u) => u.id === user.id)
 
   const gameLabel = 'VALORANT'
-  const gameColor = '#ff4655'
+  const gameColor = '#00D2BE'
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">

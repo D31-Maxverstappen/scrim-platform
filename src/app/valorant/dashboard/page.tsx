@@ -133,7 +133,7 @@ export default async function ValorantDashboardPage() {
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">VALORANT DASHBOARD</p>
             <h1 className="text-white font-black text-3xl tracking-tight">
-              안녕하세요, <span className="text-[#ff4655]" style={{ textShadow: '0 0 24px rgba(255,70,85,0.4)' }}>{displayName}</span>님
+              안녕하세요, <span className="text-[#00D2BE]" style={{ textShadow: '0 0 24px rgba(0,210,190,0.4)' }}>{displayName}</span>님
             </h1>
           </div>
           <span className="text-xs text-slate-600 hidden sm:block">
@@ -204,14 +204,14 @@ export default async function ValorantDashboardPage() {
                   </a>
                   {/* 팀 이름 → 팀 페이지 */}
                   <a href={`/teams/${team.id}`} className="flex-1 min-w-0 group/name">
-                    <p className="text-white font-black text-base truncate group-hover/name:text-[#ff4655] transition leading-tight">
+                    <p className="text-white font-black text-base truncate group-hover/name:text-[#00D2BE] transition leading-tight">
                       {team.abbreviation || team.name}
                     </p>
                     {team.tier_avg && (
                       <p className="text-xs text-slate-500 mt-0.5">{team.tier_avg}</p>
                     )}
                     <span className="inline-block mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full"
-                      style={{ background: '#ff465520', color: '#ff4655' }}>
+                      style={{ background: '#00D2BE20', color: '#00D2BE' }}>
                       {myValTeam?.role === 'captain' ? '캡틴' : '멤버'}
                     </span>
                   </a>
@@ -221,7 +221,7 @@ export default async function ValorantDashboardPage() {
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
                   <Link href="/teams/create"
                     className="text-center text-white text-xs font-bold py-2 rounded transition"
-                    style={{ background: '#ff4655' }}>
+                    style={{ background: '#00D2BE' }}>
                     팀 만들기
                   </Link>
                 </div>

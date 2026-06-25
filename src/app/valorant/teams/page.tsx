@@ -49,11 +49,11 @@ export default async function ValorantTeamsPage() {
             <h1 className="text-white font-bold text-xl">팀 찾기</h1>
           </div>
           {(myTeams ?? []).length > 0 ? (
-            <span className="text-xs font-bold px-4 py-2 rounded border border-[#ff4655]/30 bg-[#ff4655]/10 text-[#ff4655]">
+            <span className="text-xs font-bold px-4 py-2 rounded border border-[#00D2BE]/30 bg-[#00D2BE]/10 text-[#00D2BE]">
               팀 소속 중
             </span>
           ) : (
-            <Link href="/teams/create" className="bg-[#ff4655] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-bold transition">
+            <Link href="/teams/create" className="bg-[#00D2BE] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-bold transition">
               + 팀 만들기
             </Link>
           )}
@@ -68,12 +68,12 @@ export default async function ValorantTeamsPage() {
                 const team = m.teams
                 if (!team) return null
                 return (
-                  <div key={team.id} className="bg-[#13131f] border border-[#ff4655]/20 rounded p-5 flex items-center justify-between">
+                  <div key={team.id} className="bg-[#13131f] border border-[#00D2BE]/20 rounded p-5 flex items-center justify-between">
                     <div>
                       <p className="text-white font-bold mb-1">{team.name}</p>
                       <div className="flex items-center gap-2">
                         {team.tier_avg && <span className="text-slate-400 text-xs">{team.tier_avg}</span>}
-                        <span className="text-xs bg-[#ff4655]/20 text-[#ff4655] px-2 py-0.5 rounded">
+                        <span className="text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
                           {m.role === 'captain' ? '캡틴' : '멤버'}
                         </span>
                       </div>
@@ -98,12 +98,12 @@ export default async function ValorantTeamsPage() {
             <div className="divide-y divide-white/5">
               {allTeams.map((team: any) => (
                 <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
-                  <a href={`/teams/${team.id}`} className="col-span-5 text-white font-semibold text-sm hover:text-[#ff4655] transition">{team.name}</a>
+                  <a href={`/teams/${team.id}`} className="col-span-5 text-white font-semibold text-sm hover:text-[#00D2BE] transition">{team.name}</a>
                   <span className="col-span-4 text-slate-400 text-xs">{team.tier_avg ?? '—'}</span>
                   <div className="col-span-3 flex justify-end items-center gap-2">
                     <BookmarkButton type="team" id={team.id} initial={bmTeamSet.has(team.id)} />
                     {myTeamIds.has(team.id) ? (
-                      <span className="text-xs text-[#ff4655]">소속 중</span>
+                      <span className="text-xs text-[#00D2BE]">소속 중</span>
                     ) : team.captain_id === user.id ? (
                       <span className="text-xs text-slate-600">내 팀</span>
                     ) : (

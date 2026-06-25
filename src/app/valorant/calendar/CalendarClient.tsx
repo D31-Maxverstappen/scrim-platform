@@ -106,7 +106,7 @@ export default function CalendarClient({
                 onClick={() => setSelectedDay(isSelected ? null : key)}
                 className={`relative flex flex-col items-center rounded-xl py-2.5 transition group ${
                   isSelected
-                    ? 'bg-[#ff4655]/20 border border-[#ff4655]/40'
+                    ? 'bg-[#00D2BE]/20 border border-[#00D2BE]/40'
                     : count > 0
                     ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/10'
                     : 'hover:bg-white/[0.03] border border-transparent'
@@ -114,9 +114,9 @@ export default function CalendarClient({
               >
                 <span className={`text-sm font-bold ${
                   isToday
-                    ? 'text-[#ff4655]'
+                    ? 'text-[#00D2BE]'
                     : isSelected
-                    ? 'text-[#ff4655]'
+                    ? 'text-[#00D2BE]'
                     : isSun
                     ? 'text-red-400/70'
                     : isSat
@@ -130,17 +130,17 @@ export default function CalendarClient({
                     {Array.from({ length: Math.min(count, 4) }).map((_, i) => (
                       <span
                         key={i}
-                        className="w-1.5 h-1.5 rounded-full bg-[#ff4655]"
+                        className="w-1.5 h-1.5 rounded-full bg-[#00D2BE]"
                         style={{ opacity: 0.5 + (i / Math.max(count, 1)) * 0.5 }}
                       />
                     ))}
                     {count > 4 && (
-                      <span className="text-[9px] text-[#ff4655] font-bold">+{count - 4}</span>
+                      <span className="text-[9px] text-[#00D2BE] font-bold">+{count - 4}</span>
                     )}
                   </div>
                 )}
                 {isToday && (
-                  <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#ff4655]" />
+                  <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#00D2BE]" />
                 )}
               </button>
             )
@@ -150,10 +150,10 @@ export default function CalendarClient({
         {/* 범례 */}
         <div className="flex items-center gap-4 mt-4 text-[11px] text-slate-600">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#ff4655]" /> 스크림 공고
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE]" /> 스크림 공고
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-[#ff4655]" /> 오늘
+            <span className="w-1 h-1 rounded-full bg-[#00D2BE]" /> 오늘
           </span>
         </div>
       </div>
@@ -166,7 +166,7 @@ export default function CalendarClient({
               <p className="text-white font-bold text-sm">
                 {Number(selectedDay.split('-')[2])}일 스크림
               </p>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#ff4655]/10 text-[#ff4655]">
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00D2BE]/10 text-[#00D2BE]">
                 {selectedScrims.length}개
               </span>
             </div>
@@ -187,7 +187,7 @@ export default function CalendarClient({
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-white font-bold text-sm">{team?.name ?? '—'}</span>
                         {s.format && (
-                          <span className="text-[10px] font-black bg-[#ff4655]/10 text-[#ff4655] px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">
                             {s.format}
                           </span>
                         )}
