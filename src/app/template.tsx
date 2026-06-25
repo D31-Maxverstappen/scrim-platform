@@ -1,5 +1,11 @@
-// App Router template: 매 네비게이션마다 리마운트되어 enter 애니메이션이 재생된다.
-// 페이지 이동 시 콘텐츠가 "팍" 튀지 않고 부드럽게 스며들도록 opacity fade 적용.
+'use client'
+
+import { usePathname } from 'next/navigation'
+
+// 페이지 네비게이션 시 콘텐츠를 부드럽게 fade-in.
+// root template은 "첫 경로 구간"이 바뀔 때만 리마운트되므로(예: /valorant/* 끼리
+// 이동하면 효과 누락), usePathname을 key로 줘서 모든 경로 변경에 확실히 재생시킨다.
 export default function Template({ children }: { children: React.ReactNode }) {
-  return <div className="page-transition">{children}</div>
+  const pathname = usePathname()
+  return <div key={pathname} className="page-transition">{children}</div>
 }
