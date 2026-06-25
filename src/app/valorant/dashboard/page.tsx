@@ -63,14 +63,16 @@ export default async function ValorantDashboardPage() {
   const receivedApps = (allApplications ?? []).filter((a) => {
     const post = Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post
     return post?.team_id === team?.id
-  }).map((a: any) => ({
+  }).map((a) => ({
     ...a,
     applying_team: Array.isArray(a.applying_team) ? a.applying_team[0] : a.applying_team,
     scrim_post: Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post,
   }))
 
-  const teamsWithActivity = (allTeams ?? []).map((t: any) => ({
+  const teamsWithActivity = (allTeams ?? []).map((t) => ({
     ...t,
+    wins: t.wins ?? 0,
+    losses: t.losses ?? 0,
     scrim_count: scrimCountMap[t.id] ?? 0,
   }))
 

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 
 type Application = {
   id: string
-  status: string
+  status: string | null
   match_id: string | null
   applying_team: { id: string; name: string; tier_avg: string | null; game_type: string }
   scrim_post: { id: string; preferred_date: string | null; note: string | null }

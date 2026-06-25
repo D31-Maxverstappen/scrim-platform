@@ -3,7 +3,7 @@ import { FlagImg } from './CountrySelect'
 type Member = {
   user_id: string
   role: string
-  is_igl: boolean
+  is_igl: boolean | null
   users: {
     val_gamename: string | null
     riot_gamename: string | null

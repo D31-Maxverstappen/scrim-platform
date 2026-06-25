@@ -8,6 +8,13 @@ import RealtimeRefresher from '@/components/RealtimeRefresher'
 import BookmarkButton from '@/components/BookmarkButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
+// 스크림 상세 로스터 — teams(team_members(...)) 깊은 조인이라 명시 타입 부여
+type RosterMember = {
+  user_id: string
+  role: string
+  users: { riot_gamename: string | null; riot_tagline: string | null; tier: string | null; avatar_url: string | null } | null
+}
+
 function formatDate(dt: string | null) {
   if (!dt) return '미정'
   const d = new Date(dt)
@@ -64,9 +71,9 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
     .eq('scrim_post_id', id)
     .order('created_at', { ascending: false }) : { data: null }
 
-  const members = team?.team_members ?? []
-  const players = members.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role))
-  const staff = members.filter((m: any) => ['head_coach', 'coach'].includes(m.role))
+  const members: RosterMember[] = team?.team_members ?? []
+  const players = members.filter((m) => ['captain', 'igl', 'player'].includes(m.role))
+  const staff = members.filter((m) => ['head_coach', 'coach'].includes(m.role))
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -177,7 +184,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
             <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">로스터</h2>
             {players.length > 0 ? (
               <div className="grid grid-cols-3 gap-3 mb-4">
-                {players.map((m: any) => {
+                {players.map((m) => {
                   const u = m.users
                   return (
                     <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded p-3 flex flex-col items-center gap-2 text-center">
@@ -203,7 +210,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
               <>
                 <h3 className="text-slate-500 text-xs uppercase tracking-widest mb-3">Coaching Staff</h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {staff.map((m: any) => {
+                  {staff.map((m) => {
                     const u = m.users
                     return (
                       <div key={m.user_id} className="bg-[#13131f] border border-white/5 rounded p-3 flex items-center gap-3">
