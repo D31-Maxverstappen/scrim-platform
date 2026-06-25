@@ -12,6 +12,7 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://d31.gg"),
   title: "D31 - 발로란트 스크림 매칭 플랫폼",
   description: "실력에 맞는 팀을 찾고, 스크림을 잡고, 매너 점수로 신뢰를 쌓으세요. 대한민국 최초 발로란트 스크림 매칭 플랫폼.",
   openGraph: {
