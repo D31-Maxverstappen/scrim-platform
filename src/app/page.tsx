@@ -5,6 +5,7 @@ import Image from 'next/image'
 import DiscordBanner from '@/components/layout/DiscordBanner'
 import Reveal from '@/components/common/Reveal'
 import RevealText from '@/components/common/RevealText'
+import ScrollCue from '@/components/common/ScrollCue'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -140,7 +141,7 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/60 via-[#07070b]/70 to-[#07070b] landing-hero-overlay" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px]" />
         {/* 폴드 하단 글로우 — "경계 너머에 콘텐츠가 더 있다"는 암시(스크롤 유도) */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[720px] h-[220px] bg-[#00D2BE]/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[760px] h-[260px] bg-[#00D2BE]/30 rounded-full blur-[90px]" />
       </div>
 
       {/* 네비바 */}
@@ -205,15 +206,8 @@ export default function HomePage() {
             ))}
           </div>
 
-          {/* 스크롤 유도 */}
-          <a href="#features" className="mt-8 flex flex-col items-center gap-3 text-slate-400 hover:text-white transition group">
-            <span className="text-sm font-semibold tracking-widest uppercase">자세히 보기</span>
-            <div className="w-10 h-10 rounded-full border border-white/20 group-hover:border-[#00D2BE]/60 flex items-center justify-center transition animate-bounce">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
-          </a>
+          {/* 스크롤 유도 — 스크롤 시작하면 페이드아웃 */}
+          <ScrollCue href="#features" label="자세히 보기" />
 
           {/* 모바일 전용 스탯 */}
           <div className="flex lg:hidden gap-3 mt-10 w-full justify-center">
