@@ -311,7 +311,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             )}
             {isCaptain && (
               <>
-                <InviteButton type="team" targetId={id} userId={user.id} />
+                <InviteButton type="team" targetId={id} />
                 <a href={`/teams/${id}/manage`}
                   className="bg-white/5 hover:bg-white/10 text-white text-sm font-semibold px-5 py-2 rounded transition">
                   팀 관리

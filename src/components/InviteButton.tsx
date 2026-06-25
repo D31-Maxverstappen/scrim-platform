@@ -5,11 +5,9 @@ import { useState } from 'react'
 export default function InviteButton({
   type,
   targetId,
-  userId,
 }: {
   type: 'team' | 'inhouse'
   targetId: string
-  userId: string
 }) {
   const [state, setState] = useState<'idle' | 'loading' | 'copied'>('idle')
 
@@ -19,7 +17,7 @@ export default function InviteButton({
       const res = await fetch('/api/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, targetId, userId }),
+        body: JSON.stringify({ type, targetId }),
       })
       if (!res.ok) { setState('idle'); return }
       const { token } = await res.json()

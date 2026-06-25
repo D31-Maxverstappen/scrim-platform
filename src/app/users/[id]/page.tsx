@@ -67,7 +67,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
               </div>
             </div>
             {!isMe && iAmCaptain && myTeamData && (
-              <InviteButton type="team" targetId={myTeamData.id} userId={me.id} />
+              <InviteButton type="team" targetId={myTeamData.id} />
             )}
           </div>
         </div>
