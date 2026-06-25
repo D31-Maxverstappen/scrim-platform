@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import { useState } from 'react'
 import Pagination from '@/components/Pagination'
+import { EmptyState, EmptyIcons } from '@/components/EmptyState'
 import BookmarkButton from '@/components/BookmarkButton'
 import { inTierRange } from '@/lib/tiers'
 
@@ -63,30 +64,21 @@ export default function ScrimsClient({
       </div>
 
       {displayed.length === 0 ? (
-        <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded">
-          <p className="text-3xl mb-4">🎮</p>
-          {q ? (
-            <>
-              <p className="font-semibold">"{q}" 조건에 맞는 스크림이 없어요</p>
-              <p className="text-sm mt-1">다른 팀 이름으로 검색해보세요</p>
-            </>
-          ) : filterByTier ? (
-            <>
-              <p className="font-semibold">내 티어에 맞는 스크림이 없어요</p>
-              <p className="text-sm mt-1">
-                <button onClick={() => setFilterByTier(false)} className="text-[#ff4655] hover:underline">전체 공고 보기</button>
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="font-semibold">현재 모집 중인 발로란트 스크림이 없어요</p>
-              <p className="text-sm mt-1">첫 번째로 스크림을 올려보세요!</p>
-              <Link href="/scrims/post" className="mt-6 inline-block bg-[#ff4655]/20 hover:bg-[#ff4655]/30 text-[#ff4655] text-sm px-5 py-2.5 rounded transition">
-                + 스크림 올리기
-              </Link>
-            </>
-          )}
-        </div>
+        <EmptyState
+          accent="#ff4655"
+          icon={EmptyIcons.swords}
+          title={q ? `"${q}" 조건에 맞는 스크림이 없어요` : filterByTier ? '내 티어에 맞는 스크림이 없어요' : '현재 모집 중인 발로란트 스크림이 없어요'}
+          description={
+            q
+              ? '다른 팀 이름으로 검색해보세요'
+              : filterByTier
+                ? <button onClick={() => setFilterByTier(false)} className="text-[#ff4655] hover:underline">전체 공고 보기</button>
+                : '첫 번째로 스크림을 올려보세요!'
+          }
+          action={!q && !filterByTier ? (
+            <Link href="/scrims/post" className="inline-block bg-[#ff4655]/20 hover:bg-[#ff4655]/30 text-[#ff4655] text-sm px-5 py-2.5 rounded transition">+ 스크림 올리기</Link>
+          ) : undefined}
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {displayed.map((post: any) => {

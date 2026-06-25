@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Sidebar from '@/components/Sidebar'
 import Link from 'next/link'
+import { EmptyState, EmptyIcons } from '@/components/EmptyState'
 
 const STATUS_LABEL: Record<string, string> = {
   recruiting: '모집중',
@@ -70,15 +71,13 @@ export default async function InhousePage() {
         </div>
 
         {enriched.length === 0 ? (
-          <div className="bg-[#13131f] border border-white/5 rounded-2xl p-16 text-center">
-            <p className="text-3xl mb-4">🎮</p>
-            <p className="text-white font-semibold">현재 모집 중인 내전이 없어요</p>
-            <p className="text-slate-500 text-sm mt-1">첫 번째로 방을 만들어보세요!</p>
-            <Link href="/inhouse/create"
-              className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
-              + 방 만들기
-            </Link>
-          </div>
+          <EmptyState
+            accent="#00D2BE"
+            icon={EmptyIcons.target}
+            title="현재 모집 중인 내전이 없어요"
+            description="첫 번째로 방을 만들어보세요!"
+            action={<Link href="/inhouse/create" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 방 만들기</Link>}
+          />
         ) : (
           <div className="flex flex-col gap-3">
             {enriched.map((room: any) => (

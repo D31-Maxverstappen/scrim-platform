@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
+import { EmptyState, EmptyIcons } from '@/components/EmptyState'
 import type { RecruitPost } from '@/lib/types'
 
 const VAL_TIERS = [
@@ -280,14 +281,13 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 
       {/* 카드 그리드 */}
       {localPosts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-24 text-slate-600 bg-[#13131f] border border-white/5 rounded">
-          <p className="text-3xl mb-4">{activeType === 'lft' ? '🎮' : '🔍'}</p>
-          <p className="font-semibold text-sm">{activeType === 'lft' ? '팀을 찾는 선수가 없어요' : '선수를 찾는 팀이 없어요'}</p>
-          <p className="text-xs mt-1">첫 번째로 올려보세요!</p>
-          <a href="/recruit/post" className="mt-5 bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
-            + 글 올리기
-          </a>
-        </div>
+        <EmptyState
+          accent="#00D2BE"
+          icon={activeType === 'lft' ? EmptyIcons.megaphone : EmptyIcons.search}
+          title={activeType === 'lft' ? '팀을 찾는 선수가 없어요' : '선수를 찾는 팀이 없어요'}
+          description="첫 번째로 올려보세요!"
+          action={<a href="/recruit/post" className="bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 글 올리기</a>}
+        />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {localPosts.map((post) =>

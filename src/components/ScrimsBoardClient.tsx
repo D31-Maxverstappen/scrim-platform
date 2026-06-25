@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { EmptyState, EmptyIcons } from '@/components/EmptyState'
 
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -134,14 +135,13 @@ export default function ScrimsBoardClient({ posts, game, server, format }: {
 
       {/* 목록 */}
       {displayed.length === 0 ? (
-        <div className="text-center text-slate-500 py-24 bg-[#13131f] border border-white/5 rounded">
-          <p className="text-3xl mb-4">🎮</p>
-          <p className="font-semibold">조건에 맞는 스크림이 없어요</p>
-          <p className="text-sm mt-1">필터를 바꾸거나 첫 번째로 올려보세요!</p>
-          <Link href="/scrims/post" className="mt-6 inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">
-            + 스크림 올리기
-          </Link>
-        </div>
+        <EmptyState
+          accent="#00D2BE"
+          icon={EmptyIcons.swords}
+          title="조건에 맞는 스크림이 없어요"
+          description="필터를 바꾸거나 첫 번째로 올려보세요!"
+          action={<Link href="/scrims/post" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 스크림 올리기</Link>}
+        />
       ) : (
         <div className="flex flex-col gap-3">
           {displayed.map((post) => {
