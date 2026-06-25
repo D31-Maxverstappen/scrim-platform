@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import DiscordBanner from '@/components/layout/DiscordBanner'
 import Reveal from '@/components/common/Reveal'
+import RevealText from '@/components/common/RevealText'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -161,22 +162,34 @@ export default function HomePage() {
 
         {/* 센터 히어로 */}
         <div className="flex flex-col items-center text-center flex-1 max-w-2xl">
-          <div className="flex items-center gap-2 mb-6">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-            <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Korea's First Scrim Platform</p>
-          </div>
+          <Reveal trigger="load" delay={0}>
+            <div className="flex items-center gap-2 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Korea's First Scrim Platform</p>
+            </div>
+          </Reveal>
           <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">
-            스크림 · 내전<br />
-            <span className="bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent">매칭 플랫폼</span>
+            <RevealText
+              startDelay={160}
+              stagger={70}
+              segments={[
+                { text: '스크림 · 내전', breakAfter: true },
+                { text: '매칭 플랫폼', whole: true, className: 'bg-gradient-to-r from-[#00D2BE] to-[#00edd6] bg-clip-text text-transparent' },
+              ]}
+            />
           </h1>
-          <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
-            실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
-          </p>
-          <div className="flex gap-3">
-            <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
-              {loggedIn ? '홈으로' : '로그인 / 회원가입'}
-            </a>
-          </div>
+          <Reveal trigger="load" delay={520}>
+            <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
+              실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
+            </p>
+          </Reveal>
+          <Reveal trigger="load" delay={620}>
+            <div className="flex gap-3">
+              <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
+                {loggedIn ? '홈으로' : '로그인 / 회원가입'}
+              </a>
+            </div>
+          </Reveal>
 
           {/* 기능 배지 */}
           <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
@@ -304,7 +317,7 @@ export default function HomePage() {
       {/* ── 자동 매칭 하이라이트 ── */}
       <section className="relative z-10 px-6 py-24 border-t border-white/5">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-          <Reveal>
+          <Reveal direction="left" distance={32}>
             <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-3">자동 매칭</p>
             <h2 className="text-white font-black text-3xl mb-5 leading-tight">상대 찾는 데<br />시간 낭비 없이</h2>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
@@ -320,7 +333,7 @@ export default function HomePage() {
               ))}
             </ul>
           </Reveal>
-          <Reveal delay={120} className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
+          <Reveal delay={120} direction="right" scale distance={44} className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-white text-xs font-bold">자동 매칭</span>
               <span className="text-[10px] text-slate-500">비슷한 티어 자동 탐색</span>
