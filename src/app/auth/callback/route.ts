@@ -39,7 +39,6 @@ export async function GET(request: NextRequest) {
   const discordId = user.user_metadata?.provider_id ?? user.user_metadata?.sub ?? null
   const discordName = user.user_metadata?.full_name ?? user.user_metadata?.name ?? null
   const discordAvatar = user.user_metadata?.avatar_url ?? null
-  const providerToken = data.session?.provider_token ?? null
 
   const { data: existing } = await supabase
     .from('users')
@@ -53,12 +52,10 @@ export async function GET(request: NextRequest) {
       riot_gamename: discordName,
       avatar_url: discordAvatar,
       discord_id: discordId ?? null,
-      discord_access_token: providerToken,
     })
   } else {
     await supabase.from('users').update({
       discord_id: discordId ?? null,
-      discord_access_token: providerToken,
     }).eq('id', user.id)
   }
 

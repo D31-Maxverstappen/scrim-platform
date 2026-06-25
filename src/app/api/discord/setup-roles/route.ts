@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { createDiscordRole } from '@/lib/discord'
+
+async function checkAdmin() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  const { data } = await supabase.from('users').select('is_admin').eq('id', user.id).single()
+  return data?.is_admin ? user : null
+}
 
 const BASE_ROLES = [
   { name: 'D31 Member',      color: 0x00D2BE },
@@ -17,6 +26,11 @@ const BASE_ROLES = [
 ]
 
 export async function POST() {
+  // 운영용 셋업 엔드포인트 — 관리자만 실행 가능
+  if (!(await checkAdmin())) {
+    return NextResponse.json({ error: '관리자만 실행할 수 있어요.' }, { status: 403 })
+  }
+
   const admin = createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,

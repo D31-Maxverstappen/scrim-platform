@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 type State = 'idle' | 'loading' | 'success' | 'error'
 
-export default function AppealForm({ userId }: { userId: string }) {
+export default function AppealForm() {
   const [open, setOpen] = useState(false)
   const [reason, setReason] = useState('')
   const [state, setState] = useState<State>('idle')
@@ -23,7 +23,7 @@ export default function AppealForm({ userId }: { userId: string }) {
     const res = await fetch('/api/appeals', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId, reason: reason.trim() }),
+      body: JSON.stringify({ reason: reason.trim() }),
     })
     const data = await res.json()
 

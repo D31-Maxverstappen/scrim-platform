@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 
 const admin = createAdmin(
@@ -6,15 +7,23 @@ const admin = createAdmin(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 )
 
-export async function POST(req: NextRequest) {
-  const { userId, reason } = await req.json()
+export async function POST(req: Request) {
+  const { reason } = await req.json()
 
-  if (!userId || !reason) {
+  if (!reason) {
     return NextResponse.json({ error: '필수 파라미터가 누락되었습니다.' }, { status: 400 })
   }
   if (reason.length < 20) {
     return NextResponse.json({ error: '사유를 20자 이상 작성해주세요.' }, { status: 400 })
   }
+
+  // 본인 확인 — 신청자는 body가 아닌 세션에서만 결정 (타인 명의 신청 차단)
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
+  }
+  const userId = user.id
 
   // 정지된 계정인지 확인
   const { data: profile } = await admin.from('users').select('suspended').eq('id', userId).single()

@@ -46,7 +46,7 @@ export default async function SuspendedPage({
             디스코드 문의하기
           </a>
           {uid ? (
-            <AppealForm userId={uid} />
+            <AppealForm />
           ) : (
             <p className="text-slate-600 text-xs py-3">이의 신청은 정상적인 로그인 후 정지 감지 시에만 가능합니다.</p>
           )}
