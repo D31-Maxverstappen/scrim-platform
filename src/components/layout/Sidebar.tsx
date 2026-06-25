@@ -107,9 +107,45 @@ const NAV = [
   },
 ]
 
+// 내전 컨텍스트 사이드바 — /inhouse 진입 시 자동 전환
+const INHOUSE_NAV = [
+  {
+    href: '/valorant/dashboard',
+    label: '← 스크림으로',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11 19l-7-7 7-7M18 12H4" />
+      </svg>
+    ),
+  },
+  {
+    href: '/inhouse',
+    label: '내전 홈',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/inhouse/ranking',
+    label: '내전 랭킹',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8 21h8M12 17v4M6 4h12v5a6 6 0 11-12 0V4z" />
+      </svg>
+    ),
+  },
+]
+
 export default function Sidebar() {
   const router = useRouter()
   const pathname = usePathname()
+  // /inhouse 진입 시 내전 전용 메뉴로 자동 컨텍스트 전환
+  const navItems = pathname.startsWith('/inhouse') ? INHOUSE_NAV : NAV
+  const activeHref = [...navItems]
+    .filter((it) => pathname === it.href || pathname.startsWith(it.href + '/'))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href
   const [search, setSearch] = useState('')
   const [teams, setTeams] = useState<TeamResult[]>([])
   const [users, setUsers] = useState<UserResult[]>([])
@@ -230,8 +266,8 @@ export default function Sidebar() {
 
         {/* 네비 링크 */}
         <nav className="flex-1 flex flex-col gap-1 px-2 overflow-y-auto">
-          {NAV.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(item.href + '/')
+          {navItems.map((item) => {
+            const active = item.href === activeHref
             return (
               <Link key={item.href} href={item.href}
                 className={`sidebar-nav-item flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold${active ? ' active' : ''}`}>
