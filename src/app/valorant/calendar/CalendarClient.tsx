@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -104,43 +105,38 @@ export default function CalendarClient({
               <button
                 key={key}
                 onClick={() => setSelectedDay(isSelected ? null : key)}
-                className={`relative flex flex-col items-center rounded-xl py-2.5 transition group ${
+                className={`relative flex items-start aspect-[1/0.8] rounded-md px-2.5 py-2 transition group overflow-hidden ${
                   isSelected
-                    ? 'bg-[#00D2BE]/20 border border-[#00D2BE]/40'
+                    ? 'bg-[#00D2BE]/[0.12] border border-[#00D2BE]'
                     : count > 0
-                    ? 'bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] hover:border-white/10'
-                    : 'hover:bg-white/[0.03] border border-transparent'
+                    ? 'bg-[#00D2BE]/[0.06] border border-[#00D2BE]/30 hover:border-[#00D2BE]/55'
+                    : 'bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/10'
                 }`}
               >
-                <span className={`text-sm font-bold ${
-                  isToday
-                    ? 'text-[#00D2BE]'
-                    : isSelected
+                {/* 공고 있는 날: 좌상단 각진 노치 */}
+                {count > 0 && (
+                  <span className="absolute top-0 left-0 w-0 h-0 border-t-[11px] border-t-[#00D2BE] border-r-[11px] border-r-transparent rounded-tl-md" />
+                )}
+                <span className={`font-mono text-sm font-semibold leading-none ${
+                  isToday || isSelected
                     ? 'text-[#00D2BE]'
                     : isSun
-                    ? 'text-red-400/70'
+                    ? 'text-red-400/55'
                     : isSat
-                    ? 'text-blue-400/70'
-                    : 'text-white'
+                    ? 'text-blue-400/55'
+                    : 'text-slate-100'
                 }`}>
                   {day}
                 </span>
-                {count > 0 && (
-                  <div className="flex gap-0.5 mt-1 flex-wrap justify-center max-w-[40px]">
-                    {Array.from({ length: Math.min(count, 4) }).map((_, i) => (
-                      <span
-                        key={i}
-                        className="w-1.5 h-1.5 rounded-full bg-[#00D2BE]"
-                        style={{ opacity: 0.5 + (i / Math.max(count, 1)) * 0.5 }}
-                      />
-                    ))}
-                    {count > 4 && (
-                      <span className="text-[9px] text-[#00D2BE] font-bold">+{count - 4}</span>
-                    )}
-                  </div>
+                {/* 오늘: 우상단 링 표시 */}
+                {isToday && !isSelected && (
+                  <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full border border-[#00D2BE]" />
                 )}
-                {isToday && (
-                  <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#00D2BE]" />
+                {/* 공고 수 배지 */}
+                {count > 0 && (
+                  <span className="absolute bottom-1.5 right-1.5 font-mono text-[10px] font-bold leading-none text-[#04342C] bg-[#00D2BE] px-1.5 py-0.5 rounded">
+                    {count}
+                  </span>
                 )}
               </button>
             )
@@ -150,10 +146,10 @@ export default function CalendarClient({
         {/* 범례 */}
         <div className="flex items-center gap-4 mt-4 text-[11px] text-slate-600">
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE]" /> 스크림 공고
+            <span className="w-1.5 h-1.5 rounded-sm bg-[#00D2BE]" /> 스크림 공고
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-[#00D2BE]" /> 오늘
+            <span className="w-1.5 h-1.5 rounded-full border border-[#00D2BE]" /> 오늘
           </span>
         </div>
       </div>
@@ -213,9 +209,13 @@ export default function CalendarClient({
             )}
           </div>
         ) : (
-          <div className="bg-[#13131f] border border-white/5 rounded-2xl p-8 text-center sticky top-28">
-            <p className="text-3xl mb-3">📅</p>
-            <p className="text-slate-500 text-sm">날짜를 클릭하면<br/>스크림 목록이 보여요</p>
+          <div className="sticky top-28">
+            <EmptyState
+              icon={EmptyIcons.target}
+              title="날짜를 선택하세요"
+              description={<>달력에서 날짜를 클릭하면<br/>해당일 스크림 목록이 표시됩니다</>}
+              accent="#00D2BE"
+            />
           </div>
         )}
       </div>
