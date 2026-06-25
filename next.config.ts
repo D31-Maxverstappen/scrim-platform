@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     qualities: [50, 75],
     remotePatterns: [
       { protocol: 'https', hostname: 'flagcdn.com' },
-      { protocol: 'https', hostname: 'opitkttpjlxmdmqfvuew.supabase.co' },
+      { protocol: 'https', hostname: 'atmmtyyzzcczqjkeizvc.supabase.co' },
       { protocol: 'https', hostname: 'images.unsplash.com' },
     ],
   },
