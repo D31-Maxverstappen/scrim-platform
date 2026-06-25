@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import Link from "next/link";
 import SidebarGate from "@/components/layout/SidebarGate";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -49,26 +49,7 @@ export default function RootLayout({
       <body className={pretendard.variable}>
         <SidebarGate />
         {children}
-        <footer className="border-t border-white/[0.08] bg-[#07070b] py-7 mt-auto ml-56">
-          <div className="max-w-6xl mx-auto px-6 flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <span className="text-white font-black text-xl tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
-              </div>
-              <div className="flex gap-5 text-xs text-slate-500">
-                <Link href="/support" className="hover:text-slate-300 transition">문의하기</Link>
-                <Link href="/terms" className="hover:text-slate-300 transition">이용약관</Link>
-                <Link href="/privacy" className="hover:text-slate-300 transition">개인정보 처리방침</Link>
-              </div>
-            </div>
-            <div className="border-t border-white/5 pt-4 flex flex-col gap-1.5">
-              <span className="text-xs text-slate-600">© 2026 D31. All rights reserved.</span>
-              <p className="text-[10px] text-slate-700 leading-relaxed max-w-3xl">
-                D31.GG is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Valorant. Valorant and Riot Games are trademarks or registered trademarks of Riot Games, Inc. Valorant © Riot Games, Inc.
-              </p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </body>
     </html>
   );
