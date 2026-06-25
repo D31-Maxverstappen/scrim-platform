@@ -4,6 +4,17 @@
   --color-brand: #00D2BE;
   --color-brand-dark: #00a896;
   --color-brand-light: #00edd6;
+
+  /* 각진(tactical) 모서리 통일 — 전 사이트 radius를 대시보드 기준 4px로 고정.
+     rounded-full(알약·아바타·점)은 별도 토큰이라 영향 없음. 되돌리려면 이 블록만 삭제. */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.25rem;
+  --radius-2xl: 0.25rem;
+  --radius-3xl: 0.25rem;
+  --radius-4xl: 0.25rem;
 }
 
 /* ── Dark (default) ── */
