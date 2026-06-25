@@ -79,6 +79,15 @@ const NAV = [
     ),
   },
   {
+    href: '/inhouse',
+    label: '내전',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+    ),
+  },
+  {
     href: '/bookmarks',
     label: '즐겨찾기',
     icon: (
