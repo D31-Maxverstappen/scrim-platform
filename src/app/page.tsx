@@ -334,34 +334,40 @@ export default function HomePage() {
             </ul>
           </Reveal>
           <Reveal delay={120} direction="right" scale distance={44} className="bg-[#13131f] border border-white/5 rounded p-6 flex flex-col gap-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-white text-xs font-bold">자동 매칭</span>
-              <span className="text-[10px] text-slate-500">비슷한 티어 자동 탐색</span>
-            </div>
-            <div className="flex gap-2">
-              {['BO1', 'BO3', 'BO5'].map((f, i) => (
-                <div key={f} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 1 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{f}</div>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              {['KR', 'AS'].map((s, i) => (
-                <div key={s} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 0 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{s}</div>
-              ))}
-            </div>
-            <div className="bg-[#0d1a19] border border-[#00D2BE]/20 rounded px-4 py-3 flex items-center gap-2 mt-1">
+            <Reveal delay={360} distance={14}>
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-white text-xs font-bold">자동 매칭</span>
+                <span className="text-[10px] text-slate-500">비슷한 티어 자동 탐색</span>
+              </div>
+            </Reveal>
+            <Reveal delay={450} distance={14}>
+              <div className="flex gap-2">
+                {['BO1', 'BO3', 'BO5'].map((f, i) => (
+                  <div key={f} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 1 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{f}</div>
+                ))}
+              </div>
+            </Reveal>
+            <Reveal delay={540} distance={14}>
+              <div className="flex gap-2">
+                {['KR', 'AS'].map((s, i) => (
+                  <div key={s} className={`flex-1 py-1.5 rounded text-center text-[10px] font-bold ${i === 0 ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-500'}`}>{s}</div>
+                ))}
+              </div>
+            </Reveal>
+            <Reveal delay={630} distance={14} className="bg-[#0d1a19] border border-[#00D2BE]/20 rounded px-4 py-3 flex items-center gap-2 mt-1">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE] animate-pulse shrink-0" />
               <div>
                 <p className="text-white text-xs font-bold">매칭 중...</p>
                 <p className="text-slate-500 text-[10px]">23초 대기 중 · BO3 · KR</p>
               </div>
-            </div>
-            <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/30 rounded px-4 py-3 flex items-center justify-between">
+            </Reveal>
+            <Reveal delay={720} distance={14} className="bg-[#00D2BE]/10 border border-[#00D2BE]/30 rounded px-4 py-3 flex items-center justify-between">
               <div>
                 <p className="text-[#00D2BE] text-xs font-black">매칭 완료!</p>
                 <p className="text-slate-400 text-[10px]">PHANTOM과의 매치가 잡혔어요</p>
               </div>
               <span className="bg-[#00D2BE] text-white text-[10px] font-bold px-2.5 py-1 rounded">매치 보기 →</span>
-            </div>
+            </Reveal>
           </Reveal>
         </div>
       </section>
