@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import AdminReportsClient from './AdminReportsClient'
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/common/Pagination'
 
 const admin = createAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,

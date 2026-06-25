@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { FlagImg } from './CountrySelect'
+import { FlagImg } from '@/components/common/CountrySelect'
 import type { TeamBrief, MatchMap, MatchStat, TeamMemberBrief } from '@/lib/types'
 
 const ROUND_COLORS: Record<string, string> = {

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
-import { EmptyState, EmptyIcons } from '@/components/EmptyState'
+import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import type { RecruitPost } from '@/lib/types'
 
 const VAL_TIERS = [

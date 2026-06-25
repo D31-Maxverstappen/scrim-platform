@@ -2,9 +2,9 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/layout/Sidebar'
 import Link from 'next/link'
-import { EmptyState, EmptyIcons } from '@/components/EmptyState'
+import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 
 const STATUS_LABEL: Record<string, string> = {
   recruiting: '모집중',

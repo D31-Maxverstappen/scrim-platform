@@ -1,4 +1,4 @@
-import { FlagImg } from './CountrySelect'
+import { FlagImg } from '@/components/common/CountrySelect'
 
 type Member = {
   user_id: string

@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import ScrimApplyButton from '@/components/ScrimApplyButton'
-import ScrimCancelButton from '@/components/ScrimCancelButton'
-import RealtimeRefresher from '@/components/RealtimeRefresher'
-import BookmarkButton from '@/components/BookmarkButton'
+import Sidebar from '@/components/layout/Sidebar'
+import ScrimApplyButton from '@/components/scrim/ScrimApplyButton'
+import ScrimCancelButton from '@/components/scrim/ScrimCancelButton'
+import RealtimeRefresher from '@/components/common/RealtimeRefresher'
+import BookmarkButton from '@/components/common/BookmarkButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 // 스크림 상세 로스터 — teams(team_members(...)) 깊은 조인이라 명시 타입 부여

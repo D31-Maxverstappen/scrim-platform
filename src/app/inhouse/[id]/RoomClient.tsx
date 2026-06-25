@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import InviteButton from '@/components/InviteButton'
+import InviteButton from '@/components/team/InviteButton'
 
 const STATUS_LABEL: Record<string, string> = {
   recruiting: '모집중', full: '인원마감', ongoing: '진행중', done: '종료',

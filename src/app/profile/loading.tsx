@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/Skeleton'
-import Sidebar from '@/components/Sidebar'
+import { Skeleton } from '@/components/common/Skeleton'
+import Sidebar from '@/components/layout/Sidebar'
 
 export default function ProfileLoading() {
   return (

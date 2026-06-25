@@ -3,9 +3,9 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import RealtimeRefresher from '@/components/RealtimeRefresher'
-import BookmarkButton from '@/components/BookmarkButton'
+import Sidebar from '@/components/layout/Sidebar'
+import RealtimeRefresher from '@/components/common/RealtimeRefresher'
+import BookmarkButton from '@/components/common/BookmarkButton'
 
 export default async function ValorantTeamsPage() {
   const supabase = await createClient()

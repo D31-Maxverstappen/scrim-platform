@@ -1,6 +1,6 @@
 'use client'
 
-import AvatarUpload from './AvatarUpload'
+import AvatarUpload from '@/components/profile/AvatarUpload'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#8899aa', Bronze: '#a57c52', Silver: '#b0b8c8',

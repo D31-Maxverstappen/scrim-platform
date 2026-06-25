@@ -1,9 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { GameType } from '@/lib/types'
-import Sidebar from '@/components/Sidebar'
-import RealtimeRefresher from '@/components/RealtimeRefresher'
-import Pagination from '@/components/Pagination'
+import Sidebar from '@/components/layout/Sidebar'
+import RealtimeRefresher from '@/components/common/RealtimeRefresher'
+import Pagination from '@/components/common/Pagination'
 
 const PAGE_SIZE = 20
 

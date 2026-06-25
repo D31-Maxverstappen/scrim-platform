@@ -6,9 +6,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 // 라이트 모드 일시 비활성화 — 다크 모드 고정 (추후 재개 시 ThemeToggle import·렌더 복구)
 // import ThemeToggle from './ThemeToggle'
-import ProfileDropdown from './ProfileDropdown'
-import NotificationBell from './NotificationBell'
-import SuspendedWatcher from './SuspendedWatcher'
+import ProfileDropdown from '@/components/layout/ProfileDropdown'
+import NotificationBell from '@/components/layout/NotificationBell'
+import SuspendedWatcher from '@/components/layout/SuspendedWatcher'
 import { createClient } from '@/lib/supabase/client'
 
 type TeamResult = { id: string; name: string; game_type: string; tier_avg: string | null }

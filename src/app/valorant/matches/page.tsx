@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/layout/Sidebar'
 import { getTierColor } from '@/lib/tiers'
 import { GAME_COLOR } from '@/lib/games'
 import { MOCK_MATCHES, MOCK_RANK, summarize, type ValMatch } from '@/lib/valorantMatchMock'

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { MemberRole } from '@/lib/types'
-import TeamLogoUpload from '@/components/TeamLogoUpload'
+import TeamLogoUpload from '@/components/team/TeamLogoUpload'
 
 const ROLES = ['player', 'igl', 'head_coach', 'coach']
 const ROLE_LABEL: Record<string, string> = {

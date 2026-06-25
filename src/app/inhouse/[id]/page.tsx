@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/layout/Sidebar'
 import RoomClient from './RoomClient'
 
 export default async function InhouseRoomPage({ params }: { params: Promise<{ id: string }> }) {

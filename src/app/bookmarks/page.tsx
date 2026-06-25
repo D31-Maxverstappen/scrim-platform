@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import Sidebar from '@/components/Sidebar'
-import BookmarkButton from '@/components/BookmarkButton'
+import Sidebar from '@/components/layout/Sidebar'
+import BookmarkButton from '@/components/common/BookmarkButton'
 
 export default async function BookmarksPage() {
   const supabase = await createClient()

@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import { FlagImg } from '@/components/CountrySelect'
-import InviteButton from '@/components/InviteButton'
+import Sidebar from '@/components/layout/Sidebar'
+import { FlagImg } from '@/components/common/CountrySelect'
+import InviteButton from '@/components/team/InviteButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 export default async function UserProfilePage({ params }: { params: Promise<{ id: string }> }) {

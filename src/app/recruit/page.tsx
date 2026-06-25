@@ -3,9 +3,9 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import RecruitBoard from '@/components/RecruitBoard'
-import Pagination from '@/components/Pagination'
+import Sidebar from '@/components/layout/Sidebar'
+import RecruitBoard from '@/components/scrim/RecruitBoard'
+import Pagination from '@/components/common/Pagination'
 
 const PAGE_SIZE = 20
 

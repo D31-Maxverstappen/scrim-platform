@@ -1,10 +1,10 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import Sidebar from '@/components/Sidebar'
-import AvatarUpload from '@/components/AvatarUpload'
-import CountrySelect from '@/components/CountrySelect'
-import DeleteAccountButton from '@/components/DeleteAccountButton'
+import Sidebar from '@/components/layout/Sidebar'
+import AvatarUpload from '@/components/profile/AvatarUpload'
+import CountrySelect from '@/components/common/CountrySelect'
+import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
 import { GAME_LABEL } from '@/lib/games'
 
 const TIER_COLOR: Record<string, string> = {

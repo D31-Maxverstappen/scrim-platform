@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import InviteActions from '@/components/InviteActions'
+import Sidebar from '@/components/layout/Sidebar'
+import InviteActions from '@/components/team/InviteActions'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 export default async function InvitePage({ params }: { params: Promise<{ id: string }> }) {

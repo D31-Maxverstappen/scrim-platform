@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
-import Sidebar from '@/components/Sidebar'
-import RealtimeRefresher from '@/components/RealtimeRefresher'
+import Sidebar from '@/components/layout/Sidebar'
+import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 

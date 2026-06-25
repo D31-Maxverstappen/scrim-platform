@@ -2,7 +2,7 @@
 import Link from 'next/link'
 
 import Image from 'next/image'
-import DiscordBanner from '@/components/DiscordBanner'
+import DiscordBanner from '@/components/layout/DiscordBanner'
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 

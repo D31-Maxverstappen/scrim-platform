@@ -2,9 +2,9 @@
 import Link from 'next/link'
 
 import { useState } from 'react'
-import Pagination from '@/components/Pagination'
-import { EmptyState, EmptyIcons } from '@/components/EmptyState'
-import BookmarkButton from '@/components/BookmarkButton'
+import Pagination from '@/components/common/Pagination'
+import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
+import BookmarkButton from '@/components/common/BookmarkButton'
 import { inTierRange } from '@/lib/tiers'
 
 function formatDate(dt: string | null) {
