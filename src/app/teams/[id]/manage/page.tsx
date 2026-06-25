@@ -104,11 +104,11 @@ export default function ManageTeamPage() {
   useEffect(() => {
     if (!inviteSearch.trim()) { setInviteResults([]); return }
     const myId = ++inviteFetchRef.current
-    const memberIds = new Set(members.map((m: any) => m.user_id))
+    const memberIds = new Set(members.map((m) => m.user_id))
     supabase.from('users').select('id, riot_gamename, tier, avatar_url').ilike('riot_gamename', `%${inviteSearch.trim()}%`).limit(10)
       .then(({ data }) => {
         if (inviteFetchRef.current !== myId) return
-        setInviteResults((data ?? []).filter((u: any) => u.riot_gamename && !memberIds.has(u.id)))
+        setInviteResults((data ?? []).filter((u) => u.riot_gamename && !memberIds.has(u.id)))
       })
   }, [inviteSearch, members])
 
@@ -279,7 +279,7 @@ export default function ManageTeamPage() {
             />
             {inviteResults.length > 0 && (
               <div className="flex flex-col gap-2">
-                {inviteResults.map((u: any) => (
+                {inviteResults.map((u) => (
                   <div key={u.id} className="flex items-center gap-3 bg-white/3 rounded px-3 py-2.5">
                     <div className="w-8 h-8 rounded-full bg-[#00D2BE]/20 flex items-center justify-center text-[#00D2BE] font-black text-xs overflow-hidden shrink-0">
                       {u.avatar_url ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
@@ -316,7 +316,7 @@ export default function ManageTeamPage() {
             </div>
           ) : (
             <div className="flex flex-col gap-3">
-              {requests.map((r: any) => (
+              {requests.map((r) => (
                 <RequestRow key={r.id} r={r} onAction={handleRequest} />
               ))}
             </div>
@@ -327,7 +327,7 @@ export default function ManageTeamPage() {
         <section>
           <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">현재 멤버</h2>
           <div className="flex flex-col gap-3">
-            {members.map((m: any) => {
+            {members.map((m) => {
               const u = m.users
               const isCaptain = m.role === 'captain'
               return (

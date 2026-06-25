@@ -38,7 +38,7 @@ export async function POST() {
 
   // 이미 생성된 역할 확인
   const { data: existing } = await admin.from('discord_roles').select('name')
-  const existingNames = new Set((existing ?? []).map((r: any) => r.name))
+  const existingNames = new Set((existing ?? []).map((r) => r.name))
 
   const results: { name: string; status: string }[] = []
 

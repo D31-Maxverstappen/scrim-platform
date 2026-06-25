@@ -25,14 +25,14 @@ export default async function InhouseRoomPage({ params }: { params: Promise<{ id
     .eq('room_id', id)
     .order('joined_at', { ascending: true })
 
-  const enriched = (participants ?? []).map((p: any) => ({
+  const enriched = (participants ?? []).map((p) => ({
     ...p,
     users: Array.isArray(p.users) ? p.users[0] : p.users,
   }))
 
   const host = Array.isArray(room.host) ? room.host[0] : room.host
   const isHost = host?.id === user.id
-  const isParticipant = enriched.some((p: any) => p.user_id === user.id)
+  const isParticipant = enriched.some((p) => p.user_id === user.id)
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">

@@ -33,7 +33,7 @@ export default async function TeamsPage({ searchParams }: { searchParams: Promis
     .order('created_at', { ascending: false })
     .range(from, to)
 
-  const myTeamIds = new Set((myTeams ?? []).map((m: any) => m.teams?.id).filter(Boolean))
+  const myTeamIds = new Set((myTeams ?? []).map((m) => m.teams?.id).filter(Boolean))
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -57,7 +57,7 @@ export default async function TeamsPage({ searchParams }: { searchParams: Promis
 
         {myTeams && myTeams.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-            {myTeams.map((m: any) => {
+            {myTeams.map((m) => {
               const team = m.teams
               if (!team) return null
               return (
@@ -104,7 +104,7 @@ export default async function TeamsPage({ searchParams }: { searchParams: Promis
 
           {allTeams && allTeams.length > 0 ? (
             <div className="divide-y divide-white/5">
-              {allTeams.map((team: any) => (
+              {allTeams.map((team) => (
                 <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
                   <a href={`/teams/${team.id}`} className="col-span-4 text-white font-semibold text-sm hover:text-[#00D2BE] transition">{team.name}</a>
                   <span className="col-span-3 text-xs font-bold" style={{ color: GAME_COLOR[team.game_type] ?? '#fff' }}>

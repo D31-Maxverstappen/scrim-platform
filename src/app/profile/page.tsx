@@ -51,8 +51,8 @@ export default async function ProfilePage() {
         .eq('team2_id', team.id).order('match_date', { ascending: false }).limit(5),
     ])
     recentMatches = [
-      ...(m1 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2 })),
-      ...(m2 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1 })),
+      ...(m1 ?? []).map((m) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2 })),
+      ...(m2 ?? []).map((m) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1 })),
     ].sort((a, b) => new Date(b.match_date ?? 0).getTime() - new Date(a.match_date ?? 0).getTime()).slice(0, 5)
   }
 

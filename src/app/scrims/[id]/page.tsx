@@ -238,7 +238,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 </div>
               ) : (
                 <div className="flex flex-col gap-2">
-                  {applications.map((app: any) => {
+                  {applications.map((app) => {
                     const t = Array.isArray(app.teams) ? app.teams[0] : app.teams
                     return (
                       <div key={app.id} className="bg-[#13131f] border border-white/5 rounded p-4">

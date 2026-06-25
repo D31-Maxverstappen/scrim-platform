@@ -46,7 +46,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
       .not('discord_channel_id', 'is', null)
 
     const channelIds = (activeMatches ?? [])
-      .flatMap((m: any) => (m.discord_channel_id ?? '').split(',').filter(Boolean))
+      .flatMap((m) => (m.discord_channel_id ?? '').split(',').filter(Boolean))
 
     await Promise.all(channelIds.map((cid: string) => removeChannelPermission(cid, discordId).catch(() => {})))
   }

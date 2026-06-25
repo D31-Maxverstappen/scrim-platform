@@ -41,15 +41,15 @@ export default async function InhousePage() {
     .order('created_at', { ascending: false })
     .limit(30)
 
-  const roomIds = (rooms ?? []).map((r: any) => r.id)
+  const roomIds = (rooms ?? []).map((r) => r.id)
   const { data: counts } = roomIds.length
     ? await supabase.from('inhouse_participants').select('room_id').in('room_id', roomIds)
     : { data: [] }
 
   const countMap: Record<string, number> = {}
-  ;(counts ?? []).forEach((p: any) => { countMap[p.room_id] = (countMap[p.room_id] ?? 0) + 1 })
+  ;(counts ?? []).forEach((p) => { if (p.room_id) countMap[p.room_id] = (countMap[p.room_id] ?? 0) + 1 })
 
-  const enriched = (rooms ?? []).map((r: any) => ({
+  const enriched = (rooms ?? []).map((r) => ({
     ...r,
     host: Array.isArray(r.host) ? r.host[0] : r.host,
     participant_count: countMap[r.id] ?? 0,
@@ -80,7 +80,7 @@ export default async function InhousePage() {
           />
         ) : (
           <div className="flex flex-col gap-3">
-            {enriched.map((room: any) => (
+            {enriched.map((room) => (
               <Link key={room.id} href={`/inhouse/${room.id}`}
                 className="bg-[#13131f] border border-white/5 hover:border-[#00D2BE]/30 rounded-xl px-6 py-4 flex items-center gap-5 transition group">
                 <div className="w-2 h-12 rounded-full shrink-0 bg-[#00D2BE]" />

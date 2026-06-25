@@ -30,10 +30,10 @@ export default async function BookmarksPage() {
   // 북마크한 순서 유지
   const orderMap = new Map((bookmarks ?? []).map((b, i) => [`${b.target_type}:${b.target_id}`, i]))
   const scrims = (scrimsRes.data ?? [])
-    .map((s: any) => ({ ...s, teams: Array.isArray(s.teams) ? s.teams[0] : s.teams }))
-    .sort((a: any, b: any) => (orderMap.get(`scrim_post:${a.id}`) ?? 0) - (orderMap.get(`scrim_post:${b.id}`) ?? 0))
+    .map((s) => ({ ...s, teams: Array.isArray(s.teams) ? s.teams[0] : s.teams }))
+    .sort((a, b) => (orderMap.get(`scrim_post:${a.id}`) ?? 0) - (orderMap.get(`scrim_post:${b.id}`) ?? 0))
   const teams = (teamsRes.data ?? [])
-    .sort((a: any, b: any) => (orderMap.get(`team:${a.id}`) ?? 0) - (orderMap.get(`team:${b.id}`) ?? 0))
+    .sort((a, b) => (orderMap.get(`team:${a.id}`) ?? 0) - (orderMap.get(`team:${b.id}`) ?? 0))
 
   const isEmpty = scrims.length === 0 && teams.length === 0
 
@@ -57,7 +57,7 @@ export default async function BookmarksPage() {
               <section>
                 <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">스크림 {scrims.length}</h2>
                 <div className="flex flex-col gap-2">
-                  {scrims.map((s: any) => (
+                  {scrims.map((s) => (
                     <div key={s.id} className="flex items-center gap-3 border border-white/5 bg-[#13131f] rounded px-5 py-4 hover:border-white/10 transition">
                       <Link href={`/scrims/${s.id}`} className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
@@ -81,7 +81,7 @@ export default async function BookmarksPage() {
               <section>
                 <h2 className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">팀 {teams.length}</h2>
                 <div className="flex flex-col gap-2">
-                  {teams.map((t: any) => (
+                  {teams.map((t) => (
                     <div key={t.id} className="flex items-center gap-3 border border-white/5 bg-[#13131f] rounded px-5 py-4 hover:border-white/10 transition">
                       <Link href={`/teams/${t.id}`} className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">

@@ -83,8 +83,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     mannerRated = !!(existing && existing.length > 0)
   }
 
-  const team1Score = (maps ?? []).filter((m: any) => m.team1_score > m.team2_score).length
-  const team2Score = (maps ?? []).filter((m: any) => m.team2_score > m.team1_score).length
+  const team1Score = (maps ?? []).filter((m) => (m.team1_score ?? 0) > (m.team2_score ?? 0)).length
+  const team2Score = (maps ?? []).filter((m) => (m.team2_score ?? 0) > (m.team1_score ?? 0)).length
 
   const gameColor = GAME_COLOR[team1?.game_type] ?? '#00D2BE'
   const matchDate = match.match_date
@@ -234,8 +234,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           team2={team2}
           maps={maps ?? []}
           stats={safeStats}
-          team1Members={(team1Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
-          team2Members={(team2Members ?? []).map((m: any) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
+          team1Members={(team1Members ?? []).map((m) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
+          team2Members={(team2Members ?? []).map((m) => ({ ...m, users: Array.isArray(m.users) ? m.users[0] : m.users }))}
         />
 
       </div>

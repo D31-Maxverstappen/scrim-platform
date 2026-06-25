@@ -25,15 +25,15 @@ export default async function ValorantTeamsPage() {
       .limit(50),
   ])
 
-  const myValorantTeams = (myTeams ?? []).filter((m: any) => m.teams?.game_type === 'valorant')
-  const myTeamIds = new Set(myValorantTeams.map((m: any) => m.teams?.id).filter(Boolean))
+  const myValorantTeams = (myTeams ?? []).filter((m) => m.teams?.game_type === 'valorant')
+  const myTeamIds = new Set(myValorantTeams.map((m) => m.teams?.id).filter(Boolean))
 
   const { data: teamBms } = await supabase
     .from('bookmarks')
     .select('target_id')
     .eq('user_id', user.id)
     .eq('target_type', 'team')
-  const bmTeamSet = new Set((teamBms ?? []).map((b: any) => b.target_id))
+  const bmTeamSet = new Set((teamBms ?? []).map((b) => b.target_id))
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -64,7 +64,7 @@ export default async function ValorantTeamsPage() {
           <>
             <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-3">My Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {myValorantTeams.map((m: any) => {
+              {myValorantTeams.map((m) => {
                 const team = m.teams
                 if (!team) return null
                 return (
@@ -96,7 +96,7 @@ export default async function ValorantTeamsPage() {
           </div>
           {allTeams && allTeams.length > 0 ? (
             <div className="divide-y divide-white/5">
-              {allTeams.map((team: any) => (
+              {allTeams.map((team) => (
                 <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
                   <a href={`/teams/${team.id}`} className="col-span-5 text-white font-semibold text-sm hover:text-[#00D2BE] transition">{team.name}</a>
                   <span className="col-span-4 text-slate-400 text-xs">{team.tier_avg ?? '—'}</span>

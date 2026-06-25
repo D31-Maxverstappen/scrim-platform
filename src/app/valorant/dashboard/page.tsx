@@ -43,10 +43,10 @@ export default async function ValorantDashboardPage() {
     supabase.from('inhouse_rooms').select('id, title, team_mode, status, tier_min, tier_max, max_players, scheduled_at, host:users!host_id(val_gamename, riot_gamename)').in('status', ['recruiting', 'full', 'ongoing']).order('created_at', { ascending: false }).limit(5),
   ])
 
-  const myValTeam = (teamMember ?? []).map((m: any) => ({
+  const myValTeam = (teamMember ?? []).map((m) => ({
     ...m,
     teams: Array.isArray(m.teams) ? m.teams[0] : m.teams,
-  })).find((m: any) => m.teams?.game_type === GAME)
+  })).find((m) => m.teams?.game_type === GAME)
   const team = myValTeam?.teams ?? null
 
   const recentMatches = team ? (await supabase
@@ -58,9 +58,9 @@ export default async function ValorantDashboardPage() {
   ).data ?? [] : []
 
   const scrimCountMap: Record<string, number> = {}
-  scrimCounts?.forEach((s: any) => { scrimCountMap[s.team_id] = (scrimCountMap[s.team_id] ?? 0) + 1 })
+  scrimCounts?.forEach((s) => { scrimCountMap[s.team_id] = (scrimCountMap[s.team_id] ?? 0) + 1 })
 
-  const receivedApps = (allApplications ?? []).filter((a: any) => {
+  const receivedApps = (allApplications ?? []).filter((a) => {
     const post = Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post
     return post?.team_id === team?.id
   }).map((a: any) => ({
@@ -74,13 +74,13 @@ export default async function ValorantDashboardPage() {
     scrim_count: scrimCountMap[t.id] ?? 0,
   }))
 
-  const inhouseRoomIds = (rawInhouseRooms ?? []).map((r: any) => r.id)
+  const inhouseRoomIds = (rawInhouseRooms ?? []).map((r) => r.id)
   const { data: inhouseCounts } = inhouseRoomIds.length
     ? await supabase.from('inhouse_participants').select('room_id').in('room_id', inhouseRoomIds)
     : { data: [] }
   const inhouseCountMap: Record<string, number> = {}
-  ;(inhouseCounts ?? []).forEach((p: any) => { inhouseCountMap[p.room_id] = (inhouseCountMap[p.room_id] ?? 0) + 1 })
-  const inhouseRooms = (rawInhouseRooms ?? []).map((r: any) => ({
+  ;(inhouseCounts ?? []).forEach((p) => { if (p.room_id) inhouseCountMap[p.room_id] = (inhouseCountMap[p.room_id] ?? 0) + 1 })
+  const inhouseRooms = (rawInhouseRooms ?? []).map((r) => ({
     ...r,
     host: Array.isArray(r.host) ? r.host[0] : r.host,
     participant_count: inhouseCountMap[r.id] ?? 0,
@@ -277,7 +277,7 @@ export default async function ValorantDashboardPage() {
                 </div>
               ) : (
                 <div>
-                  {inhouseRooms.map((room: any, i: number) => {
+                  {inhouseRooms.map((room, i: number) => {
                     const STATUS_COLOR: Record<string, string> = {
                       recruiting: 'bg-green-500/10 text-green-400',
                       full: 'bg-yellow-500/10 text-yellow-400',
@@ -340,7 +340,7 @@ export default async function ValorantDashboardPage() {
                   </div>
                 ) : (
                   <div className="divide-y divide-white/[0.04]">
-                    {recentMatches.map((m: any) => {
+                    {recentMatches.map((m) => {
                       const t1 = Array.isArray(m.team1) ? m.team1[0] : m.team1
                       const t2 = Array.isArray(m.team2) ? m.team2[0] : m.team2
                       const w = Array.isArray(m.winner) ? m.winner[0] : m.winner

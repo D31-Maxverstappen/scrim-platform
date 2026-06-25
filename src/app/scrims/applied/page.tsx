@@ -32,9 +32,9 @@ export default async function MyScrimsPage() {
     .select('teams(id, name, game_type, captain_id)')
     .eq('user_id', user.id)
 
-  const teams = (myTeams ?? []).map((m: any) => Array.isArray(m.teams) ? m.teams[0] : m.teams).filter(Boolean)
-  const teamIds = teams.map((t: any) => t.id)
-  const captainTeamIds = teams.filter((t: any) => t.captain_id === user.id).map((t: any) => t.id)
+  const teams = (myTeams ?? []).map((m) => Array.isArray(m.teams) ? m.teams[0] : m.teams).filter(Boolean)
+  const teamIds = teams.map((t) => t.id)
+  const captainTeamIds = teams.filter((t) => t.captain_id === user.id).map((t) => t.id)
 
   if (teamIds.length === 0) {
     return <EmptyState type="no-team" />
@@ -96,7 +96,7 @@ export default async function MyScrimsPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-3">
-                {myPosts.map((post: any) => {
+                {myPosts.map((post) => {
                   const postTeam = Array.isArray(post.teams) ? post.teams[0] : post.teams
                   const apps = (post.scrim_applications ?? []) as any[]
                   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
@@ -150,7 +150,7 @@ export default async function MyScrimsPage() {
                       {/* 신청 팀 목록 */}
                       {apps.length > 0 && (
                         <div className="border-t border-white/5 divide-y divide-white/5">
-                          {apps.map((a: any) => {
+                          {apps.map((a) => {
                             const at = Array.isArray(a.teams) ? a.teams[0] : a.teams
                             const as_ = STATUS_LABEL[a.status] ?? { label: a.status, cls: 'bg-white/5 text-slate-400' }
                             return (
@@ -199,11 +199,11 @@ export default async function MyScrimsPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                {applications.map((a: any) => {
+                {applications.map((a) => {
                   const post = Array.isArray(a.scrim_post) ? a.scrim_post[0] : a.scrim_post
                   const postTeam = Array.isArray(post?.teams) ? post?.teams[0] : post?.teams
                   const gc = GAME_COLOR[post?.game_type ?? ''] ?? '#00D2BE'
-                  const s = STATUS_LABEL[a.status] ?? { label: a.status, cls: 'bg-white/5 text-slate-400' }
+                  const s = STATUS_LABEL[a.status ?? ''] ?? { label: a.status, cls: 'bg-white/5 text-slate-400' }
 
                   return (
                     <a

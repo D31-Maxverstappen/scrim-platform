@@ -54,7 +54,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     .eq('status', 'pending')
 
   await Promise.all(
-    (apps ?? []).map((app: any) => {
+    (apps ?? []).map((app) => {
       const applyingTeam = Array.isArray(app.teams) ? app.teams[0] : app.teams
       const captainId = applyingTeam?.captain_id
       if (!captainId) return

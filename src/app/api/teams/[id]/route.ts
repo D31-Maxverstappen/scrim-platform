@@ -23,15 +23,15 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   // 스크림 포스트 ID 수집
   const { data: scrimPosts } = await admin.from('scrim_posts').select('id').eq('team_id', teamId)
-  const scrimIds = (scrimPosts ?? []).map((s: any) => s.id)
+  const scrimIds = (scrimPosts ?? []).map((s) => s.id)
 
   // 연관 매치 ID 수집
   const { data: teamMatches } = await admin.from('matches').select('id').or(`team1_id.eq.${teamId},team2_id.eq.${teamId}`)
-  const matchIds = (teamMatches ?? []).map((m: any) => m.id)
+  const matchIds = (teamMatches ?? []).map((m) => m.id)
 
   if (scrimIds.length > 0) {
     const { data: scrimMatches } = await admin.from('matches').select('id').in('scrim_post_id', scrimIds)
-    scrimMatches?.forEach((m: any) => { if (!matchIds.includes(m.id)) matchIds.push(m.id) })
+    scrimMatches?.forEach((m) => { if (!matchIds.includes(m.id)) matchIds.push(m.id) })
   }
 
   // 순서대로 삭제

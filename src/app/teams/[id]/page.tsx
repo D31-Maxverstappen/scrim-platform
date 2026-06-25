@@ -46,12 +46,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   ])
 
   const allMatches = [
-    ...(matches1 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2, isteam1: true })),
-    ...(matches2 ?? []).map((m: any) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1, isteam1: false })),
+    ...(matches1 ?? []).map((m) => ({ ...m, opponent: Array.isArray(m.team2) ? m.team2[0] : m.team2, isteam1: true })),
+    ...(matches2 ?? []).map((m) => ({ ...m, opponent: Array.isArray(m.team1) ? m.team1[0] : m.team1, isteam1: false })),
   ].sort((a, b) => new Date(b.match_date ?? 0).getTime() - new Date(a.match_date ?? 0).getTime())
 
   const isCaptain = team.captain_id === user.id
-  const isMember = members?.some((m: any) => m.user_id === user.id)
+  const isMember = members?.some((m) => m.user_id === user.id)
   const hasAnyTeam = !!anyMembership
 
   const { data: teamBm } = await supabase
@@ -61,13 +61,13 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
     .maybeSingle()
   const isTeamBookmarked = !!teamBm
 
-  const players = members?.filter((m: any) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
-  const staff = members?.filter((m: any) => ['head_coach', 'coach'].includes(m.role)) ?? []
+  const players = members?.filter((m) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
+  const staff = members?.filter((m) => ['head_coach', 'coach'].includes(m.role)) ?? []
   const gameColor = GAME_COLOR[team.game_type] ?? '#00D2BE'
   const isVal = team.game_type === 'valorant'
   const total = (team.wins ?? 0) + (team.losses ?? 0)
   const teamManner = members && members.length
-    ? Math.round(members.reduce((sum: number, m: any) => {
+    ? Math.round(members.reduce((sum: number, m) => {
         const u = Array.isArray(m.users) ? m.users[0] : m.users
         return sum + (u?.manner_score ?? 100)
       }, 0) / members.length)
@@ -85,7 +85,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           <div className="border border-white/10 p-4">
             {players.length > 0 ? (
               <div className="grid grid-cols-3 gap-2">
-                {players.map((m: any) => (
+                {players.map((m) => (
                   <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
                 ))}
               </div>
@@ -101,7 +101,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Coaching Staff</h3>
             <div className="border border-white/10 p-4">
               <div className="grid grid-cols-3 gap-2">
-                {staff.map((m: any) => (
+                {staff.map((m) => (
                   <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
                 ))}
               </div>
@@ -213,7 +213,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
         </div>
       ) : (
         <div className="divide-y divide-white/5">
-          {allMatches.map((m: any) => {
+          {allMatches.map((m) => {
             const isWin = m.winner_id === id
             const isDraw = m.status === 'completed' && !m.winner_id
             const isLoss = m.status === 'completed' && m.winner_id && m.winner_id !== id

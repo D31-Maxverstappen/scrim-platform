@@ -81,7 +81,7 @@ export default function ScrimsClient({
         />
       ) : (
         <div className="flex flex-col gap-3">
-          {displayed.map((post: any) => {
+          {displayed.map((post) => {
             const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
             const tierOk = inTierRange(myTier, post.tier_min, post.tier_max)
             const hasTierCondition = post.tier_min || post.tier_max

@@ -50,7 +50,7 @@ export default async function AdminDashboard() {
           <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">최근 가입 유저</p>
         </div>
         <div className="divide-y divide-white/[0.04]">
-          {(recentUsers ?? []).map((u: any) => {
+          {(recentUsers ?? []).map((u) => {
             const name = u.val_gamename ?? u.riot_gamename ?? '(미등록)'
             const date = new Date(u.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
             return (

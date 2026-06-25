@@ -79,7 +79,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
     ])
 
     const extractIds = (members: any[]) =>
-      members.flatMap((m: any) => {
+      members.flatMap((m) => {
         const u = Array.isArray(m.users) ? m.users[0] : m.users
         return u?.discord_id ? [u.discord_id] : []
       })

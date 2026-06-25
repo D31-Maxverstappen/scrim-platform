@@ -24,7 +24,7 @@ export default async function ScrimsPage({ searchParams }: { searchParams: Promi
 
   if (q) {
     const { data: matched } = await supabase.from('teams').select('id').ilike('name', `%${q}%`)
-    const teamIds = matched?.map((t: any) => t.id) ?? []
+    const teamIds = matched?.map((t) => t.id) ?? []
     if (teamIds.length > 0) {
       query = query.in('team_id', teamIds)
     } else {

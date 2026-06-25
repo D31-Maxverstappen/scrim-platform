@@ -35,7 +35,7 @@ export default async function ValorantScrimsPage({
 
   if (q) {
     const { data: matched } = await supabase.from('teams').select('id').ilike('name', `%${q}%`)
-    const teamIds = matched?.map((t: any) => t.id) ?? []
+    const teamIds = matched?.map((t) => t.id) ?? []
     if (teamIds.length > 0) {
       const { data, count } = await supabase
         .from('scrim_posts')
@@ -62,7 +62,7 @@ export default async function ValorantScrimsPage({
     .select('target_id')
     .eq('user_id', user.id)
     .eq('target_type', 'scrim_post')
-  const bookmarkedIds = (bms ?? []).map((b: any) => b.target_id)
+  const bookmarkedIds = (bms ?? []).map((b) => b.target_id)
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
