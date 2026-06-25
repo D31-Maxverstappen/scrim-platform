@@ -55,6 +55,23 @@ export default async function ProfilePage() {
     ].sort((a, b) => new Date(b.match_date ?? 0).getTime() - new Date(a.match_date ?? 0).getTime()).slice(0, 5)
   }
 
+  // 내전 전적: 참여한 방의 winner_team과 내 배정 팀 대조 (팀은 휘발 / 개인은 누적)
+  const { data: inhouseRows } = await supabase
+    .from('inhouse_participants')
+    .select('team, inhouse_rooms(winner_team, status)')
+    .eq('user_id', user.id)
+  const inhouseGames = (inhouseRows ?? []).filter((p) => {
+    const r = Array.isArray(p.inhouse_rooms) ? p.inhouse_rooms[0] : p.inhouse_rooms
+    return r?.status === 'done' && !!r?.winner_team
+  })
+  const inhouseTotal = inhouseGames.length
+  const inhouseWins = inhouseGames.filter((p) => {
+    const r = Array.isArray(p.inhouse_rooms) ? p.inhouse_rooms[0] : p.inhouse_rooms
+    return p.team === r?.winner_team
+  }).length
+  const inhouseLosses = inhouseTotal - inhouseWins
+  const inhouseWinRate = inhouseTotal > 0 ? Math.round((inhouseWins / inhouseTotal) * 100) : null
+
   const tierColor = TIER_COLOR[(profile?.tier ?? '').split(' ')[0]] ?? 'text-slate-400'
 
   return (
@@ -150,7 +167,7 @@ export default async function ProfilePage() {
 
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
 
           {/* 매너 점수 */}
           <div className="bg-[#111118] border border-white/5 rounded p-5">
@@ -192,6 +209,18 @@ export default async function ProfilePage() {
               <span className="text-slate-600 text-sm mb-1">패</span>
             </div>
             <p className="text-slate-600 text-xs">승률 {winRate !== null ? `${winRate}%` : '—'}</p>
+          </div>
+
+          {/* 내전 전적 (개인 누적 — 팀 휘발성과 무관하게 개인 기록은 쌓임) */}
+          <div className="bg-[#111118] border border-white/5 rounded p-5">
+            <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">내전 전적</p>
+            <div className="flex items-end gap-2 mb-1">
+              <span className="text-4xl font-black text-white">{inhouseWins}</span>
+              <span className="text-slate-500 text-sm mb-1">승</span>
+              <span className="text-4xl font-black text-slate-600">{inhouseLosses}</span>
+              <span className="text-slate-600 text-sm mb-1">패</span>
+            </div>
+            <p className="text-slate-600 text-xs">승률 {inhouseWinRate !== null ? `${inhouseWinRate}%` : '—'} · {inhouseTotal}판</p>
           </div>
 
         </div>
