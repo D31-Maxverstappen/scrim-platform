@@ -161,6 +161,15 @@ body {
   animation: fade-in 0.4s ease both;
 }
 
+/* 페이지 전환 — 네비게이션 시 부드러운 진입.
+   opacity만 사용(transform/filter는 fixed 사이드바 기준점을 깨므로 금지). */
+.page-transition {
+  animation: fade-in 0.3s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page-transition { animation: none; }
+}
+
 .card-glow:hover {
   box-shadow: 0 0 0 1px rgba(0,210,190,0.18), 0 0 28px rgba(0,210,190,0.07);
   border-color: rgba(255,255,255,0.10) !important;
