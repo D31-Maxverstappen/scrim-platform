@@ -77,7 +77,7 @@ export default async function ValorantScrimsPage({
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">발로란트 스크림 상대를 구해보세요</p>
           </div>
-          <Link href="/scrims/post" className="bg-[#ff4655] hover:bg-[#e03040] text-white px-4 py-2 rounded text-sm font-semibold transition">
+          <Link href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
             + 스크림 올리기
           </Link>
         </div>

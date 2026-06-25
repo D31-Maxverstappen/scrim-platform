@@ -46,7 +46,7 @@ export default function ScrimsClient({
             name="q"
             defaultValue={q}
             placeholder="팀 이름 검색..."
-            className="w-full bg-[#13131f] border border-white/10 rounded px-4 py-2 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#ff4655]/50 transition"
+            className="w-full bg-[#13131f] border border-white/10 rounded px-4 py-2 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/50 transition"
           />
         </form>
         {myTier && (
@@ -54,7 +54,7 @@ export default function ScrimsClient({
             onClick={() => setFilterByTier((prev) => !prev)}
             className={`shrink-0 px-4 py-2 rounded text-xs font-bold transition ${
               filterByTier
-                ? 'bg-[#ff4655] text-white'
+                ? 'bg-[#00D2BE] text-white'
                 : 'bg-white/5 text-slate-400 hover:bg-white/10'
             }`}
           >
@@ -65,18 +65,18 @@ export default function ScrimsClient({
 
       {displayed.length === 0 ? (
         <EmptyState
-          accent="#ff4655"
+          accent="#00D2BE"
           icon={EmptyIcons.swords}
           title={q ? `"${q}" 조건에 맞는 스크림이 없어요` : filterByTier ? '내 티어에 맞는 스크림이 없어요' : '현재 모집 중인 발로란트 스크림이 없어요'}
           description={
             q
               ? '다른 팀 이름으로 검색해보세요'
               : filterByTier
-                ? <button onClick={() => setFilterByTier(false)} className="text-[#ff4655] hover:underline">전체 공고 보기</button>
+                ? <button onClick={() => setFilterByTier(false)} className="text-[#00D2BE] hover:underline">전체 공고 보기</button>
                 : '첫 번째로 스크림을 올려보세요!'
           }
           action={!q && !filterByTier ? (
-            <Link href="/scrims/post" className="inline-block bg-[#ff4655]/20 hover:bg-[#ff4655]/30 text-[#ff4655] text-sm px-5 py-2.5 rounded transition">+ 스크림 올리기</Link>
+            <Link href="/scrims/post" className="inline-block bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 스크림 올리기</Link>
           ) : undefined}
         />
       ) : (
@@ -89,18 +89,18 @@ export default function ScrimsClient({
               <a key={post.id} href={`/scrims/${post.id}`}
                 className={`bg-[#13131f] border rounded px-6 py-4 flex items-center gap-4 transition group ${
                   tierOk
-                    ? 'border-white/5 hover:border-[#ff4655]/40'
+                    ? 'border-white/5 hover:border-[#00D2BE]/40'
                     : 'border-white/5 opacity-50 hover:opacity-70'
                 }`}>
-                <div className="w-2 h-12 rounded-full shrink-0 bg-[#ff4655]" />
+                <div className="w-2 h-12 rounded-full shrink-0 bg-[#00D2BE]" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-white font-bold text-sm group-hover:text-[#ff4655] transition">
+                    <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition">
                       {team?.name ?? '—'}
                     </span>
                     {team?.tier_avg && <span className="text-slate-500 text-xs">· {team.tier_avg}</span>}
                     {post.format && (
-                      <span className="text-[10px] font-black bg-[#ff4655]/10 text-[#ff4655] px-1.5 py-0.5 rounded">{post.format}</span>
+                      <span className="text-[10px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">{post.format}</span>
                     )}
                     {hasTierCondition && (
                       <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
@@ -121,7 +121,7 @@ export default function ScrimsClient({
                 </div>
                 <BookmarkButton type="scrim_post" id={post.id} initial={bmSet.has(post.id)} />
                 <div className="flex flex-col items-end gap-1 shrink-0">
-                  <span className="text-[#ff4655] text-xs font-bold">신청 →</span>
+                  <span className="text-[#00D2BE] text-xs font-bold">신청 →</span>
                   {!tierOk && myTier && (
                     <span className="text-red-400 text-[10px]">티어 미달</span>
                   )}
