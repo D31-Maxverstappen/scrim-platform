@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
 import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
+import DisconnectRiotButton from '@/components/profile/DisconnectRiotButton'
 import { GAME_LABEL } from '@/lib/games'
 
 const TIER_COLOR: Record<string, string> = {
@@ -132,21 +133,24 @@ export default async function ProfilePage() {
               </a>
             </div>
             {profile?.val_gamename ? (
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded bg-[#ff4655]/10 border border-[#ff4655]/20 flex items-center justify-center text-[#ff4655] font-black text-lg">
-                  {profile.val_gamename[0].toUpperCase()}
-                </div>
-                <div>
-                  <p className="text-white font-bold">
-                    {profile.val_gamename}
-                    {profile.val_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.val_tagline}</span>}
-                  </p>
-                  {profile.val_tier && (
-                    <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier.split(' ')[0]] ?? 'text-slate-400'}`}>
-                      {profile.val_tier}
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded bg-[#ff4655]/10 border border-[#ff4655]/20 flex items-center justify-center text-[#ff4655] font-black text-lg">
+                    {profile.val_gamename[0].toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-white font-bold">
+                      {profile.val_gamename}
+                      {profile.val_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.val_tagline}</span>}
                     </p>
-                  )}
+                    {profile.val_tier && (
+                      <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier.split(' ')[0]] ?? 'text-slate-400'}`}>
+                        {profile.val_tier}
+                      </p>
+                    )}
+                  </div>
                 </div>
+                <DisconnectRiotButton />
               </div>
             ) : (
               <div className="flex items-center gap-4 py-2">
