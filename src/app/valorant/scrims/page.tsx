@@ -69,7 +69,7 @@ export default async function ValorantScrimsPage({
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
-            <p className="text-slate-400 text-sm mt-1">스크림 상대를 구해보세요</p>
+            <p className="text-slate-400 text-sm mt-1">실력에 맞는 스크림 상대를 찾아보세요</p>
           </div>
         </div>
 
