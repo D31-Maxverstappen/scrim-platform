@@ -72,7 +72,7 @@ export default function ProfileDropdown() {
 
       {/* 드롭다운 */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-56 bg-[#13131f] border border-white/10 rounded shadow-xl z-50 overflow-hidden">
+        <div className="absolute left-0 bottom-full mb-2 w-56 bg-[#13131f] border border-white/10 rounded shadow-xl z-50 overflow-hidden">
           {/* 유저 정보 */}
           <div className="px-4 py-3 border-b border-white/5">
             <p className="text-white text-sm font-bold truncate">{user?.name ?? '...'}</p>
