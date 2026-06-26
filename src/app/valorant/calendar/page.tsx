@@ -35,8 +35,7 @@ export default async function CalendarPage({
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <div className="pt-6 max-w-5xl mx-auto px-6 py-8">
         <div className="mb-6">
-          <span className="text-xs font-black text-[#ff4655] uppercase tracking-widest">VALORANT</span>
-          <h1 className="text-2xl font-bold text-white mt-1">스크림 캘린더</h1>
+          <h1 className="text-2xl font-bold text-white">스크림 캘린더</h1>
           <p className="text-slate-400 text-sm mt-1">날짜별 스크림 공고를 확인하세요</p>
         </div>
         <CalendarClient

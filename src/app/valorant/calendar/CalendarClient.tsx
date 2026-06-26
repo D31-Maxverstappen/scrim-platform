@@ -160,7 +160,7 @@ export default function CalendarClient({
           <div className="bg-[#13131f] border border-white/5 rounded-2xl overflow-hidden sticky top-28">
             <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
               <p className="text-white font-bold text-sm">
-                {Number(selectedDay.split('-')[2])}일 스크림
+                {Number(selectedDay.split('-')[2])}일
               </p>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00D2BE]/10 text-[#00D2BE]">
                 {selectedScrims.length}개
