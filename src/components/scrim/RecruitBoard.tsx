@@ -236,11 +236,7 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 }) {
   const [localPosts, setLocalPosts] = useState(posts)
 
-  const chipCls = (active: boolean) =>
-    `px-3 py-1.5 rounded text-xs font-semibold transition ${active ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`
-
   const tabUrl = (type: string) => `/recruit?type=${type}${activeGame ? `&game=${activeGame}` : ''}`
-  const gameUrl = (game: string) => `/recruit?type=${activeType}${game ? `&game=${game}` : ''}`
 
   const handleClose = async (id: string) => {
     await fetch(`/api/recruit/${id}`, {
@@ -259,8 +255,8 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 
   return (
     <>
-      {/* 탭 + 게임 필터 */}
-      <div className="flex items-center justify-between mb-5">
+      {/* 탭 */}
+      <div className="flex items-center mb-5">
         <div className="flex gap-1 bg-white/5 rounded p-1">
           <a href={tabUrl('lft')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
@@ -270,12 +266,6 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
             LFP <span className="text-[10px] opacity-60 ml-1">선수 구함</span>
           </a>
-        </div>
-
-        <div className="flex gap-2">
-          {[['', '전체'], ['valorant', 'VALORANT']].map(([val, label]) => (
-            <a key={val} href={gameUrl(val)} className={chipCls(activeGame === val)}>{label}</a>
-          ))}
         </div>
       </div>
 
