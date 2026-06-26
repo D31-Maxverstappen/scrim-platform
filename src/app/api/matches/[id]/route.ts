@@ -6,7 +6,7 @@ import { notify } from '@/lib/notifications'
 async function getMatchAndCheckCaptain(supabase: any, matchId: string, userId: string) {
   const { data: match } = await supabase
     .from('matches')
-    .select('id, status, team1_id, team2_id, discord_channel_id')
+    .select('id, status, team1_id, team2_id, discord_channel_id, discord_lobby_channel_id')
     .eq('id', matchId)
     .single()
 
@@ -56,6 +56,10 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     )
     await supabase.from('matches').update({ discord_channel_id: null }).eq('id', id)
   }
+  if (match.discord_lobby_channel_id) {
+    await deleteDiscordChannel(match.discord_lobby_channel_id)
+    await supabase.from('matches').update({ discord_lobby_channel_id: null } as never).eq('id', id)
+  }
 
   return NextResponse.json({ success: true })
 }
@@ -85,12 +89,14 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   // 소프트 취소 (행 보존 + 사유)
   await supabase.from('matches').update({ status: 'cancelled', cancel_reason: 'captain_cancelled' } as never).eq('id', id)
 
-  // Discord 채널 정리
+  // Discord 채널 정리 (음성 + 로비)
   if (match.discord_channel_id) {
     await Promise.all(
       match.discord_channel_id.split(',').filter(Boolean).map((cid: string) => deleteDiscordChannel(cid))
     )
-    await supabase.from('matches').update({ discord_channel_id: null }).eq('id', id)
+  }
+  if (match.discord_lobby_channel_id) {
+    await deleteDiscordChannel(match.discord_lobby_channel_id)
   }
 
   // 상대 팀 캡틴에게 알림

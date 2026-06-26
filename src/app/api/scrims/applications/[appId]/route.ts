@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { createScrimVoiceChannels } from '@/lib/discord'
+import { createScrimVoiceChannels, createMatchLobby } from '@/lib/discord'
 import { notify } from '@/lib/notifications'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ appId: string }> }) {
@@ -72,8 +72,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
 
     // 양 팀 이름 + Discord ID 수집
     const [{ data: team1Data }, { data: team2Data }, { data: team1Members }, { data: team2Members }] = await Promise.all([
-      supabase.from('teams').select('name, abbreviation').eq('id', scrimPost.team_id).single(),
-      supabase.from('teams').select('name, abbreviation').eq('id', applyApp.applying_team_id).single(),
+      supabase.from('teams').select('name, abbreviation, tier_avg').eq('id', scrimPost.team_id).single(),
+      supabase.from('teams').select('name, abbreviation, tier_avg').eq('id', applyApp.applying_team_id).single(),
       supabase.from('team_members').select('users(discord_id)').eq('team_id', scrimPost.team_id),
       supabase.from('team_members').select('users(discord_id)').eq('team_id', applyApp.applying_team_id),
     ])
@@ -94,6 +94,19 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ ap
     const channelStr = [team1ChannelId, team2ChannelId].filter(Boolean).join(',')
     if (channelStr) {
       await supabase.from('matches').update({ discord_channel_id: channelStr }).eq('id', newMatch.id)
+    }
+
+    // 양 팀 공유 매치 로비(텍스트 채널 + 리치 임베드) 생성
+    const lobbyChannelId = await createMatchLobby({
+      matchId: newMatch.id,
+      team1: { name: team1Data?.name ?? '팀1', tierAvg: team1Data?.tier_avg },
+      team2: { name: team2Data?.name ?? '팀2', tierAvg: team2Data?.tier_avg },
+      format,
+      matchDate: scrimPost.preferred_date,
+      memberIds: [...team1Ids, ...team2Ids],
+    })
+    if (lobbyChannelId) {
+      await supabase.from('matches').update({ discord_lobby_channel_id: lobbyChannelId } as never).eq('id', newMatch.id)
     }
 
     // 신청 팀 캡틴에게 수락 알림
