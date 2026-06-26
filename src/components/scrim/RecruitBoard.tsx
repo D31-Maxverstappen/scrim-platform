@@ -277,11 +277,11 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
         <div className="flex gap-1 bg-white/5 rounded p-1">
           <a href={tabUrl('lft')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            LFT <span className="text-[10px] opacity-60 ml-1">팀 구함</span>
+            LFT
           </a>
           <a href={tabUrl('lfp')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            LFP <span className="text-[10px] opacity-60 ml-1">선수 구함</span>
+            LFP
           </a>
         </div>
 
