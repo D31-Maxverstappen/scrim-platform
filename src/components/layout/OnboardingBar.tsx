@@ -57,7 +57,7 @@ export default function OnboardingBar({ steps }: { steps: Step[] }) {
                 {/* 라벨 */}
                 <span className={`text-xs font-bold ${
                   step.done
-                    ? 'text-slate-500 line-through decoration-slate-600'
+                    ? 'text-slate-500'
                     : i === currentIdx
                     ? 'text-white'
                     : 'text-slate-400'
