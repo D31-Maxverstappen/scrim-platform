@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
@@ -69,15 +68,9 @@ export default async function ValorantScrimsPage({
       <div className="pt-6 max-w-4xl mx-auto px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <div className="flex items-center gap-3 mb-1">
-              <span className="text-xs font-black text-[#ff4655] uppercase tracking-widest">VALORANT</span>
-            </div>
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
-            <p className="text-slate-400 text-sm mt-1">발로란트 스크림 상대를 구해보세요</p>
+            <p className="text-slate-400 text-sm mt-1">스크림 상대를 구해보세요</p>
           </div>
-          <Link href="/scrims/post" className="bg-[#00D2BE] hover:bg-[#00a896] text-white px-4 py-2 rounded text-sm font-semibold transition">
-            + 스크림 올리기
-          </Link>
         </div>
 
         <ScrimsClient
