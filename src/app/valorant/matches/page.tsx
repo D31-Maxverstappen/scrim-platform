@@ -47,7 +47,7 @@ export default async function ValorantMatchesPage() {
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 rounded-full" style={{ background: VAL_RED }} />
-            <h1 className="text-white font-black text-xl tracking-tight">발로란트 전적</h1>
+            <h1 className="text-white font-black text-xl tracking-tight">내 전적</h1>
           </div>
           <div className="flex items-center gap-2 rounded-md px-3 py-1.5 text-xs"
             style={{ background: 'rgba(232,184,75,0.08)', border: '1px solid rgba(232,184,75,0.25)', color: '#E8B84B' }}>
@@ -82,7 +82,7 @@ export default async function ValorantMatchesPage() {
                 <Link href="/onboarding?add=valorant"
                   className="text-xs font-semibold px-3 py-2 rounded transition hover:opacity-90"
                   style={{ background: 'rgba(255,70,85,0.12)', color: VAL_RED, border: '1px solid rgba(255,70,85,0.25)' }}>
-                  VALORANT 계정 연동 →
+                  Riot 계정 연동 →
                 </Link>
               )}
             </div>
@@ -125,12 +125,6 @@ export default async function ValorantMatchesPage() {
         <div className="flex flex-col gap-2">
           {matches.map((m) => <MatchRow key={m.id} m={m} />)}
         </div>
-
-        {/* 라이엇 디스클레이머 */}
-        <p className="text-slate-600 text-[11px] mt-8 leading-relaxed">
-          D31.GG는 Riot Games의 검수를 받거나 보증·후원받은 서비스가 아니며, Riot Games 또는 발로란트 제작·관리에 공식적으로 관여하는
-          누구의 견해도 반영하지 않습니다. VALORANT 및 관련 자산은 Riot Games, Inc.의 상표 또는 등록상표입니다.
-        </p>
       </div>
     </div>
   )
