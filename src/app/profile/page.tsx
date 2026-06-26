@@ -269,7 +269,7 @@ export default async function ProfilePage() {
                       </p>
                       <p className="text-slate-600 text-xs">{date} · {m.format ?? 'BO3'}</p>
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0
                       ${isWin ? 'bg-[#00D2BE]/10 text-[#00D2BE]' :
                         isLoss ? 'bg-red-500/10 text-red-400' :
                         isDraw ? 'bg-slate-500/10 text-slate-400' :

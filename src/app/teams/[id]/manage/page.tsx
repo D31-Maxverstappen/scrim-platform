@@ -308,7 +308,7 @@ export default function ManageTeamPage() {
         {/* 가입 신청 */}
         <section className="mb-8">
           <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-4">
-            가입 신청 {requests.length > 0 && <span className="ml-2 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded-full">{requests.length}</span>}
+            가입 신청 {requests.length > 0 && <span className="ml-2 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded">{requests.length}</span>}
           </h2>
           {requests.length === 0 ? (
             <div className="bg-[#13131f] border border-white/5 rounded p-6 text-center text-slate-600 text-sm">

@@ -184,7 +184,7 @@ export default function CalendarClient({
               <p className="text-white font-bold text-sm">
                 {Number(selectedDay.split('-')[2])}일
               </p>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00D2BE]/10 text-[#00D2BE]">
+              <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">
                 {selectedTotal}개
               </span>
             </div>

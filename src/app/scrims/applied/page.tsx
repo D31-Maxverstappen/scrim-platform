@@ -79,7 +79,7 @@ export default async function MyScrimsPage() {
               <h2 className="text-white font-black text-sm uppercase tracking-widest">받은 스크림</h2>
               <span className="text-slate-600 text-xs">내 팀이 올린 스크림</span>
               {myPosts && myPosts.length > 0 && (
-                <span className="ml-auto bg-[#00D2BE]/20 text-[#00D2BE] text-xs font-black px-2 py-0.5 rounded-full">
+                <span className="ml-auto bg-[#00D2BE]/20 text-[#00D2BE] text-xs font-black px-2 py-0.5 rounded">
                   {myPosts.length}건
                 </span>
               )}
@@ -116,7 +116,7 @@ export default async function MyScrimsPage() {
                             {postTeam?.tier_avg && (
                               <span className="text-slate-500 text-xs shrink-0">· {postTeam.tier_avg}</span>
                             )}
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ${ps.cls}`}>
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${ps.cls}`}>
                               {ps.label}
                             </span>
                           </div>
@@ -132,12 +132,12 @@ export default async function MyScrimsPage() {
                         </div>
                         <div className="flex items-center gap-3 shrink-0 text-xs">
                           {pendingCount > 0 && (
-                            <span className="bg-yellow-500/20 text-yellow-400 font-bold px-2 py-0.5 rounded-full">
+                            <span className="bg-yellow-500/20 text-yellow-400 font-bold px-2 py-0.5 rounded">
                               신청 {pendingCount}
                             </span>
                           )}
                           {acceptedCount > 0 && (
-                            <span className="bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded-full">
+                            <span className="bg-green-500/20 text-green-400 font-bold px-2 py-0.5 rounded">
                               수락 {acceptedCount}
                             </span>
                           )}
@@ -160,7 +160,7 @@ export default async function MyScrimsPage() {
                                 {at?.tier_avg && (
                                   <span className="text-slate-600 text-xs">{at.tier_avg}</span>
                                 )}
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${as_.cls}`}>
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${as_.cls}`}>
                                   {as_.label}
                                 </span>
                               </div>
@@ -182,7 +182,7 @@ export default async function MyScrimsPage() {
               <h2 className="text-white font-black text-sm uppercase tracking-widest">신청한 스크림</h2>
               <span className="text-slate-600 text-xs">내가 신청 보낸 스크림</span>
               {applications && applications.length > 0 && (
-                <span className="ml-auto bg-yellow-500/20 text-yellow-400 text-xs font-black px-2 py-0.5 rounded-full">
+                <span className="ml-auto bg-yellow-500/20 text-yellow-400 text-xs font-black px-2 py-0.5 rounded">
                   {applications.length}건
                 </span>
               )}
@@ -229,7 +229,7 @@ export default async function MyScrimsPage() {
                           {post?.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
                         </div>
                       </div>
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0 ${s.cls}`}>
+                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded shrink-0 ${s.cls}`}>
                         {s.label}
                       </span>
                       <span className="text-slate-700 text-xs group-hover:text-slate-500 transition">→</span>

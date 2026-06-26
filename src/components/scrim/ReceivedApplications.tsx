@@ -68,7 +68,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
       <div className="px-5 py-4 border-b border-white/[0.04] flex items-center gap-3">
         <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">받은 스크림 신청</p>
         {pending.length > 0 && (
-          <span className="text-[10px] font-black bg-[#ff4655] text-white px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-black bg-[#ff4655] text-white px-2 py-0.5 rounded">
             {pending.length}
           </span>
         )}

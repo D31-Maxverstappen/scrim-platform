@@ -62,7 +62,7 @@ export default async function AdminDashboard() {
                   <p className="text-white text-xs font-semibold truncate">{name}</p>
                 </div>
                 {u.suspended && (
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-400">정지됨</span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
                 )}
                 <span className="text-slate-600 text-[10px] shrink-0">{date}</span>
                 <a href={`/admin/users/${u.id}`} className="text-slate-700 hover:text-[#00D2BE] text-xs transition shrink-0">→</a>

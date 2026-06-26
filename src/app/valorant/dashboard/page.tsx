@@ -214,7 +214,7 @@ export default async function ValorantDashboardPage() {
                     {team.tier_avg && (
                       <p className="text-xs text-slate-500 mt-0.5">{team.tier_avg}</p>
                     )}
-                    <span className="inline-block mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full"
+                    <span className="inline-block mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded"
                       style={{ background: '#00D2BE20', color: '#00D2BE' }}>
                       {myValTeam?.role === 'captain' ? '캡틴' : '멤버'}
                     </span>
@@ -302,7 +302,7 @@ export default async function ValorantDashboardPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                             <span className="text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{room.title}</span>
-                            <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${STATUS_COLOR[room.status]}`}>
+                            <span className={`text-[10px] font-black px-2 py-0.5 rounded ${STATUS_COLOR[room.status]}`}>
                               {STATUS_LABEL[room.status]}
                             </span>
                             <span className="text-[10px] font-bold bg-white/5 text-slate-500 px-1.5 py-0.5 rounded">

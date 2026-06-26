@@ -42,7 +42,7 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
         <button onClick={() => setTab('pending')} className={tabCls(tab === 'pending')}>
           미답변
           {inquiries.filter((i) => i.status === 'pending').length > 0 && (
-            <span className="ml-2 text-[10px] font-black px-1.5 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">
+            <span className="ml-2 text-[10px] font-black px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400">
               {inquiries.filter((i) => i.status === 'pending').length}
             </span>
           )}
@@ -69,7 +69,7 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
                       {new Date(inq.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${STATUS_STYLE[inq.status]}`}>
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[inq.status]}`}>
                     {STATUS_LABEL[inq.status]}
                   </span>
                 </div>

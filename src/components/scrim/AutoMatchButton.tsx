@@ -210,7 +210,7 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
             <div className="flex-1">
               <div className="flex items-center gap-3">
                 <p className="text-white font-black text-xl drop-shadow-[0_0_12px_rgba(0,210,190,0.4)]">자동 매칭</p>
-                <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[10px] font-black rounded-full border border-[#00D2BE]/25 tracking-widest">
+                <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[10px] font-black rounded border border-[#00D2BE]/25 tracking-widest">
                   BETA
                 </span>
               </div>
@@ -219,7 +219,7 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
                 {tierAvg && (() => {
                   const s = getTierStyle(tierAvg)
                   return (
-                    <span className="shrink-0 text-[11px] font-black px-2.5 py-0.5 rounded-full"
+                    <span className="shrink-0 text-[11px] font-black px-2.5 py-0.5 rounded"
                       style={{ background: s.bg, color: s.color, border: `1px solid ${s.border}` }}>
                       내 팀 평균 {tierAvg}
                     </span>

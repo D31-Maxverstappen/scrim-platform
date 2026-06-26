@@ -49,7 +49,7 @@ export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline
             <div>
               <p className="text-slate-500 text-xs mb-1.5">게임 미등록</p>
               <a href="/onboarding"
-                className="inline-block text-[10px] font-bold bg-[#00D2BE]/10 text-[#00D2BE] px-3 py-1 rounded-full hover:bg-[#00D2BE]/20 transition">
+                className="inline-block text-[10px] font-bold bg-[#00D2BE]/10 text-[#00D2BE] px-3 py-1 rounded hover:bg-[#00D2BE]/20 transition">
                 계정 연동 →
               </a>
             </div>

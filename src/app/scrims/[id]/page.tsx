@@ -91,7 +91,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
             <span className="text-slate-400 text-xs">·</span>
             <span className="text-slate-400 text-xs">신청 팀을 확인하고 수락/거절할 수 있어요</span>
             {applications && applications.length > 0 && (
-              <span className="ml-auto bg-[#00D2BE] text-black text-xs font-black px-2.5 py-0.5 rounded-full shrink-0">
+              <span className="ml-auto bg-[#00D2BE] text-black text-xs font-black px-2.5 py-0.5 rounded shrink-0">
                 신청 {applications.length}건
               </span>
             )}
@@ -115,7 +115,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
             }`}>내가 신청한 스크림</span>
             <span className="text-slate-400 text-xs">·</span>
             <span className="text-slate-400 text-xs">{myTeam?.name}</span>
-            <span className={`ml-auto text-xs font-black px-2.5 py-0.5 rounded-full shrink-0 ${
+            <span className={`ml-auto text-xs font-black px-2.5 py-0.5 rounded shrink-0 ${
               existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
               existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
               'bg-yellow-500/20 text-yellow-400'
@@ -131,10 +131,10 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-xs font-bold px-2.5 py-1 rounded-full" style={{ color: gc, background: gc + '22' }}>
+                <span className="text-xs font-bold px-2.5 py-1 rounded" style={{ color: gc, background: gc + '22' }}>
                   {GAME_LABEL[post.game_type] ?? post.game_type}
                 </span>
-                <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${post.status === 'open' ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'}`}>
+                <span className={`text-xs font-bold px-2.5 py-1 rounded ${post.status === 'open' ? 'bg-green-500/20 text-green-400' : 'bg-slate-500/20 text-slate-400'}`}>
                   {post.status === 'open' ? '모집 중' : '마감'}
                 </span>
               </div>
@@ -234,7 +234,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 <span className="w-1.5 h-4 rounded-full bg-[#00D2BE]" />
                 <h2 className="text-white font-bold text-sm uppercase tracking-widest">받은 신청</h2>
                 {applications && applications.length > 0 && (
-                  <span className="ml-1 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded-full">{applications.length}</span>
+                  <span className="ml-1 bg-[#00D2BE] text-black text-xs font-black px-2 py-0.5 rounded">{applications.length}</span>
                 )}
               </div>
               {!applications || applications.length === 0 ? (
@@ -249,7 +249,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                       <div key={app.id} className="bg-[#13131f] border border-white/5 rounded p-4">
                         <p className="text-white font-semibold text-sm">{t?.name ?? '?'}</p>
                         {t?.tier_avg && <p className="text-slate-500 text-xs">Avg. {t.tier_avg}</p>}
-                        <span className={`mt-2 inline-block text-xs font-bold px-2 py-0.5 rounded-full ${
+                        <span className={`mt-2 inline-block text-xs font-bold px-2 py-0.5 rounded ${
                           app.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400' :
                           app.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
                           'bg-red-500/20 text-red-400'
@@ -286,7 +286,7 @@ export default async function ScrimDetailPage({ params }: { params: Promise<{ id
                 </div>
                 <div>
                   <p className="text-slate-500 text-xs mb-2">상태</p>
-                  <div className={`inline-flex items-center gap-1.5 text-sm font-black px-3 py-1.5 rounded-full ${
+                  <div className={`inline-flex items-center gap-1.5 text-sm font-black px-3 py-1.5 rounded ${
                     existingApp?.status === 'accepted' ? 'bg-green-500/20 text-green-400' :
                     existingApp?.status === 'rejected' ? 'bg-red-500/20 text-red-400' :
                     'bg-yellow-500/20 text-yellow-400'

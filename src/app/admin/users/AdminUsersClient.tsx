@@ -93,8 +93,8 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
                   <span className="col-span-2 text-slate-500 text-xs">{date}</span>
                   <div className="col-span-2">
                     {u.suspended
-                      ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-400">정지됨</span>
-                      : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">활성</span>
+                      ? <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
+                      : <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
                     }
                   </div>
                   <div className="col-span-2 flex items-center gap-1.5 justify-end">

@@ -106,7 +106,7 @@ export default function RoomClient({
             {isHost && room.status === 'recruiting' && (
               <InviteButton type="inhouse" targetId={room.id} />
             )}
-            <span className={`text-xs font-black px-3 py-1 rounded-full ${STATUS_COLOR[room.status]}`}>
+            <span className={`text-xs font-black px-3 py-1 rounded ${STATUS_COLOR[room.status]}`}>
               {STATUS_LABEL[room.status]}
             </span>
           </div>

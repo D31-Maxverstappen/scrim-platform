@@ -72,10 +72,10 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
                   <div className="flex items-start gap-3 mb-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${STATUS_STYLE[r.status]}`}>
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${STATUS_STYLE[r.status]}`}>
                           {STATUS_LABEL[r.status]}
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/[0.04] text-slate-500">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/[0.04] text-slate-500">
                           {r.target_type === 'user' ? '유저 신고' : '팀 신고'}
                         </span>
                         <span className="text-slate-700 text-[10px]">{date}</span>

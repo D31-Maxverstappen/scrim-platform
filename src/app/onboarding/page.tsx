@@ -50,7 +50,7 @@ function GameForm({
       <div className="flex items-center gap-3 mb-1">
         <div className="w-2 h-8 rounded-full" style={{ background: color }} />
         <h2 className="text-white font-bold text-lg">{label}</h2>
-        {saved && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">저장됨 ✓</span>}
+        {saved && <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">저장됨 ✓</span>}
       </div>
 
       <div>

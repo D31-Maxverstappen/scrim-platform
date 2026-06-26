@@ -40,7 +40,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
         <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: '1px solid var(--border)' }}>
           <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">검토 대기</p>
           {pending.length > 0 && (
-            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400">{pending.length}</span>
+            <span className="text-[10px] font-black px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400">{pending.length}</span>
           )}
         </div>
         {pending.length === 0 ? (
@@ -56,7 +56,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
                       {new Date(a.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 ${STATUS_STYLE[a.status]}`}>
+                  <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[a.status]}`}>
                     {STATUS_LABEL[a.status]}
                   </span>
                 </div>
@@ -100,7 +100,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
           <div className="divide-y divide-white/[0.04]">
             {done.map((a) => (
               <div key={a.id} className="px-5 py-3.5 flex items-start gap-3">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${STATUS_STYLE[a.status]}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[a.status]}`}>
                   {STATUS_LABEL[a.status]}
                 </span>
                 <div className="flex-1 min-w-0">

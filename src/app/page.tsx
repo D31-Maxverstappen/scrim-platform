@@ -199,7 +199,7 @@ export default function HomePage() {
             {[
               '자동 매칭', '스크림 게시판', 'LFT / LFP 모집', '팀 리더보드', '팀 관리', '실시간 알림',
             ].map((label) => (
-              <span key={label} className="flex items-center gap-1.5 bg-white/5 border border-white/8 text-slate-400 text-xs px-3 py-1.5 rounded-full">
+              <span key={label} className="flex items-center gap-1.5 bg-white/5 border border-white/8 text-slate-400 text-xs px-3 py-1.5 rounded">
                 <span className="w-1 h-1 rounded-full bg-[#00D2BE] shrink-0" />
                 {label}
               </span>
@@ -246,7 +246,7 @@ export default function HomePage() {
                 <p className="text-slate-500 text-xs mb-4">{game.desc}</p>
                 {game.available && (
                   <span
-                    className="text-xs font-bold px-3 py-1 rounded-full"
+                    className="text-xs font-bold px-3 py-1 rounded"
                     style={{ background: game.color + '22', color: game.color }}
                   >
                     스크림 찾기 →

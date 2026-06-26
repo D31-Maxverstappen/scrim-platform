@@ -56,10 +56,10 @@ export default function AdminUserDetailClient({ user, team, reports }: {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-white font-black text-xl">{name}</h2>
-              {user.is_admin && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#00D2BE]/10 text-[#00D2BE]">ADMIN</span>}
+              {user.is_admin && <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">ADMIN</span>}
               {user.suspended
-                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-500/15 text-red-400">정지됨</span>
-                : <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-green-500/10 text-green-400">활성</span>
+                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
+                : <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
               }
             </div>
             <p className="text-slate-500 text-xs">{joined} 가입</p>
@@ -114,7 +114,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
           <div className="divide-y divide-white/[0.04]">
             {reports.map((r) => (
               <div key={r.id} className="px-5 py-3.5 flex items-start gap-3">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-full shrink-0 mt-0.5 ${STATUS_STYLE[r.status]}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[r.status]}`}>
                   {STATUS_LABEL[r.status]}
                 </span>
                 <div className="flex-1 min-w-0">
