@@ -23,7 +23,7 @@ export default function Footer() {
           {/* 좌측 — 로고 + 면책 + 카피라이트 */}
           <div className="max-w-md">
             <span className="text-white font-black text-3xl tracking-tight">D31<span className="text-[#00D2BE]">.GG</span></span>
-            <p className="mt-4 text-[10px] text-slate-700 leading-relaxed">
+            <p className="mt-4 text-[11px] text-slate-500 leading-relaxed">
               D31.GG is not endorsed by Riot Games and does not reflect the views or opinions of Riot Games or anyone officially involved in producing or managing Valorant. Valorant and Riot Games are trademarks or registered trademarks of Riot Games, Inc. Valorant © Riot Games, Inc.
             </p>
             <p className="mt-3 text-[11px] text-slate-600">© 2026 D31. All rights reserved.</p>
