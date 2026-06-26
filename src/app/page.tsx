@@ -145,7 +145,7 @@ export default function HomePage() {
       </div>
 
       {/* 네비바 */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/80 backdrop-blur border-b border-white/5 px-6 h-16 flex items-center justify-between">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-[#07070b]/95 border-b border-white/5 px-6 h-16 flex items-center justify-between">
         <Image src="/logo.png" alt="D31" width={112} height={112} className="object-contain" />
         <Link href="/" className="absolute left-1/2 -translate-x-1/2 select-none">
           <span className="text-xl font-black tracking-tight text-white">D31</span>
