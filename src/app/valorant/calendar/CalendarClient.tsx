@@ -17,22 +17,33 @@ function toDateKey(dt: string) {
 
 export default function CalendarClient({
   scrims,
+  matches = [],
   year,
   month,
 }: {
   scrims: any[]
+  matches?: any[]
   year: number
   month: number
 }) {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
 
-  // 날짜별 스크림 그룹핑
+  // 날짜별 스크림 공고 그룹핑
   const scrimMap: Record<string, any[]> = {}
   scrims.forEach((s) => {
     if (!s.preferred_date) return
     const key = toDateKey(s.preferred_date)
     if (!scrimMap[key]) scrimMap[key] = []
     scrimMap[key].push(s)
+  })
+
+  // 날짜별 확정 스크림(matches) 그룹핑
+  const matchMap: Record<string, any[]> = {}
+  matches.forEach((m) => {
+    if (!m.match_date) return
+    const key = toDateKey(m.match_date)
+    if (!matchMap[key]) matchMap[key] = []
+    matchMap[key].push(m)
   })
 
   // 달력 셀 계산
@@ -56,6 +67,8 @@ export default function CalendarClient({
   const todayKey = toDateKey(new Date().toISOString())
 
   const selectedScrims = selectedDay ? (scrimMap[selectedDay] ?? []) : []
+  const selectedMatches = selectedDay ? (matchMap[selectedDay] ?? []) : []
+  const selectedTotal = selectedScrims.length + selectedMatches.length
 
   return (
     <div className="flex gap-6">
@@ -96,6 +109,8 @@ export default function CalendarClient({
 
             const key = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
             const count = scrimMap[key]?.length ?? 0
+            const mCount = matchMap[key]?.length ?? 0
+            const hasAny = count > 0 || mCount > 0
             const isToday = key === todayKey
             const isSelected = key === selectedDay
             const isSun = idx % 7 === 0
@@ -108,7 +123,7 @@ export default function CalendarClient({
                 className={`relative flex items-start aspect-[1/0.8] rounded-md px-2.5 py-2 transition group overflow-hidden ${
                   isSelected
                     ? 'bg-[#00D2BE]/[0.12] border border-[#00D2BE]'
-                    : count > 0
+                    : hasAny
                     ? 'bg-[#00D2BE]/[0.06] border border-[#00D2BE]/30 hover:border-[#00D2BE]/55'
                     : 'bg-white/[0.015] border border-white/[0.05] hover:bg-white/[0.04] hover:border-white/10'
                 }`}
@@ -116,6 +131,10 @@ export default function CalendarClient({
                 {/* 공고 있는 날: 좌상단 각진 노치 */}
                 {count > 0 && (
                   <span className="absolute top-0 left-0 w-0 h-0 border-t-[11px] border-t-[#00D2BE] border-r-[11px] border-r-transparent rounded-tl-md" />
+                )}
+                {/* 확정 스크림 있는 날: 좌하단 점 */}
+                {mCount > 0 && (
+                  <span className="absolute bottom-1.5 left-1.5 w-1.5 h-1.5 rounded-full bg-[#7B61FF]" />
                 )}
                 <span className={`font-mono text-sm font-semibold leading-none ${
                   isToday || isSelected
@@ -149,6 +168,9 @@ export default function CalendarClient({
             <span className="w-1.5 h-1.5 rounded-sm bg-[#00D2BE]" /> 스크림 공고
           </span>
           <span className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#7B61FF]" /> 확정 스크림
+          </span>
+          <span className="flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full border border-[#00D2BE]" /> 오늘
           </span>
         </div>
@@ -163,15 +185,38 @@ export default function CalendarClient({
                 {Number(selectedDay.split('-')[2])}일
               </p>
               <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-[#00D2BE]/10 text-[#00D2BE]">
-                {selectedScrims.length}개
+                {selectedTotal}개
               </span>
             </div>
-            {selectedScrims.length === 0 ? (
+            {selectedTotal === 0 ? (
               <div className="py-10 text-center text-slate-600 text-xs">
                 이 날짜에 스크림 없음
               </div>
             ) : (
               <div className="divide-y divide-white/5 max-h-[60vh] overflow-y-auto">
+                {selectedMatches.map((m) => {
+                  const t1 = Array.isArray(m.team1) ? m.team1[0] : m.team1
+                  const t2 = Array.isArray(m.team2) ? m.team2[0] : m.team2
+                  return (
+                    <Link
+                      key={`m-${m.id}`}
+                      href={`/matches/${m.id}`}
+                      className="block px-5 py-3.5 hover:bg-white/[0.03] transition"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-white font-bold text-sm truncate">
+                          {t1?.name ?? '—'} <span className="text-slate-600 font-normal">vs</span> {t2?.name ?? '—'}
+                        </span>
+                        <span className="text-[10px] font-black bg-[#7B61FF]/15 text-[#7B61FF] px-1.5 py-0.5 rounded shrink-0 ml-2">확정</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                        {m.match_date && <span>🕐 {formatTime(m.match_date)}</span>}
+                        {m.format && <span>· {m.format}</span>}
+                        {m.status === 'completed' && <span>· 종료</span>}
+                      </div>
+                    </Link>
+                  )
+                })}
                 {selectedScrims.map((s) => {
                   const team = Array.isArray(s.teams) ? s.teams[0] : s.teams
                   return (
