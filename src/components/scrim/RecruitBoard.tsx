@@ -288,12 +288,12 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
         <div className="flex gap-2">
           <select value={activeTier} onChange={(e) => router.push(buildUrl({ tier: e.target.value }))}
             className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
-            <option value="">티어 전체</option>
+            <option value="">{activeType === 'lfp' ? '모집 티어 전체' : '티어 전체'}</option>
             {TIER_GROUPS.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
           <select value={activeRole} onChange={(e) => router.push(buildUrl({ role: e.target.value }))}
             className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
-            <option value="">포지션 전체</option>
+            <option value="">{activeType === 'lfp' ? '모집 포지션 전체' : '포지션 전체'}</option>
             {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
           </select>
         </div>
