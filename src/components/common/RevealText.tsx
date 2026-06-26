@@ -43,7 +43,8 @@ export default function RevealText({
     transform: shown ? 'none' : 'translateY(0.5em)',
     transition: 'opacity 0.5s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1)',
     transitionDelay: `${startDelay + i * stagger}ms`,
-    willChange: 'opacity, transform',
+    // 등장 후엔 레이어 힌트 해제 (영구 레이어 누적 방지)
+    willChange: shown ? 'auto' : 'opacity, transform',
   })
 
   let idx = 0

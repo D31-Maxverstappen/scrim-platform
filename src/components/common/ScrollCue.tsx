@@ -15,10 +15,21 @@ export default function ScrollCue({
   const [hidden, setHidden] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setHidden(window.scrollY > 60)
+    // rAF로 스크롤 이벤트 묶고, 임계값(60px)을 넘나들 때만 setState — 스크롤 중 불필요한 작업 최소화
+    let raf = 0
+    let last = false
+    const update = () => {
+      raf = 0
+      const next = window.scrollY > 60
+      if (next !== last) { last = next; setHidden(next) }
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
     window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
   return (

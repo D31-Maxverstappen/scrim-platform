@@ -80,7 +80,8 @@ export default function Reveal({
         opacity: shown ? 1 : 0,
         transform: shown ? 'none' : hidden,
         transition: `opacity 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ${delay}ms`,
-        willChange: 'opacity, transform',
+        // 등장 전에만 레이어 힌트, 등장 후엔 해제 — 영구 합성 레이어 누적(스크롤 jank) 방지
+        willChange: shown ? 'auto' : 'opacity, transform',
       }}
     >
       {children}

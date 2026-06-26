@@ -139,9 +139,9 @@ export default function HomePage() {
           className="object-cover object-center opacity-20"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/60 via-[#07070b]/70 to-[#07070b] landing-hero-overlay" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px]" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px] transform-gpu" />
         {/* 폴드 하단 글로우 — "경계 너머에 콘텐츠가 더 있다"는 암시(스크롤 유도) */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[760px] h-[260px] bg-[#00D2BE]/30 rounded-full blur-[90px]" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[760px] h-[260px] bg-[#00D2BE]/30 rounded-full blur-[90px] transform-gpu" />
       </div>
 
       {/* 네비바 */}
@@ -401,7 +401,7 @@ export default function HomePage() {
       {/* ── 최종 CTA ── */}
       <section className="relative z-10 px-6 py-32 border-t border-white/5 text-center">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#00D2BE]/5 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#00D2BE]/5 rounded-full blur-[100px] transform-gpu" />
         </div>
         <Reveal>
           <p className="text-[#00D2BE] text-xs font-bold tracking-[0.3em] uppercase mb-4">지금 시작하세요</p>
