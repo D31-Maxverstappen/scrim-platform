@@ -7,6 +7,7 @@ import MatchEndButton from '@/components/match/MatchEndButton'
 import MatchScoreInput from '@/components/match/MatchScoreInput'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import MannerRating from '@/components/match/MannerRating'
+import { expireStaleMatches, CANCEL_REASON_LABEL } from '@/lib/matchExpiry'
 import type { MatchStat } from '@/lib/types'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
@@ -16,6 +17,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
+
+  // 조회 시 만료: 시간 지난 예정 매치 정리 후 조회
+  await expireStaleMatches()
 
   const { data: match } = await supabase
     .from('matches')
@@ -48,6 +52,9 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   const team1 = Array.isArray(match.team1) ? match.team1[0] : match.team1
   const team2 = Array.isArray(match.team2) ? match.team2[0] : match.team2
   const winner = Array.isArray(match.winner) ? match.winner[0] : match.winner
+
+  const isCancelled = match.status === 'cancelled'
+  const cancelReason = (match as { cancel_reason?: string | null }).cancel_reason ?? null
 
   // DB nullable 컬럼 → MatchStat(엄격) 경계 정규화
   const safeStats: MatchStat[] = (stats ?? []).map((s) => ({
@@ -111,7 +118,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                 <p className="text-slate-500 text-xs">{match.format}</p>
               </div>
               <div className="flex items-center gap-4">
-                {isCaptain && match.status !== 'completed' && (
+                {isCaptain && match.status !== 'completed' && !isCancelled && (
                   <div className="flex items-center gap-2">
                     <MatchScoreInput
                       matchId={id}
@@ -163,7 +170,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   </div>
                 )}
                 <p className="text-slate-700 text-[10px] mt-2 uppercase tracking-widest">
-                  {match.status === 'completed' ? '종료' : match.status === 'ongoing' ? '진행 중' : '예정'}
+                  {match.status === 'completed' ? '종료' : isCancelled ? '취소됨' : match.status === 'ongoing' ? '진행 중' : '예정'}
                 </p>
               </div>
 
@@ -183,13 +190,21 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           </div>
         </div>
 
+        {/* ── 취소 사유 배너 ── */}
+        {isCancelled && (
+          <div className="mb-6 rounded-lg border border-red-500/25 bg-red-500/[0.06] px-5 py-4 flex items-center gap-3">
+            <span className="text-[10px] font-black text-red-400 border border-red-500/40 rounded px-1.5 py-0.5 shrink-0">취소됨</span>
+            <p className="text-slate-300 text-sm">{CANCEL_REASON_LABEL[cancelReason ?? ''] ?? '매치가 취소됐어요.'}</p>
+          </div>
+        )}
+
         {/* ── 매너 평가 (종료된 매치, 캡틴만) ── */}
         {match.status === 'completed' && isCaptain && (
           <MannerRating matchId={id} alreadyRated={mannerRated} opponentName={opponentTeam?.name ?? '상대 팀'} />
         )}
 
         {/* ── Discord 음성채널 ── */}
-        {match.discord_channel_id && match.status !== 'completed' && (() => {
+        {match.discord_channel_id && match.status !== 'completed' && !isCancelled && (() => {
           const channelIds = match.discord_channel_id.split(',').filter(Boolean)
           const labels = [team1?.name ?? '팀 1', team2?.name ?? '팀 2']
           return (

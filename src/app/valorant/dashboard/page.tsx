@@ -11,6 +11,7 @@ import OnboardingBar from '@/components/layout/OnboardingBar'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import AutoMatchButton from '@/components/scrim/AutoMatchButton'
 import StatCounter from '@/components/common/StatCounter'
+import { expireStaleMatches } from '@/lib/matchExpiry'
 import Link from 'next/link'
 
 const GAME = 'valorant'
@@ -47,6 +48,9 @@ export default async function ValorantDashboardPage() {
     teams: Array.isArray(m.teams) ? m.teams[0] : m.teams,
   })).find((m) => m.teams?.game_type === GAME)
   const team = myValTeam?.teams ?? null
+
+  // 조회 시 만료: 시간 지난 예정 매치 정리 후 최근 매치 조회
+  await expireStaleMatches()
 
   const recentMatches = team ? (await supabase
     .from('matches')
@@ -345,7 +349,7 @@ export default async function ValorantDashboardPage() {
                       const t2 = Array.isArray(m.team2) ? m.team2[0] : m.team2
                       const w = Array.isArray(m.winner) ? m.winner[0] : m.winner
                       const isWin = w?.id === team?.id
-                      const statusLabel = m.status === 'completed' ? (isWin ? '승' : '패') : m.status === 'ongoing' ? 'LIVE' : '예정'
+                      const statusLabel = m.status === 'completed' ? (isWin ? '승' : '패') : m.status === 'cancelled' ? '취소' : m.status === 'ongoing' ? 'LIVE' : '예정'
                       const statusColor = m.status === 'completed'
                         ? (isWin ? '#00D2BE' : '#64748b')
                         : m.status === 'ongoing' ? '#ff4655' : '#64748b'

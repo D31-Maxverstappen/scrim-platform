@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deleteDiscordChannel } from '@/lib/discord'
+import { notify } from '@/lib/notifications'
 
 async function getMatchAndCheckCaptain(supabase: any, matchId: string, userId: string) {
   const { data: match } = await supabase
@@ -59,7 +60,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   return NextResponse.json({ success: true })
 }
 
-// 매치 취소
+// 매치 취소 (소프트 취소 — 기록 보존 + 사유 표시 + 상대 캡틴 알림)
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const supabase = await createClient()
@@ -70,17 +71,35 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!match) return NextResponse.json({ error: '매치를 찾을 수 없어요.' }, { status: 404 })
   if (!isCaptain) return NextResponse.json({ error: '권한이 없어요.' }, { status: 403 })
   if (match.status === 'completed') return NextResponse.json({ error: '완료된 매치는 취소할 수 없어요.' }, { status: 400 })
+  if (match.status === 'cancelled') return NextResponse.json({ error: '이미 취소된 매치예요.' }, { status: 400 })
 
-  // Discord 채널 먼저 삭제
+  // 취소한 캡틴의 팀 → 상대 팀 판별
+  const { data: myTeam } = await supabase
+    .from('teams')
+    .select('id, name')
+    .in('id', [match.team1_id, match.team2_id].filter((v): v is string => !!v))
+    .eq('captain_id', user.id)
+    .single()
+  const otherTeamId = myTeam?.id === match.team1_id ? match.team2_id : match.team1_id
+
+  // 소프트 취소 (행 보존 + 사유)
+  await supabase.from('matches').update({ status: 'cancelled', cancel_reason: 'captain_cancelled' } as never).eq('id', id)
+
+  // Discord 채널 정리
   if (match.discord_channel_id) {
     await Promise.all(
       match.discord_channel_id.split(',').filter(Boolean).map((cid: string) => deleteDiscordChannel(cid))
     )
+    await supabase.from('matches').update({ discord_channel_id: null }).eq('id', id)
   }
 
-  await supabase.from('match_player_stats').delete().eq('match_id', id)
-  await supabase.from('match_maps').delete().eq('match_id', id)
-  await supabase.from('matches').delete().eq('id', id)
+  // 상대 팀 캡틴에게 알림
+  if (otherTeamId) {
+    const { data: otherTeam } = await supabase.from('teams').select('captain_id').eq('id', otherTeamId).single()
+    if (otherTeam?.captain_id) {
+      await notify(otherTeam.captain_id, 'match_cancelled', '매치가 취소됐어요', `${myTeam?.name ?? '상대 팀'}이(가) 예정된 매치를 취소했어요.`, `/matches/${id}`)
+    }
+  }
 
   return NextResponse.json({ success: true })
 }
