@@ -55,6 +55,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   const isCancelled = match.status === 'cancelled'
   const cancelReason = (match as { cancel_reason?: string | null }).cancel_reason ?? null
+  // 자동매칭 즉시 매치: scrim_post_id 없음 → 약속시간이 아니라 '지금 바로'
+  const isInstant = !(match as { scrim_post_id?: string | null }).scrim_post_id
 
   // DB nullable 컬럼 → MatchStat(엄격) 경계 정규화
   const safeStats: MatchStat[] = (stats ?? []).map((s) => ({
@@ -114,7 +116,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
             {/* 날짜/포맷 */}
             <div className="flex items-start justify-between mb-8">
               <div>
-                <p className="text-[#00D2BE] text-xs font-bold uppercase tracking-widest mb-0.5">스크림 매치</p>
+                <p className="text-[#00D2BE] text-xs font-bold uppercase tracking-widest mb-0.5">{isInstant ? '⚡ 즉시 매치' : '스크림 매치'}</p>
                 <p className="text-slate-500 text-xs">{match.format}</p>
               </div>
               <div className="flex items-center gap-4">
@@ -134,8 +136,17 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   </div>
                 )}
                 <div className="text-right">
-                  <p className="text-white text-sm font-semibold">{matchDate}</p>
-                  {matchTime && <p className="text-slate-500 text-xs mt-0.5">{matchTime} KST</p>}
+                  {isInstant && match.status === 'scheduled' ? (
+                    <>
+                      <p className="text-white text-sm font-semibold">지금 바로 시작</p>
+                      <p className="text-[#00D2BE] text-xs mt-0.5 font-medium">방금 매칭됐어요</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-white text-sm font-semibold">{matchDate}</p>
+                      {matchTime && <p className="text-slate-500 text-xs mt-0.5">{matchTime} KST</p>}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
