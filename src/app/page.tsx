@@ -52,7 +52,7 @@ const features = [
     ),
   },
   {
-    title: '팀원 모집 게시판',
+    title: '선수·팀 구하기',
     desc: 'LFT/LFP 공고를 올리고 Discord 태그로 바로 연락할 수 있습니다.',
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
