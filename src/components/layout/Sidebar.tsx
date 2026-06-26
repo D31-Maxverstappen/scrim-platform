@@ -78,6 +78,7 @@ const NAV = [
       </svg>
     ),
   },
+  /* 내전 — 일단 숨김 (2026-06-27 요청, 추후 복구)
   {
     href: '/inhouse',
     label: '내전',
@@ -87,6 +88,7 @@ const NAV = [
       </svg>
     ),
   },
+  */
   {
     href: '/bookmarks',
     label: '즐겨찾기',

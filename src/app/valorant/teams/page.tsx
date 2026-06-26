@@ -17,7 +17,7 @@ export default async function ValorantTeamsPage() {
       .eq('user_id', user.id),
     supabase
       .from('teams')
-      .select('id, name, game_type, tier_avg, captain_id')
+      .select('id, name, abbreviation, game_type, tier_avg, captain_id, logo_url')
       .eq('game_type', 'valorant')
       .order('created_at', { ascending: false })
       .limit(50),
@@ -77,7 +77,7 @@ export default async function ValorantTeamsPage() {
         {/* 전체 발로란트 팀 */}
         <h2 className="text-white font-bold text-sm uppercase tracking-widest mb-3">전체 팀</h2>
         <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
-          <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
+          <div className="grid grid-cols-12 gap-3 px-6 py-4 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
             <span className="col-span-5">팀</span>
             <span className="col-span-4">평균 티어</span>
             <span className="col-span-3 text-right">가입</span>
@@ -85,9 +85,16 @@ export default async function ValorantTeamsPage() {
           {allTeams && allTeams.length > 0 ? (
             <div className="divide-y divide-white/5">
               {allTeams.map((team) => (
-                <div key={team.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/3 transition">
-                  <a href={`/teams/${team.id}`} className="col-span-5 text-white font-semibold text-sm hover:text-[#00D2BE] transition">{team.name}</a>
-                  <span className="col-span-4 text-slate-400 text-xs">{team.tier_avg ?? '—'}</span>
+                <div key={team.id} className="grid grid-cols-12 gap-3 px-6 py-4 items-center hover:bg-white/3 transition">
+                  <a href={`/teams/${team.id}`} className="col-span-5 flex items-center gap-3 group min-w-0">
+                    <span className="w-11 h-11 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center overflow-hidden text-white font-black">
+                      {team.logo_url
+                        ? <img src={team.logo_url} alt={team.name} className="w-full h-full object-cover" />
+                        : (team.abbreviation || team.name)[0]?.toUpperCase()}
+                    </span>
+                    <span className="text-white font-semibold text-base group-hover:text-[#00D2BE] transition truncate">{team.name}</span>
+                  </a>
+                  <span className="col-span-4 text-slate-400 text-sm">{team.tier_avg ?? '—'}</span>
                   <div className="col-span-3 flex justify-end items-center gap-2">
                     <BookmarkButton type="team" id={team.id} initial={bmTeamSet.has(team.id)} />
                     {myTeamIds.has(team.id) ? (
