@@ -8,8 +8,8 @@ import Pagination from '@/components/common/Pagination'
 
 const PAGE_SIZE = 20
 
-export default async function RecruitPage({ searchParams }: { searchParams: Promise<{ type?: string; game?: string; page?: string }> }) {
-  const { type = 'lft', game = '', page: pageStr = '1' } = await searchParams
+export default async function RecruitPage({ searchParams }: { searchParams: Promise<{ type?: string; tier?: string; role?: string; page?: string }> }) {
+  const { type = 'lft', tier = '', role = '', page: pageStr = '1' } = await searchParams
   const page = Math.max(1, Number(pageStr) || 1)
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
@@ -31,7 +31,8 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
     .order('created_at', { ascending: false })
     .range(from, to)
 
-  if (game) query = (query as any).eq('game_type', game)
+  if (tier) query = (query as any).ilike('tier', `%${tier}%`)
+  if (role) query = (query as any).contains('roles', [role])
 
   const [{ data: posts, count }, { data: myTeam }] = await Promise.all([
     query,
@@ -55,14 +56,15 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
           currentUserId={user.id}
           currentUserHasTeam={!!myTeam}
           activeType={type}
-          activeGame={game}
+          activeTier={tier}
+          activeRole={role}
         />
         <Pagination
           page={page}
           total={count ?? 0}
           pageSize={PAGE_SIZE}
           basePath="/recruit"
-          params={{ type, ...(game && { game }) }}
+          params={{ type, ...(tier && { tier }), ...(role && { role }) }}
         />
       </div>
     </div>

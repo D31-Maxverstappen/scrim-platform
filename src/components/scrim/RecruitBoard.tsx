@@ -1,10 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import type { RecruitPost } from '@/lib/types'
+
+// 필터용 — 티어 그룹(LFP는 콤마결합이라 그룹 ilike로 매칭), 포지션(roles 배열 contains)
+const TIER_GROUPS = ['Iron', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond', 'Ascendant', 'Immortal', 'Radiant']
+const ROLE_OPTIONS = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
 
 const VAL_TIERS = [
   'Iron 3','Iron 2','Iron 1','Bronze 3','Bronze 2','Bronze 1',
@@ -227,16 +232,28 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
   )
 }
 
-export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, activeType, activeGame }: {
+export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, activeType, activeTier, activeRole }: {
   posts: RecruitPost[]
   currentUserId: string
   currentUserHasTeam: boolean
   activeType: string
-  activeGame: string
+  activeTier: string
+  activeRole: string
 }) {
+  const router = useRouter()
   const [localPosts, setLocalPosts] = useState(posts)
 
-  const tabUrl = (type: string) => `/recruit?type=${type}${activeGame ? `&game=${activeGame}` : ''}`
+  // type/tier/role 보존하며 한 값만 교체한 /recruit URL 생성 (페이지는 1로 리셋)
+  const buildUrl = (next: { type?: string; tier?: string; role?: string }) => {
+    const type = next.type ?? activeType
+    const tier = next.tier ?? activeTier
+    const role = next.role ?? activeRole
+    const q = new URLSearchParams({ type })
+    if (tier) q.set('tier', tier)
+    if (role) q.set('role', role)
+    return `/recruit?${q.toString()}`
+  }
+  const tabUrl = (type: string) => buildUrl({ type })
 
   const handleClose = async (id: string) => {
     await fetch(`/api/recruit/${id}`, {
@@ -255,8 +272,8 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 
   return (
     <>
-      {/* 탭 */}
-      <div className="flex items-center mb-5">
+      {/* 탭 + 필터 */}
+      <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
         <div className="flex gap-1 bg-white/5 rounded p-1">
           <a href={tabUrl('lft')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
@@ -266,6 +283,19 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
             LFP <span className="text-[10px] opacity-60 ml-1">선수 구함</span>
           </a>
+        </div>
+
+        <div className="flex gap-2">
+          <select value={activeTier} onChange={(e) => router.push(buildUrl({ tier: e.target.value }))}
+            className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
+            <option value="">티어 전체</option>
+            {TIER_GROUPS.map((t) => <option key={t} value={t}>{t}</option>)}
+          </select>
+          <select value={activeRole} onChange={(e) => router.push(buildUrl({ role: e.target.value }))}
+            className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
+            <option value="">포지션 전체</option>
+            {ROLE_OPTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+          </select>
         </div>
       </div>
 
