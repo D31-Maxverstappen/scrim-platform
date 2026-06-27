@@ -15,6 +15,7 @@ import { expireStaleMatches } from '@/lib/matchExpiry'
 import Link from 'next/link'
 
 const GAME = 'valorant'
+const SHOW_INHOUSE = false // 내전 탭 비활성화로 일단 숨김 (추후 복구)
 
 export default async function ValorantDashboardPage() {
   const supabase = await createClient()
@@ -264,7 +265,8 @@ export default async function ValorantDashboardPage() {
               <ScrimList scrims={recentScrims ?? []} game={GAME} />
             </div>
 
-            {/* 내전 섹션 */}
+            {/* 내전 섹션 — 일단 숨김 (내전 탭 비활성화) */}
+            {SHOW_INHOUSE && (
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
                 <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
@@ -327,6 +329,7 @@ export default async function ValorantDashboardPage() {
                 </div>
               )}
             </div>
+            )}
 
             <ReceivedApplications initialApps={receivedApps} />
 
