@@ -58,12 +58,12 @@ export default async function ValorantMatchesPage() {
         </div>
 
         {/* ── 플레이어 요약 헤더 ── */}
-        <div className="border border-white/10 bg-[#13131f] mb-6 overflow-hidden">
-          <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${VAL_RED}, transparent)` }} />
+        <div className="border border-white/10 mb-6 overflow-hidden" style={{ background: `linear-gradient(135deg, ${rankColor}1f 0%, #13131f 52%)` }}>
+          <div className="h-1 w-full" style={{ background: `linear-gradient(90deg, ${rankColor}, transparent)` }} />
           <div className="px-8 py-6">
             <div className="flex items-center gap-5 mb-7 flex-wrap">
               {/* 아바타 */}
-              <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden flex items-center justify-center font-black text-2xl border border-white/10 bg-[#1a1a2e] text-white">
+              <div className="w-16 h-16 shrink-0 rounded-xl overflow-hidden flex items-center justify-center font-black text-2xl bg-[#1a1a2e] text-white" style={{ border: `2px solid ${rankColor}`, boxShadow: `0 0 18px ${rankColor}40` }}>
                 {profile?.avatar_url
                   ? <img src={profile.avatar_url} alt="" className="w-full h-full object-cover" />
                   : (valName?.[0]?.toUpperCase() ?? '?')}
@@ -74,9 +74,10 @@ export default async function ValorantMatchesPage() {
                   <p className="text-white font-black text-2xl truncate">{valName ?? '플레이어'}</p>
                   {valTag && <span className="text-slate-500 text-sm">#{valTag}</span>}
                 </div>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <span className="text-sm font-bold" style={{ color: rankColor }}>{MOCK_RANK.name}</span>
-                  <span className="text-slate-600 text-xs">· {MOCK_RANK.rr} RR</span>
+                <div className="flex items-center gap-2.5 mt-2">
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: rankColor, boxShadow: `0 0 8px ${rankColor}` }} />
+                  <span className="text-base font-black" style={{ color: rankColor }}>{MOCK_RANK.name}</span>
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded" style={{ background: `${rankColor}1a`, color: rankColor }}>{MOCK_RANK.rr} RR</span>
                 </div>
               </div>
               {!connected && (
