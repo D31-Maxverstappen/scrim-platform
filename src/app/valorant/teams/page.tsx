@@ -4,23 +4,35 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import BookmarkButton from '@/components/common/BookmarkButton'
+import Pagination from '@/components/common/Pagination'
 
-export default async function ValorantTeamsPage() {
+const PAGE_SIZE = 15
+
+export default async function ValorantTeamsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>
+}) {
+  const { page: pageStr = '1' } = await searchParams
+  const page = Math.max(1, Number(pageStr) || 1)
+  const from = (page - 1) * PAGE_SIZE
+  const to = from + PAGE_SIZE - 1
+
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const [{ data: myTeams }, { data: allTeams }] = await Promise.all([
+  const [{ data: myTeams }, { data: allTeams, count: total }] = await Promise.all([
     supabase
       .from('team_members')
       .select('role, teams(id, name, game_type, tier_avg, captain_id)')
       .eq('user_id', user.id),
     supabase
       .from('teams')
-      .select('id, name, abbreviation, game_type, tier_avg, captain_id, logo_url')
+      .select('id, name, abbreviation, game_type, tier_avg, captain_id, logo_url', { count: 'exact' })
       .eq('game_type', 'valorant')
       .order('created_at', { ascending: false })
-      .limit(50),
+      .range(from, to),
   ])
 
   const myValorantTeams = (myTeams ?? []).filter((m) => m.teams?.game_type === 'valorant')
@@ -112,6 +124,8 @@ export default async function ValorantTeamsPage() {
             <div className="text-center py-12 text-slate-600 text-sm">아직 팀이 없어요</div>
           )}
         </div>
+
+        <Pagination page={page} total={total ?? 0} pageSize={PAGE_SIZE} basePath="/valorant/teams" />
       </div>
     </div>
   )
