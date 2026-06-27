@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { isCoachAccount } from '@/lib/account'
 
 const admin = createAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,22 +32,42 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ toke
   if (!invite) return NextResponse.redirect(`${origin}/dashboard`)
 
   if (invite.type === 'team') {
-    // 이미 어떤 팀이든 소속된 경우 → 가입 불가, 팀 페이지로만 이동
-    const { data: existingMembership } = await admin
-      .from('team_members')
-      .select('team_id')
-      .eq('user_id', user.id)
-      .maybeSingle()
+    const coach = await isCoachAccount(admin, user.id)
 
-    if (existingMembership) {
-      return NextResponse.redirect(`${origin}/dashboard?error=already_in_team`)
+    if (coach) {
+      // 코치: 다팀 허용 — 이 팀에 이미 있으면 그냥 팀 페이지로, 없으면 코치로 가입
+      const { data: thisTeam } = await admin
+        .from('team_members')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('team_id', invite.target_id)
+        .maybeSingle()
+
+      if (!thisTeam) {
+        await admin.from('team_members').insert({
+          team_id: invite.target_id,
+          user_id: user.id,
+          role: 'coach',
+        })
+      }
+    } else {
+      // 선수: 이미 어떤 팀이든 소속된 경우 → 가입 불가, 팀 페이지로만 이동
+      const { data: existingMembership } = await admin
+        .from('team_members')
+        .select('team_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      if (existingMembership) {
+        return NextResponse.redirect(`${origin}/dashboard?error=already_in_team`)
+      }
+
+      await admin.from('team_members').insert({
+        team_id: invite.target_id,
+        user_id: user.id,
+        role: 'player',
+      })
     }
-
-    await admin.from('team_members').insert({
-      team_id: invite.target_id,
-      user_id: user.id,
-      role: 'player',
-    })
     return NextResponse.redirect(`${origin}/teams/${invite.target_id}`)
   }
 

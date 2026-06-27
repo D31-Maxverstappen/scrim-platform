@@ -10,7 +10,8 @@ async function getRoleId(admin: any, name: string): Promise<string | null> {
 }
 
 export async function POST(req: NextRequest) {
-  const { gameName, tagLine, gameType, tier } = await req.json()
+  const { gameName, tagLine, gameType, tier, accountType } = await req.json()
+  const account_type = accountType === 'coach' ? 'coach' : 'player'
 
   if (!gameName || !tagLine) {
     return NextResponse.json({ error: '이름과 태그를 입력해주세요.' }, { status: 400 })
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
     val_tagline: tagLine,
     val_tier: tier ?? null,
     tier: tier ?? null,
+    account_type,
   }, { onConflict: 'id' })
 
   // Discord 역할 부여 (discord_id 있는 경우)

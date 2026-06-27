@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { recalcTierAvg } from '@/lib/tierUtils'
 import { assignDiscordRole } from '@/lib/discord'
+import { isCoachAccount } from '@/lib/account'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -17,26 +18,33 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (invite.status !== 'pending') return NextResponse.json({ error: '이미 처리된 초대예요.' }, { status: 400 })
 
   if (action === 'accept') {
-    const { data: alreadyMember } = await supabase.from('team_members').select('id').eq('user_id', user.id).maybeSingle()
-    if (alreadyMember) return NextResponse.json({ error: '이미 다른 팀에 소속되어 있어요.' }, { status: 400 })
+    // 코치는 다팀 허용 → 1팀 제약·중복 정리 건너뜀, role 'coach'
+    const coach = await isCoachAccount(supabase, user.id)
 
-    await supabase.from('team_members').insert({ team_id: invite.team_id, user_id: user.id, role: 'player' })
+    if (!coach) {
+      const { data: alreadyMember } = await supabase.from('team_members').select('id').eq('user_id', user.id).maybeSingle()
+      if (alreadyMember) return NextResponse.json({ error: '이미 다른 팀에 소속되어 있어요.' }, { status: 400 })
+    }
+
+    await supabase.from('team_members').insert({ team_id: invite.team_id, user_id: user.id, role: coach ? 'coach' : 'player' })
     await supabase.from('team_invites').update({ status: 'accepted' }).eq('id', id)
 
-    // 다른 팀 pending 신청 전부 취소
-    await supabase
-      .from('team_join_requests')
-      .update({ status: 'rejected' })
-      .eq('user_id', user.id)
-      .eq('status', 'pending')
+    if (!coach) {
+      // 선수: 다른 팀 pending 신청 전부 취소
+      await supabase
+        .from('team_join_requests')
+        .update({ status: 'rejected' })
+        .eq('user_id', user.id)
+        .eq('status', 'pending')
 
-    // 다른 팀 pending 초대 전부 취소
-    await supabase
-      .from('team_invites')
-      .update({ status: 'declined' })
-      .eq('invited_user_id', user.id)
-      .eq('status', 'pending')
-      .neq('id', id)
+      // 선수: 다른 팀 pending 초대 전부 취소
+      await supabase
+        .from('team_invites')
+        .update({ status: 'declined' })
+        .eq('invited_user_id', user.id)
+        .eq('status', 'pending')
+        .neq('id', id)
+    }
 
     // 팀 평균 티어 갱신
     await recalcTierAvg(supabase, invite.team_id)

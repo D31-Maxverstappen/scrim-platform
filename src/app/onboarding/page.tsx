@@ -20,10 +20,11 @@ const VAL_TIERS = [
 type GameProfile = { gameName: string; tagLine: string; tier: string }
 
 function GameForm({
-  gameType, color, label, tiers, onSave, onSkip, saved,
+  gameType, color, label, tiers, onSave, onSkip, onBack, saved, coachMode = false,
 }: {
   gameType: string; color: string; label: string; tiers: string[]
-  onSave: (p: GameProfile) => void; onSkip: () => void; saved: GameProfile | null
+  onSave: (p: GameProfile) => void; onSkip?: () => void; onBack?: () => void
+  saved: GameProfile | null; coachMode?: boolean
 }) {
   const [gameName, setGameName] = useState(saved?.gameName ?? '')
   const [tagLine, setTagLine] = useState(saved?.tagLine ?? 'KR1')
@@ -31,18 +32,25 @@ function GameForm({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // 코치는 티어 없이 라이엇 연동(신원확인)만, 선수는 라이엇 ID + 티어 필수.
+  const canSave = coachMode ? !!gameName.trim() : (!!gameName.trim() && !!tier)
+
   const handleSave = async () => {
-    if (!gameName.trim() || !tier) return
+    if (!canSave) return
     setLoading(true); setError('')
     const res = await fetch('/api/riot/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ gameName: gameName.trim(), tagLine: tagLine.trim(), gameType, tier }),
+      body: JSON.stringify({
+        gameName: gameName.trim(), tagLine: tagLine.trim(), gameType,
+        tier: coachMode ? undefined : tier,
+        accountType: coachMode ? 'coach' : 'player',
+      }),
     })
     const data = await res.json()
     setLoading(false)
     if (!res.ok) setError(data.error)
-    else onSave({ gameName: gameName.trim(), tagLine: tagLine.trim(), tier })
+    else onSave({ gameName: gameName.trim(), tagLine: tagLine.trim(), tier: coachMode ? '' : tier })
   }
 
   return (
@@ -71,41 +79,78 @@ function GameForm({
             />
           </div>
         </div>
-        <p className="text-slate-600 text-xs mt-1.5">예: 페이커#KR1</p>
+        <p className="text-slate-600 text-xs mt-1.5">
+          {coachMode ? '코치 본인 확인용으로 연동돼요 · 예: 페이커#KR1' : '예: 페이커#KR1'}
+        </p>
       </div>
 
-      <div>
-        <label className="text-slate-400 text-xs font-semibold uppercase tracking-widest block mb-2">현재 티어</label>
-        <div className="grid grid-cols-3 gap-2">
-          {tiers.map((t) => (
-            <button key={t} type="button" onClick={() => setTier(t)}
-              className={`py-2 rounded text-xs font-semibold transition ${tier === t ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-              {t}
-            </button>
-          ))}
+      {!coachMode && (
+        <div>
+          <label className="text-slate-400 text-xs font-semibold uppercase tracking-widest block mb-2">현재 티어</label>
+          <div className="grid grid-cols-3 gap-2">
+            {tiers.map((t) => (
+              <button key={t} type="button" onClick={() => setTier(t)}
+                className={`py-2 rounded text-xs font-semibold transition ${tier === t ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                {t}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {error && <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">{error}</p>}
 
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          disabled={loading || !gameName.trim() || !tier}
+          disabled={loading || !canSave}
           className="flex-1 bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-bold py-3 rounded transition text-sm"
         >
           {loading ? '저장 중...' : '저장'}
         </button>
-        <button onClick={onSkip} className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-semibold rounded transition">
-          건너뛰기
-        </button>
+        {coachMode
+          ? (onBack && (
+              <button onClick={onBack} className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-semibold rounded transition">
+                뒤로
+              </button>
+            ))
+          : (onSkip && (
+              <button onClick={onSkip} className="px-4 py-3 bg-white/5 hover:bg-white/10 text-slate-400 text-sm font-semibold rounded transition">
+                건너뛰기
+              </button>
+            ))}
       </div>
     </div>
   )
 }
 
-function DoneStep({ valProfile, onGo }: {
+// 가입 시 선수/코치 선택 (계정 유형은 가입 시 고정)
+function RoleStep({ onSelect }: { onSelect: (role: 'player' | 'coach') => void }) {
+  const cards: { role: 'player' | 'coach'; emoji: string; title: string; desc: string; color: string }[] = [
+    { role: 'player', emoji: '🎮', title: '선수', desc: '팀에 소속돼 스크림을 뛰어요. 라이엇 ID와 티어를 등록해요.', color: '#ff4655' },
+    { role: 'coach', emoji: '📋', title: '코치', desc: '여러 팀의 전략·피드백을 맡아요. 티어 없이 라이엇 연동만 해요.', color: '#60a5fa' },
+  ]
+  return (
+    <div className="flex flex-col gap-3">
+      {cards.map((c) => (
+        <button key={c.role} onClick={() => onSelect(c.role)}
+          className="flex items-center gap-4 bg-white/3 border border-white/10 hover:border-white/30 rounded p-5 text-left transition group">
+          <div className="w-12 h-12 shrink-0 rounded flex items-center justify-center text-2xl"
+            style={{ background: `${c.color}1a` }}>{c.emoji}</div>
+          <div className="flex-1 min-w-0">
+            <p className="text-white font-bold text-base" style={{ color: c.color }}>{c.title}</p>
+            <p className="text-slate-500 text-xs mt-0.5">{c.desc}</p>
+          </div>
+          <span className="text-slate-600 group-hover:translate-x-0.5 transition-transform">→</span>
+        </button>
+      ))}
+    </div>
+  )
+}
+
+function DoneStep({ valProfile, isCoach, onGo }: {
   valProfile: GameProfile | null
+  isCoach: boolean
   onGo: () => void
 }) {
   const [inviteUrl, setInviteUrl] = useState<string | null>(null)
@@ -130,7 +175,13 @@ function DoneStep({ valProfile, onGo }: {
           </div>
           <h2 className="text-white font-bold text-xl mb-1">프로필 설정 완료!</h2>
           <div className="flex flex-col gap-1 text-xs mt-2">
-            {valProfile && <p className="text-[#ff4655]">VALORANT · {valProfile.gameName}#{valProfile.tagLine} · {valProfile.tier}</p>}
+            {valProfile && (
+              <p style={{ color: isCoach ? '#60a5fa' : '#ff4655' }}>
+                {isCoach
+                  ? `코치 · ${valProfile.gameName}#${valProfile.tagLine}`
+                  : `VALORANT · ${valProfile.gameName}#${valProfile.tagLine} · ${valProfile.tier}`}
+              </p>
+            )}
             {!valProfile && <p className="text-slate-500">나중에 프로필에서 등록할 수 있어요</p>}
           </div>
         </div>
@@ -139,19 +190,21 @@ function DoneStep({ valProfile, onGo }: {
         <div className="bg-[#111118] border border-white/5 rounded p-5 mb-4">
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-4">다음 단계</p>
           <div className="flex flex-col gap-2">
-            <Link href="/teams/create"
-              className="flex items-center gap-3 bg-[#00D2BE]/10 border border-[#00D2BE]/20 hover:border-[#00D2BE]/40 rounded px-4 py-3.5 transition group">
-              <div className="w-8 h-8 bg-[#00D2BE]/20 rounded flex items-center justify-center shrink-0">
-                <svg className="w-4 h-4 text-[#00D2BE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="text-white font-bold text-sm">새 팀 만들기</p>
-                <p className="text-slate-500 text-xs">팀을 만들고 캡틴이 되세요</p>
-              </div>
-              <span className="text-[#00D2BE] text-sm group-hover:translate-x-0.5 transition-transform">→</span>
-            </Link>
+            {!isCoach && (
+              <Link href="/teams/create"
+                className="flex items-center gap-3 bg-[#00D2BE]/10 border border-[#00D2BE]/20 hover:border-[#00D2BE]/40 rounded px-4 py-3.5 transition group">
+                <div className="w-8 h-8 bg-[#00D2BE]/20 rounded flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 text-[#00D2BE]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white font-bold text-sm">새 팀 만들기</p>
+                  <p className="text-slate-500 text-xs">팀을 만들고 캡틴이 되세요</p>
+                </div>
+                <span className="text-[#00D2BE] text-sm group-hover:translate-x-0.5 transition-transform">→</span>
+              </Link>
+            )}
             <Link href="/teams"
               className="flex items-center gap-3 bg-white/3 border border-white/5 hover:border-white/10 rounded px-4 py-3.5 transition group">
               <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center shrink-0">
@@ -160,8 +213,8 @@ function DoneStep({ valProfile, onGo }: {
                 </svg>
               </div>
               <div className="flex-1">
-                <p className="text-white font-bold text-sm">팀 찾아 가입하기</p>
-                <p className="text-slate-500 text-xs">기존 팀에 합류하세요</p>
+                <p className="text-white font-bold text-sm">{isCoach ? '맡을 팀 찾기' : '팀 찾아 가입하기'}</p>
+                <p className="text-slate-500 text-xs">{isCoach ? '팀에 코치로 합류하세요' : '기존 팀에 합류하세요'}</p>
               </div>
               <span className="text-slate-500 text-sm group-hover:translate-x-0.5 transition-transform">→</span>
             </Link>
@@ -197,13 +250,14 @@ function DoneStep({ valProfile, onGo }: {
 
 function OnboardingContent() {
   const router = useRouter()
-  const [step, setStep] = useState<'val' | 'done'>('val')
+  const [step, setStep] = useState<'role' | 'val' | 'coach' | 'done'>('role')
   const [valProfile, setValProfile] = useState<GameProfile | null>(null)
+  const [isCoach, setIsCoach] = useState(false)
 
   const handleValSave = (p: GameProfile) => { setValProfile(p); setStep('done') }
 
   if (step === 'done') {
-    return <DoneStep valProfile={valProfile} onGo={() => router.replace('/dashboard')} />
+    return <DoneStep valProfile={valProfile} isCoach={isCoach} onGo={() => router.replace('/dashboard')} />
   }
 
   return (
@@ -212,17 +266,28 @@ function OnboardingContent() {
         <div className="text-center mb-8">
           <span className="font-black text-3xl tracking-widest text-[#00D2BE]">D31</span>
           <h1 className="text-white font-bold text-xl mt-4 mb-1">프로필 설정</h1>
+          <p className="text-slate-500 text-xs mt-1">
+            {step === 'role' ? '어떤 유형으로 시작할까요?' : isCoach ? '코치로 시작해요' : '선수로 시작해요'}
+          </p>
           <div className="flex items-center justify-center gap-2 mt-3">
-            <div className="w-8 h-1.5 rounded-full bg-[#ff4655]" />
+            <div className="w-8 h-1.5 rounded-full" style={{ background: isCoach ? '#60a5fa' : '#ff4655' }} />
           </div>
         </div>
 
         <div className="bg-[#111118] border border-white/5 rounded p-6">
-          <GameForm
-            gameType="valorant" color="#ff4655" label="VALORANT"
-            tiers={VAL_TIERS} saved={valProfile}
-            onSave={handleValSave} onSkip={() => setStep('done')}
-          />
+          {step === 'role' ? (
+            <RoleStep onSelect={(role) => { setIsCoach(role === 'coach'); setStep(role === 'coach' ? 'coach' : 'val') }} />
+          ) : (
+            <GameForm
+              gameType="valorant"
+              color={isCoach ? '#60a5fa' : '#ff4655'}
+              label={isCoach ? '코치 등록' : 'VALORANT'}
+              tiers={VAL_TIERS} saved={valProfile} coachMode={step === 'coach'}
+              onSave={handleValSave}
+              onSkip={() => setStep('done')}
+              onBack={() => setStep('role')}
+            />
+          )}
         </div>
 
         <button onClick={() => router.replace('/dashboard')} className="w-full text-center text-slate-600 text-xs mt-4 hover:text-slate-400 transition">
