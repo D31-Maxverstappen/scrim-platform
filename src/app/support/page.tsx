@@ -1,8 +1,15 @@
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
+import { createClient as createAdmin } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import InquiryForm from './InquiryForm'
+import MyInquiries, { type MyInquiry } from './MyInquiries'
+
+const admin = createAdmin(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+)
 
 export default async function SupportPage() {
   const supabase = await createClient()
@@ -16,6 +23,13 @@ export default async function SupportPage() {
     .single()
 
   const displayName = profile?.val_gamename ?? profile?.riot_gamename ?? '—'
+
+  // 본인 문의 내역 — service_role로 user.id 스코프 조회(본인 것만 노출)
+  const { data: inquiries } = await admin
+    .from('inquiries')
+    .select('id, subject, content, status, admin_reply, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -47,6 +61,15 @@ export default async function SupportPage() {
               <p className="text-[#00D2BE] text-xs font-mono mt-2 select-all">ceoofd31@gmail.com</p>
             </div>
           </div>
+        </div>
+
+        {/* 내 문의 내역 */}
+        <div className="mt-12">
+          <div className="flex items-center gap-3 mb-5">
+            <h2 className="text-white font-black text-xl">내 문의 내역</h2>
+            <span className="text-slate-600 text-xs font-bold">{inquiries?.length ?? 0}건</span>
+          </div>
+          <MyInquiries inquiries={(inquiries ?? []) as MyInquiry[]} />
         </div>
       </div>
     </div>
