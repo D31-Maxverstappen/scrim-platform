@@ -93,7 +93,7 @@ export default function ScrimsClient({
                     ? 'border-white/5 hover:border-[#00D2BE]/40'
                     : 'border-white/5 opacity-50 hover:opacity-70'
                 }`}>
-                <div className="w-2 h-12 rounded-full shrink-0 bg-[#00D2BE]" />
+                <div className="w-2 h-12 rounded shrink-0 bg-[#00D2BE]" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition">

@@ -82,7 +82,7 @@ export default async function InhousePage() {
             {enriched.map((room) => (
               <Link key={room.id} href={`/inhouse/${room.id}`}
                 className="bg-[#13131f] border border-white/5 hover:border-[#00D2BE]/30 rounded-xl px-6 py-4 flex items-center gap-5 transition group">
-                <div className="w-2 h-12 rounded-full shrink-0 bg-[#00D2BE]" />
+                <div className="w-2 h-12 rounded shrink-0 bg-[#00D2BE]" />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition">{room.title}</span>
