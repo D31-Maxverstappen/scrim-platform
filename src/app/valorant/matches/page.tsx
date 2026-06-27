@@ -94,14 +94,19 @@ export default async function ValorantMatchesPage() {
 
             {/* 모스트 요원 */}
             {s.topAgents.length > 0 && (
-              <div className="flex items-center gap-2 mt-5 flex-wrap">
-                <span className="text-slate-500 text-xs uppercase tracking-widest mr-1">모스트 요원</span>
+              <div className="flex items-center gap-3 mt-5 flex-wrap">
+                <span className="text-slate-500 text-xs uppercase tracking-widest">모스트 요원</span>
                 {s.topAgents.map((a) => (
-                  <span key={a.agent} className="flex items-center gap-1.5 bg-white/5 rounded px-2.5 py-1 text-xs">
-                    <span className="text-white font-semibold">{a.agent}</span>
-                    <span className="text-slate-500">{a.games}판</span>
-                    <span style={{ color: a.winRate >= 50 ? WIN_COLOR : LOSS_COLOR }}>{a.winRate}%</span>
-                  </span>
+                  <div key={a.agent} className="flex items-center gap-2 bg-white/[0.04] border border-white/5 rounded px-2.5 py-1.5">
+                    <span className="w-7 h-7 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-xs">{a.agent[0]}</span>
+                    <div className="leading-tight">
+                      <p className="text-white text-xs font-bold">{a.agent}</p>
+                      <p className="text-[11px]">
+                        <span className="text-slate-500">{a.games}판 · </span>
+                        <span className="font-bold" style={{ color: a.winRate >= 50 ? WIN_COLOR : LOSS_COLOR }}>{a.winRate}%</span>
+                      </p>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}

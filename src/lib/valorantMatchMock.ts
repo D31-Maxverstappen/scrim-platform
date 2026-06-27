@@ -90,15 +90,15 @@ function genPlayers(m: Omit<ValMatch, 'players'>): ValMatchPlayer[] {
 
 // 최근 매치 (최신순)
 const BASE_MATCHES: Omit<ValMatch, 'players'>[] = [
-  { id: 'm1', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 8, agent: '제트', agentRole: '척후대', kills: 27, deaths: 14, assists: 5, acs: 312, hsPercent: 29, adr: 168, mvp: true, playedAt: '2026-06-24T22:41:00+09:00', durationMin: 34 },
+  { id: 'm1', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 8, agent: '제트', agentRole: '타격대', kills: 27, deaths: 14, assists: 5, acs: 312, hsPercent: 29, adr: 168, mvp: true, playedAt: '2026-06-24T22:41:00+09:00', durationMin: 34 },
   { id: 'm2', mode: '스크림', map: '로터스', win: true, roundsWon: 13, roundsLost: 11, agent: '오멘', agentRole: '전략가', kills: 19, deaths: 16, assists: 9, acs: 241, hsPercent: 24, adr: 141, mvp: false, playedAt: '2026-06-24T21:55:00+09:00', durationMin: 41 },
-  { id: 'm3', mode: '경쟁전', map: '헤이븐', win: false, roundsWon: 10, roundsLost: 13, agent: '레이즈', agentRole: '척후대', kills: 21, deaths: 18, assists: 4, acs: 263, hsPercent: 18, adr: 152, mvp: false, playedAt: '2026-06-23T23:12:00+09:00', durationMin: 38 },
-  { id: 'm4', mode: '경쟁전', map: '바인드', win: true, roundsWon: 13, roundsLost: 6, agent: '제트', agentRole: '척후대', kills: 24, deaths: 11, assists: 3, acs: 298, hsPercent: 31, adr: 161, mvp: true, playedAt: '2026-06-23T22:08:00+09:00', durationMin: 29 },
-  { id: 'm5', mode: '일반전', map: '스플릿', win: false, roundsWon: 7, roundsLost: 13, agent: '레이나', agentRole: '척후대', kills: 16, deaths: 17, assists: 2, acs: 214, hsPercent: 22, adr: 128, mvp: false, playedAt: '2026-06-22T20:33:00+09:00', durationMin: 31 },
+  { id: 'm3', mode: '경쟁전', map: '헤이븐', win: false, roundsWon: 10, roundsLost: 13, agent: '레이즈', agentRole: '타격대', kills: 21, deaths: 18, assists: 4, acs: 263, hsPercent: 18, adr: 152, mvp: false, playedAt: '2026-06-23T23:12:00+09:00', durationMin: 38 },
+  { id: 'm4', mode: '경쟁전', map: '바인드', win: true, roundsWon: 13, roundsLost: 6, agent: '제트', agentRole: '타격대', kills: 24, deaths: 11, assists: 3, acs: 298, hsPercent: 31, adr: 161, mvp: true, playedAt: '2026-06-23T22:08:00+09:00', durationMin: 29 },
+  { id: 'm5', mode: '일반전', map: '스플릿', win: false, roundsWon: 7, roundsLost: 13, agent: '레이나', agentRole: '타격대', kills: 16, deaths: 17, assists: 2, acs: 214, hsPercent: 22, adr: 128, mvp: false, playedAt: '2026-06-22T20:33:00+09:00', durationMin: 31 },
   { id: 'm6', mode: '스크림', map: '펄', win: true, roundsWon: 13, roundsLost: 9, agent: '킬조이', agentRole: '감시자', kills: 18, deaths: 13, assists: 7, acs: 232, hsPercent: 26, adr: 137, mvp: false, playedAt: '2026-06-22T19:40:00+09:00', durationMin: 36 },
   { id: 'm7', mode: '경쟁전', map: '선셋', win: true, roundsWon: 14, roundsLost: 12, agent: '소바', agentRole: '척후대', kills: 20, deaths: 15, assists: 11, acs: 245, hsPercent: 20, adr: 144, mvp: false, playedAt: '2026-06-21T23:50:00+09:00', durationMin: 43 },
   { id: 'm8', mode: '경쟁전', map: '아이스박스', win: false, roundsWon: 11, roundsLost: 13, agent: '바이퍼', agentRole: '전략가', kills: 17, deaths: 18, assists: 6, acs: 219, hsPercent: 23, adr: 131, mvp: false, playedAt: '2026-06-21T22:31:00+09:00', durationMin: 39 },
-  { id: 'm9', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 10, agent: '제트', agentRole: '척후대', kills: 25, deaths: 16, assists: 4, acs: 281, hsPercent: 28, adr: 158, mvp: false, playedAt: '2026-06-20T21:18:00+09:00', durationMin: 37 },
+  { id: 'm9', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 10, agent: '제트', agentRole: '타격대', kills: 25, deaths: 16, assists: 4, acs: 281, hsPercent: 28, adr: 158, mvp: false, playedAt: '2026-06-20T21:18:00+09:00', durationMin: 37 },
 ]
 
 export const MOCK_MATCHES: ValMatch[] = BASE_MATCHES.map((m) => ({ ...m, players: genPlayers(m) }))
