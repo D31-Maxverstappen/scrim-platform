@@ -101,10 +101,10 @@ export default function ScrimsClient({
                     </span>
                     {team?.tier_avg && <span className="text-slate-500 text-xs">· {team.tier_avg}</span>}
                     {post.format && (
-                      <span className="text-[10px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">{post.format}</span>
+                      <span className="text-[11px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">{post.format}</span>
                     )}
                     {hasTierCondition && (
-                      <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                      <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${
                         tierOk ? 'bg-white/5 text-slate-500' : 'bg-red-500/10 text-red-400'
                       }`}>
                         {post.tier_min && post.tier_max
@@ -116,7 +116,7 @@ export default function ScrimsClient({
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
-                    {post.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
+                    {post.preferred_date && <span className="whitespace-nowrap shrink-0">📅 {formatDate(post.preferred_date)}</span>}
                     {post.note && <span className="truncate max-w-[240px]">{post.note}</span>}
                   </div>
                 </div>
@@ -124,7 +124,7 @@ export default function ScrimsClient({
                 <div className="flex flex-col items-end gap-1 shrink-0">
                   <span className="text-[#00D2BE] text-xs font-bold">신청 →</span>
                   {!tierOk && myTier && (
-                    <span className="text-red-400 text-[10px]">티어 미달</span>
+                    <span className="text-red-400 text-[11px]">티어 미달</span>
                   )}
                 </div>
               </a>

@@ -83,14 +83,14 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
             <p className="text-xs" style={{ color: getTierColor(profileTier) }}>{profileTier}</p>
           )}
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
+        <span className="text-[11px] font-bold px-2 py-0.5 rounded shrink-0"
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
       {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {tierDisplay.map((d, i) => (
-            <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded border"
+            <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
               style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
           ))}
         </div>
@@ -99,7 +99,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
       {post.roles && post.roles.length > 0 && (
         <div className="flex flex-wrap gap-1">
           {post.roles.map((r: string) => (
-            <span key={r} className="text-[10px] font-semibold bg-white/5 text-slate-400 px-2 py-0.5 rounded">{r}</span>
+            <span key={r} className="text-[11px] font-semibold bg-white/5 text-slate-400 px-2 py-0.5 rounded">{r}</span>
           ))}
         </div>
       )}
@@ -113,12 +113,12 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
           <span className="text-slate-600 text-xs">Discord 미등록</span>
         )}
         <div className="flex items-center gap-2">
-          <span className="text-slate-600 text-[10px]">{timeAgo(post.created_at)}</span>
+          <span className="text-slate-600 text-[11px]">{timeAgo(post.created_at)}</span>
           {isOwn && (
             <>
-              <a href={`/recruit/post/edit/${post.id}`} className="text-[10px] text-slate-500 hover:text-white transition font-semibold">수정</a>
-              <button onClick={() => onClose(post.id)} className="text-[10px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
-              <button onClick={() => onDelete(post.id)} className="text-[10px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
+              <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
+              <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
+              <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
             </>
           )}
         </div>
@@ -170,24 +170,24 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           <p className="text-white font-bold text-sm truncate">{team?.name ?? '팀 없음'}</p>
           {team?.tier_avg && <p className="text-xs text-slate-400">Avg. {team.tier_avg}</p>}
         </div>
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded shrink-0"
+        <span className="text-[11px] font-bold px-2 py-0.5 rounded shrink-0"
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
       {post.roles && post.roles.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
-          <span className="text-[10px] text-slate-600">모집 포지션</span>
+          <span className="text-[11px] text-slate-600">모집 포지션</span>
           {post.roles.map((r: string) => (
-            <span key={r} className="text-[10px] font-semibold bg-[#00D2BE]/10 text-[#00D2BE] px-2 py-0.5 rounded">{r}</span>
+            <span key={r} className="text-[11px] font-semibold bg-[#00D2BE]/10 text-[#00D2BE] px-2 py-0.5 rounded">{r}</span>
           ))}
         </div>
       )}
 
       {tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
-          <span className="text-[10px] text-slate-600 shrink-0">희망 티어</span>
+          <span className="text-[11px] text-slate-600 shrink-0">희망 티어</span>
           {tierDisplay.map((d, i) => (
-            <span key={i} className="text-[10px] font-bold px-2 py-0.5 rounded border"
+            <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
               style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
           ))}
         </div>
@@ -202,18 +202,18 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           ) : (
             <span className="text-slate-600 text-xs">Discord 미등록</span>
           )}
-          <span className="text-slate-600 text-[10px] shrink-0">{timeAgo(post.created_at)}</span>
+          <span className="text-slate-600 text-[11px] shrink-0">{timeAgo(post.created_at)}</span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           {showApplyBtn && (
             applyState === 'done' ? (
-              <span className="text-[10px] font-bold text-green-400 bg-green-500/10 px-3 py-1.5 rounded">✓ 신청 완료</span>
+              <span className="text-[11px] font-bold text-green-400 bg-green-500/10 px-3 py-1.5 rounded">✓ 신청 완료</span>
             ) : (
               <button
                 onClick={handleApply}
                 disabled={applyState === 'loading'}
-                className="text-[10px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition"
+                className="text-[11px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition"
               >
                 {applyState === 'loading' ? '신청 중...' : '가입 신청'}
               </button>
@@ -221,9 +221,9 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           )}
           {isOwn && (
             <>
-              <a href={`/recruit/post/edit/${post.id}`} className="text-[10px] text-slate-500 hover:text-white transition font-semibold">수정</a>
-              <button onClick={() => onClose(post.id)} className="text-[10px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
-              <button onClick={() => onDelete(post.id)} className="text-[10px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
+              <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
+              <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
+              <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
             </>
           )}
         </div>

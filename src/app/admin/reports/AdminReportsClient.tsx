@@ -38,7 +38,7 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Reports</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Reports</p>
         <h1 className="text-white font-black text-2xl">신고 관리</h1>
       </div>
 
@@ -73,24 +73,24 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
                   <div className="flex items-start gap-3 mb-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded ${STATUS_STYLE[r.status]}`}>
+                        <span className={`text-[11px] font-black px-2 py-0.5 rounded ${STATUS_STYLE[r.status]}`}>
                           {STATUS_LABEL[r.status]}
                         </span>
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-white/[0.04] text-slate-500">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-white/[0.04] text-slate-500">
                           {r.target_type === 'user' ? '유저 신고' : '팀 신고'}
                         </span>
-                        <span className="text-slate-700 text-[10px]">{date}</span>
+                        <span className="text-slate-700 text-[11px]">{date}</span>
                       </div>
                       <p className="text-white text-xs font-semibold mb-0.5">신고자: {reporterName}</p>
                       <p className="text-slate-400 text-xs leading-relaxed">{r.reason}</p>
                       {r.action && (
-                        <p className="text-slate-600 text-[10px] mt-1">처리 내용: {r.action}</p>
+                        <p className="text-slate-600 text-[11px] mt-1">처리 내용: {r.action}</p>
                       )}
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <a href={r.target_type === 'user' ? `/admin/users?search=${r.target_id}` : `/teams/${r.target_id}`}
                         target={r.target_type === 'team' ? '_blank' : undefined}
-                        className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] transition">
+                        className="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] transition">
                         대상 보기
                       </a>
                     </div>
@@ -98,15 +98,15 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
                   {r.status === 'pending' && (
                     <div className="flex gap-2 pt-2 border-t border-white/[0.04]">
                       <button disabled={isLoading} onClick={() => handle(r.id, 'resolve', '경고 조치')}
-                        className="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 transition disabled:opacity-50">
+                        className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 transition disabled:opacity-50">
                         {isLoading ? '...' : '경고'}
                       </button>
                       <button disabled={isLoading} onClick={() => handle(r.id, 'resolve', '계정 정지')}
-                        className="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
+                        className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
                         {isLoading ? '...' : '정지 처리'}
                       </button>
                       <button disabled={isLoading} onClick={() => handle(r.id, 'dismiss')}
-                        className="text-[10px] font-bold px-3 py-1.5 rounded-lg bg-white/[0.04] text-slate-500 hover:bg-white/[0.08] transition disabled:opacity-50">
+                        className="text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white/[0.04] text-slate-500 hover:bg-white/[0.08] transition disabled:opacity-50">
                         {isLoading ? '...' : '무시'}
                       </button>
                     </div>

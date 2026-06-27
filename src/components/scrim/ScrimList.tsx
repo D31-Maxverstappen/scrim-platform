@@ -30,7 +30,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
   const activeCount = (filterServer ? 1 : 0) + (filterFormat ? 1 : 0) + (filterTier ? 1 : 0)
 
   const chip = (active: boolean) =>
-    `px-2.5 py-1 text-[10px] font-bold rounded-sm transition cursor-pointer select-none ${
+    `px-2.5 py-1 text-[11px] font-bold rounded-sm transition cursor-pointer select-none ${
       active ? 'bg-[#00D2BE]/20 text-[#00D2BE] border border-[#00D2BE]/40' : 'bg-white/[0.04] text-slate-500 border border-transparent hover:bg-white/[0.08] hover:text-slate-300'
     }`
 
@@ -40,8 +40,8 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
       {/* 헤더 */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
         <div className="flex items-center gap-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">스크림 게시판</p>
-          <span className="flex items-center gap-1.5 text-[10px] text-green-400 font-bold"
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">스크림 게시판</p>
+          <span className="flex items-center gap-1.5 text-[11px] text-green-400 font-bold"
             style={{ textShadow: '0 0 8px rgba(74,222,128,0.7)' }}>
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"
               style={{ boxShadow: '0 0 6px rgba(74,222,128,0.9)' }} />
@@ -51,7 +51,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
         <div className="flex items-center gap-3">
           <button
             onClick={() => setFilterOpen((v) => !v)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[10px] font-bold transition border ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-[11px] font-bold transition border ${
               filterOpen || activeCount > 0
                 ? 'bg-[#00D2BE]/10 border-[#00D2BE]/30 text-[#00D2BE]'
                 : 'bg-white/[0.04] border-white/[0.10] text-slate-500 hover:text-slate-300'
@@ -64,7 +64,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
               </span>
             )}
           </button>
-          <a href={allLink} className="text-[10px] font-bold text-slate-400 hover:text-white transition">
+          <a href={allLink} className="text-[11px] font-bold text-slate-400 hover:text-white transition">
             전체 보기 →
           </a>
         </div>
@@ -74,21 +74,21 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
       {filterOpen && (
         <div className="flex flex-wrap items-center gap-4 px-5 py-3 border-b border-white/[0.04] bg-white/[0.02]">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">서버</span>
+            <span className="text-[11px] text-slate-600 font-bold uppercase tracking-wider">서버</span>
             {['KR', 'AS'].map((s) => (
               <button key={s} onClick={() => setFilterServer(filterServer === s ? '' : s)} className={chip(filterServer === s)}>{s}</button>
             ))}
           </div>
           <div className="w-px h-3 bg-white/[0.06]" />
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">포맷</span>
+            <span className="text-[11px] text-slate-600 font-bold uppercase tracking-wider">포맷</span>
             {['BO1', 'BO3', 'BO5'].map((f) => (
               <button key={f} onClick={() => setFilterFormat(filterFormat === f ? '' : f)} className={chip(filterFormat === f)}>{f}</button>
             ))}
           </div>
           <div className="w-px h-3 bg-white/[0.06]" />
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] text-slate-600 font-bold uppercase tracking-wider">티어</span>
+            <span className="text-[11px] text-slate-600 font-bold uppercase tracking-wider">티어</span>
             {VAL_TIERS.map((tier) => (
               <button key={tier} onClick={() => setFilterTier(filterTier === tier ? '' : tier)} className={chip(filterTier === tier)}>{tier}</button>
             ))}
@@ -98,12 +98,12 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
 
       {/* 컬럼 헤더 */}
       <div className="grid grid-cols-12 gap-2 px-5 py-2.5 border-b border-white/[0.04]">
-        <span className="col-span-3 text-[10px] font-bold uppercase tracking-wider text-slate-700">팀 이름</span>
-        <span className="col-span-2 text-[10px] font-bold uppercase tracking-wider text-slate-700">평균 티어</span>
-        <span className="col-span-3 text-[10px] font-bold uppercase tracking-wider text-slate-700">희망 시간</span>
-        <span className="col-span-2 text-[10px] font-bold uppercase tracking-wider text-slate-700">서버</span>
-        <span className="col-span-1 text-[10px] font-bold uppercase tracking-wider text-slate-700">포맷</span>
-        <span className="col-span-1 text-right text-[10px] font-bold uppercase tracking-wider text-slate-700">신청</span>
+        <span className="col-span-3 text-[11px] font-bold uppercase tracking-wider text-slate-700">팀 이름</span>
+        <span className="col-span-2 text-[11px] font-bold uppercase tracking-wider text-slate-700">평균 티어</span>
+        <span className="col-span-3 text-[11px] font-bold uppercase tracking-wider text-slate-700">희망 시간</span>
+        <span className="col-span-2 text-[11px] font-bold uppercase tracking-wider text-slate-700">서버</span>
+        <span className="col-span-1 text-[11px] font-bold uppercase tracking-wider text-slate-700">포맷</span>
+        <span className="col-span-1 text-right text-[11px] font-bold uppercase tracking-wider text-slate-700">신청</span>
       </div>
 
       {filtered.length === 0 ? (
@@ -130,7 +130,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
                 <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
                 <span className="col-span-3 text-slate-500 text-xs">{date}</span>
                 <span className="col-span-2">
-                  <span className="px-2 py-0.5 bg-white/[0.04] text-slate-500 text-[10px] font-bold rounded-md">
+                  <span className="px-2 py-0.5 bg-white/[0.04] text-slate-500 text-[11px] font-bold rounded-md">
                     {s.server ?? 'KR'}
                   </span>
                 </span>

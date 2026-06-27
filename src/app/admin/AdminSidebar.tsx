@@ -17,7 +17,7 @@ export default function AdminSidebar() {
   return (
     <aside className="w-56 shrink-0 flex flex-col min-h-screen" style={{ backgroundColor: 'var(--bg-card)', borderRight: '1px solid var(--border)' }}>
       <div className="px-5 py-5" style={{ borderBottom: '1px solid var(--border)' }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">D31 Admin</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600">D31 Admin</p>
         <p className="text-white font-black text-lg mt-0.5">관리자 패널</p>
       </div>
       <nav className="flex-1 py-3">

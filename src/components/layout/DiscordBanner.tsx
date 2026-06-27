@@ -25,14 +25,14 @@ export default function DiscordBanner({ compact = false }: { compact?: boolean }
   if (compact) {
     return (
       <div className="bg-[#0d0d1a] border border-white/[0.06] rounded-2xl p-5">
-        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Discord</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Discord</p>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-9 h-9 rounded-xl bg-[#5865F2]/10 border border-[#5865F2]/20 flex items-center justify-center shrink-0">
             <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
           </div>
           <div>
             <p className="text-white text-xs font-bold">D31 공식 서버</p>
-            <p className="text-slate-600 text-[10px] mt-0.5">공지 · 팀원 모집 · 커뮤니티</p>
+            <p className="text-slate-600 text-[11px] mt-0.5">공지 · 팀원 모집 · 커뮤니티</p>
           </div>
         </div>
         {loading ? (

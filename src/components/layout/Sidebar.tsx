@@ -222,7 +222,7 @@ export default function Sidebar() {
               style={{ background: 'var(--bg-card)', border: '1px solid var(--border-input)' }}>
               {teams.length > 0 && (
                 <>
-                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>팀</p>
+                  <p className="px-3 pt-2.5 pb-1 text-[11px] font-black uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>팀</p>
                   {teams.map((t) => (
                     <button key={t.id} onMouseDown={() => { router.push(`/teams/${t.id}`); setSearch(''); setOpen(false) }}
                       className="w-full flex items-center gap-2 px-3 py-2 transition text-left"
@@ -231,7 +231,7 @@ export default function Sidebar() {
                       onMouseLeave={e => (e.currentTarget.style.background = '')}>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold truncate">{t.name}</p>
-                        {t.tier_avg && <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{t.tier_avg}</p>}
+                        {t.tier_avg && <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{t.tier_avg}</p>}
                       </div>
                     </button>
                   ))}
@@ -239,7 +239,7 @@ export default function Sidebar() {
               )}
               {users.length > 0 && (
                 <>
-                  <p className="px-3 pt-2.5 pb-1 text-[10px] font-black uppercase tracking-widest border-t"
+                  <p className="px-3 pt-2.5 pb-1 text-[11px] font-black uppercase tracking-widest border-t"
                     style={{ color: 'var(--text-muted)', borderColor: 'var(--border)' }}>유저</p>
                   {users.map((u) => (
                     <button key={u.id} onMouseDown={() => { router.push(`/users/${u.id}`); setSearch(''); setOpen(false) }}
@@ -247,13 +247,13 @@ export default function Sidebar() {
                       style={{ color: 'var(--text-primary)' }}
                       onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-input)')}
                       onMouseLeave={e => (e.currentTarget.style.background = '')}>
-                      <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold"
+                      <div className="w-6 h-6 rounded-full overflow-hidden shrink-0 flex items-center justify-center text-[11px] font-bold"
                         style={{ background: 'var(--bg-input)', color: 'var(--text-muted)' }}>
                         {u.avatar_url ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" /> : u.riot_gamename?.[0]?.toUpperCase() ?? '?'}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold truncate">{u.riot_gamename}</p>
-                        {u.tier && <p className="text-[10px]" style={{ color: 'var(--text-muted)' }}>{u.tier}</p>}
+                        {u.tier && <p className="text-[11px]" style={{ color: 'var(--text-muted)' }}>{u.tier}</p>}
                       </div>
                     </button>
                   ))}

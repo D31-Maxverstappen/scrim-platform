@@ -81,7 +81,7 @@ export default function InquiryForm({ displayName }: { displayName: string }) {
           rows={6}
           className="w-full bg-[#13131f] border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/50 transition resize-none"
         />
-        <p className="text-right text-slate-700 text-[10px] mt-1">{content.length}자</p>
+        <p className="text-right text-slate-700 text-[11px] mt-1">{content.length}자</p>
       </div>
 
       {state === 'error' && (

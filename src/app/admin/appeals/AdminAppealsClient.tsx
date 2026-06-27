@@ -39,9 +39,9 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
       {/* 검토 대기 */}
       <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <div className="px-5 py-4 flex items-center gap-3" style={{ borderBottom: '1px solid var(--border)' }}>
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">검토 대기</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">검토 대기</p>
           {pending.length > 0 && (
-            <span className="text-[10px] font-black px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400">{pending.length}</span>
+            <span className="text-[11px] font-black px-2 py-0.5 rounded bg-yellow-500/10 text-yellow-400">{pending.length}</span>
           )}
         </div>
         {pending.length === 0 ? (
@@ -53,11 +53,11 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="text-white text-sm font-bold">{displayName(a)}</p>
-                    <p className="text-slate-600 text-[10px] mt-0.5">
+                    <p className="text-slate-600 text-[11px] mt-0.5">
                       {formatKST(a.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[a.status]}`}>
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[a.status]}`}>
                     {STATUS_LABEL[a.status]}
                   </span>
                 </div>
@@ -96,21 +96,21 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
       {done.length > 0 && (
         <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
           <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">처리 완료</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">처리 완료</p>
           </div>
           <div className="divide-y divide-white/[0.04]">
             {done.map((a) => (
               <div key={a.id} className="px-5 py-3.5 flex items-start gap-3">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[a.status]}`}>
+                <span className={`text-[11px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[a.status]}`}>
                   {STATUS_LABEL[a.status]}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-xs font-semibold">{displayName(a)}</p>
                   <p className="text-slate-500 text-xs mt-0.5 leading-relaxed line-clamp-2">{a.reason}</p>
                   {a.admin_note && (
-                    <p className="text-slate-600 text-[10px] mt-1">메모: {a.admin_note}</p>
+                    <p className="text-slate-600 text-[11px] mt-1">메모: {a.admin_note}</p>
                   )}
-                  <p className="text-slate-700 text-[10px] mt-1">
+                  <p className="text-slate-700 text-[11px] mt-1">
                     {formatKST(a.created_at, { month: 'short', day: 'numeric' })}
                   </p>
                 </div>

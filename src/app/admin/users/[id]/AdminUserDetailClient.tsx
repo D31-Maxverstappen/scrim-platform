@@ -49,7 +49,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
     <div className="max-w-2xl flex flex-col gap-5">
       {/* 프로필 카드 */}
       <div className="rounded-2xl p-6" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-4">Profile</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-4">Profile</p>
         <div className="flex items-center gap-4 mb-6">
           <div className="w-14 h-14 rounded-2xl bg-[#00D2BE]/10 border border-[#00D2BE]/20 flex items-center justify-center text-2xl font-black text-[#00D2BE] shrink-0">
             {name[0]?.toUpperCase() ?? '?'}
@@ -57,10 +57,10 @@ export default function AdminUserDetailClient({ user, team, reports }: {
           <div>
             <div className="flex items-center gap-2 mb-1">
               <h2 className="text-white font-black text-xl">{name}</h2>
-              {user.is_admin && <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">ADMIN</span>}
+              {user.is_admin && <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">ADMIN</span>}
               {user.suspended
-                ? <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
-                : <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
+                ? <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
+                : <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
               }
             </div>
             <p className="text-slate-500 text-xs">{joined} 가입</p>
@@ -74,7 +74,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
             { label: '소속 팀', value: (team?.teams as any)?.name ?? '없음' },
           ].map((item) => (
             <div key={item.label} className="rounded-xl px-4 py-3" style={{ backgroundColor: 'var(--bg-base)' }}>
-              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 mb-1">{item.label}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.12em] text-slate-600 mb-1">{item.label}</p>
               <p className="text-white text-sm font-bold">{item.value}</p>
             </div>
           ))}
@@ -107,7 +107,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
       {/* 신고 내역 */}
       <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <div className="px-5 py-4" style={{ borderBottom: '1px solid var(--border)' }}>
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">신고 내역</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">신고 내역</p>
         </div>
         {reports.length === 0 ? (
           <div className="py-10 text-center text-slate-700 text-xs">신고 내역 없음</div>
@@ -115,12 +115,12 @@ export default function AdminUserDetailClient({ user, team, reports }: {
           <div className="divide-y divide-white/[0.04]">
             {reports.map((r) => (
               <div key={r.id} className="px-5 py-3.5 flex items-start gap-3">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[r.status]}`}>
+                <span className={`text-[11px] font-black px-2 py-0.5 rounded shrink-0 mt-0.5 ${STATUS_STYLE[r.status]}`}>
                   {STATUS_LABEL[r.status]}
                 </span>
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-xs leading-relaxed">{r.reason}</p>
-                  <p className="text-slate-700 text-[10px] mt-0.5">
+                  <p className="text-slate-700 text-[11px] mt-0.5">
                     {formatKST(r.created_at, { month: 'short', day: 'numeric' })}
                   </p>
                 </div>

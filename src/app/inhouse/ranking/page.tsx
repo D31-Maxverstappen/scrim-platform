@@ -60,7 +60,7 @@ export default async function InhouseRankingPage() {
           />
         ) : (
           <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
-            <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-[10px] text-slate-600 uppercase tracking-widest">
+            <div className="grid grid-cols-12 gap-2 px-5 py-3 border-b border-white/5 text-[11px] text-slate-600 uppercase tracking-widest">
               <span className="col-span-1 text-center">#</span>
               <span className="col-span-5">플레이어</span>
               <span className="col-span-2 text-center">판수</span>
@@ -95,7 +95,7 @@ export default async function InhouseRankingPage() {
                         {isMe && <span className="text-[#00D2BE] text-xs ml-1">(나)</span>}
                       </p>
                       {r.tier && (
-                        <p className="text-[10px]" style={{ color: getTierColor(r.tier) }}>
+                        <p className="text-[11px]" style={{ color: getTierColor(r.tier) }}>
                           {r.tier}
                         </p>
                       )}

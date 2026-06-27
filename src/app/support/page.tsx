@@ -21,7 +21,7 @@ export default async function SupportPage() {
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <div className="pt-6 max-w-5xl mx-auto px-6 py-12">
         <div className="mb-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">SUPPORT</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">SUPPORT</p>
           <h1 className="text-white font-black text-3xl">문의하기</h1>
           <p className="text-slate-500 text-sm mt-2">궁금한 점이나 불편한 사항을 남겨주세요</p>
         </div>

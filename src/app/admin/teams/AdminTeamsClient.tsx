@@ -25,14 +25,14 @@ export default function AdminTeamsClient({ teams }: { teams: any[] }) {
   return (
     <div>
       <div className="mb-6">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Teams</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Teams</p>
         <h1 className="text-white font-black text-2xl">팀 관리</h1>
       </div>
 
       <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <div className="grid grid-cols-12 gap-2 px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
           {['팀 이름', '게임', '캡틴', '멤버', '평균 티어', ''].map((h, i) => (
-            <span key={i} className={`text-[10px] font-black uppercase tracking-[0.15em] text-slate-700 ${
+            <span key={i} className={`text-[11px] font-black uppercase tracking-[0.15em] text-slate-700 ${
               i === 0 ? 'col-span-3' : i === 1 ? 'col-span-1' : i === 2 ? 'col-span-3' : i === 3 ? 'col-span-1' : i === 4 ? 'col-span-2' : 'col-span-2'
             }`}>{h}</span>
           ))}
@@ -49,16 +49,16 @@ export default function AdminTeamsClient({ teams }: { teams: any[] }) {
               return (
                 <div key={t.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/[0.02] transition">
                   <div className="col-span-3 flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-black shrink-0"
+                    <div className="w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-black shrink-0"
                       style={{ background: gc + '20', color: gc }}>
                       {(t.abbreviation ?? t.name)[0]?.toUpperCase()}
                     </div>
                     <div className="min-w-0">
                       <p className="text-white text-xs font-semibold truncate">{t.name}</p>
-                      <p className="text-slate-700 text-[10px]">{date}</p>
+                      <p className="text-slate-700 text-[11px]">{date}</p>
                     </div>
                   </div>
-                  <span className="col-span-1 text-[10px] font-bold" style={{ color: gc }}>
+                  <span className="col-span-1 text-[11px] font-bold" style={{ color: gc }}>
                     {t.game_type === 'valorant' ? 'VAL' : t.game_type}
                   </span>
                   <span className="col-span-3 text-slate-400 text-xs truncate">{captainName}</span>
@@ -66,13 +66,13 @@ export default function AdminTeamsClient({ teams }: { teams: any[] }) {
                   <span className="col-span-2 text-slate-500 text-xs">{t.tier_avg ?? '—'}</span>
                   <div className="col-span-2 flex justify-end gap-2">
                     <a href={`/teams/${t.id}`} target="_blank"
-                      className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] transition">
+                      className="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] transition">
                       보기
                     </a>
                     <button
                       disabled={loading === t.id}
                       onClick={() => handleDisband(t.id, t.name)}
-                      className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
+                      className="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
                       {loading === t.id ? '...' : '해산'}
                     </button>
                   </div>

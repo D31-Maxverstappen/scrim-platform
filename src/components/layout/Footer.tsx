@@ -38,7 +38,7 @@ export default function Footer() {
               <div className={colWrap}>
                 <Link href="/scrims" className={linkCls}>스크림</Link>
                 <Link href="/inhouse" className={linkCls}>내전</Link>
-                <span className={soon}>대회 <span className="text-[10px]">(추후)</span></span>
+                <span className={soon}>대회 <span className="text-[11px]">(추후)</span></span>
                 <Link href="/leaderboard" className={linkCls}>랭킹/통계</Link>
               </div>
             </div>
@@ -49,7 +49,7 @@ export default function Footer() {
               <div className={colWrap}>
                 <Link href="/about" className={linkCls}>소개</Link>
                 <Link href="/support" className={linkCls}>문의하기</Link>
-                <span className={soon}>채용 <span className="text-[10px]">(추후)</span></span>
+                <span className={soon}>채용 <span className="text-[11px]">(추후)</span></span>
               </div>
             </div>
 

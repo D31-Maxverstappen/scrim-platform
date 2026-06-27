@@ -150,12 +150,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             <div className="flex items-center gap-3 mb-3">
               <div className="text-center">
                 <p className="text-2xl font-black text-white">{team.wins ?? 0}</p>
-                <p className="text-[10px] text-slate-500 uppercase">승</p>
+                <p className="text-[11px] text-slate-500 uppercase">승</p>
               </div>
               <span className="text-slate-700 text-lg">–</span>
               <div className="text-center">
                 <p className="text-2xl font-black text-slate-500">{team.losses ?? 0}</p>
-                <p className="text-[10px] text-slate-500 uppercase">패</p>
+                <p className="text-[11px] text-slate-500 uppercase">패</p>
               </div>
             </div>
             {total > 0 && (
@@ -242,7 +242,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
                   <p className="text-slate-600 text-xs">{date} · {m.format ?? 'BO3'}</p>
                 </div>
                 {/* 상태 */}
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0
+                <span className={`text-[11px] font-bold px-2 py-0.5 rounded shrink-0
                   ${isWin ? 'bg-[#00D2BE]/10 text-[#00D2BE]' :
                     isLoss ? 'bg-red-500/10 text-red-400' :
                     isDraw ? 'bg-slate-500/10 text-slate-400' :
@@ -368,8 +368,8 @@ function RosterCard({ member, currentUserId, isVal }: {
           {isMe && <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE] shrink-0" />}
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold" style={{ color: roleColor }}>{ROLE_LABEL[member.role] ?? member.role}</span>
-          {tier && <span className="text-[10px] text-slate-600">{tier}</span>}
+          <span className="text-[11px] font-bold" style={{ color: roleColor }}>{ROLE_LABEL[member.role] ?? member.role}</span>
+          {tier && <span className="text-[11px] text-slate-600">{tier}</span>}
         </div>
       </div>
     </div>

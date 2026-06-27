@@ -134,7 +134,7 @@ export default async function ValorantMatchesPage() {
 function StatTile({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="bg-[#0e0e16] border border-white/5 rounded px-3 py-2.5">
-      <p className="text-slate-500 text-[10px] uppercase tracking-widest mb-1">{label}</p>
+      <p className="text-slate-500 text-[11px] uppercase tracking-widest mb-1">{label}</p>
       <p className="text-lg font-black">{children}</p>
     </div>
   )
@@ -165,7 +165,7 @@ function MatchRow({ m }: { m: ValMatch }) {
             <p className="text-slate-500 text-xs truncate">{m.map} · {m.agentRole}</p>
           </div>
           {m.mvp && (
-            <span className="shrink-0 text-[10px] font-black px-1.5 py-0.5 rounded"
+            <span className="shrink-0 text-[11px] font-black px-1.5 py-0.5 rounded"
               style={{ background: 'rgba(232,184,75,0.15)', color: '#E8B84B' }}>MVP</span>
           )}
         </div>
@@ -177,7 +177,7 @@ function MatchRow({ m }: { m: ValMatch }) {
             <span className="text-slate-600"> : </span>
             <span style={{ color: !m.win ? LOSS_COLOR : '#cbd5e1' }}>{m.roundsLost}</span>
           </p>
-          <p className="text-slate-600 text-[10px] mt-0.5">스코어</p>
+          <p className="text-slate-600 text-[11px] mt-0.5">스코어</p>
         </div>
 
         {/* KDA */}
@@ -185,23 +185,23 @@ function MatchRow({ m }: { m: ValMatch }) {
           <p className="text-white text-sm font-bold">
             {m.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{m.deaths}</span> <span className="text-slate-600">/</span> {m.assists}
           </p>
-          <p className="text-slate-600 text-[10px] mt-0.5">{kda} KDA</p>
+          <p className="text-slate-600 text-[11px] mt-0.5">{kda} KDA</p>
         </div>
 
         {/* ACS / HS */}
         <div className="text-center shrink-0 w-16 hidden sm:block">
           <p className="text-white text-sm font-bold">{m.acs}</p>
-          <p className="text-slate-600 text-[10px] mt-0.5">ACS</p>
+          <p className="text-slate-600 text-[11px] mt-0.5">ACS</p>
         </div>
         <div className="text-center shrink-0 w-14 hidden sm:block">
           <p className="text-white text-sm font-bold">{m.hsPercent}%</p>
-          <p className="text-slate-600 text-[10px] mt-0.5">HS</p>
+          <p className="text-slate-600 text-[11px] mt-0.5">HS</p>
         </div>
 
         {/* 날짜 */}
         <div className="text-right shrink-0 w-28 hidden md:block">
           <p className="text-slate-400 text-xs">{fmtDate(m.playedAt)}</p>
-          <p className="text-slate-600 text-[10px] mt-0.5">{m.durationMin}분</p>
+          <p className="text-slate-600 text-[11px] mt-0.5">{m.durationMin}분</p>
         </div>
       </div>
     </div>

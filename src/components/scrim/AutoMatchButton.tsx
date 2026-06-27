@@ -210,7 +210,7 @@ export default function AutoMatchButton({ teamId, gameType, tierAvg }: { teamId:
             <div className="flex-1">
               <div className="flex items-center gap-3">
                 <p className="text-white font-black text-xl drop-shadow-[0_0_12px_rgba(0,210,190,0.4)]">자동 매칭</p>
-                <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[10px] font-black rounded border border-[#00D2BE]/25 tracking-widest">
+                <span className="px-2 py-0.5 bg-[#00D2BE]/10 text-[#00D2BE] text-[11px] font-black rounded border border-[#00D2BE]/25 tracking-widest">
                   BETA
                 </span>
               </div>

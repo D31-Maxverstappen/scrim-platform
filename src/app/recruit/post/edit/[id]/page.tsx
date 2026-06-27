@@ -109,7 +109,7 @@ export default function RecruitEditPage() {
 
           {/* 유형 표시 (수정 불가) */}
           <div className="flex items-center gap-2 px-4 py-3 bg-white/5 rounded border border-white/10">
-            <span className="text-[10px] font-black text-slate-600 uppercase tracking-wider">유형</span>
+            <span className="text-[11px] font-black text-slate-600 uppercase tracking-wider">유형</span>
             <span className="text-white font-bold text-sm ml-2">{type === 'lft' ? 'LFT — 팀 구함' : 'LFP — 선수 구함'}</span>
           </div>
 

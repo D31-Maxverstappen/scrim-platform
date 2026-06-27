@@ -86,10 +86,10 @@ export default async function InhousePage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition">{room.title}</span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded ${STATUS_COLOR[room.status]}`}>
+                    <span className={`text-[11px] font-black px-2 py-0.5 rounded ${STATUS_COLOR[room.status]}`}>
                       {STATUS_LABEL[room.status]}
                     </span>
-                    <span className="text-[10px] font-bold bg-white/5 text-slate-400 px-2 py-0.5 rounded">
+                    <span className="text-[11px] font-bold bg-white/5 text-slate-400 px-2 py-0.5 rounded">
                       {MODE_LABEL[room.team_mode]}
                     </span>
                   </div>
@@ -109,7 +109,7 @@ export default async function InhousePage() {
                   <p className="text-white font-bold text-sm">
                     {room.participant_count} <span className="text-slate-600 font-normal">/ {room.max_players}</span>
                   </p>
-                  <p className="text-slate-600 text-[10px] mt-0.5">명</p>
+                  <p className="text-slate-600 text-[11px] mt-0.5">명</p>
                 </div>
               </Link>
             ))}

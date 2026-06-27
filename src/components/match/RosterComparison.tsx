@@ -36,7 +36,7 @@ function PlayerCard({ member, flip = false }: { member: Member; flip?: boolean }
             <span className="text-[9px] font-black px-1.5 py-0.5 bg-[#00D2BE]/20 text-[#00D2BE] shrink-0">IGL</span>
           )}
         </div>
-        {tier && <p className="text-slate-600 text-[10px] mt-0.5">{tier}</p>}
+        {tier && <p className="text-slate-600 text-[11px] mt-0.5">{tier}</p>}
       </div>
     </div>
   )

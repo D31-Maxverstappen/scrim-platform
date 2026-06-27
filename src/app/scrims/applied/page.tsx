@@ -117,14 +117,14 @@ export default async function MyScrimsPage() {
                             {postTeam?.tier_avg && (
                               <span className="text-slate-500 text-xs shrink-0">· {postTeam.tier_avg}</span>
                             )}
-                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded shrink-0 ${ps.cls}`}>
+                            <span className={`text-[11px] font-bold px-2 py-0.5 rounded shrink-0 ${ps.cls}`}>
                               {ps.label}
                             </span>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-slate-500">
                             {post.format && <span className="font-bold">{post.format}</span>}
                             {post.server && (
-                              <span className="bg-white/5 px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-400">
+                              <span className="bg-white/5 px-1.5 py-0.5 rounded text-[11px] font-bold text-slate-400">
                                 {post.server}
                               </span>
                             )}
@@ -161,7 +161,7 @@ export default async function MyScrimsPage() {
                                 {at?.tier_avg && (
                                   <span className="text-slate-600 text-xs">{at.tier_avg}</span>
                                 )}
-                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${as_.cls}`}>
+                                <span className={`text-[11px] font-bold px-2 py-0.5 rounded ${as_.cls}`}>
                                   {as_.label}
                                 </span>
                               </div>
@@ -223,14 +223,14 @@ export default async function MyScrimsPage() {
                         <div className="flex items-center gap-2 text-xs text-slate-500">
                           {post?.format && <span className="font-bold">{post.format}</span>}
                           {post?.server && (
-                            <span className="bg-white/5 px-1.5 py-0.5 rounded text-[10px] font-bold text-slate-400">
+                            <span className="bg-white/5 px-1.5 py-0.5 rounded text-[11px] font-bold text-slate-400">
                               {post.server}
                             </span>
                           )}
                           {post?.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
                         </div>
                       </div>
-                      <span className={`text-[10px] font-bold px-2.5 py-1 rounded shrink-0 ${s.cls}`}>
+                      <span className={`text-[11px] font-bold px-2.5 py-1 rounded shrink-0 ${s.cls}`}>
                         {s.label}
                       </span>
                       <span className="text-slate-700 text-xs group-hover:text-slate-500 transition">→</span>

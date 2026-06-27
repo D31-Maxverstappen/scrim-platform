@@ -181,7 +181,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                     <p className="text-slate-600 text-xs mt-1">{match.format}</p>
                   </div>
                 )}
-                <p className="text-slate-700 text-[10px] mt-2 uppercase tracking-widest">
+                <p className="text-slate-700 text-[11px] mt-2 uppercase tracking-widest">
                   {match.status === 'completed' ? '종료' : isCancelled ? '취소됨' : match.status === 'ongoing' ? '진행 중' : '예정'}
                 </p>
               </div>
@@ -205,7 +205,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
         {/* ── 취소 사유 배너 ── */}
         {isCancelled && (
           <div className="mb-6 rounded-lg border border-red-500/25 bg-red-500/[0.06] px-5 py-4 flex items-center gap-3">
-            <span className="text-[10px] font-black text-red-400 border border-red-500/40 rounded px-1.5 py-0.5 shrink-0">취소됨</span>
+            <span className="text-[11px] font-black text-red-400 border border-red-500/40 rounded px-1.5 py-0.5 shrink-0">취소됨</span>
             <p className="text-slate-300 text-sm">{CANCEL_REASON_LABEL[cancelReason ?? ''] ?? '매치가 취소됐어요.'}</p>
           </div>
         )}
@@ -235,7 +235,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-white font-bold text-xs">{labels[i] ?? `팀${i + 1}`} 대기실</p>
-                    <p className="text-slate-500 text-[10px]">팀원만 입장 가능</p>
+                    <p className="text-slate-500 text-[11px]">팀원만 입장 가능</p>
                   </div>
                   <span className="text-[#5865F2] text-xs font-bold group-hover:translate-x-0.5 transition-transform">→</span>
                 </a>

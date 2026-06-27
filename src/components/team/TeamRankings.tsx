@@ -41,8 +41,8 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
     <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
       {/* 헤더 */}
       <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
-        <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">팀 랭킹</p>
-        <span className="text-[10px] font-bold text-slate-500">승률 기준</span>
+        <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">팀 랭킹</p>
+        <span className="text-[11px] font-bold text-slate-500">승률 기준</span>
       </div>
 
       {sorted.length === 0 ? (
@@ -64,7 +64,7 @@ export default function TeamRankings({ teams, game }: { teams: Team[]; game?: st
                     {team.name}
                   </p>
                   {total > 0 && (
-                    <p className="text-slate-500 text-[10px]">{team.wins}승 {team.losses}패</p>
+                    <p className="text-slate-500 text-[11px]">{team.wins}승 {team.losses}패</p>
                   )}
                 </div>
                 <span className="text-xs font-bold shrink-0 text-slate-400">

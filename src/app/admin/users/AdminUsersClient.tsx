@@ -47,7 +47,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
     <div>
       <div className="mb-6 flex items-end justify-between">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Users</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-1">Users</p>
           <h1 className="text-white font-black text-2xl">유저 관리</h1>
         </div>
         <form onSubmit={handleSearch} className="flex gap-2">
@@ -66,7 +66,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
       <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
         <div className="grid grid-cols-12 gap-2 px-5 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
           {['닉네임', '티어', '가입일', '상태', ''].map((h, i) => (
-            <span key={i} className={`text-[10px] font-black uppercase tracking-[0.15em] text-slate-700 ${i === 0 ? 'col-span-4' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-2'}`}>{h}</span>
+            <span key={i} className={`text-[11px] font-black uppercase tracking-[0.15em] text-slate-700 ${i === 0 ? 'col-span-4' : i === 1 ? 'col-span-2' : i === 2 ? 'col-span-2' : i === 3 ? 'col-span-2' : 'col-span-2'}`}>{h}</span>
           ))}
         </div>
 
@@ -82,7 +82,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
               return (
                 <div key={u.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/[0.02] transition">
                   <div className="col-span-4 flex items-center gap-2.5 min-w-0">
-                    <div className="w-7 h-7 rounded-lg bg-[#00D2BE]/10 flex items-center justify-center text-[10px] font-black text-[#00D2BE] shrink-0">
+                    <div className="w-7 h-7 rounded-lg bg-[#00D2BE]/10 flex items-center justify-center text-[11px] font-black text-[#00D2BE] shrink-0">
                       {name[0]?.toUpperCase() ?? '?'}
                     </div>
                     <div className="min-w-0">
@@ -94,8 +94,8 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
                   <span className="col-span-2 text-slate-500 text-xs">{date}</span>
                   <div className="col-span-2">
                     {u.suspended
-                      ? <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
-                      : <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
+                      ? <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-red-500/15 text-red-400">정지됨</span>
+                      : <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-green-500/10 text-green-400">활성</span>
                     }
                   </div>
                   <div className="col-span-2 flex items-center gap-1.5 justify-end">
@@ -104,7 +104,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
                         <button
                           disabled={isLoading}
                           onClick={() => handleSuspend(u.id, !u.suspended)}
-                          className={`text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition disabled:opacity-50 ${
+                          className={`text-[11px] font-bold px-2.5 py-1.5 rounded-lg transition disabled:opacity-50 ${
                             u.suspended
                               ? 'bg-green-500/10 text-green-400 hover:bg-green-500/20'
                               : 'bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20'
@@ -114,7 +114,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
                         <button
                           disabled={isLoading}
                           onClick={() => handleDelete(u.id, name)}
-                          className="text-[10px] font-bold px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
+                          className="text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition disabled:opacity-50">
                           탈퇴
                         </button>
                       </>

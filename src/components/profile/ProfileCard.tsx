@@ -24,7 +24,7 @@ type Props = {
 export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline, valTier }: Props) {
   return (
     <div className="bg-[#0d0d1a] border border-white/[0.06] rounded p-5">
-      <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Profile</p>
+      <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Profile</p>
 
       <div className="flex items-center gap-3">
         <AvatarUpload
@@ -49,7 +49,7 @@ export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline
             <div>
               <p className="text-slate-500 text-xs mb-1.5">게임 미등록</p>
               <a href="/onboarding"
-                className="inline-block text-[10px] font-bold bg-[#00D2BE]/10 text-[#00D2BE] px-3 py-1 rounded hover:bg-[#00D2BE]/20 transition">
+                className="inline-block text-[11px] font-bold bg-[#00D2BE]/10 text-[#00D2BE] px-3 py-1 rounded hover:bg-[#00D2BE]/20 transition">
                 계정 연동 →
               </a>
             </div>
@@ -59,7 +59,7 @@ export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline
 
       {valGamename && (
         <a href="/profile"
-          className="mt-4 flex items-center justify-between text-[10px] text-slate-600 hover:text-slate-400 transition border-t border-white/[0.04] pt-3">
+          className="mt-4 flex items-center justify-between text-[11px] text-slate-600 hover:text-slate-400 transition border-t border-white/[0.04] pt-3">
           <span>프로필 보기</span>
           <span>→</span>
         </a>

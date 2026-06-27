@@ -137,7 +137,7 @@ export default async function ValorantDashboardPage() {
         {/* ── 인사 헤더 ── */}
         <div className="mb-10 flex items-end justify-between animate-fade-in-up" style={{ animationDelay: '0ms' }}>
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">VALORANT DASHBOARD</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-600 mb-2">VALORANT DASHBOARD</p>
             <h1 className="text-white font-black text-3xl tracking-tight">
               안녕하세요, <span className="text-[#00D2BE]" style={{ textShadow: '0 0 24px rgba(0,210,190,0.4)' }}>{displayName}</span>님
             </h1>
@@ -159,7 +159,7 @@ export default async function ValorantDashboardPage() {
               className="bg-[#0d0d1a] border border-white/[0.08] rounded px-6 py-5 stat-card-glow animate-fade-in-up cursor-default"
               style={{ animationDelay: `${s.delay}ms` }}
             >
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-3">{s.label}</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-3">{s.label}</p>
               <div className="flex items-baseline gap-1.5">
                 <span className="text-4xl font-black text-white leading-none">
                   <StatCounter value={s.value} />
@@ -186,7 +186,7 @@ export default async function ValorantDashboardPage() {
 
             {/* 매너 점수 */}
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
               <div className="flex items-baseline gap-1.5 mb-3">
                 <span className="text-3xl font-black text-white">{profile?.manner_score ?? 100}</span>
                 <span className="text-xs text-slate-500">/ 200</span>
@@ -194,12 +194,12 @@ export default async function ValorantDashboardPage() {
               <div className="w-full bg-white/[0.05] rounded-full h-1">
                 <div className="h-1 rounded-full bg-gradient-to-r from-[#00D2BE] to-[#00edd6]" style={{ width: '50%' }} />
               </div>
-              <p className="text-[10px] text-slate-700 mt-2">기본 점수</p>
+              <p className="text-[11px] text-slate-700 mt-2">기본 점수</p>
             </div>
 
             {/* 내 팀 */}
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Team</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">My Team</p>
               {team ? (
                 <div className="flex items-center gap-3">
                   {/* 로고: 캡틴→관리페이지, 멤버→팀페이지 */}
@@ -216,7 +216,7 @@ export default async function ValorantDashboardPage() {
                     {team.tier_avg && (
                       <p className="text-xs text-slate-500 mt-0.5">{team.tier_avg}</p>
                     )}
-                    <span className="inline-block mt-1.5 text-[10px] font-bold px-2 py-0.5 rounded"
+                    <span className="inline-block mt-1.5 text-[11px] font-bold px-2 py-0.5 rounded"
                       style={{ background: '#00D2BE20', color: '#00D2BE' }}>
                       {myValTeam?.role === 'captain' ? '캡틴' : '멤버'}
                     </span>
@@ -244,7 +244,7 @@ export default async function ValorantDashboardPage() {
                   className={`flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.03] transition group ${i > 0 ? 'border-t border-white/[0.04]' : ''}`}>
                   <div>
                     <p className="text-white text-xs font-bold group-hover:text-[#00D2BE] transition">{item.label}</p>
-                    <p className="text-slate-600 text-[10px] mt-0.5">{item.sub}</p>
+                    <p className="text-slate-600 text-[11px] mt-0.5">{item.sub}</p>
                   </div>
                   <span className="text-slate-700 group-hover:text-[#00D2BE] transition text-sm">→</span>
                 </a>
@@ -270,8 +270,8 @@ export default async function ValorantDashboardPage() {
             {SHOW_INHOUSE && (
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
               <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.04]">
-                <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
-                <Link href="/inhouse" className="text-[10px] font-bold text-slate-400 hover:text-white transition">
+                <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">내전</p>
+                <Link href="/inhouse" className="text-[11px] font-bold text-slate-400 hover:text-white transition">
                   전체 보기 →
                 </Link>
               </div>
@@ -305,14 +305,14 @@ export default async function ValorantDashboardPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                             <span className="text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{room.title}</span>
-                            <span className={`text-[10px] font-black px-2 py-0.5 rounded ${STATUS_COLOR[room.status]}`}>
+                            <span className={`text-[11px] font-black px-2 py-0.5 rounded ${STATUS_COLOR[room.status]}`}>
                               {STATUS_LABEL[room.status]}
                             </span>
-                            <span className="text-[10px] font-bold bg-white/5 text-slate-500 px-1.5 py-0.5 rounded">
+                            <span className="text-[11px] font-bold bg-white/5 text-slate-500 px-1.5 py-0.5 rounded">
                               {MODE_LABEL[room.team_mode]}
                             </span>
                           </div>
-                          <div className="flex items-center gap-3 text-[10px] text-slate-600">
+                          <div className="flex items-center gap-3 text-[11px] text-slate-600">
                             <span>방장: {room.host?.val_gamename ?? room.host?.riot_gamename ?? '—'}</span>
                             {scheduledStr && <span>📅 {scheduledStr}</span>}
                           </div>
@@ -321,7 +321,7 @@ export default async function ValorantDashboardPage() {
                           <p className="text-white font-bold text-xs">
                             {room.participant_count}<span className="text-slate-600 font-normal"> / {room.max_players}</span>
                           </p>
-                          <p className="text-slate-700 text-[10px]">명</p>
+                          <p className="text-slate-700 text-[11px]">명</p>
                         </div>
                         <span className="text-slate-700 group-hover:text-[#00D2BE] text-xs transition shrink-0">→</span>
                       </Link>
@@ -340,7 +340,7 @@ export default async function ValorantDashboardPage() {
               {/* 최근 매치 */}
               <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden card-glow transition-all duration-300">
                 <div className="px-5 py-4 border-b border-white/[0.04] flex items-center justify-between">
-                  <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600">최근 매치</p>
+                  <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600">최근 매치</p>
                 </div>
                 {recentMatches.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 text-slate-700">
@@ -370,7 +370,7 @@ export default async function ValorantDashboardPage() {
                             <p className="text-white text-xs font-semibold truncate">
                               {t1?.name ?? '—'} <span className="text-slate-700">vs</span> {t2?.name ?? '—'}
                             </p>
-                            <p className="text-slate-600 text-[10px]">{m.format} · {date}</p>
+                            <p className="text-slate-600 text-[11px]">{m.format} · {date}</p>
                           </div>
                           <span className="text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
                         </a>

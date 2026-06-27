@@ -40,7 +40,7 @@ function RoundBox({ result }: { result: string | null }) {
 
 function StatHeader({ playerLabel }: { playerLabel: string }) {
   return (
-    <div className="grid px-4 py-2 border-b border-white/10 text-[10px] text-slate-600 uppercase tracking-wider"
+    <div className="grid px-4 py-2 border-b border-white/10 text-[11px] text-slate-600 uppercase tracking-wider"
       style={{ gridTemplateColumns: GRID }}>
       <span>{playerLabel}</span>
       <span className="text-center">R</span>
@@ -75,7 +75,7 @@ function StatRow({ stat, gameName }: { stat: MatchStat; gameName: string }) {
             <FlagImg code={u?.country} size={12} />
             <a href={`/users/${stat.user_id}`} className="text-white text-xs font-semibold hover:text-[#00D2BE] transition">{name}</a>
           </div>
-          <span className="text-slate-600 text-[10px]">{gameName}</span>
+          <span className="text-slate-600 text-[11px]">{gameName}</span>
         </div>
       </div>
       <span className="text-white text-xs font-bold text-center">{rating}</span>
@@ -126,7 +126,7 @@ function RoundTimeline({ results, label }: { results: string | null; label: stri
 
   return (
     <div className="flex items-center gap-3 py-2">
-      <span className="text-[10px] text-slate-500 w-6 shrink-0 font-bold">{label}</span>
+      <span className="text-[11px] text-slate-500 w-6 shrink-0 font-bold">{label}</span>
       <div className="flex gap-0.5">
         {Array.from({ length: totalRounds }).map((_, i) => (
           <RoundBox key={i} result={chars[i] ?? null} />
@@ -217,7 +217,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           {/* 라운드 박스 */}
           <div className="border border-white/5 px-4 py-2">
             <div className="flex items-center gap-3 pb-1 border-b border-white/5">
-              <span className="text-[10px] text-slate-600 w-6" />
+              <span className="text-[11px] text-slate-600 w-6" />
               <div className="flex gap-0.5">
                 {Array.from({ length: 24 }).map((_, i) => (
                   <span key={i} className="text-[8px] text-slate-700 w-5 text-center">{i + 1}</span>

@@ -61,7 +61,7 @@ export default async function BookmarksPage() {
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-white font-bold text-sm truncate">{s.teams?.name ?? '팀'}</span>
                           {s.teams?.tier_avg && <span className="text-[#00D2BE] text-xs">{s.teams.tier_avg}</span>}
-                          {s.status !== 'open' && <span className="text-[10px] text-slate-500 border border-white/10 rounded px-1.5 py-0.5">{s.status}</span>}
+                          {s.status !== 'open' && <span className="text-[11px] text-slate-500 border border-white/10 rounded px-1.5 py-0.5">{s.status}</span>}
                         </div>
                         <p className="text-slate-500 text-xs">
                           {[s.format, s.server, s.preferred_date].filter(Boolean).join(' · ') || '상세 보기'}

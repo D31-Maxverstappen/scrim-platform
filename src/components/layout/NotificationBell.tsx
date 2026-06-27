@@ -115,7 +115,7 @@ export default function NotificationBell() {
                     <div className={!n.read ? '' : 'ml-3.5'}>
                       <p className="text-white text-xs font-semibold">{n.title}</p>
                       {n.body && <p className="text-slate-500 text-xs mt-0.5">{n.body}</p>}
-                      <p className="text-slate-700 text-[10px] mt-1">
+                      <p className="text-slate-700 text-[11px] mt-1">
                         {n.created_at ? formatKST(n.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''}
                       </p>
                     </div>

@@ -153,7 +153,7 @@ export default function CalendarClient({
                 )}
                 {/* 공고 수 배지 */}
                 {count > 0 && (
-                  <span className="absolute bottom-1.5 right-1.5 font-mono text-[10px] font-bold leading-none text-[#04342C] bg-[#00D2BE] px-1.5 py-0.5 rounded">
+                  <span className="absolute bottom-1.5 right-1.5 font-mono text-[11px] font-bold leading-none text-[#04342C] bg-[#00D2BE] px-1.5 py-0.5 rounded">
                     {count}
                   </span>
                 )}
@@ -184,7 +184,7 @@ export default function CalendarClient({
               <p className="text-white font-bold text-sm">
                 {Number(selectedDay.split('-')[2])}일
               </p>
-              <span className="text-[10px] font-black px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">
+              <span className="text-[11px] font-black px-2 py-0.5 rounded bg-[#00D2BE]/10 text-[#00D2BE]">
                 {selectedTotal}개
               </span>
             </div>
@@ -207,7 +207,7 @@ export default function CalendarClient({
                         <span className="text-white font-bold text-sm truncate">
                           {t1?.name ?? '—'} <span className="text-slate-600 font-normal">vs</span> {t2?.name ?? '—'}
                         </span>
-                        <span className="text-[10px] font-black bg-[#7B61FF]/15 text-[#7B61FF] px-1.5 py-0.5 rounded shrink-0 ml-2">확정</span>
+                        <span className="text-[11px] font-black bg-[#7B61FF]/15 text-[#7B61FF] px-1.5 py-0.5 rounded shrink-0 ml-2">확정</span>
                       </div>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
                         {m.match_date && <span>🕐 {formatTime(m.match_date)}</span>}
@@ -228,7 +228,7 @@ export default function CalendarClient({
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-white font-bold text-sm">{team?.name ?? '—'}</span>
                         {s.format && (
-                          <span className="text-[10px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">
+                          <span className="text-[11px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">
                             {s.format}
                           </span>
                         )}
@@ -238,7 +238,7 @@ export default function CalendarClient({
                         {team?.tier_avg && <span>· {team.tier_avg}</span>}
                       </div>
                       {(s.tier_min || s.tier_max) && (
-                        <p className="text-[10px] text-slate-600 mt-1">
+                        <p className="text-[11px] text-slate-600 mt-1">
                           {s.tier_min && s.tier_max
                             ? `${s.tier_min} ~ ${s.tier_max}`
                             : s.tier_min ? `${s.tier_min} 이상` : `${s.tier_max} 이하`}

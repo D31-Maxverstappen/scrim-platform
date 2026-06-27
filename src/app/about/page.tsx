@@ -51,21 +51,21 @@ export default function AboutPage() {
                 <ul className="flex flex-col gap-2.5 text-slate-400">
                   <li className="flex flex-col gap-1">
                     <span className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-[#00D2BE] border border-[#00D2BE]/40 rounded px-1.5 py-0.5">사용 중</span>
+                      <span className="text-[11px] font-bold text-[#00D2BE] border border-[#00D2BE]/40 rounded px-1.5 py-0.5">사용 중</span>
                       <span className="text-slate-200">계정 확인 (Riot Account API)</span>
                     </span>
                     <span className="text-slate-500 pl-1">사용자가 직접 입력한 라이엇 ID(이름#태그)로 본인 확인을 거쳐 PUUID·게임명·태그라인을 받아옵니다. PUUID는 계정을 안정적으로 연결하기 위한 식별자로만 쓰입니다.</span>
                   </li>
                   <li className="flex flex-col gap-1">
                     <span className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">승인 후 예정</span>
+                      <span className="text-[11px] font-bold text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">승인 후 예정</span>
                       <span className="text-slate-200">발로란트 티어 (VAL Ranked API)</span>
                     </span>
                     <span className="text-slate-500 pl-1">현재 티어는 사용자가 직접 입력한 값을 사용합니다. Production 키 승인 후, 라이엇 발로란트 랭크 API로 본인의 경쟁전 티어를 자동 조회해 프로필 표시·실력 기반 매칭에 활용할 예정입니다.</span>
                   </li>
                   <li className="flex flex-col gap-1">
                     <span className="flex items-center gap-2">
-                      <span className="text-[10px] font-bold text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">승인 후 예정</span>
+                      <span className="text-[11px] font-bold text-slate-400 border border-slate-600 rounded px-1.5 py-0.5">승인 후 예정</span>
                       <span className="text-slate-200">발로란트 전적·통계 (VAL Match API)</span>
                     </span>
                     <span className="text-slate-500 pl-1">Production 키 승인 후, 사용자 본인의 최근 매치 기록·요원·K/D 등 전적을 표시할 예정입니다. 현재 전적 화면은 &lsquo;미리보기&rsquo; 표기와 함께 예시(목업) 데이터로 동작합니다.</span>

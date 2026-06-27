@@ -134,7 +134,7 @@ export default function MatchScoreInput({
             return (
               <div key={i} className={`border rounded p-4 transition ${hasResult ? 'border-white/10' : 'border-white/5'}`}>
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Map {i + 1}</span>
+                  <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">Map {i + 1}</span>
                   {isVal && (
                     <select
                       value={m.map_name}

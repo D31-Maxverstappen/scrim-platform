@@ -131,12 +131,12 @@ function RecruitPostContent() {
               <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]); setAnchorTier(null) }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFT
-                <span className="text-[10px] opacity-70 font-normal">팀 구함</span>
+                <span className="text-[11px] opacity-70 font-normal">팀 구함</span>
               </button>
               <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
                 className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                 LFP
-                <span className="text-[10px] opacity-70 font-normal">선수 구함</span>
+                <span className="text-[11px] opacity-70 font-normal">선수 구함</span>
               </button>
             </div>
           </div>
@@ -146,7 +146,7 @@ function RecruitPostContent() {
             <div className="bg-white/3 border border-white/5 rounded px-4 py-3">
               {myTeam ? (
                 <div>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">모집하는 팀</p>
+                  <p className="text-[11px] text-slate-500 uppercase tracking-wider mb-1">모집하는 팀</p>
                   <p className="text-white font-bold text-sm">{myTeam.name}</p>
                   {myTeam.tier_avg && <p className="text-slate-400 text-xs">Avg. {myTeam.tier_avg}</p>}
                 </div>

@@ -43,7 +43,7 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
         <button onClick={() => setTab('pending')} className={tabCls(tab === 'pending')}>
           미답변
           {inquiries.filter((i) => i.status === 'pending').length > 0 && (
-            <span className="ml-2 text-[10px] font-black px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400">
+            <span className="ml-2 text-[11px] font-black px-1.5 py-0.5 rounded bg-yellow-500/10 text-yellow-400">
               {inquiries.filter((i) => i.status === 'pending').length}
             </span>
           )}
@@ -66,11 +66,11 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
                   <div>
                     <p className="text-white text-sm font-bold">{displayName(inq)}</p>
                     <p className="text-slate-500 text-xs mt-0.5">{inq.subject}</p>
-                    <p className="text-slate-700 text-[10px] mt-0.5">
+                    <p className="text-slate-700 text-[11px] mt-0.5">
                       {formatKST(inq.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
-                  <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[inq.status]}`}>
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[inq.status]}`}>
                     {STATUS_LABEL[inq.status]}
                   </span>
                 </div>
@@ -100,7 +100,7 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
                 )}
 
                 {inq.status === 'answered' && inq.admin_reply && (
-                  <p className="text-slate-600 text-[10px]">메모: {inq.admin_reply}</p>
+                  <p className="text-slate-600 text-[11px]">메모: {inq.admin_reply}</p>
                 )}
               </div>
             ))}

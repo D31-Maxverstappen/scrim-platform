@@ -76,7 +76,7 @@ export default function AppealForm() {
         style={{ backgroundColor: 'var(--bg-base)', border: '1px solid var(--border)' }}
       />
 
-      <span className={`text-[10px] ${reason.length >= 20 ? 'text-slate-600' : 'text-slate-700'}`}>
+      <span className={`text-[11px] ${reason.length >= 20 ? 'text-slate-600' : 'text-slate-700'}`}>
         {reason.length} / 20자 이상
       </span>
 

@@ -150,7 +150,7 @@ export default function RoomClient({
       {/* 참가자 목록 */}
       {!teamsAssigned ? (
         <div className="bg-[#13131f] border border-white/5 rounded-2xl p-5">
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">참가자 {participants.length}명</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">참가자 {participants.length}명</p>
           <div className="flex flex-col gap-2">
             {participants.map((p) => <PlayerCard key={p.id} p={p} showTeam={false} />)}
           </div>
@@ -183,7 +183,7 @@ export default function RoomClient({
       {/* 결과 입력 (방장, 진행중) */}
       {isHost && teamsAssigned && ['ongoing', 'full'].includes(room.status) && (
         <div className="bg-[#13131f] border border-white/5 rounded-2xl p-5">
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">결과 입력</p>
+          <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">결과 입력</p>
           <div className="flex gap-3">
             <button
               onClick={() => handle('resultA', { winnerTeam: 'A' })}

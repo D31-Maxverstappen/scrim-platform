@@ -132,7 +132,7 @@ export default function TeamChat({
               <div className={`flex flex-col gap-1 max-w-[65%] ${isMe ? 'items-end' : 'items-start'}`}>
                 <div className={`flex items-baseline gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
                   <span className={`text-xs font-bold ${isMe ? 'text-[#00D2BE]' : 'text-white'}`}>{name}</span>
-                  <span className="text-slate-600 text-[10px]">{time}</span>
+                  <span className="text-slate-600 text-[11px]">{time}</span>
                 </div>
                 <div className={`px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
                   isMe
