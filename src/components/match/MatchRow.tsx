@@ -9,7 +9,8 @@ const MODE_LABEL_COLOR: Record<string, string> = { 경쟁전: '#E8B84B', 스크�
 
 const fmtDate = (iso: string) => formatKST(iso, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 
-function PlayerRow({ p }: { p: ValMatchPlayer }) {
+function PlayerRow({ p, maxAcs }: { p: ValMatchPlayer; maxAcs: number }) {
+  const acsPct = Math.max(8, Math.round((p.acs / maxAcs) * 100))
   return (
     <div className={`grid grid-cols-12 gap-2 items-center px-3 py-1.5 text-xs ${p.isMe ? 'bg-[#00D2BE]/10' : 'hover:bg-white/[0.02]'}`}>
       <div className="col-span-5 flex items-center gap-2 min-w-0">
@@ -17,7 +18,12 @@ function PlayerRow({ p }: { p: ValMatchPlayer }) {
         <span className={`truncate ${p.isMe ? 'text-[#00D2BE] font-bold' : 'text-slate-300'}`}>{p.name}{p.tag && <span className="text-slate-600 font-normal">#{p.tag}</span>}</span>
       </div>
       <span className="col-span-4 text-center text-slate-300">{p.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{p.deaths}</span> <span className="text-slate-600">/</span> {p.assists}</span>
-      <span className="col-span-2 text-center text-white font-bold">{p.acs}</span>
+      <div className="col-span-2">
+        <div className="relative h-4 rounded-sm overflow-hidden flex items-center justify-center bg-white/[0.03]">
+          <div className="absolute inset-y-0 left-0" style={{ width: `${acsPct}%`, background: p.isMe ? 'rgba(0,210,190,0.30)' : 'rgba(255,255,255,0.09)' }} />
+          <span className="relative text-white font-bold">{p.acs}</span>
+        </div>
+      </div>
       <span className="col-span-1 text-right text-slate-500">{p.hsPercent}%</span>
     </div>
   )
@@ -39,6 +45,7 @@ export default function MatchRow({ m }: { m: ValMatch }) {
   const kda = ((m.kills + m.assists) / (m.deaths || 1)).toFixed(2)
   const blue = m.players.filter((p) => p.team === 'blue')
   const red = m.players.filter((p) => p.team === 'red')
+  const maxAcs = Math.max(...m.players.map((p) => p.acs), 1)
 
   return (
     <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden hover:border-white/15 transition">
@@ -52,7 +59,7 @@ export default function MatchRow({ m }: { m: ValMatch }) {
           </div>
 
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-sm">{m.agent[0]}</div>
+            <div className="w-10 h-10 shrink-0 rounded bg-[#1a1a2e] flex items-center justify-center text-white font-black text-sm" style={{ border: `1px solid ${accent}66` }}>{m.agent[0]}</div>
             <div className="min-w-0">
               <p className="text-white font-semibold text-sm truncate">{m.agent}</p>
               <p className="text-slate-500 text-xs truncate">{m.map} · {m.agentRole}</p>
@@ -104,9 +111,9 @@ export default function MatchRow({ m }: { m: ValMatch }) {
             <span className="col-span-1 text-right">HS</span>
           </div>
           <TeamLabel label="우리 팀" win={m.win} rounds={m.roundsWon} />
-          {blue.map((p, i) => <PlayerRow key={`b${i}`} p={p} />)}
+          {blue.map((p, i) => <PlayerRow key={`b${i}`} p={p} maxAcs={maxAcs} />)}
           <TeamLabel label="상대 팀" win={!m.win} rounds={m.roundsLost} />
-          {red.map((p, i) => <PlayerRow key={`r${i}`} p={p} />)}
+          {red.map((p, i) => <PlayerRow key={`r${i}`} p={p} maxAcs={maxAcs} />)}
         </div>
       )}
     </div>

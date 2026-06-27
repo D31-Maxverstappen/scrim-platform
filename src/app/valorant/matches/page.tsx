@@ -80,16 +80,16 @@ export default async function ValorantMatchesPage() {
 
             {/* 요약 스탯 */}
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              <StatTile label="최근 전적">
+              <StatTile label="최근 전적" accent="#00D2BE">
                 <span className="text-white">{s.wins}승</span>
                 <span className="text-slate-600"> {s.losses}패</span>
               </StatTile>
-              <StatTile label="승률">
+              <StatTile label="승률" accent={s.winRate >= 50 ? WIN_COLOR : LOSS_COLOR}>
                 <span style={{ color: s.winRate >= 50 ? WIN_COLOR : LOSS_COLOR }}>{s.winRate}%</span>
               </StatTile>
-              <StatTile label="평균 ACS"><span className="text-white">{s.avgAcs}</span></StatTile>
-              <StatTile label="K/D"><span className="text-white">{s.kd.toFixed(2)}</span></StatTile>
-              <StatTile label="헤드샷"><span className="text-white">{s.hsPercent}%</span></StatTile>
+              <StatTile label="평균 ACS" accent="#00D2BE"><span className="text-white">{s.avgAcs}</span></StatTile>
+              <StatTile label="K/D" accent="#00D2BE"><span className="text-white">{s.kd.toFixed(2)}</span></StatTile>
+              <StatTile label="헤드샷" accent="#00D2BE"><span className="text-white">{s.hsPercent}%</span></StatTile>
             </div>
 
             {/* 모스트 요원 */}
@@ -126,10 +126,11 @@ export default async function ValorantMatchesPage() {
   )
 }
 
-function StatTile({ label, children }: { label: string; children: React.ReactNode }) {
+function StatTile({ label, accent, children }: { label: string; accent?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-[#0e0e16] border border-white/5 rounded px-3 py-2.5">
-      <p className="text-slate-500 text-[11px] uppercase tracking-widest mb-1">{label}</p>
+    <div className="relative bg-[#0e0e16] border border-white/5 rounded px-3 py-2.5 overflow-hidden hover:border-white/10 transition">
+      <div className="absolute top-0 left-0 h-0.5 w-full opacity-70" style={{ background: accent ?? 'rgba(255,255,255,0.12)' }} />
+      <p className="text-slate-500 text-[11px] uppercase tracking-widest mb-1 mt-0.5">{label}</p>
       <p className="text-lg font-black">{children}</p>
     </div>
   )
