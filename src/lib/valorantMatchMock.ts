@@ -5,6 +5,20 @@
 
 export type ValMatchMode = '경쟁전' | '일반전' | '스크림'
 
+// 매치 스코어보드의 개별 플레이어 (양 팀 10명)
+export type ValMatchPlayer = {
+  name: string
+  tag: string
+  agent: string
+  team: 'blue' | 'red' // blue = 본인 팀(아군), red = 상대 팀
+  kills: number
+  deaths: number
+  assists: number
+  acs: number
+  hsPercent: number
+  isMe?: boolean
+}
+
 export type ValMatch = {
   id: string
   mode: ValMatchMode
@@ -23,6 +37,7 @@ export type ValMatch = {
   mvp: boolean // 매치 MVP 여부
   playedAt: string // ISO 8601
   durationMin: number
+  players: ValMatchPlayer[] // 양 팀 10명 스코어보드 (승인 후 Match-V1로 교체)
 }
 
 export type ValRank = {
@@ -34,8 +49,47 @@ export type ValRank = {
 // 연동된 라이엇 계정의 현재 경쟁전 티어 (목업)
 export const MOCK_RANK: ValRank = { name: '불멸 2', colorKey: 'Immortal', rr: 47 }
 
+// ── 스코어보드 플레이어 생성 (결정적: 매치 id 시드로 SSR/CSR 동일 결과) ──
+const AGENTS = ['제트', '오멘', '레이즈', '세이지', '킬조이', '소바', '바이퍼', '레이나', '브리치', '네온', '페이드', '스카이', '체임버', '아스트라', '요루', '게코', '데드락', '하버', '클로브', '아이소']
+const NAMES = ['Stormi', 'Kael', 'Nova', 'Riven', 'Zephyr', 'Lumi', 'Dusk', 'Vexa', 'Orion', 'Sable', 'Wisp', 'Talon', 'Echo', 'Frost', 'Nyx', 'Onyx', 'Pyre', 'Quill', 'Rune', 'Mochi']
+const TAGS = ['KR1', 'KR2', 'VAL', 'D31', 'GG', 'PRO', 'ACE', 'OG']
+
+function hashStr(s: string): number {
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0
+  return Math.abs(h) || 1
+}
+function rngFrom(seed: number): () => number {
+  let s = seed % 2147483647
+  if (s <= 0) s += 2147483646
+  return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646 }
+}
+
+function genPlayers(m: Omit<ValMatch, 'players'>): ValMatchPlayer[] {
+  const rng = rngFrom(hashStr(m.id))
+  const pick = <T,>(arr: T[]): T => arr[Math.floor(rng() * arr.length)]
+  const usedAgents = new Set<string>([m.agent])
+  const usedNames = new Set<string>()
+  const uniqAgent = () => { let a = pick(AGENTS); while (usedAgents.has(a)) a = pick(AGENTS); usedAgents.add(a); return a }
+  const uniqName = () => { let n = pick(NAMES); while (usedNames.has(n)) n = pick(NAMES); usedNames.add(n); return n }
+  const stat = (base: number, spread: number) => Math.max(0, Math.round(base + (rng() - 0.5) * spread))
+  const filler = (team: 'blue' | 'red'): ValMatchPlayer => ({
+    name: uniqName(), tag: pick(TAGS), agent: uniqAgent(), team,
+    kills: stat(18, 18), deaths: stat(15, 10), assists: stat(6, 9), acs: stat(225, 150), hsPercent: stat(24, 18),
+  })
+
+  const me: ValMatchPlayer = {
+    name: '나', tag: '', agent: m.agent, team: 'blue', isMe: true,
+    kills: m.kills, deaths: m.deaths, assists: m.assists, acs: m.acs, hsPercent: m.hsPercent,
+  }
+  const blue = [me, ...Array.from({ length: 4 }, () => filler('blue'))]
+  const red = Array.from({ length: 5 }, () => filler('red'))
+  const byAcs = (a: ValMatchPlayer, b: ValMatchPlayer) => b.acs - a.acs
+  return [...blue.sort(byAcs), ...red.sort(byAcs)]
+}
+
 // 최근 매치 (최신순)
-export const MOCK_MATCHES: ValMatch[] = [
+const BASE_MATCHES: Omit<ValMatch, 'players'>[] = [
   { id: 'm1', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 8, agent: '제트', agentRole: '척후대', kills: 27, deaths: 14, assists: 5, acs: 312, hsPercent: 29, adr: 168, mvp: true, playedAt: '2026-06-24T22:41:00+09:00', durationMin: 34 },
   { id: 'm2', mode: '스크림', map: '로터스', win: true, roundsWon: 13, roundsLost: 11, agent: '오멘', agentRole: '전략가', kills: 19, deaths: 16, assists: 9, acs: 241, hsPercent: 24, adr: 141, mvp: false, playedAt: '2026-06-24T21:55:00+09:00', durationMin: 41 },
   { id: 'm3', mode: '경쟁전', map: '헤이븐', win: false, roundsWon: 10, roundsLost: 13, agent: '레이즈', agentRole: '척후대', kills: 21, deaths: 18, assists: 4, acs: 263, hsPercent: 18, adr: 152, mvp: false, playedAt: '2026-06-23T23:12:00+09:00', durationMin: 38 },
@@ -46,6 +100,8 @@ export const MOCK_MATCHES: ValMatch[] = [
   { id: 'm8', mode: '경쟁전', map: '아이스박스', win: false, roundsWon: 11, roundsLost: 13, agent: '바이퍼', agentRole: '전략가', kills: 17, deaths: 18, assists: 6, acs: 219, hsPercent: 23, adr: 131, mvp: false, playedAt: '2026-06-21T22:31:00+09:00', durationMin: 39 },
   { id: 'm9', mode: '경쟁전', map: '어센트', win: true, roundsWon: 13, roundsLost: 10, agent: '제트', agentRole: '척후대', kills: 25, deaths: 16, assists: 4, acs: 281, hsPercent: 28, adr: 158, mvp: false, playedAt: '2026-06-20T21:18:00+09:00', durationMin: 37 },
 ]
+
+export const MOCK_MATCHES: ValMatch[] = BASE_MATCHES.map((m) => ({ ...m, players: genPlayers(m) }))
 
 export type ValSummary = {
   wins: number

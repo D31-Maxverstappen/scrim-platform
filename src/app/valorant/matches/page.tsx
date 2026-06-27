@@ -3,23 +3,12 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getTierColor } from '@/lib/tiers'
 import { GAME_COLOR } from '@/lib/games'
-import { MOCK_MATCHES, MOCK_RANK, summarize, type ValMatch } from '@/lib/valorantMatchMock'
-import { formatKST } from '@/lib/datetime'
+import { MOCK_MATCHES, MOCK_RANK, summarize } from '@/lib/valorantMatchMock'
+import MatchRow from '@/components/match/MatchRow'
 
 const VAL_RED = GAME_COLOR.valorant
 const WIN_COLOR = '#22c55e'
 const LOSS_COLOR = '#ff4655'
-
-const MODE_LABEL_COLOR: Record<string, string> = {
-  경쟁전: '#E8B84B',
-  스크림: '#00D2BE',
-  일반전: '#94a3b8',
-}
-
-function fmtDate(iso: string): string {
-  const d = new Date(iso)
-  return formatKST(d, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-}
 
 export default async function ValorantMatchesPage() {
   const supabase = await createClient()
@@ -141,70 +130,3 @@ function StatTile({ label, children }: { label: string; children: React.ReactNod
   )
 }
 
-function MatchRow({ m }: { m: ValMatch }) {
-  const accent = m.win ? WIN_COLOR : LOSS_COLOR
-  const kda = ((m.kills + m.assists) / (m.deaths || 1)).toFixed(2)
-  return (
-    <div className="flex items-stretch bg-[#13131f] border border-white/5 rounded overflow-hidden hover:border-white/15 transition">
-      {/* 승패 색상 바 */}
-      <div className="w-1 shrink-0" style={{ background: accent }} />
-
-      <div className="flex-1 flex items-center gap-4 px-4 py-3 flex-wrap sm:flex-nowrap">
-        {/* 결과 + 모드 */}
-        <div className="w-20 shrink-0">
-          <p className="font-black text-sm" style={{ color: accent }}>{m.win ? '승리' : '패배'}</p>
-          <p className="text-[11px] mt-0.5" style={{ color: MODE_LABEL_COLOR[m.mode] ?? '#94a3b8' }}>{m.mode}</p>
-        </div>
-
-        {/* 요원 + 맵 */}
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className="w-10 h-10 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-sm">
-            {m.agent[0]}
-          </div>
-          <div className="min-w-0">
-            <p className="text-white font-semibold text-sm truncate">{m.agent}</p>
-            <p className="text-slate-500 text-xs truncate">{m.map} · {m.agentRole}</p>
-          </div>
-          {m.mvp && (
-            <span className="shrink-0 text-[11px] font-black px-1.5 py-0.5 rounded"
-              style={{ background: 'rgba(232,184,75,0.15)', color: '#E8B84B' }}>MVP</span>
-          )}
-        </div>
-
-        {/* 스코어 */}
-        <div className="text-center shrink-0 w-16">
-          <p className="text-sm font-black">
-            <span style={{ color: m.win ? WIN_COLOR : '#cbd5e1' }}>{m.roundsWon}</span>
-            <span className="text-slate-600"> : </span>
-            <span style={{ color: !m.win ? LOSS_COLOR : '#cbd5e1' }}>{m.roundsLost}</span>
-          </p>
-          <p className="text-slate-600 text-[11px] mt-0.5">스코어</p>
-        </div>
-
-        {/* KDA */}
-        <div className="text-center shrink-0 w-24">
-          <p className="text-white text-sm font-bold">
-            {m.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{m.deaths}</span> <span className="text-slate-600">/</span> {m.assists}
-          </p>
-          <p className="text-slate-600 text-[11px] mt-0.5">{kda} KDA</p>
-        </div>
-
-        {/* ACS / HS */}
-        <div className="text-center shrink-0 w-16 hidden sm:block">
-          <p className="text-white text-sm font-bold">{m.acs}</p>
-          <p className="text-slate-600 text-[11px] mt-0.5">ACS</p>
-        </div>
-        <div className="text-center shrink-0 w-14 hidden sm:block">
-          <p className="text-white text-sm font-bold">{m.hsPercent}%</p>
-          <p className="text-slate-600 text-[11px] mt-0.5">HS</p>
-        </div>
-
-        {/* 날짜 */}
-        <div className="text-right shrink-0 w-28 hidden md:block">
-          <p className="text-slate-400 text-xs">{fmtDate(m.playedAt)}</p>
-          <p className="text-slate-600 text-[11px] mt-0.5">{m.durationMin}분</p>
-        </div>
-      </div>
-    </div>
-  )
-}
