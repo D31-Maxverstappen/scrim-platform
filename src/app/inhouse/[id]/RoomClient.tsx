@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import InviteButton from '@/components/team/InviteButton'
@@ -90,7 +91,7 @@ export default function RoomClient({
 
   const formatDate = (dt: string | null) => {
     if (!dt) return null
-    return new Date(dt).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    return formatKST(dt, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
   }
 
   return (

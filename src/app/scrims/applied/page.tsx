@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatKST } from '@/lib/datetime'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
@@ -7,7 +8,7 @@ const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
 function formatDate(dt: string | null) {
   if (!dt) return '미정'
-  return new Date(dt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  return formatKST(dt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 const STATUS_LABEL: Record<string, { label: string; cls: string }> = {

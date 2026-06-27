@@ -6,6 +6,7 @@ import ScrimCancelButton from '@/components/scrim/ScrimCancelButton'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
+import { formatKST } from '@/lib/datetime'
 
 // 스크림 상세 로스터 — teams(team_members(...)) 깊은 조인이라 명시 타입 부여
 type RosterMember = {
@@ -17,7 +18,7 @@ type RosterMember = {
 function formatDate(dt: string | null) {
   if (!dt) return '미정'
   const d = new Date(dt)
-  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  return formatKST(d, { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default async function ScrimDetailPage({ params }: { params: Promise<{ id: string }> }) {

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { toDateInputValue } from '@/lib/datetime'
 
 export default function ScrimEditPage() {
   const { id } = useParams<{ id: string }>()
@@ -12,7 +13,7 @@ export default function ScrimEditPage() {
   const [error, setError] = useState('')
   const [format, setFormat] = useState<'BO1' | 'BO3' | 'BO5'>('BO3')
   const [server, setServer] = useState<'KR' | 'AS'>('KR')
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(toDateInputValue())
   const [hour, setHour] = useState('8')
   const [minute, setMinute] = useState('00')
   const [ampm, setAmpm] = useState<'오전' | '오후'>('오후')
@@ -26,7 +27,7 @@ export default function ScrimEditPage() {
       setServer((data.server ?? 'KR') as 'KR' | 'AS')
       if (data.preferred_date) {
         const d = new Date(data.preferred_date)
-        setDate(d.toISOString().split('T')[0])
+        setDate(toDateInputValue(d))
         const localHour = d.getHours()
         const h12 = localHour % 12 || 12
         setHour(String(h12))
@@ -48,7 +49,7 @@ export default function ScrimEditPage() {
     let h = parseInt(hour)
     if (ampm === '오전' && h === 12) h = 0
     if (ampm === '오후' && h !== 12) h += 12
-    const preferred_date = `${date}T${String(h).padStart(2, '0')}:${minute}:00`
+    const preferred_date = `${date}T${String(h).padStart(2, '0')}:${minute}:00+09:00`
 
     const res = await fetch(`/api/scrims/${id}`, {
       method: 'PATCH',

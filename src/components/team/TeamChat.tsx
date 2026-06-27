@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { createClient } from '@/lib/supabase/client'
 
 type Message = {
@@ -114,7 +115,7 @@ export default function TeamChat({
           const isMe = msg.user_id === currentUserId
           const u = Array.isArray(msg.users) ? msg.users[0] : msg.users
           const name = isMe ? '나' : (u?.riot_gamename ?? '알 수 없음')
-          const time = new Date(msg.created_at).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+          const time = formatKST(msg.created_at, { hour: '2-digit', minute: '2-digit' })
 
           return (
             <div key={msg.id} className={`flex items-start gap-3 ${isMe ? 'flex-row-reverse' : ''}`}>

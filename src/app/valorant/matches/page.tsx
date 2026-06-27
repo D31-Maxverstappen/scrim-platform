@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getTierColor } from '@/lib/tiers'
 import { GAME_COLOR } from '@/lib/games'
 import { MOCK_MATCHES, MOCK_RANK, summarize, type ValMatch } from '@/lib/valorantMatchMock'
+import { formatKST } from '@/lib/datetime'
 
 const VAL_RED = GAME_COLOR.valorant
 const WIN_COLOR = '#22c55e'
@@ -17,7 +18,7 @@ const MODE_LABEL_COLOR: Record<string, string> = {
 
 function fmtDate(iso: string): string {
   const d = new Date(iso)
-  return d.toLocaleString('ko-KR', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  return formatKST(d, { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default async function ValorantMatchesPage() {

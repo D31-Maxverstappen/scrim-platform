@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
+import { formatKST } from '@/lib/datetime'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
@@ -25,7 +26,7 @@ const MODE_LABEL: Record<string, string> = {
 
 function formatDate(dt: string | null) {
   if (!dt) return null
-  return new Date(dt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  return formatKST(dt, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default async function InhousePage() {

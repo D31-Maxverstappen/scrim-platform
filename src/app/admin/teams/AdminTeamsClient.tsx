@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 
 const GAME_COLOR: Record<string, string> = { valorant: '#ff4655' }
 
@@ -44,7 +45,7 @@ export default function AdminTeamsClient({ teams }: { teams: any[] }) {
             {list.map((t) => {
               const gc = GAME_COLOR[t.game_type] ?? '#00D2BE'
               const captainName = t.captain?.val_gamename ?? t.captain?.riot_gamename ?? '—'
-              const date = new Date(t.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+              const date = formatKST(t.created_at, { month: 'short', day: 'numeric' })
               return (
                 <div key={t.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/[0.02] transition">
                   <div className="col-span-3 flex items-center gap-2.5 min-w-0">

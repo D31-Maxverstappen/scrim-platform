@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { formatKST } from '@/lib/datetime'
 import { redirect, notFound } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import JoinTeamButton from '@/components/team/JoinTeamButton'
@@ -219,7 +220,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             const isOngoing = m.status === 'ongoing'
             const isScheduled = m.status === 'scheduled'
             const date = m.match_date
-              ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+              ? formatKST(m.match_date, { month: 'short', day: 'numeric' })
               : '미정'
             return (
               <a key={m.id} href={`/matches/${m.id}`}

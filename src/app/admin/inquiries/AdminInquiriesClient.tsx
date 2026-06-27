@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { useRouter } from 'next/navigation'
 
 const STATUS_STYLE: Record<string, string> = {
@@ -66,7 +67,7 @@ export default function AdminInquiriesClient({ inquiries }: { inquiries: any[] }
                     <p className="text-white text-sm font-bold">{displayName(inq)}</p>
                     <p className="text-slate-500 text-xs mt-0.5">{inq.subject}</p>
                     <p className="text-slate-700 text-[10px] mt-0.5">
-                      {new Date(inq.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {formatKST(inq.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[inq.status]}`}>

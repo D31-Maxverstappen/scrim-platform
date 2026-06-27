@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
+import { formatKST } from '@/lib/datetime'
 import { redirect } from 'next/navigation'
 import ProfileCard from '@/components/profile/ProfileCard'
 import TeamRankings from '@/components/team/TeamRankings'
@@ -142,7 +143,7 @@ export default async function ValorantDashboardPage() {
             </h1>
           </div>
           <span className="text-xs text-slate-600 hidden sm:block">
-            {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
+            {formatKST(new Date(), { year: 'numeric', month: 'long', day: 'numeric' })}
           </span>
         </div>
 
@@ -296,7 +297,7 @@ export default async function ValorantDashboardPage() {
                       random: '랜덤', balanced: '밸런스', captain: '캡틴픽',
                     }
                     const scheduledStr = room.scheduled_at
-                      ? new Date(room.scheduled_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+                      ? formatKST(room.scheduled_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
                       : null
                     return (
                       <Link key={room.id} href={`/inhouse/${room.id}`}
@@ -357,7 +358,7 @@ export default async function ValorantDashboardPage() {
                         ? (isWin ? '#00D2BE' : '#64748b')
                         : m.status === 'ongoing' ? '#ff4655' : '#64748b'
                       const date = m.match_date
-                        ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+                        ? formatKST(m.match_date, { month: 'short', day: 'numeric' })
                         : '미정'
                       return (
                         <a key={m.id} href={`/matches/${m.id}`}

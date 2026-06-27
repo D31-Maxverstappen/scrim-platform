@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { useRouter } from 'next/navigation'
 
 export default function AdminUserDetailClient({ user, team, reports }: {
@@ -11,7 +12,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
   const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
   const name = user.val_gamename ?? user.riot_gamename ?? '(미등록)'
-  const joined = new Date(user.created_at).toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const joined = formatKST(user.created_at, { year: 'numeric', month: 'long', day: 'numeric' })
 
   const handleSuspend = async (suspend: boolean) => {
     setLoading('suspend')
@@ -120,7 +121,7 @@ export default function AdminUserDetailClient({ user, team, reports }: {
                 <div className="flex-1 min-w-0">
                   <p className="text-white text-xs leading-relaxed">{r.reason}</p>
                   <p className="text-slate-700 text-[10px] mt-0.5">
-                    {new Date(r.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                    {formatKST(r.created_at, { month: 'short', day: 'numeric' })}
                   </p>
                 </div>
               </div>

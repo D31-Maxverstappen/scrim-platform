@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { formatKST } from '@/lib/datetime'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
@@ -250,7 +251,7 @@ export default async function ProfilePage() {
                 const isLoss = m.status === 'completed' && !!m.winner_id && m.winner_id !== team?.id
                 const isOngoing = m.status === 'ongoing'
                 const date = m.match_date
-                  ? new Date(m.match_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+                  ? formatKST(m.match_date, { month: 'short', day: 'numeric' })
                   : '미정'
                 return (
                   <Link key={m.id} href={`/matches/${m.id}`}

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 
 const STATUS_STYLE: Record<string, string> = {
   pending: 'bg-yellow-500/10 text-yellow-400',
@@ -65,7 +66,7 @@ export default function AdminReportsClient({ reports }: { reports: any[] }) {
             {filtered.map((r) => {
               const reporter = Array.isArray(r.reporter) ? r.reporter[0] : r.reporter
               const reporterName = reporter?.val_gamename ?? reporter?.riot_gamename ?? '알 수 없음'
-              const date = new Date(r.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+              const date = formatKST(r.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
               const isLoading = loading === r.id
               return (
                 <div key={r.id} className="px-5 py-4">

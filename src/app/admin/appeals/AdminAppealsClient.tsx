@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { useRouter } from 'next/navigation'
 
 const STATUS_STYLE: Record<string, string> = {
@@ -53,7 +54,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
                   <div>
                     <p className="text-white text-sm font-bold">{displayName(a)}</p>
                     <p className="text-slate-600 text-[10px] mt-0.5">
-                      {new Date(a.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      {formatKST(a.created_at, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
                   <span className={`text-[10px] font-black px-2 py-0.5 rounded shrink-0 ${STATUS_STYLE[a.status]}`}>
@@ -110,7 +111,7 @@ export default function AdminAppealsClient({ appeals }: { appeals: any[] }) {
                     <p className="text-slate-600 text-[10px] mt-1">메모: {a.admin_note}</p>
                   )}
                   <p className="text-slate-700 text-[10px] mt-1">
-                    {new Date(a.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })}
+                    {formatKST(a.created_at, { month: 'short', day: 'numeric' })}
                   </p>
                 </div>
               </div>

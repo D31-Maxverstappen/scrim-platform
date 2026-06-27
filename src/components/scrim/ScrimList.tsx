@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+import { formatKST } from '@/lib/datetime'
 
 import { useState } from 'react'
 import type { ScrimPost } from '@/lib/types'
@@ -117,7 +118,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
           {filtered.map((s, i) => {
             const t = Array.isArray(s.teams) ? s.teams[0] : s.teams
             const date = s.preferred_date
-              ? new Date(s.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+              ? formatKST(s.preferred_date, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
               : '미정'
             return (
               <a

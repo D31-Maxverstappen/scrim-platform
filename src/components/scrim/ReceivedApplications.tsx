@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { formatKST } from '@/lib/datetime'
 
 type Application = {
   id: string
@@ -77,7 +78,7 @@ export default function ReceivedApplications({ initialApps }: { initialApps: App
       <div className="divide-y divide-white/[0.04]">
         {[...pending, ...done].map((app) => {
           const date = app.scrim_post.preferred_date
-            ? new Date(app.scrim_post.preferred_date).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+            ? formatKST(app.scrim_post.preferred_date, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
             : '미정'
 
           return (

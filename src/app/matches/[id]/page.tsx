@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { formatKST } from '@/lib/datetime'
 import { redirect, notFound } from 'next/navigation'
 import MatchTabs from '@/components/match/MatchTabs'
 import RosterComparison from '@/components/match/RosterComparison'
@@ -96,10 +97,10 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
 
   const gameColor = GAME_COLOR[team1?.game_type] ?? '#00D2BE'
   const matchDate = match.match_date
-    ? new Date(match.match_date).toLocaleDateString('ko-KR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+    ? formatKST(match.match_date, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     : '날짜 미정'
   const matchTime = match.match_date
-    ? new Date(match.match_date).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+    ? formatKST(match.match_date, { hour: '2-digit', minute: '2-digit' })
     : ''
 
   return (

@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import CalendarClient from './CalendarClient'
+import { toDateInputValue } from '@/lib/datetime'
 
 export default async function CalendarPage({
   searchParams,
@@ -14,13 +15,14 @@ export default async function CalendarPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  // month 파라미터: "2026-06" 형식, 없으면 현재 달
-  const now = new Date()
-  const targetMonth = month ?? `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
+  // month 파라미터: "2026-06" 형식, 없으면 현재 달(KST 기준)
+  const targetMonth = month ?? toDateInputValue().slice(0, 7)
   const [year, mon] = targetMonth.split('-').map(Number)
 
-  const monthStart = new Date(year, mon - 1, 1).toISOString()
-  const monthEnd = new Date(year, mon, 1).toISOString()
+  // KST 월 경계 — 서버(UTC) 기준 new Date(y,m,1)은 9시간 어긋나 KST 자정~오전 9시 항목이 인접 월로 빠짐
+  const pad = (n: number) => String(n).padStart(2, '0')
+  const monthStart = new Date(`${year}-${pad(mon)}-01T00:00:00+09:00`).toISOString()
+  const monthEnd = new Date(`${mon === 12 ? year + 1 : year}-${pad(mon === 12 ? 1 : mon + 1)}-01T00:00:00+09:00`).toISOString()
 
   const { data: scrims } = await supabase
     .from('scrim_posts')

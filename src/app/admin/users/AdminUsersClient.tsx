@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST } from '@/lib/datetime'
 import { useRouter } from 'next/navigation'
 
 export default function AdminUsersClient({ users, initialSearch }: { users: any[]; initialSearch: string }) {
@@ -76,7 +77,7 @@ export default function AdminUsersClient({ users, initialSearch }: { users: any[
             {list.map((u) => {
               const name = u.val_gamename ?? u.riot_gamename ?? '(미등록)'
               const tier = u.val_tier ?? u.tier ?? '—'
-              const date = new Date(u.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+              const date = formatKST(u.created_at, { month: 'short', day: 'numeric' })
               const isLoading = loading === u.id || loading === u.id + 'del'
               return (
                 <div key={u.id} className="grid grid-cols-12 gap-2 px-5 py-3.5 items-center hover:bg-white/[0.02] transition">

@@ -1,18 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { formatKST, toDateInputValue } from '@/lib/datetime'
 import Link from 'next/link'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
 function formatTime(dt: string) {
-  return new Date(dt).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+  return formatKST(dt, { hour: '2-digit', minute: '2-digit' })
 }
 
 function toDateKey(dt: string) {
-  const d = new Date(dt)
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  return toDateInputValue(dt) // KST 기준 YYYY-MM-DD (표시 formatKST와 일관)
 }
 
 export default function CalendarClient({

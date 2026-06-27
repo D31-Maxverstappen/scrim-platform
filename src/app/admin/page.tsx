@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { formatKST } from '@/lib/datetime'
 
 const admin = createAdmin(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -52,7 +53,7 @@ export default async function AdminDashboard() {
         <div className="divide-y divide-white/[0.04]">
           {(recentUsers ?? []).map((u) => {
             const name = u.val_gamename ?? u.riot_gamename ?? '(미등록)'
-            const date = new Date(u.created_at).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' })
+            const date = formatKST(u.created_at, { month: 'short', day: 'numeric' })
             return (
               <div key={u.id} className="flex items-center gap-3 px-5 py-3">
                 <div className="w-8 h-8 rounded-xl bg-[#00D2BE]/10 border border-[#00D2BE]/20 flex items-center justify-center text-xs font-black text-[#00D2BE] shrink-0">

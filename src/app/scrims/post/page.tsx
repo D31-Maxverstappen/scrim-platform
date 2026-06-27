@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, useTransition } from 'react'
 import { createScrimAction } from '@/app/actions'
 import { VAL_TIERS } from '@/lib/tiers'
+import { toDateInputValue } from '@/lib/datetime'
 
 const GAMES = [
   { value: 'valorant', label: 'VALORANT' },
@@ -18,7 +19,7 @@ export default function PostScrimPage() {
   const [tierMin, setTierMin] = useState('')
   const [tierMax, setTierMax] = useState('')
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = toDateInputValue()
   const [date, setDate] = useState(today)
   const [hour, setHour] = useState('8')
   const [minute, setMinute] = useState('00')
@@ -39,7 +40,7 @@ export default function PostScrimPage() {
     if (ampm === '오후' && h !== 12) h += 12
     const time = `${String(h).padStart(2, '0')}:${minute}`
 
-    if (new Date(`${date}T${time}:00`) < new Date()) {
+    if (new Date(`${date}T${time}:00+09:00`) < new Date()) {
       setError('현재 시간보다 과거는 선택할 수 없어요.')
       return
     }

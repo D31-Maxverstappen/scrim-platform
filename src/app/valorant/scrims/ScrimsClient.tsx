@@ -6,11 +6,12 @@ import Pagination from '@/components/common/Pagination'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { inTierRange } from '@/lib/tiers'
+import { formatKST } from '@/lib/datetime'
 
 function formatDate(dt: string | null) {
   if (!dt) return null
   const d = new Date(dt)
-  return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+  return formatKST(d, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default function ScrimsClient({
