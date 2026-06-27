@@ -11,19 +11,22 @@ const fmtDate = (iso: string) => formatKST(iso, { month: 'long', day: 'numeric',
 
 function PlayerRow({ p, maxAcs }: { p: ValMatchPlayer; maxAcs: number }) {
   const acsPct = Math.max(8, Math.round((p.acs / maxAcs) * 100))
+  const pm = p.kills - p.deaths
   return (
     <div className={`grid grid-cols-12 gap-2 items-center px-3 py-1.5 text-xs ${p.isMe ? 'bg-[#00D2BE]/10' : 'hover:bg-white/[0.02]'}`}>
-      <div className="col-span-5 flex items-center gap-2 min-w-0">
+      <div className="col-span-4 flex items-center gap-2 min-w-0">
         <span className="w-6 h-6 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-[11px]">{p.agent[0]}</span>
         <span className={`truncate ${p.isMe ? 'text-[#00D2BE] font-bold' : 'text-slate-300'}`}>{p.name}{p.tag && <span className="text-slate-600 font-normal">#{p.tag}</span>}</span>
       </div>
-      <span className="col-span-4 text-center text-slate-300">{p.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{p.deaths}</span> <span className="text-slate-600">/</span> {p.assists}</span>
+      <span className="col-span-3 text-center text-slate-300 whitespace-nowrap">{p.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{p.deaths}</span> <span className="text-slate-600">/</span> {p.assists}</span>
+      <span className="col-span-1 text-center font-bold" style={{ color: pm > 0 ? WIN_COLOR : pm < 0 ? LOSS_COLOR : '#94a3b8' }}>{pm > 0 ? '+' : ''}{pm}</span>
       <div className="col-span-2">
         <div className="relative h-4 rounded-sm overflow-hidden flex items-center justify-center bg-white/[0.03]">
           <div className="absolute inset-y-0 left-0" style={{ width: `${acsPct}%`, background: p.isMe ? 'rgba(0,210,190,0.30)' : 'rgba(255,255,255,0.09)' }} />
           <span className="relative text-white font-bold">{p.acs}</span>
         </div>
       </div>
+      <span className="col-span-1 text-center text-slate-400">{p.kast}%</span>
       <span className="col-span-1 text-right text-slate-500">{p.hsPercent}%</span>
     </div>
   )
@@ -104,10 +107,27 @@ export default function MatchRow({ m }: { m: ValMatch }) {
       {/* 스코어보드 (펼침) */}
       {open && (
         <div className="border-t border-white/5 bg-[#0e0e16]">
+          {/* 라운드 타임라인 */}
+          <div className="px-3 py-2.5 border-b border-white/5">
+            <div className="flex items-center gap-1.5 mb-2 text-xs">
+              <span className="font-black" style={{ color: WIN_COLOR }}>{m.roundsWon}</span>
+              <span className="text-slate-600">:</span>
+              <span className="font-black" style={{ color: LOSS_COLOR }}>{m.roundsLost}</span>
+              <span className="text-slate-600 text-[11px] ml-1">라운드 타임라인</span>
+            </div>
+            <div className="flex gap-[3px] flex-wrap">
+              {m.rounds.map((r, i) => (
+                <span key={i} className="w-2.5 h-4 rounded-[1px]" style={{ background: r === 'blue' ? WIN_COLOR : LOSS_COLOR, opacity: 0.85 }} />
+              ))}
+            </div>
+          </div>
+          {/* 컬럼 헤더 */}
           <div className="grid grid-cols-12 gap-2 px-3 py-1.5 text-[10px] text-slate-600 uppercase tracking-wider border-b border-white/5">
-            <span className="col-span-5">플레이어</span>
-            <span className="col-span-4 text-center">K / D / A</span>
+            <span className="col-span-4">플레이어</span>
+            <span className="col-span-3 text-center">K / D / A</span>
+            <span className="col-span-1 text-center">+/-</span>
             <span className="col-span-2 text-center">ACS</span>
+            <span className="col-span-1 text-center">KAST</span>
             <span className="col-span-1 text-right">HS</span>
           </div>
           <TeamLabel label="우리 팀" win={m.win} rounds={m.roundsWon} />
