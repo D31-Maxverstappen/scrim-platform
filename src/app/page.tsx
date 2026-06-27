@@ -164,7 +164,7 @@ export default function HomePage() {
         </div>
 
         {/* 센터 히어로 */}
-        <div className="flex flex-col items-center text-center flex-1 max-w-2xl">
+        <div className="flex flex-col items-center text-center flex-1 max-w-3xl">
           <Reveal trigger="load" delay={0}>
             <div className="flex items-center gap-2 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
