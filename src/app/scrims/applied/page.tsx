@@ -108,7 +108,7 @@ export default async function MyScrimsPage() {
                       {/* 포스트 헤더 */}
                       <a href={`/scrims/${post.id}`}
                         className="flex items-center gap-4 px-5 py-4 hover:bg-white/3 transition group">
-                        <div className="w-1.5 h-10 rounded shrink-0" style={{ background: gc }} />
+                        <div className="w-1.5 h-10 rounded-none shrink-0" style={{ background: gc }} />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                             <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition truncate">
@@ -210,7 +210,7 @@ export default async function MyScrimsPage() {
                       href={a.status === 'accepted' && a.match_id ? `/matches/${a.match_id}` : `/scrims/${post?.id}`}
                       className="bg-[#13131f] border border-yellow-500/10 hover:border-yellow-500/20 rounded px-5 py-4 flex items-center gap-4 transition group"
                     >
-                      <div className="w-1.5 h-10 rounded shrink-0" style={{ background: gc }} />
+                      <div className="w-1.5 h-10 rounded-none shrink-0" style={{ background: gc }} />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-0.5">
                           <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition truncate">
