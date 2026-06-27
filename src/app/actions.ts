@@ -129,8 +129,9 @@ export async function createScrimAction(formData: FormData) {
 
   if (!myTeam) return { error: '해당 게임의 팀이 없어요. 먼저 팀을 만들어주세요!' }
 
+  // KST(+09:00) 명시 — 안 붙이면 DB(UTC)가 그대로 UTC로 간주해 9시간 밀림(날짜 +1, 20:00→05:00)
   const preferredDate = preferred_date && preferred_time
-    ? `${preferred_date}T${preferred_time}:00`
+    ? `${preferred_date}T${preferred_time}:00+09:00`
     : null
 
   const { error: postError } = await supabase
