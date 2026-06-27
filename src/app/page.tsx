@@ -182,13 +182,13 @@ export default function HomePage() {
             />
           </h1>
           <Reveal trigger="load" delay={520}>
-            <p className="text-slate-400 text-lg max-w-lg mb-12 leading-relaxed">
+            <p className="text-slate-300 text-xl max-w-xl mb-12 leading-relaxed">
               실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
             </p>
           </Reveal>
           <Reveal trigger="load" delay={620}>
             <div className="flex gap-3">
-              <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-8 py-3.5 rounded transition text-sm">
+              <a href={loggedIn ? '/valorant/dashboard' : '/login'} className="bg-[#00D2BE] hover:bg-[#00a896] text-white font-bold px-10 py-4 rounded transition text-base">
                 {loggedIn ? '홈으로' : '로그인 / 회원가입'}
               </a>
             </div>
@@ -199,8 +199,8 @@ export default function HomePage() {
             {[
               '자동 매칭', '스크림 게시판', 'LFT / LFP 모집', '팀 리더보드', '팀 관리', '실시간 알림',
             ].map((label) => (
-              <span key={label} className="flex items-center gap-1.5 bg-white/5 border border-white/8 text-slate-400 text-xs px-3 py-1.5 rounded">
-                <span className="w-1 h-1 rounded-full bg-[#00D2BE] shrink-0" />
+              <span key={label} className="flex items-center gap-1.5 bg-white/5 border border-white/8 text-slate-300 text-sm px-4 py-2 rounded">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#00D2BE] shrink-0" />
                 {label}
               </span>
             ))}
