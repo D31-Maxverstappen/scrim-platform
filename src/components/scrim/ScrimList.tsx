@@ -96,16 +96,6 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
         </div>
       )}
 
-      {/* 컬럼 헤더 */}
-      <div className="grid grid-cols-12 gap-2 px-5 py-2.5 border-b border-white/[0.04]">
-        <span className="col-span-3 text-[11px] font-bold uppercase tracking-wider text-slate-700">팀 이름</span>
-        <span className="col-span-2 text-[11px] font-bold uppercase tracking-wider text-slate-700">평균 티어</span>
-        <span className="col-span-3 text-[11px] font-bold uppercase tracking-wider text-slate-700">희망 시간</span>
-        <span className="col-span-2 text-[11px] font-bold uppercase tracking-wider text-slate-700">서버</span>
-        <span className="col-span-1 text-[11px] font-bold uppercase tracking-wider text-slate-700">포맷</span>
-        <span className="col-span-1 text-right text-[11px] font-bold uppercase tracking-wider text-slate-700">신청</span>
-      </div>
-
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-14 text-slate-700">
           <p className="text-sm font-semibold mb-1">조건에 맞는 스크림이 없어요</p>
@@ -124,18 +114,22 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
               <a
                 key={s.id}
                 href={`/scrims/${s.id}`}
-                className={`grid grid-cols-12 gap-2 px-5 py-3.5 hover:bg-white/[0.03] transition items-center group border-l-2 border-transparent hover:border-[#00D2BE]/60 ${i !== 0 ? 'border-t border-t-white/[0.04]' : ''}`}
+                className={`flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.03] transition group ${i !== 0 ? 'border-t border-t-white/[0.04]' : ''}`}
               >
-                <span className="col-span-3 text-white text-xs font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
-                <span className="col-span-2 text-slate-500 text-xs truncate">{t?.tier_avg ?? '—'}</span>
-                <span className="col-span-3 text-slate-500 text-xs">{date}</span>
-                <span className="col-span-2">
-                  <span className="px-2 py-0.5 bg-white/[0.04] text-slate-500 text-[11px] font-bold rounded-md">
-                    {s.server ?? 'KR'}
-                  </span>
-                </span>
-                <span className="col-span-1 text-xs text-slate-500 font-bold">{s.format ?? 'BO3'}</span>
-                <span className="col-span-1 text-right text-slate-700 group-hover:text-[#00D2BE] text-xs transition">→</span>
+                {/* 각진 틸 액센트 바 (스크림 페이지와 통일) */}
+                <div className="w-1.5 h-10 shrink-0 bg-[#00D2BE]" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                    <span className="text-white text-sm font-semibold truncate group-hover:text-[#00D2BE] transition">{t?.name ?? '—'}</span>
+                    {t?.tier_avg && <span className="text-slate-500 text-xs shrink-0">· {t.tier_avg}</span>}
+                    <span className="text-[11px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded shrink-0">{s.format ?? 'BO3'}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-slate-500">
+                    <span className="whitespace-nowrap">📅 {date}</span>
+                    <span className="px-1.5 py-0.5 bg-white/[0.04] rounded text-[11px] font-bold shrink-0">{s.server ?? 'KR'}</span>
+                  </div>
+                </div>
+                <span className="text-slate-700 group-hover:text-[#00D2BE] text-sm transition shrink-0">→</span>
               </a>
             )
           })}
