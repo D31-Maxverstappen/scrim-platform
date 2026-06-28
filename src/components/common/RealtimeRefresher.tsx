@@ -9,15 +9,16 @@ export default function RealtimeRefresher({ tables }: { tables: string[] }) {
 
   useEffect(() => {
     const supabase = createClient()
-    const channels = tables.map(table =>
-      supabase
-        .channel(`realtime:${table}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table }, () => {
-          router.refresh()
-        })
-        .subscribe()
+    // 여러 테이블을 단일 채널에 묶어 구독한다. 채널(=동시 연결) 수가 Realtime 한도를
+    // 좌우하므로, 테이블당 채널을 따로 열지 않고 1채널에 .on()을 여러 번 붙여 연결 수를 줄인다.
+    const channel = tables.reduce(
+      (ch, table) => ch.on('postgres_changes', { event: '*', schema: 'public', table }, () => {
+        router.refresh()
+      }),
+      supabase.channel(`realtime:${tables.join(',')}`)
     )
-    return () => { channels.forEach(ch => supabase.removeChannel(ch)) }
+    channel.subscribe()
+    return () => { supabase.removeChannel(channel) }
   }, [router])
 
   return null
