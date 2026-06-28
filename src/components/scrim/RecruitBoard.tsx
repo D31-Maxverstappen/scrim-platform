@@ -272,7 +272,6 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
     if (role) q.set('role', role)
     return `/recruit?${q.toString()}`
   }
-  const tabUrl = (type: string) => buildUrl({ type })
 
   const handleClose = async (id: string) => {
     await fetch(`/api/recruit/${id}`, {
@@ -291,19 +290,8 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 
   return (
     <>
-      {/* 탭 + 필터 */}
-      <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
-        <div className="flex gap-1 bg-white/5 rounded p-1">
-          <a href={tabUrl('lft')}
-            className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            팀 구하기
-          </a>
-          <a href={tabUrl('lfp')}
-            className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            선수·코치 구하기
-          </a>
-        </div>
-
+      {/* 필터 (탭 전환은 사이드바 '팀 구하기' / '선수·코치 구하기'로) */}
+      <div className="flex items-center justify-end mb-5 gap-3 flex-wrap">
         <div className="flex gap-2">
           <select value={activeTier} onChange={(e) => router.push(buildUrl({ tier: e.target.value }))}
             className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
