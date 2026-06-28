@@ -148,6 +148,17 @@ export default function ManageTeamPage() {
     else { const d = await res.json(); setMsg('오류: ' + (d.error ?? '알 수 없음')) }
   }
 
+  const handleTransferCaptain = async (userId: string, name: string) => {
+    if (!confirm(`주장을 '${name}'님에게 넘길까요?\n양도하면 본인은 일반 선수가 되고, 되돌리려면 새 주장이 다시 넘겨줘야 해요.`)) return
+    const res = await fetch(`/api/teams/${teamId}/transfer-captain`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newCaptainId: userId }),
+    })
+    if (res.ok) { router.replace(`/teams/${teamId}`) } // 양도 후엔 더 이상 주장이 아니므로 팀 페이지로
+    else { const d = await res.json(); setMsg('오류: ' + (d.error ?? '알 수 없음')) }
+  }
+
   const handleToggleOpen = async () => {
     setIsOpenSaving(true)
     const newVal = !isOpen
@@ -355,6 +366,12 @@ export default function ManageTeamPage() {
                       >
                         {ROLES.map(role => <option key={role} value={role} className="bg-[#1e1e2e] text-white">{ROLE_LABEL[role]}</option>)}
                       </select>
+                      {['player', 'igl'].includes(m.role) && (
+                        <button onClick={() => handleTransferCaptain(m.user_id, u?.riot_gamename ?? '이 멤버')}
+                          className="text-xs text-slate-600 hover:text-[#00D2BE] transition px-2 whitespace-nowrap">
+                          주장 양도
+                        </button>
+                      )}
                       <button onClick={() => handleKick(m.user_id)} className="text-xs text-slate-600 hover:text-red-400 transition px-2">
                         내보내기
                       </button>
