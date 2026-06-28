@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Fragment } from 'react'
 
 export default function TeamPageTabs({
   overviewContent,
@@ -27,6 +27,7 @@ export default function TeamPageTabs({
     { key: 'chat', label: '채팅' },
   ]
 
+  // 활성 탭 콘텐츠
   const content =
     tab === 'overview' ? overviewContent :
     tab === 'stats' ? statsContent :
@@ -54,7 +55,9 @@ export default function TeamPageTabs({
           ))}
         </div>
       </div>
-      {content}
+      {/* content는 서버 컴포넌트에서 prop으로 넘어온 엘리먼트 → 배열 위치에서 key 경고가 나므로
+          단일 자식이 되도록 keyed Fragment로 감싼다(추가 DOM 없음). */}
+      <Fragment key="tab-content">{content}</Fragment>
     </>
   )
 }
