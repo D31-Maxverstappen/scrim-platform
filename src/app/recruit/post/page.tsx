@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Suspense } from 'react'
-import { getTierColor } from '@/lib/tiers'
 
 const VAL_ROLES = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
 
@@ -31,7 +30,8 @@ function RecruitPostContent() {
   const game = 'valorant'
   const [tier, setTier] = useState('')              // LFT 단일
   const [tiers, setTiers] = useState<string[]>([]) // LFP 다중 (범위)
-  const [anchorTier, setAnchorTier] = useState<string | null>(null) // 범위 시작점
+  const [minTier, setMinTier] = useState('')        // LFP 범위: 최소
+  const [maxTier, setMaxTier] = useState('')        // LFP 범위: 최대
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
   const [discordTag, setDiscordTag] = useState('')
@@ -65,24 +65,16 @@ function RecruitPostContent() {
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
   }
 
-  // LFP 범위 선택: 첫 클릭 = 앵커, 두 번째 클릭 = 범위 채우기, 앵커 재클릭 = 초기화
-  const handleTierClick = (t: string) => {
-    if (!anchorTier || tiers.length === 0) {
-      setAnchorTier(t)
-      setTiers([t])
-      return
-    }
-    if (anchorTier === t) {
-      setAnchorTier(null)
-      setTiers([])
-      return
-    }
-    const ai = VAL_TIERS.indexOf(anchorTier)
-    const ti = VAL_TIERS.indexOf(t)
-    const start = Math.min(ai, ti)
-    const end = Math.max(ai, ti)
-    setTiers(VAL_TIERS.slice(start, end + 1))
-  }
+  // 최소~최대 티어 드롭다운 → tiers 범위 계산 (VAL_TIERS는 낮은→높은 순)
+  useEffect(() => {
+    if (!minTier && !maxTier) { setTiers([]); return }
+    const lo = minTier || maxTier
+    const hi = maxTier || minTier
+    let a = VAL_TIERS.indexOf(lo)
+    let b = VAL_TIERS.indexOf(hi)
+    if (a > b) { const t = a; a = b; b = t }
+    setTiers(VAL_TIERS.slice(a, b + 1))
+  }, [minTier, maxTier])
 
   const DISCORD_REGEX = /^[\w.]{2,32}(#\d{4})?$/
 
@@ -146,12 +138,12 @@ function RecruitPostContent() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-2">
-                <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
+                <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier('') }}
                   className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   선수 구함
                   <span className="text-[11px] opacity-70 font-normal">팀이 선수 모집</span>
                 </button>
-                <button type="button" onClick={() => { setType('lfc'); setRoles([]); setTier(''); setTiers([]); setAnchorTier(null) }}
+                <button type="button" onClick={() => { setType('lfc'); setRoles([]); setTier(''); setMinTier(''); setMaxTier('') }}
                   className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfc' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   코치 구함
                   <span className="text-[11px] opacity-70 font-normal">팀이 코치 모집</span>
@@ -196,46 +188,39 @@ function RecruitPostContent() {
           </div>
           )}
 
-          {/* 티어 — 선수 관련일 때만 */}
+          {/* 티어 — 드롭다운(내 티어 1개 / 희망 티어 최소~최대 범위) */}
           {showTierRoles && (
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 티어' : '희망 티어'}
-              {type === 'lfp' && (
-                <span className="text-slate-600 font-normal ml-1 text-xs">
-                  {tiers.length === 0 ? '— 첫 티어 클릭 후 끝 티어 클릭으로 범위 선택' : `${tiers.length}개 선택됨`}
-                </span>
+              {type === 'lfp' && tiers.length > 0 && (
+                <span className="text-slate-600 font-normal ml-1 text-xs">{tiers.length}개 범위</span>
               )}
             </label>
-            <div className="flex flex-wrap gap-1.5">
-              {type === 'lft'
-                ? tierList.map((t) => {
-                    const color = getTierColor(t)
-                    const active = tier === t
-                    return (
-                      <button key={t} type="button" onClick={() => setTier(tier === t ? '' : t)}
-                        className="px-2.5 py-1 rounded text-xs font-semibold transition border"
-                        style={active
-                          ? { background: color + '33', color, borderColor: color }
-                          : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderColor: 'transparent' }
-                        }>{t}</button>
-                    )
-                  })
-                : tierList.map((t) => {
-                    const color = getTierColor(t)
-                    const selected = tiers.includes(t)
-                    const isAnchor = t === anchorTier
-                    return (
-                      <button key={t} type="button" onClick={() => handleTierClick(t)}
-                        className="px-2.5 py-1 rounded text-xs font-semibold transition border"
-                        style={selected
-                          ? { background: color + '33', color, borderColor: isAnchor ? color : color + '66' }
-                          : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderColor: 'transparent' }
-                        }>{t}</button>
-                    )
-                  })
-              }
-            </div>
+            {type === 'lft' ? (
+              <select value={tier} onChange={(e) => setTier(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                style={{ colorScheme: 'dark' }}>
+                <option value="">티어 선택</option>
+                {tierList.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            ) : (
+              <div className="flex items-center gap-2">
+                <select value={minTier} onChange={(e) => setMinTier(e.target.value)}
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                  style={{ colorScheme: 'dark' }}>
+                  <option value="">최소 티어</option>
+                  {tierList.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <span className="text-slate-500 text-sm shrink-0">~</span>
+                <select value={maxTier} onChange={(e) => setMaxTier(e.target.value)}
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                  style={{ colorScheme: 'dark' }}>
+                  <option value="">최대 티어</option>
+                  {tierList.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+            )}
           </div>
           )}
 

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { getTierColor } from '@/lib/tiers'
 
 const VAL_ROLES = ['Duelist', 'Initiator', 'Sentinel', 'Controller', 'IGL', 'Flex']
 const VAL_TIERS = [
@@ -20,7 +19,8 @@ export default function RecruitEditPage() {
   const [type, setType] = useState<'lft' | 'lfp'>('lft')
   const [tier, setTier] = useState('')
   const [tiers, setTiers] = useState<string[]>([])
-  const [anchorTier, setAnchorTier] = useState<string | null>(null)
+  const [minTier, setMinTier] = useState('')
+  const [maxTier, setMaxTier] = useState('')
   const [roles, setRoles] = useState<string[]>([])
   const [note, setNote] = useState('')
   const [discordTag, setDiscordTag] = useState('')
@@ -48,8 +48,9 @@ export default function RecruitEditPage() {
           setTier(data.tier ?? '')
         } else {
           const arr = data.tier ? data.tier.split(',').map((t: string) => t.trim()).filter(Boolean) : []
-          setTiers(arr)
-          if (arr.length > 0) setAnchorTier(arr[0])
+          // 저장된 범위(낮은→높은 순)에서 최소/최대 복원
+          const sorted = [...arr].sort((a, b) => VAL_TIERS.indexOf(a) - VAL_TIERS.indexOf(b))
+          if (sorted.length > 0) { setMinTier(sorted[0]); setMaxTier(sorted[sorted.length - 1]) }
         }
         setFetching(false)
       })
@@ -58,13 +59,16 @@ export default function RecruitEditPage() {
   const toggleRole = (r: string) =>
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
 
-  const handleTierClick = (t: string) => {
-    if (!anchorTier || tiers.length === 0) { setAnchorTier(t); setTiers([t]); return }
-    if (anchorTier === t) { setAnchorTier(null); setTiers([]); return }
-    const ai = VAL_TIERS.indexOf(anchorTier)
-    const ti = VAL_TIERS.indexOf(t)
-    setTiers(VAL_TIERS.slice(Math.min(ai, ti), Math.max(ai, ti) + 1))
-  }
+  // 최소~최대 → tiers 범위 계산
+  useEffect(() => {
+    if (!minTier && !maxTier) { setTiers([]); return }
+    const lo = minTier || maxTier
+    const hi = maxTier || minTier
+    let a = VAL_TIERS.indexOf(lo)
+    let b = VAL_TIERS.indexOf(hi)
+    if (a > b) { const t = a; a = b; b = t }
+    setTiers(VAL_TIERS.slice(a, b + 1))
+  }, [minTier, maxTier])
 
   const DISCORD_REGEX = /^[\w.]{2,32}(#\d{4})?$/
 
@@ -125,32 +129,38 @@ export default function RecruitEditPage() {
             </div>
           </div>
 
-          {/* 티어 */}
+          {/* 티어 — 드롭다운(내 티어 1개 / 희망 티어 최소~최대 범위) */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 티어' : '희망 티어'}
-              {type === 'lfp' && (
-                <span className="text-slate-600 font-normal ml-1 text-xs">
-                  {tiers.length === 0 ? '— 범위 선택' : `${tiers.length}개 선택됨`}
-                </span>
+              {type === 'lfp' && tiers.length > 0 && (
+                <span className="text-slate-600 font-normal ml-1 text-xs">{tiers.length}개 범위</span>
               )}
             </label>
-            <div className="flex flex-wrap gap-1.5">
-              {VAL_TIERS.map((t) => {
-                const color = getTierColor(t)
-                const active = type === 'lft' ? tier === t : tiers.includes(t)
-                const isAnchor = t === anchorTier
-                return (
-                  <button key={t} type="button"
-                    onClick={() => type === 'lft' ? setTier(tier === t ? '' : t) : handleTierClick(t)}
-                    className="px-2.5 py-1 rounded text-xs font-semibold transition border"
-                    style={active
-                      ? { background: color + '33', color, borderColor: isAnchor ? color : color + '66' }
-                      : { background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderColor: 'transparent' }
-                    }>{t}</button>
-                )
-              })}
-            </div>
+            {type === 'lft' ? (
+              <select value={tier} onChange={(e) => setTier(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded px-4 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                style={{ colorScheme: 'dark' }}>
+                <option value="">티어 선택</option>
+                {VAL_TIERS.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            ) : (
+              <div className="flex items-center gap-2">
+                <select value={minTier} onChange={(e) => setMinTier(e.target.value)}
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                  style={{ colorScheme: 'dark' }}>
+                  <option value="">최소 티어</option>
+                  {VAL_TIERS.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+                <span className="text-slate-500 text-sm shrink-0">~</span>
+                <select value={maxTier} onChange={(e) => setMaxTier(e.target.value)}
+                  className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded px-3 py-2.5 text-white text-sm focus:outline-none focus:border-[#00D2BE] transition"
+                  style={{ colorScheme: 'dark' }}>
+                  <option value="">최대 티어</option>
+                  {VAL_TIERS.map((t) => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+            )}
           </div>
 
           {/* 한마디 */}
