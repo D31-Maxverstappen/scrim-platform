@@ -58,6 +58,8 @@ function RecruitPostContent() {
   const isCoach = accountType === 'coach'
   const needsTeam = type === 'lfp' || type === 'lfc'           // 팀 캡틴이 모집
   const showTierRoles = (type === 'lft' && !isCoach) || type === 'lfp' // 선수 관련 입력
+  // 진입 맥락: 사이드바 '팀 구하기'(lft)면 team, '선수·코치 구하기'(lfp/lfc)면 recruit
+  const formContext: 'team' | 'recruit' = defaultType === 'lft' ? 'team' : 'recruit'
 
   const toggleRole = (r: string) => {
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
@@ -129,7 +131,7 @@ function RecruitPostContent() {
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded p-6 flex flex-col gap-5">
 
-          {/* 유형 */}
+          {/* 유형 — 진입 맥락(사이드바)에 맞춰 분리 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">유형 *</label>
             {isCoach ? (
@@ -137,22 +139,22 @@ function RecruitPostContent() {
                 팀 구하기
                 <span className="text-[11px] opacity-70 font-normal">코치로 맡을 팀을 찾아요</span>
               </div>
+            ) : formContext === 'team' ? (
+              <div className="py-3 rounded text-sm font-bold bg-[#00D2BE] text-white flex flex-col items-center gap-0.5">
+                팀 구하기
+                <span className="text-[11px] opacity-70 font-normal">팀을 찾는 선수예요</span>
+              </div>
             ) : (
-              <div className="grid grid-cols-3 gap-2">
-                <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]); setAnchorTier(null) }}
-                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-                  팀 구하기
-                  <span className="text-[10px] opacity-70 font-normal">팀 찾는 선수</span>
-                </button>
+              <div className="grid grid-cols-2 gap-2">
                 <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
-                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   선수 구함
-                  <span className="text-[10px] opacity-70 font-normal">팀이 선수 모집</span>
+                  <span className="text-[11px] opacity-70 font-normal">팀이 선수 모집</span>
                 </button>
                 <button type="button" onClick={() => { setType('lfc'); setRoles([]); setTier(''); setTiers([]); setAnchorTier(null) }}
-                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfc' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfc' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
                   코치 구함
-                  <span className="text-[10px] opacity-70 font-normal">팀이 코치 모집</span>
+                  <span className="text-[11px] opacity-70 font-normal">팀이 코치 모집</span>
                 </button>
               </div>
             )}

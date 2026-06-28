@@ -290,8 +290,12 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
 
   return (
     <>
-      {/* 필터 (탭 전환은 사이드바 '팀 구하기' / '선수·코치 구하기'로) */}
-      <div className="flex items-center justify-end mb-5 gap-3 flex-wrap">
+      {/* 글 올리기 + 필터 (탭 전환은 사이드바 '팀 구하기' / '선수·코치 구하기'로) */}
+      <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
+        <a href={`/recruit/post?type=${activeType}`}
+          className="bg-[#00D2BE] hover:bg-[#00a896] text-white text-xs font-bold px-4 py-2 rounded transition shrink-0">
+          + 글 올리기
+        </a>
         <div className="flex gap-2">
           <select value={activeTier} onChange={(e) => router.push(buildUrl({ tier: e.target.value }))}
             className="bg-white/5 border border-white/10 text-slate-300 text-xs rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00D2BE] cursor-pointer">
@@ -313,7 +317,7 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
           icon={activeType === 'lft' ? EmptyIcons.megaphone : EmptyIcons.search}
           title={activeType === 'lft' ? '팀을 찾는 사람이 없어요' : '선수·코치를 찾는 팀이 없어요'}
           description="첫 번째로 올려보세요!"
-          action={<a href="/recruit/post" className="bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 글 올리기</a>}
+          action={<a href={`/recruit/post?type=${activeType}`} className="bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 글 올리기</a>}
         />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
