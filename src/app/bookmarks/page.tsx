@@ -40,7 +40,7 @@ export default async function BookmarksPage() {
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
       <div className="max-w-5xl mx-auto px-6 py-10">
         <h1 className="text-2xl font-black text-white mb-1">즐겨찾기</h1>
-        <p className="text-slate-500 text-sm mb-8">저장한 스크림과 팀을 모아봐요.</p>
+        <p className="text-slate-500 text-sm mb-8">관심 있는 스크림과 팀을 한곳에.</p>
 
         {isEmpty ? (
           <div className="border border-white/5 bg-[#13131f] rounded p-12 text-center">
