@@ -120,7 +120,6 @@ export default function PostScrimPage() {
               <span className="text-slate-500 text-sm shrink-0">일</span>
               {weekday && <span className="text-[#00D2BE] text-sm shrink-0">({weekday})</span>}
             </div>
-            <p className="text-slate-600 text-xs mt-1.5">숫자만 입력하면 다음 칸으로 자동 이동해요</p>
           </div>
 
           {/* 시간 */}
