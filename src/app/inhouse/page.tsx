@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
+import { CalendarIcon } from '@/components/common/icons'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
@@ -95,7 +96,7 @@ export default async function InhousePage() {
                   </div>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
                     <span>방장: {room.host?.val_gamename ?? room.host?.riot_gamename ?? '—'}</span>
-                    {room.scheduled_at && <span>📅 {formatDate(room.scheduled_at)}</span>}
+                    {room.scheduled_at && <span className="inline-flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5 shrink-0" />{formatDate(room.scheduled_at)}</span>}
                     {(room.tier_min || room.tier_max) && (
                       <span>
                         {room.tier_min && room.tier_max

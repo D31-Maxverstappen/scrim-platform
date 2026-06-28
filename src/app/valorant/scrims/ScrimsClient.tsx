@@ -5,6 +5,7 @@ import { useState } from 'react'
 import Pagination from '@/components/common/Pagination'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import BookmarkButton from '@/components/common/BookmarkButton'
+import { CalendarIcon } from '@/components/common/icons'
 import { inTierRange } from '@/lib/tiers'
 import { formatKST } from '@/lib/datetime'
 
@@ -116,7 +117,7 @@ export default function ScrimsClient({
                     )}
                   </div>
                   <div className="flex items-center gap-3 text-xs text-slate-500">
-                    {post.preferred_date && <span className="whitespace-nowrap shrink-0">📅 {formatDate(post.preferred_date)}</span>}
+                    {post.preferred_date && <span className="inline-flex items-center gap-1 whitespace-nowrap shrink-0"><CalendarIcon className="w-3.5 h-3.5 shrink-0" />{formatDate(post.preferred_date)}</span>}
                     {post.note && <span className="truncate max-w-[240px]">{post.note}</span>}
                   </div>
                 </div>

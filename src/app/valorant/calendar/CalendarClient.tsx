@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { formatKST, toDateInputValue } from '@/lib/datetime'
+import { ClockIcon } from '@/components/common/icons'
 import Link from 'next/link'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 
@@ -210,7 +211,7 @@ export default function CalendarClient({
                         <span className="text-[11px] font-black bg-[#7B61FF]/15 text-[#7B61FF] px-1.5 py-0.5 rounded shrink-0 ml-2">확정</span>
                       </div>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                        {m.match_date && <span>🕐 {formatTime(m.match_date)}</span>}
+                        {m.match_date && <span className="inline-flex items-center gap-1"><ClockIcon className="w-3 h-3 shrink-0" />{formatTime(m.match_date)}</span>}
                         {m.format && <span>· {m.format}</span>}
                         {m.status === 'completed' && <span>· 종료</span>}
                       </div>
@@ -234,7 +235,7 @@ export default function CalendarClient({
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
-                        {s.preferred_date && <span>🕐 {formatTime(s.preferred_date)}</span>}
+                        {s.preferred_date && <span className="inline-flex items-center gap-1"><ClockIcon className="w-3 h-3 shrink-0" />{formatTime(s.preferred_date)}</span>}
                         {team?.tier_avg && <span>· {team.tier_avg}</span>}
                       </div>
                       {(s.tier_min || s.tier_max) && (

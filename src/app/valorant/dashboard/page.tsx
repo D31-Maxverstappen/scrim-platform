@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
+import { CalendarIcon } from '@/components/common/icons'
 import { redirect } from 'next/navigation'
 import ProfileCard from '@/components/profile/ProfileCard'
 import TeamRankings from '@/components/team/TeamRankings'
@@ -315,7 +316,7 @@ export default async function ValorantDashboardPage() {
                           </div>
                           <div className="flex items-center gap-3 text-[11px] text-slate-600">
                             <span>방장: {room.host?.val_gamename ?? room.host?.riot_gamename ?? '—'}</span>
-                            {scheduledStr && <span>📅 {scheduledStr}</span>}
+                            {scheduledStr && <span className="inline-flex items-center gap-1"><CalendarIcon className="w-3 h-3 shrink-0" />{scheduledStr}</span>}
                           </div>
                         </div>
                         <div className="shrink-0 text-right">

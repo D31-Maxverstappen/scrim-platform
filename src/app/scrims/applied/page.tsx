@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { formatKST } from '@/lib/datetime'
+import { CalendarIcon } from '@/components/common/icons'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
@@ -128,7 +129,7 @@ export default async function MyScrimsPage() {
                                 {post.server}
                               </span>
                             )}
-                            {post.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
+                            {post.preferred_date && <span className="inline-flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5 shrink-0" />{formatDate(post.preferred_date)}</span>}
                           </div>
                         </div>
                         <div className="flex items-center gap-3 shrink-0 text-xs">
@@ -227,7 +228,7 @@ export default async function MyScrimsPage() {
                               {post.server}
                             </span>
                           )}
-                          {post?.preferred_date && <span>📅 {formatDate(post.preferred_date)}</span>}
+                          {post?.preferred_date && <span className="inline-flex items-center gap-1"><CalendarIcon className="w-3.5 h-3.5 shrink-0" />{formatDate(post.preferred_date)}</span>}
                         </div>
                       </div>
                       <span className={`text-[11px] font-bold px-2.5 py-1 rounded shrink-0 ${s.cls}`}>

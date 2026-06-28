@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { formatKST } from '@/lib/datetime'
+import { CalendarIcon } from '@/components/common/icons'
 
 import { useState } from 'react'
 import type { ScrimPost } from '@/lib/types'
@@ -125,7 +126,7 @@ export default function ScrimList({ scrims, game }: { scrims: ScrimPost[]; game?
                     <span className="text-[11px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded shrink-0">{s.format ?? 'BO3'}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <span className="whitespace-nowrap">📅 {date}</span>
+                    <span className="inline-flex items-center gap-1 whitespace-nowrap"><CalendarIcon className="w-3.5 h-3.5 shrink-0" />{date}</span>
                     <span className="px-1.5 py-0.5 bg-white/[0.04] rounded text-[11px] font-bold shrink-0">{s.server ?? 'KR'}</span>
                   </div>
                 </div>
