@@ -1,10 +1,10 @@
 'use client'
 import Link from 'next/link'
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition, useRef } from 'react'
 import { createScrimAction } from '@/app/actions'
 import { VAL_TIERS } from '@/lib/tiers'
-import { toDateInputValue } from '@/lib/datetime'
+import { toDateInputValue, formatKST } from '@/lib/datetime'
 
 const GAMES = [
   { value: 'valorant', label: 'VALORANT' },
@@ -20,7 +20,14 @@ export default function PostScrimPage() {
   const [tierMax, setTierMax] = useState('')
 
   const today = toDateInputValue()
-  const [date, setDate] = useState(today)
+  const [y, setY] = useState(today.slice(0, 4))
+  const [mo, setMo] = useState(today.slice(5, 7))
+  const [dy, setDy] = useState(today.slice(8, 10))
+  const date = y.length === 4 && mo && dy ? `${y}-${mo.padStart(2, '0')}-${dy.padStart(2, '0')}` : ''
+  const weekday = date ? formatKST(`${date}T12:00:00+09:00`, { weekday: 'short' }) : ''
+  const yRef = useRef<HTMLInputElement>(null)
+  const moRef = useRef<HTMLInputElement>(null)
+  const dyRef = useRef<HTMLInputElement>(null)
   const [hour, setHour] = useState('8')
   const [minute, setMinute] = useState('00')
   const [ampm, setAmpm] = useState<'오전' | '오후'>('오후')
@@ -29,6 +36,9 @@ export default function PostScrimPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!mo || !dy || +mo < 1 || +mo > 12 || +dy < 1 || +dy > 31) {
+      setError('날짜를 정확히 입력해주세요. (월 1~12, 일 1~31)'); return
+    }
     if (!date) { setError('희망 날짜를 선택해주세요.'); return }
     if (tierMin && tierMax && VAL_TIERS.indexOf(tierMin) > VAL_TIERS.indexOf(tierMax)) {
       setError('최소 티어가 최대 티어보다 높을 수 없어요.'); return
@@ -87,13 +97,30 @@ export default function PostScrimPage() {
           {/* 날짜 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">희망 날짜 *</label>
-            <input
-              type="date"
-              value={date}
-              min={today}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white focus:outline-none focus:border-[#00D2BE] transition"
-            />
+            <div className="flex items-center gap-2">
+              <input
+                ref={yRef} type="text" inputMode="numeric" value={y} aria-label="연도"
+                onChange={(e) => { const v = e.target.value.replace(/\D/g, '').slice(0, 4); setY(v); if (v.length === 4) moRef.current?.focus() }}
+                className="w-20 bg-white/5 border border-white/10 rounded px-2 py-3 text-white text-center focus:outline-none focus:border-[#00D2BE] transition"
+              />
+              <span className="text-slate-500 text-sm shrink-0">년</span>
+              <input
+                ref={moRef} type="text" inputMode="numeric" value={mo} placeholder="MM" aria-label="월"
+                onChange={(e) => { const v = e.target.value.replace(/\D/g, '').slice(0, 2); setMo(v); if (v.length === 2 || +v >= 2) dyRef.current?.focus() }}
+                onKeyDown={(e) => { if (e.key === 'Backspace' && !mo) yRef.current?.focus() }}
+                className="w-14 bg-white/5 border border-white/10 rounded px-2 py-3 text-white text-center placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              />
+              <span className="text-slate-500 text-sm shrink-0">월</span>
+              <input
+                ref={dyRef} type="text" inputMode="numeric" value={dy} placeholder="DD" aria-label="일"
+                onChange={(e) => { const v = e.target.value.replace(/\D/g, '').slice(0, 2); setDy(v) }}
+                onKeyDown={(e) => { if (e.key === 'Backspace' && !dy) moRef.current?.focus() }}
+                className="w-14 bg-white/5 border border-white/10 rounded px-2 py-3 text-white text-center placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
+              />
+              <span className="text-slate-500 text-sm shrink-0">일</span>
+              {weekday && <span className="text-[#00D2BE] text-sm shrink-0">({weekday})</span>}
+            </div>
+            <p className="text-slate-600 text-xs mt-1.5">숫자만 입력하면 다음 칸으로 자동 이동해요</p>
           </div>
 
           {/* 시간 */}
