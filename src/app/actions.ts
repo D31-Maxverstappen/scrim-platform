@@ -40,6 +40,13 @@ export async function createTeamAction(formData: FormData) {
     return { error: '팀 약자는 2~5글자로 입력해주세요. (예: PRX, T1, GEN)' }
   }
 
+  // 코치 계정은 팀을 만들 수 없음 — 주장(=출전 로스터)이 되면 '주장+코치' 모순이 생김.
+  // 코치는 기존 팀에 코치로 합류한다. (온보딩에서도 '새 팀 만들기'를 숨김)
+  const { data: acct } = await supabase.from('users').select('account_type').eq('id', user.id).maybeSingle()
+  if (acct?.account_type === 'coach') {
+    return { error: '코치 계정은 팀을 만들 수 없어요. 팀에 코치로 합류해 주세요.' }
+  }
+
   // 이미 팀에 소속됐는지 확인 (1팀 제한)
   const { data: existingMembership } = await supabase
     .from('team_members')
