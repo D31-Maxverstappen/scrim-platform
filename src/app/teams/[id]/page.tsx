@@ -88,8 +88,18 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
     </div>
   )
 
-  const players = members?.filter((m) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
-  const staff = members?.filter((m) => ['head_coach', 'coach'].includes(m.role)) ?? []
+  // 선수 = 출전 로스터(주장→IGL→선수 순 정렬), 스태프 = 헤드코치/코치 분리
+  const PLAYER_ORDER: Record<string, number> = { captain: 0, igl: 1, player: 2 }
+  const players = (members?.filter((m) => ['captain', 'igl', 'player'].includes(m.role)) ?? [])
+    .sort((a, b) => (PLAYER_ORDER[a.role] ?? 9) - (PLAYER_ORDER[b.role] ?? 9))
+  const headCoaches = members?.filter((m) => m.role === 'head_coach') ?? []
+  const coaches = members?.filter((m) => m.role === 'coach') ?? []
+  const staff = [...headCoaches, ...coaches]
+
+  // 빈자리도 공석 카드로 노출(휑한 느낌 제거). 발로란트 정원 5인 기준.
+  const PLAYER_SLOTS = Math.max(5, players.length)
+  const HEAD_COACH_SLOTS = Math.max(1, headCoaches.length)
+  const COACH_SLOTS = Math.max(2, coaches.length)
   const gameColor = GAME_COLOR[team.game_type] ?? '#00D2BE'
   const isVal = team.game_type === 'valorant'
   const total = (team.wins ?? 0) + (team.losses ?? 0)
@@ -106,35 +116,46 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
       {/* 왼쪽 */}
       <div className="flex-1 min-w-0 flex flex-col gap-6">
 
-        {/* CURRENT ROSTER */}
+        {/* CURRENT ROSTER — 정원 5인, 빈자리는 공석 카드 */}
         <div>
           <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Current Roster</h3>
           <div className="border border-white/10 p-4">
-            {players.length > 0 ? (
-              <div className="grid grid-cols-3 gap-2">
-                {players.map((m) => (
-                  <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-                ))}
-              </div>
-            ) : (
-              <p className="text-slate-600 text-sm py-4 text-center">아직 선수가 없어요</p>
-            )}
+            <div className="grid grid-cols-3 gap-2">
+              {Array.from({ length: PLAYER_SLOTS }).map((_, i) =>
+                players[i]
+                  ? <RosterCard key={players[i].user_id} member={players[i]} currentUserId={user.id} isVal={isVal} />
+                  : <EmptySlot key={`p-${i}`} label="빈 자리" />
+              )}
+            </div>
           </div>
         </div>
 
-        {/* COACHING STAFF */}
-        {staff.length > 0 && (
-          <div>
-            <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Coaching Staff</h3>
-            <div className="border border-white/10 p-4">
+        {/* COACHING STAFF — 헤드 코치 / 코치 석 분리, 공석도 노출 */}
+        <div>
+          <h3 className="text-sm font-black text-white uppercase tracking-widest mb-3">Coaching Staff</h3>
+          <div className="border border-white/10 p-4 flex flex-col gap-4">
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">헤드 코치</p>
               <div className="grid grid-cols-3 gap-2">
-                {staff.map((m) => (
-                  <RosterCard key={m.user_id} member={m} currentUserId={user.id} isVal={isVal} />
-                ))}
+                {Array.from({ length: HEAD_COACH_SLOTS }).map((_, i) =>
+                  headCoaches[i]
+                    ? <RosterCard key={headCoaches[i].user_id} member={headCoaches[i]} currentUserId={user.id} isVal={isVal} />
+                    : <EmptySlot key={`hc-${i}`} label="헤드 코치 공석" />
+                )}
+              </div>
+            </div>
+            <div>
+              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-2">코치</p>
+              <div className="grid grid-cols-3 gap-2">
+                {Array.from({ length: COACH_SLOTS }).map((_, i) =>
+                  coaches[i]
+                    ? <RosterCard key={coaches[i].user_id} member={coaches[i]} currentUserId={user.id} isVal={isVal} />
+                    : <EmptySlot key={`c-${i}`} label="코치 공석" />
+                )}
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
 
       {/* 오른쪽 사이드바 */}
@@ -363,6 +384,19 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           }
         />
       </div>
+    </div>
+  )
+}
+
+function EmptySlot({ label }: { label: string }) {
+  return (
+    <div className="border border-dashed border-white/10 flex items-center gap-3 px-3 py-2.5 bg-white/[0.015]">
+      <div className="w-10 h-10 shrink-0 flex items-center justify-center bg-white/[0.02]">
+        <svg className="w-4 h-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 5v14m7-7H5" />
+        </svg>
+      </div>
+      <p className="text-slate-600 text-xs font-medium">{label}</p>
     </div>
   )
 }
