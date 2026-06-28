@@ -23,7 +23,7 @@ export default function TeamPageTabs({
     { key: 'overview', label: '개요' },
     { key: 'stats', label: '통계' },
     { key: 'matches', label: '매치' },
-    ...(showPlaybook ? [{ key: 'playbook', label: '플레이북' }] : []),
+    ...(showPlaybook ? [{ key: 'playbook', label: '전략 노트' }] : []),
     { key: 'chat', label: '채팅' },
   ]
 

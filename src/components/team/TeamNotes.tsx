@@ -56,7 +56,7 @@ export default function TeamNotes({
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={matchId ? '이 매치의 전략·피드백을 남겨보세요 (우리 팀만 봐요)' : '맵별 전략 등 팀 플레이북을 기록하세요 (우리 팀만 봐요)'}
+          placeholder={matchId ? '이 매치의 전략·피드백을 남겨보세요 (우리 팀만 봐요)' : '맵별 전략 등 팀 전략 노트를 기록하세요 (우리 팀만 봐요)'}
           rows={3}
           className="w-full bg-[#0d0d18] border border-white/10 rounded px-3 py-2.5 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE]/50 transition resize-none"
         />
