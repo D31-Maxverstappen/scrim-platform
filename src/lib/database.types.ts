@@ -1152,6 +1152,36 @@ export type Database = {
           },
         ]
       }
+      team_notes: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string
+          id: string
+          match_id: string | null
+          team_id: string
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          team_id: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          match_id?: string | null
+          team_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       teams: {
         Row: {
           abbreviation: string | null

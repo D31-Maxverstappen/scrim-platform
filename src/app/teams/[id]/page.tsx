@@ -9,6 +9,7 @@ import TeamPageTabs from '@/components/team/TeamPageTabs'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { FlagImg } from '@/components/common/CountrySelect'
 import TeamChat from '@/components/team/TeamChat'
+import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 const ROLE_LABEL: Record<string, string> = {
@@ -60,6 +61,32 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
     .eq('user_id', user.id).eq('target_type', 'team').eq('target_id', id)
     .maybeSingle()
   const isTeamBookmarked = !!teamBm
+
+  // 플레이북: 팀 상시 노트(match_id NULL) — 팀원만 (RLS도 이중 차단)
+  let playbookNotes: TeamNote[] = []
+  if (isMember || isCaptain) {
+    const { data: rawNotes } = await supabase
+      .from('team_notes')
+      .select('id, content, created_at, author_id')
+      .eq('team_id', id)
+      .is('match_id', null)
+      .order('created_at', { ascending: false })
+    const authorIds = [...new Set((rawNotes ?? []).map((n) => n.author_id).filter((v): v is string => !!v))]
+    const { data: authors } = authorIds.length
+      ? await supabase.from('users').select('id, val_gamename, riot_gamename, avatar_url').in('id', authorIds)
+      : { data: [] }
+    const amap = new Map((authors ?? []).map((a) => [a.id, a]))
+    playbookNotes = (rawNotes ?? []).map((n) => ({
+      ...n,
+      author: n.author_id ? amap.get(n.author_id) ?? null : null,
+    })) as TeamNote[]
+  }
+
+  const playbookContent = (
+    <div className="max-w-2xl">
+      <TeamNotes notes={playbookNotes} teamId={id} matchId={null} currentUserId={user.id} />
+    </div>
+  )
 
   const players = members?.filter((m) => ['captain', 'igl', 'player'].includes(m.role)) ?? []
   const staff = members?.filter((m) => ['head_coach', 'coach'].includes(m.role)) ?? []
@@ -325,6 +352,8 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           overviewContent={overviewContent}
           statsContent={statsContent}
           matchesContent={matchesContent}
+          playbookContent={playbookContent}
+          showPlaybook={isMember || isCaptain}
           chatContent={
             <TeamChat
               teamId={id}

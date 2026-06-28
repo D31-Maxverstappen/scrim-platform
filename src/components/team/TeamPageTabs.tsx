@@ -7,11 +7,15 @@ export default function TeamPageTabs({
   statsContent,
   matchesContent,
   chatContent,
+  playbookContent,
+  showPlaybook = false,
 }: {
   overviewContent: React.ReactNode
   statsContent: React.ReactNode
   matchesContent: React.ReactNode
   chatContent: React.ReactNode
+  playbookContent?: React.ReactNode
+  showPlaybook?: boolean
 }) {
   const [tab, setTab] = useState('overview')
 
@@ -19,6 +23,7 @@ export default function TeamPageTabs({
     { key: 'overview', label: '개요' },
     { key: 'stats', label: '통계' },
     { key: 'matches', label: '매치' },
+    ...(showPlaybook ? [{ key: 'playbook', label: '플레이북' }] : []),
     { key: 'chat', label: '채팅' },
   ]
 
@@ -26,6 +31,7 @@ export default function TeamPageTabs({
     tab === 'overview' ? overviewContent :
     tab === 'stats' ? statsContent :
     tab === 'matches' ? matchesContent :
+    tab === 'playbook' ? playbookContent :
     chatContent
 
   return (

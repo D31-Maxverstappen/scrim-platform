@@ -8,6 +8,7 @@ import MatchEndButton from '@/components/match/MatchEndButton'
 import MatchScoreInput from '@/components/match/MatchScoreInput'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import MannerRating from '@/components/match/MannerRating'
+import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
 import { expireStaleMatches, CANCEL_REASON_LABEL } from '@/lib/matchExpiry'
 import type { MatchStat } from '@/lib/types'
 
@@ -78,6 +79,35 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     .eq('captain_id', user.id)
     .single()
   const isCaptain = !!captainTeam
+
+  // 전략 노트: 뷰어가 이 매치의 어느 팀 소속인지(코치/캡틴/선수 모두) → 그 팀 노트만 노출
+  const { data: myMembership } = await supabase
+    .from('team_members')
+    .select('team_id')
+    .eq('user_id', user.id)
+    .in('team_id', [match.team1_id, match.team2_id].filter((v): v is string => !!v))
+    .limit(1)
+    .maybeSingle()
+  const viewerTeamId = myMembership?.team_id ?? null
+
+  let teamNotes: TeamNote[] = []
+  if (viewerTeamId) {
+    const { data: rawNotes } = await supabase
+      .from('team_notes')
+      .select('id, content, created_at, author_id')
+      .eq('team_id', viewerTeamId)
+      .eq('match_id', id)
+      .order('created_at', { ascending: false })
+    const authorIds = [...new Set((rawNotes ?? []).map((n) => n.author_id).filter((v): v is string => !!v))]
+    const { data: authors } = authorIds.length
+      ? await supabase.from('users').select('id, val_gamename, riot_gamename, avatar_url').in('id', authorIds)
+      : { data: [] }
+    const amap = new Map((authors ?? []).map((a) => [a.id, a]))
+    teamNotes = (rawNotes ?? []).map((n) => ({
+      ...n,
+      author: n.author_id ? amap.get(n.author_id) ?? null : null,
+    })) as TeamNote[]
+  }
 
   // 매너 평가: 종료된 매치에서 캡틴이 상대 팀을 평가 (이미 평가했는지 조회)
   const opponentTeam = captainTeam?.id === match.team1_id ? team2 : team1
@@ -251,6 +281,17 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           team1Name={team1?.abbreviation || team1?.name || '팀 1'}
           team2Name={team2?.abbreviation || team2?.name || '팀 2'}
         />
+
+        {/* ── 전략 노트 (우리 팀원만) ── */}
+        {viewerTeamId && (
+          <div className="mt-6">
+            <div className="flex items-baseline gap-2 mb-3">
+              <h3 className="text-sm font-black text-white uppercase tracking-widest">전략 노트</h3>
+              <span className="text-slate-600 text-[11px]">우리 팀만 볼 수 있어요</span>
+            </div>
+            <TeamNotes notes={teamNotes} teamId={viewerTeamId} matchId={id} currentUserId={user.id} />
+          </div>
+        )}
 
         {/* ── 탭 + 콘텐츠 ── */}
         <MatchTabs
