@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { formatKST } from '@/lib/datetime'
 import { redirect } from 'next/navigation'
+import { MANNER_ENABLED } from '@/lib/features'
 import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
@@ -172,9 +173,10 @@ export default async function ProfilePage() {
 
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className={`grid grid-cols-1 ${MANNER_ENABLED ? 'sm:grid-cols-2' : ''} gap-4 mb-6`}>
 
-          {/* 매너 점수 */}
+          {/* 매너 점수 — MANNER_ENABLED로 비활성화 */}
+          {MANNER_ENABLED && (
           <div className="bg-[#111118] border border-white/5 rounded p-5">
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-3">매너 점수</p>
             <p className="text-4xl font-black text-white mb-2">{profile?.manner_score ?? 100}</p>
@@ -183,6 +185,7 @@ export default async function ProfilePage() {
             </div>
             <p className="text-slate-600 text-xs">0~200pt</p>
           </div>
+          )}
 
           {/* 소속 팀 */}
           <div className="bg-[#111118] border border-white/5 rounded p-5">

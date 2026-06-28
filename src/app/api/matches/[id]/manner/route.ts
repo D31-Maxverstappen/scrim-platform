@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createClient as createAdmin } from '@supabase/supabase-js'
+import { MANNER_ENABLED } from '@/lib/features'
 
 // 평가 → 점수 변화(delta) + 사유(manner_reason enum)
 const RATINGS: Record<string, { delta: number; reason: string }> = {
@@ -10,6 +11,8 @@ const RATINGS: Record<string, { delta: number; reason: string }> = {
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!MANNER_ENABLED) return NextResponse.json({ error: '매너 평가는 현재 비활성화되어 있어요.' }, { status: 403 })
+
   const { id } = await params
   const { rating } = await req.json()
   const r = RATINGS[rating as string]

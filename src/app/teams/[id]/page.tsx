@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
 import { redirect, notFound } from 'next/navigation'
+import { MANNER_ENABLED } from '@/lib/features'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import JoinTeamButton from '@/components/team/JoinTeamButton'
 import LeaveTeamButton from '@/components/team/LeaveTeamButton'
@@ -228,12 +229,12 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
           <div className="px-4 py-2.5 border-b border-white/5">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">통계</p>
           </div>
-          <div className="grid grid-cols-4 divide-x divide-white/5">
+          <div className={`grid ${MANNER_ENABLED ? 'grid-cols-4' : 'grid-cols-3'} divide-x divide-white/5`}>
             {[
               { label: '총 스크림', value: allMatches.length > 0 ? String(allMatches.length) : '—' },
               { label: '승률', value: total > 0 ? `${Math.round(((team.wins ?? 0) / total) * 100)}%` : '—' },
               { label: '평균 티어', value: team.tier_avg ?? '—' },
-              { label: '매너 점수', value: `${teamManner}` },
+              ...(MANNER_ENABLED ? [{ label: '매너 점수', value: `${teamManner}` }] : []),
             ].map((s) => (
               <div key={s.label} className="px-6 py-5 text-center">
                 <p className="text-2xl font-black text-white mb-1">{s.value}</p>

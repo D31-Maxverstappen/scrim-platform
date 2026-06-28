@@ -183,7 +183,7 @@ export default function HomePage() {
           </h1>
           <Reveal trigger="load" delay={520}>
             <p className="text-slate-300 text-xl max-w-xl mb-12 leading-relaxed">
-              실력에 맞는 팀을 찾고, 스크림을 잡고,<br />매너 점수로 신뢰를 쌓으세요.
+              실력에 맞는 팀을 찾고, 스크림을 잡고,<br />함께 성장하세요.
             </p>
           </Reveal>
           <Reveal trigger="load" delay={620}>

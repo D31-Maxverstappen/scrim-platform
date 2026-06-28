@@ -8,6 +8,7 @@ import MatchEndButton from '@/components/match/MatchEndButton'
 import MatchScoreInput from '@/components/match/MatchScoreInput'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import MannerRating from '@/components/match/MannerRating'
+import { MANNER_ENABLED } from '@/lib/features'
 import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
 import { expireStaleMatches, CANCEL_REASON_LABEL } from '@/lib/matchExpiry'
 import type { MatchStat } from '@/lib/types'
@@ -240,8 +241,8 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
           </div>
         )}
 
-        {/* ── 매너 평가 (종료된 매치, 캡틴만) ── */}
-        {match.status === 'completed' && isCaptain && (
+        {/* ── 매너 평가 (종료된 매치, 캡틴만) — MANNER_ENABLED로 비활성화 ── */}
+        {MANNER_ENABLED && match.status === 'completed' && isCaptain && (
           <MannerRating matchId={id} alreadyRated={mannerRated} opponentName={opponentTeam?.name ?? '상대 팀'} />
         )}
 

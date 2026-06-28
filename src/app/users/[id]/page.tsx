@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { FlagImg } from '@/components/common/CountrySelect'
 import InviteButton from '@/components/team/InviteButton'
+import { MANNER_ENABLED } from '@/lib/features'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
 const ROLE_LABEL: Record<string, string> = {
@@ -93,12 +94,14 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
           </div>
         </div>
 
-        {/* 통계 — 매너 점수 / 스크림 전적 / 승률 */}
-        <div className="grid grid-cols-3 gap-3 mb-6">
+        {/* 통계 — (매너 점수) / 스크림 전적 / 승률 · 매너는 MANNER_ENABLED로 비활성화 */}
+        <div className={`grid ${MANNER_ENABLED ? 'grid-cols-3' : 'grid-cols-2'} gap-3 mb-6`}>
+          {MANNER_ENABLED && (
           <div className="bg-[#13131f] border border-white/5 rounded px-4 py-4 text-center">
             <p className="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">매너 점수</p>
             <p className="text-2xl font-black text-[#00D2BE]">{profile.manner_score ?? 100}</p>
           </div>
+          )}
           <div className="bg-[#13131f] border border-white/5 rounded px-4 py-4 text-center">
             <p className="text-[11px] text-slate-500 uppercase tracking-widest mb-1.5">스크림 전적</p>
             <p className="text-2xl font-black text-white">

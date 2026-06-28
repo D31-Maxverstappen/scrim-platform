@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
 import { CalendarIcon } from '@/components/common/icons'
+import { MANNER_ENABLED } from '@/lib/features'
 import { redirect } from 'next/navigation'
 import ProfileCard from '@/components/profile/ProfileCard'
 import TeamRankings from '@/components/team/TeamRankings'
@@ -150,11 +151,11 @@ export default async function ValorantDashboardPage() {
         </div>
 
         {/* ── 상단 통계 ── */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className={`grid ${MANNER_ENABLED ? 'grid-cols-3' : 'grid-cols-2'} gap-4 mb-8`}>
           {[
             { label: '가입 유저', value: userCount ?? 0, sub: '명', delay: 80 },
             { label: '활동 팀',   value: teamCount ?? 0, sub: '팀', delay: 160 },
-            { label: '매너 점수', value: profile?.manner_score ?? 100, sub: '/ 200', delay: 240 },
+            ...(MANNER_ENABLED ? [{ label: '매너 점수', value: profile?.manner_score ?? 100, sub: '/ 200', delay: 240 }] : []),
           ].map((s) => (
             <div
               key={s.label}
@@ -186,7 +187,8 @@ export default async function ValorantDashboardPage() {
               valTier={profile?.val_tier ?? (profile?.game_type === 'valorant' ? profile?.tier : null) ?? null}
             /></div>
 
-            {/* 매너 점수 */}
+            {/* 매너 점수 — MANNER_ENABLED로 비활성화 */}
+            {MANNER_ENABLED && (
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
               <p className="text-[11px] font-black uppercase tracking-[0.15em] text-slate-600 mb-4">Manner Score</p>
               <div className="flex items-baseline gap-1.5 mb-3">
@@ -198,6 +200,7 @@ export default async function ValorantDashboardPage() {
               </div>
               <p className="text-[11px] text-slate-700 mt-2">기본 점수</p>
             </div>
+            )}
 
             {/* 내 팀 */}
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded p-5 card-glow transition-all duration-300">
