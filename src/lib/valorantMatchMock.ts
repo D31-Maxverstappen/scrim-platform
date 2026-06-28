@@ -43,13 +43,13 @@ export type ValMatch = {
 }
 
 export type ValRank = {
-  name: string // 예: '불멸 2'
+  name: string // 예: 'Immortal 2' (티어는 영어 표기)
   colorKey: string // lib/tiers.ts getTierColor 키 (예: 'Immortal')
   rr: number // 0~100
 }
 
 // 연동된 라이엇 계정의 현재 경쟁전 티어 (목업)
-export const MOCK_RANK: ValRank = { name: '불멸 2', colorKey: 'Immortal', rr: 47 }
+export const MOCK_RANK: ValRank = { name: 'Immortal 2', colorKey: 'Immortal', rr: 47 }
 
 // ── 스코어보드/라운드 생성 (결정적: 매치 id 시드로 SSR/CSR 동일 결과) ──
 const AGENTS = ['제트', '오멘', '레이즈', '세이지', '킬조이', '소바', '바이퍼', '레이나', '브리치', '네온', '페이드', '스카이', '체임버', '아스트라', '요루', '게코', '데드락', '하버', '클로브', '아이소']
