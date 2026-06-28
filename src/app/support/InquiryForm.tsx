@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const SUBJECTS = [
   '계정 문의',
@@ -10,6 +11,7 @@ const SUBJECTS = [
 ]
 
 export default function InquiryForm({ displayName }: { displayName: string }) {
+  const router = useRouter()
   const [subject, setSubject] = useState(SUBJECTS[0])
   const [content, setContent] = useState('')
   const [state, setState] = useState<'idle' | 'loading' | 'done' | 'error'>('idle')
@@ -26,6 +28,7 @@ export default function InquiryForm({ displayName }: { displayName: string }) {
     })
 
     setState(res.ok ? 'done' : 'error')
+    if (res.ok) router.refresh()  // 옆 '내 문의 내역'(서버컴포넌트) 즉시 갱신
   }
 
   if (state === 'done') {

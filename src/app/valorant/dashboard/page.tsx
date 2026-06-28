@@ -34,7 +34,7 @@ export default async function ValorantDashboardPage() {
     { data: allApplications },
     { data: rawInhouseRooms },
   ] = await Promise.all([
-    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score').eq('id', user.id).single(),
+    supabase.from('users').select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score, account_type').eq('id', user.id).single(),
     supabase.from('team_members').select('role, teams(id, name, abbreviation, game_type, tier_avg, captain_id)').eq('user_id', user.id),
     supabase.from('users').select('id', { count: 'exact', head: true }),
     supabase.from('teams').select('id', { count: 'exact', head: true }).eq('game_type', GAME),
@@ -50,6 +50,7 @@ export default async function ValorantDashboardPage() {
     teams: Array.isArray(m.teams) ? m.teams[0] : m.teams,
   })).find((m) => m.teams?.game_type === GAME)
   const team = myValTeam?.teams ?? null
+  const isCoach = profile?.account_type === 'coach'  // 코치는 팀 생성 불가 → '팀 찾기'로 안내
 
   // 조회 시 만료: 시간 지난 예정 매치 정리 후 최근 매치 조회
   await expireStaleMatches()
@@ -111,10 +112,10 @@ export default async function ValorantDashboardPage() {
     },
     {
       id: 'team',
-      label: '팀 가입 / 생성',
+      label: isCoach ? '팀 합류' : '팀 가입 / 생성',
       done: !!team,
-      href: team ? `/teams/${team.id}` : '/teams/create',
-      cta: team ? '내 팀 보기' : '팀 만들기',
+      href: team ? `/teams/${team.id}` : (isCoach ? '/teams' : '/teams/create'),
+      cta: team ? '내 팀 보기' : (isCoach ? '팀 찾기' : '팀 만들기'),
     },
     {
       id: 'scrim',
@@ -225,10 +226,10 @@ export default async function ValorantDashboardPage() {
               ) : (
                 <div className="flex flex-col gap-3">
                   <p className="text-slate-600 text-xs">소속 팀 없음</p>
-                  <Link href="/teams/create"
+                  <Link href={isCoach ? '/teams' : '/teams/create'}
                     className="text-center text-white text-xs font-bold py-2 rounded transition"
                     style={{ background: '#00D2BE' }}>
-                    팀 만들기
+                    {isCoach ? '팀 찾기' : '팀 만들기'}
                   </Link>
                 </div>
               )}
