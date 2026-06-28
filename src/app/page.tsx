@@ -168,7 +168,7 @@ export default function HomePage() {
           <Reveal trigger="load" delay={0}>
             <div className="flex items-center gap-2 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Korea's First Scrim Platform</p>
+              <p className="text-green-400 text-xs font-semibold tracking-[0.3em] uppercase">Find Your Scrim, Build Your Team</p>
             </div>
           </Reveal>
           <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 tracking-tight">

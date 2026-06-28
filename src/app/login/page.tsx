@@ -53,7 +53,7 @@ function LoginForm() {
           <Link href="/" className="flex justify-center">
             <Image src="/logo.png" alt="D31" width={120} height={120} className="object-contain" />
           </Link>
-          <p className="text-slate-500 text-sm mt-2">Korea&apos;s First Scrim Platform</p>
+          <p className="text-slate-500 text-sm mt-2">Find Your Scrim, Build Your Team</p>
         </div>
 
         <div className="bg-[#1e1e2e]/80 backdrop-blur border border-white/10 rounded p-8 flex flex-col gap-5 shadow-2xl">

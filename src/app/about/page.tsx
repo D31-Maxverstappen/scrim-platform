@@ -8,7 +8,7 @@ export default function AboutPage() {
         <Link href="/" className="text-slate-500 text-sm hover:text-slate-300 transition">← 메인으로</Link>
 
         <h1 className="text-white font-black text-3xl mt-6 mb-2">소개</h1>
-        <p className="text-slate-500 text-sm mb-12">D31.GG — 대한민국 최초 발로란트 스크림 매칭 플랫폼</p>
+        <p className="text-slate-500 text-sm mb-12">D31.GG — 한국 FPS 유저들을 위한 스크림 허브</p>
 
         <div className="flex flex-col gap-10 text-sm leading-relaxed">
 
