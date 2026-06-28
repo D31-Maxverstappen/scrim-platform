@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import Link from 'next/link'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import ScrimsClient from './ScrimsClient'
 
@@ -27,6 +28,7 @@ export default async function ValorantScrimsPage({
     .single()
 
   const myTier = myTeam?.tier_avg ?? null
+  const isCaptain = !!myTeam  // 주장만 스크림 공고를 올릴 수 있음 (createScrimAction 조건과 일치)
 
   let posts: any[] = []
   let total = 0
@@ -71,6 +73,14 @@ export default async function ValorantScrimsPage({
             <h1 className="text-2xl font-bold text-white">스크림 게시판</h1>
             <p className="text-slate-400 text-sm mt-1">실력에 맞는 스크림 상대를 찾아보세요</p>
           </div>
+          {isCaptain && (
+            <Link
+              href="/scrims/post"
+              className="shrink-0 bg-[#00D2BE] hover:bg-[#00a896] text-white text-sm font-semibold px-4 py-2.5 rounded transition"
+            >
+              + 스크림 올리기
+            </Link>
+          )}
         </div>
 
         <ScrimsClient
