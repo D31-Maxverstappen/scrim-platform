@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense } from 'react'
 import { usePathname } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import { showSidebar } from '@/lib/showSidebar'
@@ -8,5 +9,10 @@ import { showSidebar } from '@/lib/showSidebar'
 export default function SidebarGate() {
   const pathname = usePathname()
   if (!showSidebar(pathname)) return null
-  return <Sidebar />
+  // Sidebar가 useSearchParams(모집 탭 active 판정)를 쓰므로 Suspense 경계로 감싼다
+  return (
+    <Suspense fallback={null}>
+      <Sidebar />
+    </Suspense>
+  )
 }

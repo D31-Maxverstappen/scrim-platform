@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, Fragment } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 // 라이트 모드 일시 비활성화 — 다크 모드 고정 (추후 재개 시 ThemeToggle import·렌더 복구)
@@ -43,11 +43,20 @@ const NAV = [
     ),
   },
   {
-    href: '/recruit',
-    label: '선수·팀 구하기',
+    href: '/recruit?type=lft',
+    label: '팀 구하기',
     icon: (
       <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/recruit?type=lfp',
+    label: '선수·코치 구하기',
+    icon: (
+      <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 0 1-3.417.592l-2.147-6.15M18 13a3 3 0 1 0 0-6M5.436 13.683A4.001 4.001 0 0 1 7 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 0 1-1.564-.317z" />
       </svg>
     ),
   },
@@ -150,6 +159,9 @@ const MY_TEAM_ICON = (
 export default function Sidebar() {
   const router = useRouter()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  // 모집 탭(/recruit) active 판정용 — 기본 lft(팀 구하기)
+  const recruitType = searchParams.get('type') === 'lfp' ? 'lfp' : 'lft'
   const [search, setSearch] = useState('')
   const [teams, setTeams] = useState<TeamResult[]>([])
   const [users, setUsers] = useState<UserResult[]>([])
@@ -295,7 +307,11 @@ export default function Sidebar() {
         {/* 네비 링크 */}
         <nav className="flex-1 flex flex-col gap-1 px-2 overflow-y-auto">
           {navItems.map((item, idx) => {
-            const active = item.href === activeHref
+            // 모집 항목(/recruit?type=...)은 type 쿼리로 active 판정, 그 외는 경로 매칭
+            const isRecruit = item.href.startsWith('/recruit?')
+            const active = isRecruit
+              ? (pathname === '/recruit' && item.href.endsWith(`type=${recruitType}`))
+              : item.href === activeHref
             const link = (
               <Link key={item.href} href={item.href}
                 className={`sidebar-nav-item flex items-center gap-3 px-3 py-3 rounded text-sm font-semibold${active ? ' active' : ''}`}>
