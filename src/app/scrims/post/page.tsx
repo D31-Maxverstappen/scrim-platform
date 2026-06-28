@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState, useTransition, useRef } from 'react'
 import { createScrimAction } from '@/app/actions'
 import { VAL_TIERS } from '@/lib/tiers'
-import { toDateInputValue, formatKST } from '@/lib/datetime'
+import { toDateInputValue } from '@/lib/datetime'
 
 const GAMES = [
   { value: 'valorant', label: 'VALORANT' },
@@ -24,7 +24,6 @@ export default function PostScrimPage() {
   const [mo, setMo] = useState(today.slice(5, 7))
   const [dy, setDy] = useState(today.slice(8, 10))
   const date = y.length === 4 && mo && dy ? `${y}-${mo.padStart(2, '0')}-${dy.padStart(2, '0')}` : ''
-  const weekday = date ? formatKST(`${date}T12:00:00+09:00`, { weekday: 'short' }) : ''
   const yRef = useRef<HTMLInputElement>(null)
   const moRef = useRef<HTMLInputElement>(null)
   const dyRef = useRef<HTMLInputElement>(null)
@@ -118,7 +117,6 @@ export default function PostScrimPage() {
                 className="w-14 bg-white/5 border border-white/10 rounded px-2 py-3 text-white text-center placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition"
               />
               <span className="text-slate-500 text-sm shrink-0">일</span>
-              {weekday && <span className="text-[#00D2BE] text-sm shrink-0">({weekday})</span>}
             </div>
           </div>
 
