@@ -167,3 +167,13 @@ export async function updateCountryAction(country: string) {
 
   await supabase.from('users').update({ country: country || null }).eq('id', user.id)
 }
+
+export async function updateCareerAction(career: string) {
+  const supabase = await getSupabase()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: '로그인이 필요해요' }
+  if (career.length > 1000) return { error: '경력은 1000자 이내로 입력해 주세요' }
+
+  await supabase.from('users').update({ career: career.trim() || null }).eq('id', user.id)
+  return { ok: true }
+}

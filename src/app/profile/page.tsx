@@ -5,6 +5,7 @@ import { MANNER_ENABLED } from '@/lib/features'
 import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
+import CareerEditor from '@/components/profile/CareerEditor'
 import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
 import DisconnectRiotButton from '@/components/profile/DisconnectRiotButton'
 import { GAME_LABEL } from '@/lib/games'
@@ -24,7 +25,7 @@ export default async function ProfilePage() {
 
   const { data: profile } = await supabase
     .from('users')
-    .select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score')
+    .select('id, avatar_url, val_gamename, val_tagline, val_tier, riot_gamename, riot_tagline, tier, game_type, country, manner_score, career')
     .eq('id', user.id)
     .single()
 
@@ -231,6 +232,11 @@ export default async function ProfilePage() {
             <p className="text-slate-600 text-xs">승률 {inhouseWinRate !== null ? `${inhouseWinRate}%` : '—'} · {inhouseTotal}판</p>
           </div>
 
+        </div>
+
+        {/* 경력 / 이력 */}
+        <div className="mb-6">
+          <CareerEditor initial={profile?.career ?? null} />
         </div>
 
         {/* 최근 스크림 */}

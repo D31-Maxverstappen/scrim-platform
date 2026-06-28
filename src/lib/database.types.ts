@@ -1245,6 +1245,7 @@ export type Database = {
         Row: {
           account_type: string
           avatar_url: string | null
+          career: string | null
           country: string | null
           created_at: string
           discord_id: string | null
@@ -1272,6 +1273,7 @@ export type Database = {
         Insert: {
           account_type?: string
           avatar_url?: string | null
+          career?: string | null
           country?: string | null
           created_at?: string
           discord_id?: string | null
@@ -1299,6 +1301,7 @@ export type Database = {
         Update: {
           account_type?: string
           avatar_url?: string | null
+          career?: string | null
           country?: string | null
           created_at?: string
           discord_id?: string | null

@@ -22,7 +22,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
 
   const { data: profile } = await supabase
     .from('users')
-    .select('id, riot_gamename, riot_tagline, val_gamename, val_tagline, val_tier, tier, game_type, avatar_url, country, manner_score, account_type')
+    .select('id, riot_gamename, riot_tagline, val_gamename, val_tagline, val_tier, tier, game_type, avatar_url, country, manner_score, account_type, career')
     .eq('id', id)
     .single()
 
@@ -113,6 +113,14 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
             <p className="text-2xl font-black text-white">{winRate !== null ? `${winRate}%` : '—'}</p>
           </div>
         </div>
+
+        {/* 경력 / 이력 (등록한 경우에만 표시) */}
+        {profile.career && (
+          <div className="bg-[#13131f] border border-white/5 rounded p-5 mb-6">
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-3">경력</p>
+            <p className="text-slate-300 text-sm whitespace-pre-wrap leading-relaxed">{profile.career}</p>
+          </div>
+        )}
 
         {/* 소속 팀 (여러 팀 — 코치는 여러 팀 가능) */}
         <div className="bg-[#13131f] border border-white/5 rounded p-5">
