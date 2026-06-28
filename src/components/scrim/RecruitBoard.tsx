@@ -66,6 +66,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   const profileTier = u?.val_tier ?? u?.tier
   const tierDisplay = formatTierDisplay(post.tier)
   const isOwn = post.user_id === currentUserId
+  const isCoach = u?.account_type === 'coach'
 
   return (
     <div className={`bg-[#13131f] border rounded p-4 flex flex-col gap-3 relative ${isOwn ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
@@ -78,8 +79,14 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
             : gameName?.[0]?.toUpperCase() ?? '?'}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white font-bold text-sm truncate">{gameName ?? '—'}</p>
-          {tierDisplay.length === 0 && profileTier && (
+          <div className="flex items-center gap-1.5">
+            <p className="text-white font-bold text-sm truncate">{gameName ?? '—'}</p>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0"
+              style={isCoach ? { background: '#60a5fa1a', color: '#60a5fa' } : { background: '#94a3b81a', color: '#94a3b8' }}>
+              {isCoach ? '코치' : '선수'}
+            </span>
+          </div>
+          {tierDisplay.length === 0 && profileTier && !isCoach && (
             <p className="text-xs" style={{ color: getTierColor(profileTier) }}>{profileTier}</p>
           )}
         </div>
@@ -127,16 +134,18 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   )
 }
 
-function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }: {
+function LfpCard({ post, currentUserId, currentUserHasTeam, currentUserAccountType, onClose, onDelete }: {
   post: RecruitPost
   currentUserId: string
   currentUserHasTeam: boolean
+  currentUserAccountType: string
   onClose: (id: string) => void
   onDelete: (id: string) => void
 }) {
   const team = Array.isArray(post.teams) ? post.teams[0] : post.teams
   const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
   const isOwn = post.user_id === currentUserId
+  const isLfc = post.type === 'lfc' // 코치 구함
   const tierDisplay = formatTierDisplay(post.tier)
 
   const [applyState, setApplyState] = useState<'idle' | 'loading' | 'done'>('idle')
@@ -155,7 +164,10 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
     }
   }
 
-  const showApplyBtn = !isOwn && !currentUserHasTeam
+  // 선수 구함=선수계정·무소속만 신청 / 코치 구함=코치계정만 신청
+  const showApplyBtn = !isOwn && (isLfc
+    ? currentUserAccountType === 'coach'
+    : currentUserAccountType !== 'coach' && !currentUserHasTeam)
 
   return (
     <div className={`bg-[#13131f] border rounded p-4 flex flex-col gap-3 relative ${isOwn ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
@@ -167,14 +179,20 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
           {team?.name?.[0]?.toUpperCase() ?? '?'}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-white font-bold text-sm truncate">{team?.name ?? '팀 없음'}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-white font-bold text-sm truncate">{team?.name ?? '팀 없음'}</p>
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0"
+              style={isLfc ? { background: '#60a5fa1a', color: '#60a5fa' } : { background: '#00D2BE1a', color: '#00D2BE' }}>
+              {isLfc ? '코치 구함' : '선수 구함'}
+            </span>
+          </div>
           {team?.tier_avg && <p className="text-xs text-slate-400">Avg. {team.tier_avg}</p>}
         </div>
         <span className="text-[11px] font-bold px-2 py-0.5 rounded shrink-0"
           style={{ background: gc + '22', color: gc }}>VAL</span>
       </div>
 
-      {post.roles && post.roles.length > 0 && (
+      {!isLfc && post.roles && post.roles.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
           <span className="text-[11px] text-slate-600">모집 포지션</span>
           {post.roles.map((r: string) => (
@@ -183,7 +201,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
         </div>
       )}
 
-      {tierDisplay.length > 0 && (
+      {!isLfc && tierDisplay.length > 0 && (
         <div className="flex flex-wrap gap-1 items-center">
           <span className="text-[11px] text-slate-600 shrink-0">희망 티어</span>
           {tierDisplay.map((d, i) => (
@@ -215,7 +233,7 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
                 disabled={applyState === 'loading'}
                 className="text-[11px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition"
               >
-                {applyState === 'loading' ? '신청 중...' : '가입 신청'}
+                {applyState === 'loading' ? '신청 중...' : isLfc ? '코치 지원' : '가입 신청'}
               </button>
             )
           )}
@@ -232,10 +250,11 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, onClose, onDelete }:
   )
 }
 
-export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, activeType, activeTier, activeRole }: {
+export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam, currentUserAccountType, activeType, activeTier, activeRole }: {
   posts: RecruitPost[]
   currentUserId: string
   currentUserHasTeam: boolean
+  currentUserAccountType: string
   activeType: string
   activeTier: string
   activeRole: string
@@ -277,11 +296,11 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
         <div className="flex gap-1 bg-white/5 rounded p-1">
           <a href={tabUrl('lft')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lft' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            LFT
+            팀 구하기
           </a>
           <a href={tabUrl('lfp')}
             className={`px-4 py-1.5 rounded text-xs font-bold transition ${activeType === 'lfp' ? 'bg-[#00D2BE] text-white' : 'text-slate-400 hover:text-white'}`}>
-            LFP
+            선수·코치 구하기
           </a>
         </div>
 
@@ -304,7 +323,7 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
         <EmptyState
           accent="#00D2BE"
           icon={activeType === 'lft' ? EmptyIcons.megaphone : EmptyIcons.search}
-          title={activeType === 'lft' ? '팀을 찾는 선수가 없어요' : '선수를 찾는 팀이 없어요'}
+          title={activeType === 'lft' ? '팀을 찾는 사람이 없어요' : '선수·코치를 찾는 팀이 없어요'}
           description="첫 번째로 올려보세요!"
           action={<a href="/recruit/post" className="bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 글 올리기</a>}
         />
@@ -313,7 +332,7 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
           {localPosts.map((post) =>
             activeType === 'lft'
               ? <LftCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
-              : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} onClose={handleClose} onDelete={handleDelete} />
+              : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} currentUserAccountType={currentUserAccountType} onClose={handleClose} onDelete={handleDelete} />
           )}
         </div>
       )}

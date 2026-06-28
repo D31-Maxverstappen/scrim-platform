@@ -12,10 +12,11 @@ export async function POST(req: NextRequest) {
 
   if (!type || !game_type) return NextResponse.json({ error: '필수 항목을 입력해주세요.' }, { status: 400 })
 
-  if (type === 'lfp') {
+  // 선수 모집(lfp)·코치 모집(lfc)은 팀 캡틴만
+  if (type === 'lfp' || type === 'lfc') {
     const { data: team } = await supabase.from('teams').select('captain_id').eq('id', team_id).single()
     if (!team || team.captain_id !== user.id) {
-      return NextResponse.json({ error: '팀 캡틴만 선수 모집을 올릴 수 있어요.' }, { status: 403 })
+      return NextResponse.json({ error: '팀 캡틴만 모집 글을 올릴 수 있어요.' }, { status: 403 })
     }
   }
 
@@ -37,15 +38,15 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  if (type === 'lfp' && team_id) {
+  if ((type === 'lfp' || type === 'lfc') && team_id) {
     const { count } = await admin
       .from('recruitment_posts')
       .select('id', { count: 'exact', head: true })
       .eq('team_id', team_id)
-      .eq('type', 'lfp')
+      .eq('type', type)
       .eq('status', 'active')
     if (count && count > 0) {
-      return NextResponse.json({ error: '이미 활성 선수 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
+      return NextResponse.json({ error: type === 'lfc' ? '이미 활성 코치 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' : '이미 활성 선수 구함 글이 있어요. 기존 글을 삭제 후 다시 올려주세요.' }, { status: 400 })
     }
   }
 

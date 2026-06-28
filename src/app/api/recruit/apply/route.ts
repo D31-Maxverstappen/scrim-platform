@@ -8,13 +8,17 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  // 이미 팀이 있으면 차단
-  const { data: myTeam } = await supabase
-    .from('team_members')
-    .select('team_id')
-    .eq('user_id', user.id)
-    .single()
-  if (myTeam) return NextResponse.json({ error: '이미 팀에 소속되어 있어요.' }, { status: 400 })
+  // 코치 계정은 여러 팀에 코치로 들어갈 수 있어 1팀 제약 제외. 선수는 이미 팀 있으면 차단.
+  const { data: meRow } = await supabase.from('users').select('account_type').eq('id', user.id).maybeSingle()
+  if (meRow?.account_type !== 'coach') {
+    const { data: myTeam } = await supabase
+      .from('team_members')
+      .select('team_id')
+      .eq('user_id', user.id)
+      .limit(1)
+      .maybeSingle()
+    if (myTeam) return NextResponse.json({ error: '이미 팀에 소속되어 있어요.' }, { status: 400 })
+  }
 
   const { postId } = await req.json()
   if (!postId) return NextResponse.json({ error: '잘못된 요청이에요.' }, { status: 400 })

@@ -15,6 +15,7 @@ export type UserBrief = {
   country?: string | null
   tier?: string | null
   val_tier?: string | null
+  account_type?: string | null
 }
 
 export type TeamBrief = {
@@ -67,10 +68,11 @@ export type ScrimPost = {
   teams: TeamBrief | TeamBrief[] | null
 }
 
-// 팀원 모집 게시글 (LFT/LFP) — users/teams가 조인 시 배열로 추론될 수 있음
+// 팀원 모집 게시글 — type: lft(팀 구함) / lfp(선수 구함) / lfc(코치 구함)
 export type RecruitPost = {
   id: string
   user_id: string
+  type?: string
   game_type: string
   tier?: string | null
   roles?: string[] | null

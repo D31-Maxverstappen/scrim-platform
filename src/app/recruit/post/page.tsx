@@ -23,9 +23,11 @@ const VAL_TIERS = [
 function RecruitPostContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const defaultType = searchParams.get('type') === 'lfp' ? 'lfp' : 'lft'
+  const spType = searchParams.get('type')
+  const defaultType: 'lft' | 'lfp' | 'lfc' = spType === 'lfp' ? 'lfp' : spType === 'lfc' ? 'lfc' : 'lft'
 
-  const [type, setType] = useState<'lft' | 'lfp'>(defaultType)
+  const [type, setType] = useState<'lft' | 'lfp' | 'lfc'>(defaultType)
+  const [accountType, setAccountType] = useState<string>('player')
   const game = 'valorant'
   const [tier, setTier] = useState('')              // LFT 단일
   const [tiers, setTiers] = useState<string[]>([]) // LFP 다중 (범위)
@@ -42,17 +44,20 @@ function RecruitPostContent() {
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (!user) return
-      supabase.from('users').select('val_tier, tier').eq('id', user.id).single()
+      supabase.from('users').select('val_tier, tier, account_type').eq('id', user.id).single()
         .then(({ data: profile }) => {
-          if (type === 'lft') {
-            const t = profile?.val_tier ?? null
-            if (t) setTier(t)
-          }
+          // 코치 계정은 '팀 구하기(코치)'만 — 티어/포지션 없이
+          if (profile?.account_type === 'coach') { setAccountType('coach'); setType('lft') }
+          else if (profile?.val_tier) setTier(profile.val_tier)
         })
       supabase.from('teams').select('id, name, tier_avg, game_type').eq('captain_id', user.id).eq('game_type', game).single()
         .then(({ data }) => setMyTeam(data))
     })
   }, [game])
+
+  const isCoach = accountType === 'coach'
+  const needsTeam = type === 'lfp' || type === 'lfc'           // 팀 캡틴이 모집
+  const showTierRoles = (type === 'lft' && !isCoach) || type === 'lfp' // 선수 관련 입력
 
   const toggleRole = (r: string) => {
     setRoles((prev) => prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r])
@@ -81,7 +86,7 @@ function RecruitPostContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (type === 'lfp' && !myTeam) { setError('해당 게임의 팀 캡틴이 아니에요.'); return }
+    if (needsTeam && !myTeam) { setError('해당 게임의 팀 캡틴이 아니에요.'); return }
     if (discordTag && !DISCORD_REGEX.test(discordTag)) {
       setError('Discord 태그 형식이 올바르지 않아요. (예: username 또는 username#1234)')
       return
@@ -93,15 +98,15 @@ function RecruitPostContent() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type, game_type: game,
-        tier: type === 'lft' ? (tier || null) : (tiers.length ? tiers.join(',') : null),
-        roles: roles.length ? roles : null,
+        tier: !showTierRoles ? null : (type === 'lft' ? (tier || null) : (tiers.length ? tiers.join(',') : null)),
+        roles: showTierRoles && roles.length ? roles : null,
         note: note || null,
         discord_tag: discordTag || null,
-        team_id: type === 'lfp' ? myTeam?.id : null,
+        team_id: needsTeam ? myTeam?.id : null,
       }),
     })
     setLoading(false)
-    if (res.ok) router.push(`/recruit?type=${type}`)
+    if (res.ok) router.push(`/recruit?type=${type === 'lfc' ? 'lfp' : type}`)
     else {
       const data = await res.json()
       setError(data.error ?? '오류가 발생했어요.')
@@ -124,25 +129,37 @@ function RecruitPostContent() {
 
         <form onSubmit={handleSubmit} className="bg-[#1e1e2e] border border-white/10 rounded p-6 flex flex-col gap-5">
 
-          {/* LFT / LFP */}
+          {/* 유형 */}
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">유형 *</label>
-            <div className="grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]); setAnchorTier(null) }}
-                className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-                LFT
-                <span className="text-[11px] opacity-70 font-normal">팀 구함</span>
-              </button>
-              <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
-                className={`py-3 rounded text-sm font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-                LFP
-                <span className="text-[11px] opacity-70 font-normal">선수 구함</span>
-              </button>
-            </div>
+            {isCoach ? (
+              <div className="py-3 rounded text-sm font-bold bg-[#00D2BE] text-white flex flex-col items-center gap-0.5">
+                팀 구하기
+                <span className="text-[11px] opacity-70 font-normal">코치로 맡을 팀을 찾아요</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                <button type="button" onClick={() => { setType('lft'); setRoles([]); setTiers([]); setAnchorTier(null) }}
+                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lft' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  팀 구하기
+                  <span className="text-[10px] opacity-70 font-normal">팀 찾는 선수</span>
+                </button>
+                <button type="button" onClick={() => { setType('lfp'); setRoles([]); setTier(''); setAnchorTier(null) }}
+                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfp' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  선수 구함
+                  <span className="text-[10px] opacity-70 font-normal">팀이 선수 모집</span>
+                </button>
+                <button type="button" onClick={() => { setType('lfc'); setRoles([]); setTier(''); setTiers([]); setAnchorTier(null) }}
+                  className={`py-3 rounded text-xs font-bold transition flex flex-col items-center gap-0.5 ${type === 'lfc' ? 'bg-[#00D2BE] text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
+                  코치 구함
+                  <span className="text-[10px] opacity-70 font-normal">팀이 코치 모집</span>
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* LFP일 때 내 팀 표시 */}
-          {type === 'lfp' && (
+          {/* 팀 모집(선수/코치)일 때 내 팀 표시 */}
+          {needsTeam && (
             <div className="bg-white/3 border border-white/5 rounded px-4 py-3">
               {myTeam ? (
                 <div>
@@ -151,12 +168,20 @@ function RecruitPostContent() {
                   {myTeam.tier_avg && <p className="text-slate-400 text-xs">Avg. {myTeam.tier_avg}</p>}
                 </div>
               ) : (
-                <p className="text-red-400 text-xs">이 게임의 팀 캡틴이어야 선수 모집을 올릴 수 있어요.</p>
+                <p className="text-red-400 text-xs">이 게임의 팀 캡틴이어야 모집 글을 올릴 수 있어요.</p>
               )}
             </div>
           )}
 
-          {/* 포지션/역할 */}
+          {/* 코치 모집 안내 */}
+          {type === 'lfc' && (
+            <p className="text-slate-500 text-xs bg-white/3 border border-white/5 rounded px-4 py-3">
+              우리 팀을 맡아줄 코치를 찾는 글이에요. 티어·포지션 없이 한마디로 어떤 코치를 원하는지 적어주세요.
+            </p>
+          )}
+
+          {/* 포지션/역할 — 선수 관련일 때만 */}
+          {showTierRoles && (
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 포지션' : '모집 포지션'} <span className="text-slate-500 font-normal">(복수 선택 가능)</span>
@@ -167,8 +192,10 @@ function RecruitPostContent() {
               ))}
             </div>
           </div>
+          )}
 
-          {/* 티어 */}
+          {/* 티어 — 선수 관련일 때만 */}
+          {showTierRoles && (
           <div>
             <label className="text-slate-300 text-sm font-semibold block mb-2">
               {type === 'lft' ? '내 티어' : '희망 티어'}
@@ -208,6 +235,7 @@ function RecruitPostContent() {
               }
             </div>
           </div>
+          )}
 
           {/* 한마디 */}
           <div>
@@ -217,7 +245,7 @@ function RecruitPostContent() {
               onChange={(e) => setNote(e.target.value)}
               rows={3}
               maxLength={200}
-              placeholder={type === 'lft' ? '스크림 가능 시간, 원하는 팀 분위기 등...' : '팀 소개, 연습 일정 등...'}
+              placeholder={type === 'lfc' ? '원하는 코치 스타일, 연습 일정 등...' : type === 'lft' ? (isCoach ? '코칭 경력, 가능 시간, 맡고 싶은 팀 등...' : '스크림 가능 시간, 원하는 팀 분위기 등...') : '팀 소개, 연습 일정 등...'}
               className="w-full bg-white/5 border border-white/10 rounded px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-[#00D2BE] transition resize-none"
             />
           </div>
@@ -244,7 +272,7 @@ function RecruitPostContent() {
             <p className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded px-4 py-3">{error}</p>
           )}
 
-          <button type="submit" disabled={loading || (type === 'lfp' && !myTeam)}
+          <button type="submit" disabled={loading || (needsTeam && !myTeam)}
             className="w-full bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white font-semibold py-3 rounded transition">
             {loading ? '올리는 중...' : '올리기'}
           </button>

@@ -25,23 +25,24 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
 
   let query = admin
     .from('recruitment_posts')
-    .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url), teams(id, name, tier_avg, game_type, captain_id)', { count: 'exact' })
+    .select('*, users(id, riot_gamename, val_gamename, val_tier, tier, avatar_url, account_type), teams(id, name, tier_avg, game_type, captain_id)', { count: 'exact' })
     .eq('status', 'active')
-    .eq('type', type)
     .order('created_at', { ascending: false })
     .range(from, to)
+
+  // '선수·코치 구하기' 탭(lfp)은 팀의 선수모집(lfp)+코치모집(lfc)을 함께 노출
+  query = type === 'lfp' ? (query as any).in('type', ['lfp', 'lfc']) : (query as any).eq('type', type)
 
   if (tier) query = (query as any).ilike('tier', `%${tier}%`)
   if (role) query = (query as any).contains('roles', [role])
 
-  const [{ data: posts, count }, { data: myTeam }] = await Promise.all([
+  const [{ data: posts, count }, { data: myMember }, { data: meRow }] = await Promise.all([
     query,
-    supabase
-      .from('team_members')
-      .select('team_id')
-      .eq('user_id', user.id)
-      .single(),
+    supabase.from('team_members').select('team_id').eq('user_id', user.id).limit(1).maybeSingle(),
+    supabase.from('users').select('account_type').eq('id', user.id).maybeSingle(),
   ])
+  const myTeam = myMember
+  const currentUserAccountType = meRow?.account_type ?? 'player'
 
   return (
     <div className="min-h-screen ml-56 bg-[#0a0a0a]">
@@ -55,6 +56,7 @@ export default async function RecruitPage({ searchParams }: { searchParams: Prom
           posts={posts ?? []}
           currentUserId={user.id}
           currentUserHasTeam={!!myTeam}
+          currentUserAccountType={currentUserAccountType}
           activeType={type}
           activeTier={tier}
           activeRole={role}
