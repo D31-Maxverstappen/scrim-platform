@@ -140,25 +140,49 @@ const INHOUSE_NAV = [
   },
 ]
 
+// '내 팀' 메뉴 아이콘 (방패 — 소속/소속팀 식별)
+const MY_TEAM_ICON = (
+  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+  </svg>
+)
+
 export default function Sidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  // /inhouse 진입 시 내전 전용 메뉴로 자동 컨텍스트 전환
-  const navItems = pathname.startsWith('/inhouse') ? INHOUSE_NAV : NAV
-  const activeHref = [...navItems]
-    .filter((it) => pathname === it.href || pathname.startsWith(it.href + '/'))
-    .sort((a, b) => b.href.length - a.href.length)[0]?.href
   const [search, setSearch] = useState('')
   const [teams, setTeams] = useState<TeamResult[]>([])
   const [users, setUsers] = useState<UserResult[]>([])
   const [open, setOpen] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const [myTeamId, setMyTeamId] = useState<string | null>(null)
   const wrapperRef = useRef<HTMLDivElement>(null)
   const fetchIdRef = useRef(0)
+
+  // '내 팀': 소속 팀이 있으면 홈/내 전적 다음에 노출(캡틴 팀 우선)
+  const myTeamItem = myTeamId ? { href: `/teams/${myTeamId}`, label: '내 팀', icon: MY_TEAM_ICON } : null
+  // /inhouse 진입 시 내전 전용 메뉴로 자동 컨텍스트 전환
+  const navItems = pathname.startsWith('/inhouse')
+    ? INHOUSE_NAV
+    : (myTeamItem ? [...NAV.slice(0, 2), myTeamItem, ...NAV.slice(2)] : NAV)
+  const activeHref = [...navItems]
+    .filter((it) => pathname === it.href || pathname.startsWith(it.href + '/'))
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href
 
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null))
   }, [])
+
+  // 소속 팀 조회 → '내 팀' 메뉴 (캡틴인 팀 우선, 없으면 첫 팀)
+  useEffect(() => {
+    if (!userId) { setMyTeamId(null); return }
+    createClient().from('team_members').select('team_id, role').eq('user_id', userId)
+      .then(({ data }) => {
+        if (!data || data.length === 0) { setMyTeamId(null); return }
+        const captain = data.find((m) => m.role === 'captain')
+        setMyTeamId((captain ?? data[0]).team_id)
+      })
+  }, [userId])
 
   useEffect(() => {
     if (!search.trim()) { setTeams([]); setUsers([]); setOpen(false); return }
