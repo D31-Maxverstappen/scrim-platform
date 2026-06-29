@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import { getTeamStatsMock, type TeamStats } from '@/lib/teamStatsMock'
 import AgentIcon from '@/components/common/AgentIcon'
+import MapIcon from '@/components/common/MapIcon'
+import RoleIcon from '@/components/common/RoleIcon'
+import WeaponIcon from '@/components/common/WeaponIcon'
 
 // 팀 통계 대시보드 (유료 Pro 기능 — 목업 시연용).
 // 데이터는 lib/teamStatsMock 에서 생성(결정적). 라이엇 데이터/스크림 축적 후 실집계로 교체.
@@ -291,9 +294,9 @@ function SideWinrate({ s }: { s: TeamStats }) {
 function EconomyWinrate({ s }: { s: TeamStats }) {
   const e = s.advanced.economy
   const rows = [
-    { label: '풀바이', sub: '완전 구매', value: e.fullBuy },
-    { label: '포스바이', sub: '무리한 구매', value: e.forceBuy },
-    { label: '이코', sub: '아낌(권총)', value: e.eco },
+    { label: '풀바이', sub: '완전 구매', value: e.fullBuy, weapon: 'vandal' },
+    { label: '포스바이', sub: '무리한 구매', value: e.forceBuy, weapon: 'spectre' },
+    { label: '이코', sub: '아낌(권총)', value: e.eco, weapon: 'classic' },
   ]
   return (
     <Card title="라운드 경제별 승률" badge="라이엇 연동 시">
@@ -301,7 +304,8 @@ function EconomyWinrate({ s }: { s: TeamStats }) {
         {rows.map((r) => (
           <div key={r.label}>
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-sm font-bold text-white">
+              <span className="text-sm font-bold text-white flex items-center gap-2">
+                <WeaponIcon weapon={r.weapon} className="h-3.5 w-auto max-w-[44px] opacity-70" />
                 {r.label} <span className="text-[11px] font-normal text-slate-600">{r.sub}</span>
               </span>
               <span className="text-sm font-black" style={{ color: r.value >= 50 ? TEAL : '#f87171' }}>{r.value}%</span>
@@ -353,18 +357,21 @@ function FirstBloodImpact({ s }: { s: TeamStats }) {
 // ── 핵심 교전 지표 ──
 function KeyMetrics({ s }: { s: TeamStats }) {
   const a = s.advanced
-  const items = [
-    { label: '피스톨 승률', value: `${a.pistolWinrate}%`, hint: '1·13라운드' },
-    { label: '선취점 비율', value: `${a.firstBloodRate}%`, hint: '첫 킬 선점' },
-    { label: '클러치 성공', value: `${a.clutchRate}%`, hint: '1vX 상황' },
-    { label: '멀티킬 라운드', value: `${a.multiKillRate}%`, hint: '2킬+ 발생' },
+  const items: { label: string; value: string; hint: string; weapon: string | null }[] = [
+    { label: '피스톨 승률', value: `${a.pistolWinrate}%`, hint: '1·13라운드', weapon: 'classic' },
+    { label: '선취점 비율', value: `${a.firstBloodRate}%`, hint: '첫 킬 선점', weapon: null },
+    { label: '클러치 성공', value: `${a.clutchRate}%`, hint: '1vX 상황', weapon: null },
+    { label: '멀티킬 라운드', value: `${a.multiKillRate}%`, hint: '2킬+ 발생', weapon: null },
   ]
   return (
     <Card title="핵심 교전 지표" badge="라이엇 연동 시">
       <div className="grid grid-cols-2 gap-3">
         {items.map((it) => (
           <div key={it.label} className="rounded bg-white/[0.02] border border-white/5 p-3">
-            <p className="text-[11px] text-slate-500 mb-1">{it.label}</p>
+            <p className="text-[11px] text-slate-500 mb-1 flex items-center gap-1.5">
+              {it.label}
+              <WeaponIcon weapon={it.weapon} className="h-3 w-auto max-w-[34px] opacity-60" />
+            </p>
             <p className="text-xl font-black" style={{ color: TEAL }}>{it.value}</p>
             <p className="text-[10px] text-slate-600 mt-0.5">{it.hint}</p>
           </div>
@@ -423,7 +430,10 @@ function MapWinrates({ s }: { s: TeamStats }) {
           return (
             <div key={m.map}>
               <div className="flex items-center gap-3">
-                <span className="w-16 shrink-0 text-xs font-semibold text-slate-300">{m.map}</span>
+                <div className="flex items-center gap-2.5 w-28 shrink-0">
+                  <MapIcon map={m.map} className="w-7 h-7 rounded" />
+                  <span className="text-xs font-semibold text-slate-300 truncate">{m.map}</span>
+                </div>
                 <div className="flex-1 h-2 rounded bg-white/5 overflow-hidden">
                   <div className="h-full rounded" style={{ width: `${wr}%`, background: wr >= 50 ? TEAL : LOSS }} />
                 </div>
@@ -431,7 +441,7 @@ function MapWinrates({ s }: { s: TeamStats }) {
                 <span className="w-12 shrink-0 text-right text-[11px] text-slate-600">{m.wins}-{m.losses}</span>
               </div>
               {/* 공/수 세부 */}
-              <div className="flex items-center gap-2 mt-1 pl-[76px] text-[11px]">
+              <div className="flex items-center gap-2 mt-1 pl-[124px] text-[11px]">
                 <span className="text-slate-500" style={{ color: '#f87171' }}>공 {m.attackWr}%</span>
                 <span className="text-slate-700">·</span>
                 <span style={{ color: '#60a5fa' }}>수 {m.defenseWr}%</span>
@@ -497,7 +507,9 @@ function PlayerStats({ s }: { s: TeamStats }) {
                     <AgentIcon agent={p.agent} className="w-7 h-7 rounded" char="text-[10px]" />
                     <div>
                       <p className="text-white font-semibold leading-tight">{p.name}</p>
-                      <p className="text-[11px] text-slate-500 leading-tight">{p.agent} · {p.role}</p>
+                      <p className="text-[11px] text-slate-500 leading-tight flex items-center gap-1">
+                        {p.agent} · <RoleIcon role={p.role} size={12} className="opacity-70" />{p.role}
+                      </p>
                     </div>
                   </div>
                 </td>
