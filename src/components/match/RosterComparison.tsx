@@ -1,3 +1,4 @@
+import { Fragment } from 'react'
 import { FlagImg } from '@/components/common/CountrySelect'
 
 type Member = {
@@ -90,22 +91,22 @@ export default function RosterComparison({ team1Members, team2Members, team1Name
           const isIglRow = (m1?.is_igl || m2?.is_igl)
 
           return (
-            <>
-              <div key={`t1-${i}`} className={isIglRow ? 'ring-1 ring-[#00D2BE]/30' : ''}>
+            <Fragment key={i}>
+              <div className={isIglRow ? 'ring-1 ring-[#00D2BE]/30' : ''}>
                 {m1 ? <PlayerCard member={m1} /> : <EmptyCard />}
               </div>
 
-              <div key={`vs-${i}`} className="flex items-center justify-center px-2">
+              <div className="flex items-center justify-center px-2">
                 {i === Math.floor(maxLen / 2)
                   ? <span className="text-slate-700 text-xs font-black">VS</span>
                   : <div className="w-px h-full bg-white/5" />
                 }
               </div>
 
-              <div key={`t2-${i}`} className={isIglRow ? 'ring-1 ring-[#00D2BE]/30' : ''}>
+              <div className={isIglRow ? 'ring-1 ring-[#00D2BE]/30' : ''}>
                 {m2 ? <PlayerCard member={m2} flip /> : <EmptyCard flip />}
               </div>
-            </>
+            </Fragment>
           )
         })}
       </div>
