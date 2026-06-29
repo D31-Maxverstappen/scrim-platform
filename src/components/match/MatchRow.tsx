@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { formatKST } from '@/lib/datetime'
+import AgentIcon from '@/components/common/AgentIcon'
 import type { ValMatch, ValMatchPlayer } from '@/lib/valorantMatchMock'
 
 const WIN_COLOR = '#22c55e'
@@ -15,7 +16,7 @@ function PlayerRow({ p, maxAcs }: { p: ValMatchPlayer; maxAcs: number }) {
   return (
     <div className={`grid grid-cols-12 gap-2 items-center px-3 py-1.5 text-xs ${p.isMe ? 'bg-[#00D2BE]/10' : 'hover:bg-white/[0.02]'}`}>
       <div className="col-span-4 flex items-center gap-2 min-w-0">
-        <span className="w-6 h-6 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-[11px]">{p.agent[0]}</span>
+        <AgentIcon agent={p.agent} className="w-6 h-6 rounded border border-white/10" char="text-[11px]" />
         <span className={`truncate ${p.isMe ? 'text-[#00D2BE] font-bold' : 'text-slate-300'}`}>{p.name}{p.tag && <span className="text-slate-600 font-normal">#{p.tag}</span>}</span>
       </div>
       <span className="col-span-3 text-center text-slate-300 whitespace-nowrap">{p.kills} <span className="text-slate-600">/</span> <span className="text-[#ff6b76]">{p.deaths}</span> <span className="text-slate-600">/</span> {p.assists}</span>
@@ -62,7 +63,7 @@ export default function MatchRow({ m }: { m: ValMatch }) {
           </div>
 
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            <div className="w-10 h-10 shrink-0 rounded bg-[#1a1a2e] flex items-center justify-center text-white font-black text-sm" style={{ border: `1px solid ${accent}66` }}>{m.agent[0]}</div>
+            <AgentIcon agent={m.agent} className="w-10 h-10 rounded" char="text-sm" style={{ border: `1px solid ${accent}66` }} />
             <div className="min-w-0">
               <p className="text-white font-semibold text-sm truncate">{m.agent}</p>
               <p className="text-slate-500 text-xs truncate">{m.map} · {m.agentRole}</p>

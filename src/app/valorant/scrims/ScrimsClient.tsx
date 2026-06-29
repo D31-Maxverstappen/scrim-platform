@@ -6,6 +6,7 @@ import Pagination from '@/components/common/Pagination'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { CalendarIcon } from '@/components/common/icons'
+import RankIcon from '@/components/common/RankIcon'
 import { inTierRange } from '@/lib/tiers'
 import { formatKST } from '@/lib/datetime'
 
@@ -100,7 +101,7 @@ export default function ScrimsClient({
                     <span className="text-white font-bold text-sm group-hover:text-[#00D2BE] transition">
                       {team?.name ?? '—'}
                     </span>
-                    {team?.tier_avg && <span className="text-slate-500 text-xs">· {team.tier_avg}</span>}
+                    {team?.tier_avg && <span className="inline-flex items-center gap-1 text-slate-500 text-xs">· <RankIcon tier={team.tier_avg} size={20} />{team.tier_avg}</span>}
                     {post.format && (
                       <span className="text-[11px] font-black bg-[#00D2BE]/10 text-[#00D2BE] px-1.5 py-0.5 rounded">{post.format}</span>
                     )}

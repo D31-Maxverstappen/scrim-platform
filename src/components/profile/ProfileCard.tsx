@@ -1,6 +1,7 @@
 'use client'
 
 import AvatarUpload from '@/components/profile/AvatarUpload'
+import RankIcon from '@/components/common/RankIcon'
 
 const TIER_COLOR: Record<string, string> = {
   Iron: '#8899aa', Bronze: '#a57c52', Silver: '#b0b8c8',
@@ -40,8 +41,8 @@ export default function ProfileCard({ userId, avatarUrl, valGamename, valTagline
                 {valTagline && <span className="text-slate-600 font-normal text-xs"> #{valTagline}</span>}
               </p>
               {valTier && (
-                <p className="text-xs font-bold mt-1" style={{ color: tierColor(valTier) }}>
-                  {valTier}
+                <p className="inline-flex items-center gap-1 text-xs font-bold mt-1" style={{ color: tierColor(valTier) }}>
+                  <RankIcon tier={valTier} size={22} />{valTier}
                 </p>
               )}
             </>

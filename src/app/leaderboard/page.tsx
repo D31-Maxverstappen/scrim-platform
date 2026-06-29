@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import type { GameType } from '@/lib/types'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import Pagination from '@/components/common/Pagination'
+import RankIcon from '@/components/common/RankIcon'
 
 const PAGE_SIZE = 20
 
@@ -139,7 +140,7 @@ export default async function LeaderboardPage({
                         {t.name}
                       </span>
                     </div>
-                    <span className="col-span-2 text-center text-slate-500 text-xs">{t.tier_avg ?? '—'}</span>
+                    <span className="col-span-2 inline-flex items-center justify-center gap-1 text-slate-500 text-xs">{t.tier_avg && <RankIcon tier={t.tier_avg} size={22} />}{t.tier_avg ?? '—'}</span>
                     <div className="col-span-2 text-center">
                       <span className="text-green-400 font-bold text-xs">{t.wins ?? 0}</span>
                       <span className="text-slate-700 text-xs mx-1">—</span>
@@ -167,7 +168,7 @@ export default async function LeaderboardPage({
               <div className="bg-[#00D2BE]/10 border border-[#00D2BE]/20 rounded px-5 py-3 mb-4 flex items-center gap-3">
                 <span className="text-[#00D2BE] font-black text-lg">#{myPlayerRank + 1}</span>
                 <span className="text-white font-semibold text-sm">내 순위</span>
-                <span className="text-slate-400 text-sm">{sortedPlayers[myPlayerRank]?.displayTier ?? '—'}</span>
+                <span className="inline-flex items-center gap-1.5 text-slate-400 text-sm"><RankIcon tier={sortedPlayers[myPlayerRank]?.displayTier} size={25} />{sortedPlayers[myPlayerRank]?.displayTier ?? '—'}</span>
               </div>
             )}
 
@@ -207,8 +208,8 @@ export default async function LeaderboardPage({
                         </div>
                       </div>
                       <div className="col-span-4">
-                        <span className="text-sm font-semibold" style={{ color: tc }}>
-                          {u.displayTier}
+                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: tc }}>
+                          <RankIcon tier={u.displayTier} size={25} />{u.displayTier}
                         </span>
                       </div>
                     </a>

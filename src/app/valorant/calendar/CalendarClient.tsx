@@ -5,6 +5,7 @@ import { formatKST, toDateInputValue } from '@/lib/datetime'
 import { ClockIcon } from '@/components/common/icons'
 import Link from 'next/link'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
+import RankIcon from '@/components/common/RankIcon'
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -236,7 +237,7 @@ export default function CalendarClient({
                       </div>
                       <div className="flex items-center gap-2 text-[11px] text-slate-500">
                         {s.preferred_date && <span className="inline-flex items-center gap-1"><ClockIcon className="w-3 h-3 shrink-0" />{formatTime(s.preferred_date)}</span>}
-                        {team?.tier_avg && <span>· {team.tier_avg}</span>}
+                        {team?.tier_avg && <span className="inline-flex items-center gap-1">· <RankIcon tier={team.tier_avg} size={18} />{team.tier_avg}</span>}
                       </div>
                       {(s.tier_min || s.tier_max) && (
                         <p className="text-[11px] text-slate-600 mt-1">

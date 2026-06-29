@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
+import RankIcon from '@/components/common/RankIcon'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
 import { D31ScoreBadge } from '@/components/profile/D31ScoreCard'
 import type { RecruitPost } from '@/lib/types'
@@ -85,7 +86,7 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
           <span className="text-[11px] font-bold" style={isCoach ? { color: '#60a5fa' } : { color: '#94a3b8' }}>
             {isCoach ? '코치' : '선수'}
           </span>
-          {profileTier && !isCoach && <span className="text-[11px] ml-1.5" style={{ color: getTierColor(profileTier) }}>{profileTier}</span>}
+          {profileTier && !isCoach && <span className="inline-flex items-center gap-0.5 text-[11px] ml-1.5" style={{ color: getTierColor(profileTier) }}><RankIcon tier={profileTier} size={20} />{profileTier}</span>}
         </div>
       </a>
 

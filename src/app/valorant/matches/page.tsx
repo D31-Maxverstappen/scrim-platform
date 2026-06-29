@@ -5,6 +5,8 @@ import { getTierColor } from '@/lib/tiers'
 import { GAME_COLOR } from '@/lib/games'
 import { MOCK_MATCHES, MOCK_RANK, summarize } from '@/lib/valorantMatchMock'
 import MatchRow from '@/components/match/MatchRow'
+import AgentIcon from '@/components/common/AgentIcon'
+import RankIcon from '@/components/common/RankIcon'
 
 const VAL_RED = GAME_COLOR.valorant
 const WIN_COLOR = '#22c55e'
@@ -64,7 +66,7 @@ export default async function ValorantMatchesPage() {
                   {valTag && <span className="text-slate-500 text-sm">#{valTag}</span>}
                 </div>
                 <div className="flex items-center gap-2.5 mt-2">
-                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: rankColor, boxShadow: `0 0 8px ${rankColor}` }} />
+                  <RankIcon tier={MOCK_RANK.name} size={36} />
                   <span className="text-base font-black" style={{ color: rankColor }}>{MOCK_RANK.name}</span>
                   <span className="text-[11px] font-bold px-2 py-0.5 rounded" style={{ background: `${rankColor}1a`, color: rankColor }}>{MOCK_RANK.rr} RR</span>
                 </div>
@@ -98,7 +100,7 @@ export default async function ValorantMatchesPage() {
                 <span className="text-slate-500 text-xs uppercase tracking-widest">모스트 요원</span>
                 {s.topAgents.map((a) => (
                   <div key={a.agent} className="flex items-center gap-2 bg-white/[0.04] border border-white/5 rounded px-2.5 py-1.5">
-                    <span className="w-7 h-7 shrink-0 rounded bg-[#1a1a2e] border border-white/10 flex items-center justify-center text-white font-black text-xs">{a.agent[0]}</span>
+                    <AgentIcon agent={a.agent} className="w-7 h-7 rounded border border-white/10" char="text-xs" />
                     <div className="leading-tight">
                       <p className="text-white text-xs font-bold">{a.agent}</p>
                       <p className="text-[11px]">

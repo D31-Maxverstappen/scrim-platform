@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation'
 import { FlagImg } from '@/components/common/CountrySelect'
 import InviteButton from '@/components/team/InviteButton'
 import D31ScoreCard from '@/components/profile/D31ScoreCard'
+import RankIcon from '@/components/common/RankIcon'
 import { MANNER_ENABLED } from '@/lib/features'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
@@ -84,7 +85,7 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
                 {tier && (
                   <>
                     <span className="text-slate-700">·</span>
-                    <span className="text-slate-400 text-xs">{tier}</span>
+                    <span className="inline-flex items-center gap-1 text-slate-400 text-xs"><RankIcon tier={tier} size={22} />{tier}</span>
                   </>
                 )}
               </div>

@@ -8,6 +8,7 @@ import MatchEndButton from '@/components/match/MatchEndButton'
 import MatchScoreInput from '@/components/match/MatchScoreInput'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import MannerRating from '@/components/match/MannerRating'
+import RankIcon from '@/components/common/RankIcon'
 import { MANNER_ENABLED } from '@/lib/features'
 import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
 import { expireStaleMatches, CANCEL_REASON_LABEL } from '@/lib/matchExpiry'
@@ -194,7 +195,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   <p className={`text-xl font-black ${winner?.id === team1?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
                     {team1?.name ?? '—'}
                   </p>
-                  <p className="text-slate-600 text-xs mt-0.5">{team1?.tier_avg ?? '—'}</p>
+                  <p className="inline-flex items-center gap-1 text-slate-500 text-xs mt-0.5">{team1?.tier_avg && <RankIcon tier={team1.tier_avg} size={21} />}{team1?.tier_avg ?? '—'}</p>
                 </div>
               </div>
 
@@ -223,7 +224,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
                   <p className={`text-xl font-black ${winner?.id === team2?.id ? 'text-white' : match.status === 'completed' ? 'text-slate-500' : 'text-white'}`}>
                     {team2?.name ?? '—'}
                   </p>
-                  <p className="text-slate-600 text-xs mt-0.5">{team2?.tier_avg ?? '—'}</p>
+                  <p className="inline-flex items-center justify-end gap-1 text-slate-500 text-xs mt-0.5">{team2?.tier_avg && <RankIcon tier={team2.tier_avg} size={21} />}{team2?.tier_avg ?? '—'}</p>
                 </div>
                 <div className={`w-16 h-16 shrink-0 rounded-xl flex items-center justify-center font-black text-2xl border border-white/10 ${winner?.id === team2?.id || match.status !== 'completed' ? 'bg-[#1a1a2e] text-white' : 'bg-[#13131f] text-slate-600'}`}>
                   {(team2?.abbreviation || team2?.name || '?')[0].toUpperCase()}

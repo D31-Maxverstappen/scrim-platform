@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic'
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
 import { CalendarIcon } from '@/components/common/icons'
+import RankIcon from '@/components/common/RankIcon'
 import { MANNER_ENABLED } from '@/lib/features'
 import { redirect } from 'next/navigation'
 import ProfileCard from '@/components/profile/ProfileCard'
@@ -219,7 +220,7 @@ export default async function ValorantDashboardPage() {
                       {team.abbreviation || team.name}
                     </p>
                     {team.tier_avg && (
-                      <p className="text-xs text-slate-500 mt-0.5">{team.tier_avg}</p>
+                      <p className="inline-flex items-center gap-1 text-xs text-slate-500 mt-0.5"><RankIcon tier={team.tier_avg} size={20} />{team.tier_avg}</p>
                     )}
                     <span className="inline-block mt-1.5 text-[11px] font-bold px-2 py-0.5 rounded"
                       style={{ background: '#00D2BE20', color: '#00D2BE' }}>
@@ -243,7 +244,7 @@ export default async function ValorantDashboardPage() {
             <div className="bg-[#0d0d1a] border border-white/[0.10] rounded overflow-hidden">
               {[
                 { href: '/scrims/applied', label: '내 스크림', sub: '받은 · 신청한 스크림' },
-                { href: '/recruit', label: '팀 · 선수 찾기', sub: '모집 게시판' },
+                { href: '/recruit', label: '팀 찾기', sub: '모집 게시판' },
               ].map((item, i) => (
                 <a key={item.href} href={item.href}
                   className={`flex items-center justify-between px-5 py-3.5 hover:bg-white/[0.03] transition group ${i > 0 ? 'border-t border-white/[0.04]' : ''}`}>

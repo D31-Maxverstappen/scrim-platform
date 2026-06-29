@@ -19,6 +19,14 @@ const games = [
     href: '/valorant/dashboard',
     loginHref: '/login',
     available: true,
+    wordmark: '/valorant-wordmark.png', // Riot 공식 워드마크(V_Logotype_Red)
+    bgImage: '/valorant-hero.jpg', // 카드 배경 키아트
+
+    // VALORANT V 마크 — Riot 공식 프레스킷(V_Logomark_Red, 여백 크롭)
+    logo: (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src="/valorant-v.png" alt="VALORANT" className="w-16 h-14 object-contain" />
+    ),
   },
   {
     name: '+ 추가 게임',
@@ -29,6 +37,9 @@ const games = [
     href: '#',
     loginHref: '#',
     available: false,
+    wordmark: null,
+    bgImage: null,
+    logo: null,
   },
 ]
 
@@ -140,8 +151,6 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#07070b]/60 via-[#07070b]/70 to-[#07070b] landing-hero-overlay" />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[#00D2BE]/8 rounded-full blur-[120px] transform-gpu" />
-        {/* 폴드 하단 글로우 — "경계 너머에 콘텐츠가 더 있다"는 암시(스크롤 유도) */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[760px] h-[260px] bg-[#00D2BE]/30 rounded-full blur-[90px] transform-gpu" />
       </div>
 
       {/* 네비바 */}
@@ -237,20 +246,30 @@ export default function HomePage() {
               style={{ background: game.bg }}
               className={`group relative flex items-center gap-6 rounded p-7 border border-white/5 transition-all duration-300 overflow-hidden ${game.available ? 'hover:border-white/10 cursor-pointer hover:scale-[1.02]' : 'cursor-default opacity-50'}`}
             >
+              {/* 카드 배경 키아트 (VALORANT) — 왼쪽은 어둡게 해 로고·글자 가독성 유지 */}
+              {game.bgImage && (
+                <>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={game.bgImage} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover object-[center_30%] opacity-85 pointer-events-none" />
+                  <div className="absolute inset-0 pointer-events-none bg-gradient-to-r from-[#0b0205] via-[#0b0205]/60 to-transparent" />
+                </>
+              )}
               <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                 style={{ background: `radial-gradient(circle at 30% 50%, ${game.glow} 0%, transparent 70%)` }}
               />
+              {game.logo && (
+                <div className="relative z-10 shrink-0" style={{ color: game.color }}>{game.logo}</div>
+              )}
               <div className="relative z-10 flex-1">
-                <p className="font-black text-3xl tracking-widest mb-1" style={{ color: game.color }}>{game.name}</p>
-                <p className="text-slate-500 text-xs mb-4">{game.desc}</p>
-                {game.available && (
-                  <span
-                    className="text-xs font-bold px-3 py-1 rounded"
-                    style={{ background: game.color + '22', color: game.color }}
-                  >
-                    스크림 찾기 →
-                  </span>
+                {game.wordmark ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={game.wordmark} alt={game.name} className="h-7 w-auto object-contain" />
+                ) : (
+                  <>
+                    <p className="font-black text-3xl tracking-widest mb-1" style={{ color: game.color }}>{game.name}</p>
+                    <p className="text-slate-500 text-xs">{game.desc}</p>
+                  </>
                 )}
               </div>
             </a>

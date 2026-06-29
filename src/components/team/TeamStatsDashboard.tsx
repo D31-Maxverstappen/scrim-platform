@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { getTeamStatsMock, type TeamStats } from '@/lib/teamStatsMock'
+import AgentIcon from '@/components/common/AgentIcon'
 
 // 팀 통계 대시보드 (유료 Pro 기능 — 목업 시연용).
 // 데이터는 lib/teamStatsMock 에서 생성(결정적). 라이엇 데이터/스크림 축적 후 실집계로 교체.
@@ -493,6 +494,7 @@ function PlayerStats({ s }: { s: TeamStats }) {
                 <td className="py-2.5">
                   <div className="flex items-center gap-2.5">
                     <span className="w-1 h-7 rounded-full shrink-0" style={{ background: ROLE_COLOR[p.role] ?? '#94a3b8' }} />
+                    <AgentIcon agent={p.agent} className="w-7 h-7 rounded" char="text-[10px]" />
                     <div>
                       <p className="text-white font-semibold leading-tight">{p.name}</p>
                       <p className="text-[11px] text-slate-500 leading-tight">{p.agent} · {p.role}</p>

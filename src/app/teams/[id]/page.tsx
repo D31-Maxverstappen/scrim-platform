@@ -8,6 +8,7 @@ import InviteButton from '@/components/team/InviteButton'
 import TeamPageTabs from '@/components/team/TeamPageTabs'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { FlagImg } from '@/components/common/CountrySelect'
+import RankIcon from '@/components/common/RankIcon'
 import TeamChat from '@/components/team/TeamChat'
 import TeamStatsDashboard from '@/components/team/TeamStatsDashboard'
 import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
@@ -166,7 +167,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">평균 티어</span>
-              <span className="text-white">{team.tier_avg ?? '—'}</span>
+              <span className="inline-flex items-center gap-1 text-white">{team.tier_avg && <RankIcon tier={team.tier_avg} size={22} />}{team.tier_avg ?? '—'}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">멤버</span>
@@ -308,7 +309,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
               {team.tier_avg && (
                 <>
                   <span className="text-slate-700">·</span>
-                  <span className="text-slate-400 text-sm">{team.tier_avg}</span>
+                  <span className="inline-flex items-center gap-1 text-slate-400 text-sm"><RankIcon tier={team.tier_avg} size={22} />{team.tier_avg}</span>
                 </>
               )}
             </div>
@@ -405,7 +406,7 @@ function RosterCard({ member, currentUserId, isVal }: {
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[11px] font-bold" style={{ color: roleColor }}>{ROLE_LABEL[member.role] ?? member.role}</span>
-          {tier && <span className="text-[11px] text-slate-600">{tier}</span>}
+          {tier && <span className="inline-flex items-center gap-1 text-[11px] text-slate-400"><RankIcon tier={tier} size={21} />{tier}</span>}
         </div>
       </div>
     </div>

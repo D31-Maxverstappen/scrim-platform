@@ -5,6 +5,7 @@ import { MANNER_ENABLED } from '@/lib/features'
 import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
+import RankIcon from '@/components/common/RankIcon'
 import CareerEditor from '@/components/profile/CareerEditor'
 import D31ScoreCard from '@/components/profile/D31ScoreCard'
 import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
@@ -148,8 +149,8 @@ export default async function ProfilePage() {
                       {profile.val_tagline && <span className="text-slate-500 font-normal text-sm"> #{profile.val_tagline}</span>}
                     </p>
                     {profile.val_tier && (
-                      <p className={`text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier.split(' ')[0]] ?? 'text-slate-400'}`}>
-                        {profile.val_tier}
+                      <p className={`inline-flex items-center gap-1 text-sm font-bold mt-0.5 ${TIER_COLOR[profile.val_tier.split(' ')[0]] ?? 'text-slate-400'}`}>
+                        <RankIcon tier={profile.val_tier} size={25} />{profile.val_tier}
                       </p>
                     )}
                   </div>

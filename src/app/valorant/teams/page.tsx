@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import Pagination from '@/components/common/Pagination'
+import RankIcon from '@/components/common/RankIcon'
 
 const PAGE_SIZE = 15
 
@@ -72,7 +73,7 @@ export default async function ValorantTeamsPage({
                     <div>
                       <p className="text-white font-bold mb-1">{team.name}</p>
                       <div className="flex items-center gap-2">
-                        {team.tier_avg && <span className="text-slate-400 text-xs">{team.tier_avg}</span>}
+                        {team.tier_avg && <span className="inline-flex items-center gap-1 text-slate-400 text-xs"><RankIcon tier={team.tier_avg} size={21} />{team.tier_avg}</span>}
                         <span className="text-xs bg-[#00D2BE]/20 text-[#00D2BE] px-2 py-0.5 rounded">
                           {m.role === 'captain' ? '캡틴' : '멤버'}
                         </span>
@@ -106,7 +107,7 @@ export default async function ValorantTeamsPage({
                     </span>
                     <span className="text-white font-semibold text-base group-hover:text-[#00D2BE] transition truncate">{team.name}</span>
                   </a>
-                  <span className="col-span-4 text-slate-400 text-sm">{team.tier_avg ?? '—'}</span>
+                  <span className="col-span-4 inline-flex items-center gap-1.5 text-slate-400 text-sm">{team.tier_avg && <RankIcon tier={team.tier_avg} size={25} />}{team.tier_avg ?? '—'}</span>
                   <div className="col-span-3 flex justify-end items-center gap-2">
                     <BookmarkButton type="team" id={team.id} initial={bmTeamSet.has(team.id)} />
                     {myTeamIds.has(team.id) ? (
