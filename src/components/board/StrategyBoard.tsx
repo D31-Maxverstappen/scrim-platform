@@ -9,7 +9,7 @@ import { minimapIcon } from '@/lib/valorantMaps'
 // 전략 노트 작전판 MVP — 맵 미니맵 배경 위에 펜·화살표로 작전을 그리고 PNG로 내보낸다.
 // 라이브러리: react-konva(Konva). 클라이언트 전용(ssr:false로 로드).
 
-const MAPS = ['어센트', '바인드', '헤이븐', '스플릿', '로터스', '선셋', '어비스', '아이스박스', '브리즈', '프랙처', '펄', '커로드']
+const MAPS = ['어센트', '바인드', '헤이븐', '스플릿', '로터스', '선셋', '어비스', '아이스박스', '브리즈', '프랙처', '펄', '코로드']
 const COLORS = ['#00D2BE', '#ff4655', '#ffd700', '#ffffff', '#3b82f6', '#a855f7']
 const SIZE = 680
 
@@ -18,6 +18,7 @@ type Stroke = { tool: Tool; points: number[]; color: string; width: number }
 
 export default function StrategyBoard() {
   const [map, setMap] = useState('어센트')
+  const [mapOpen, setMapOpen] = useState(false)
   const [tool, setTool] = useState<Tool>('pen')
   const [color, setColor] = useState(COLORS[0])
   const [width, setWidth] = useState(3)
@@ -25,6 +26,7 @@ export default function StrategyBoard() {
   const [mapImg, setMapImg] = useState<HTMLImageElement | null>(null)
   const drawing = useRef(false)
   const stageRef = useRef<Konva.Stage>(null)
+  const mapRef = useRef<HTMLDivElement>(null)
 
   // 맵 바뀌면 미니맵 배경 로드
   useEffect(() => {
@@ -34,6 +36,16 @@ export default function StrategyBoard() {
     img.src = src
     img.onload = () => setMapImg(img)
   }, [map])
+
+  // 드롭다운 외부 클릭 시 닫기
+  useEffect(() => {
+    if (!mapOpen) return
+    const onDoc = (e: MouseEvent) => {
+      if (mapRef.current && !mapRef.current.contains(e.target as Node)) setMapOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    return () => document.removeEventListener('mousedown', onDoc)
+  }, [mapOpen])
 
   const start = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     drawing.current = true
@@ -83,13 +95,27 @@ export default function StrategyBoard() {
     <div className="flex flex-col gap-4">
       {/* 툴바 */}
       <div className="flex flex-wrap items-center gap-3 p-3 rounded bg-[#13131f] border border-white/5">
-        <select
-          value={map}
-          onChange={(e) => setMap(e.target.value)}
-          className="bg-[#1e1e2e] border border-white/10 text-white text-xs px-2 py-1.5 rounded focus:outline-none focus:border-[#00D2BE]"
-        >
-          {MAPS.map((m) => <option key={m} value={m} className="bg-[#1e1e2e]">{m}</option>)}
-        </select>
+        <div className="relative" ref={mapRef}>
+          <button
+            onClick={() => setMapOpen((o) => !o)}
+            className="flex items-center justify-between gap-2 min-w-[92px] bg-[#1e1e2e] border border-white/10 text-white text-xs px-3 py-1.5 rounded hover:border-[#00D2BE] transition"
+          >
+            {map}<span className="text-[8px] text-slate-500">▼</span>
+          </button>
+          {mapOpen && (
+            <div className="absolute top-full left-0 mt-1 z-50 w-32 max-h-64 overflow-auto rounded border border-white/10 bg-[#1e1e2e] shadow-xl py-1">
+              {MAPS.map((m) => (
+                <button
+                  key={m}
+                  onClick={() => { setMap(m); setMapOpen(false) }}
+                  className={`block w-full text-left px-3 py-1.5 text-xs transition ${m === map ? 'text-[#00D2BE] bg-white/5' : 'text-slate-300 hover:bg-white/5'}`}
+                >
+                  {m}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <div className="flex gap-1.5">
           {toolBtn('pen', '✏️ 펜')}

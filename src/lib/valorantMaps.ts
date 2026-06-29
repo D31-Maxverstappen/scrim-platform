@@ -5,7 +5,7 @@
 const MAP_SLUG: Record<string, string> = {
   어센트: 'ascent', 바인드: 'bind', 헤이븐: 'haven', 스플릿: 'split',
   로터스: 'lotus', 선셋: 'sunset', 어비스: 'abyss', 아이스박스: 'icebox',
-  브리즈: 'breeze', 프랙처: 'fracture', 펄: 'pearl', 커로드: 'corrode',
+  브리즈: 'breeze', 프랙처: 'fracture', 펄: 'pearl', 코로드: 'corrode',
 }
 
 const KNOWN = new Set(Object.values(MAP_SLUG))
