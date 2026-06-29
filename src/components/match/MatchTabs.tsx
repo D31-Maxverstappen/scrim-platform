@@ -288,8 +288,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <StatHeader playerLabel="플레이어" />
           {padded1.map((item, i) =>
             hasStats1 && item
-              ? <StatRow key={(item as MatchStat).id ?? i} stat={item as MatchStat} gameName={team1?.name ?? ''} />
-              : <EmptyStatRow key={i} member={item as TeamMemberBrief | null} />
+              ? <StatRow key={(item as MatchStat).user_id || `s1-${i}`} stat={item as MatchStat} gameName={team1?.name ?? ''} />
+              : <EmptyStatRow key={(item as TeamMemberBrief | null)?.user_id || `e1-${i}`} member={item as TeamMemberBrief | null} />
           )}
         </div>
         {/* 팀 2 */}
@@ -300,8 +300,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
           <StatHeader playerLabel="플레이어" />
           {padded2.map((item, i) =>
             hasStats2 && item
-              ? <StatRow key={(item as MatchStat).id ?? i} stat={item as MatchStat} gameName={team2?.name ?? ''} />
-              : <EmptyStatRow key={i} member={item as TeamMemberBrief | null} />
+              ? <StatRow key={(item as MatchStat).user_id || `s2-${i}`} stat={item as MatchStat} gameName={team2?.name ?? ''} />
+              : <EmptyStatRow key={(item as TeamMemberBrief | null)?.user_id || `e2-${i}`} member={item as TeamMemberBrief | null} />
           )}
         </div>
       </div>
