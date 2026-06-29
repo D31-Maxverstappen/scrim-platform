@@ -294,9 +294,9 @@ function SideWinrate({ s }: { s: TeamStats }) {
 function EconomyWinrate({ s }: { s: TeamStats }) {
   const e = s.advanced.economy
   const rows = [
-    { label: '풀바이', sub: '완전 구매', value: e.fullBuy, weapon: 'vandal' },
-    { label: '포스바이', sub: '무리한 구매', value: e.forceBuy, weapon: 'spectre' },
-    { label: '이코', sub: '아낌(권총)', value: e.eco, weapon: 'classic' },
+    { label: '풀바이', value: e.fullBuy, weapon: 'vandal' },
+    { label: '포스바이', value: e.forceBuy, weapon: 'spectre' },
+    { label: '이코', value: e.eco, weapon: 'classic' },
   ]
   return (
     <Card title="라운드 경제별 승률" badge="라이엇 연동 시">
@@ -306,7 +306,7 @@ function EconomyWinrate({ s }: { s: TeamStats }) {
             <div className="flex items-center justify-between mb-1.5">
               <span className="text-sm font-bold text-white flex items-center gap-2">
                 <WeaponIcon weapon={r.weapon} className="h-3.5 w-auto max-w-[44px] opacity-70" />
-                {r.label} <span className="text-[11px] font-normal text-slate-600">{r.sub}</span>
+                {r.label}
               </span>
               <span className="text-sm font-black" style={{ color: r.value >= 50 ? TEAL : '#f87171' }}>{r.value}%</span>
             </div>
@@ -315,7 +315,6 @@ function EconomyWinrate({ s }: { s: TeamStats }) {
             </div>
           </div>
         ))}
-        <p className="text-[11px] text-slate-600 mt-1">돈 상황별 라운드 승률 — 이코 훔치는 팀이 강팀</p>
       </div>
     </Card>
   )

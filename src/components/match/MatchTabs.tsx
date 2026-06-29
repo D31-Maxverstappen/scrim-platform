@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { FlagImg } from '@/components/common/CountrySelect'
+import MapIcon from '@/components/common/MapIcon'
 import type { TeamBrief, MatchMap, MatchStat, TeamMemberBrief } from '@/lib/types'
 
 const ROUND_COLORS: Record<string, string> = {
@@ -189,8 +190,9 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
         </button>
         {maps.map((m, i) => (
           <button key={m.id} onClick={() => setMapTab(m.id)}
-            className={`px-5 py-2.5 text-xs font-semibold transition border-l border-white/5 ${mapTab === m.id ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
-            <span className="text-slate-600 mr-1">{i + 1}</span>
+            className={`px-5 py-2.5 text-xs font-semibold transition border-l border-white/5 flex items-center gap-1.5 ${mapTab === m.id ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-slate-300'}`}>
+            <span className="text-slate-600">{i + 1}</span>
+            <MapIcon map={m.map_name} className="w-4 h-4 rounded-sm" />
             {mapAbbr(m.map_name)}
           </button>
         ))}
@@ -204,7 +206,8 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
               <a href={`/teams/${team1?.id}`} className="text-white font-black text-lg hover:text-[#00D2BE] transition">{teamAbbr(team1)}</a>
               <p className="text-slate-600 text-xs">{t1Score} / {t1Score + t2Score > 0 ? t1Score + t2Score : 0}</p>
             </div>
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
+              <MapIcon map={mapName} className="w-12 h-12 rounded mb-1.5" />
               <p className="text-slate-400 text-sm font-bold">{mapName}</p>
               <p className="text-white font-black text-2xl mt-1">{t1Score} — {t2Score}</p>
             </div>
