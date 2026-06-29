@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { FlagImg } from '@/components/common/CountrySelect'
 import MapIcon from '@/components/common/MapIcon'
+import AgentIcon from '@/components/common/AgentIcon'
 import { parseRounds, type RoundCell, type RoundReason } from '@/lib/roundResults'
 import type { TeamBrief, MatchMap, MatchStat, TeamMemberBrief } from '@/lib/types'
 
@@ -69,9 +70,11 @@ function StatRow({ stat, gameName }: { stat: MatchStat; gameName: string }) {
     <div className="grid items-center px-4 py-2.5 border-b border-white/5 hover:bg-white/2 transition"
       style={{ gridTemplateColumns: GRID }}>
       <div className="flex items-center gap-2">
-        {u?.avatar_url
-          ? <img src={u.avatar_url} alt="" className="w-7 h-7 object-cover" />
-          : <div className="w-7 h-7 bg-[#1a1a2e] flex items-center justify-center text-xs font-black text-white/20">{name[0]}</div>
+        {stat.agent
+          ? <AgentIcon agent={stat.agent} className="w-7 h-7" char="text-[10px]" />
+          : u?.avatar_url
+            ? <img src={u.avatar_url} alt="" className="w-7 h-7 object-cover" />
+            : <div className="w-7 h-7 bg-[#1a1a2e] flex items-center justify-center text-xs font-black text-white/20">{name[0]}</div>
         }
         <div>
           <div className="flex items-center gap-1">

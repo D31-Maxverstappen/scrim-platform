@@ -50,6 +50,7 @@ export type MatchStat = {
   hs_pct: number
   fk: number
   fd: number
+  agent: string | null
 }
 
 export type TeamMemberBrief = {

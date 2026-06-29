@@ -71,6 +71,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
     kills: s.kills ?? 0, deaths: s.deaths ?? 0, assists: s.assists ?? 0,
     acs: s.acs ?? 0, kast: s.kast ?? 0, adr: s.adr ?? 0,
     hs_pct: s.hs_pct ?? 0, fk: s.fk ?? 0, fd: s.fd ?? 0,
+    agent: (s as { agent?: string | null }).agent ?? null,
   }))
 
   // 양 팀 중 하나의 캡틴인지 확인
