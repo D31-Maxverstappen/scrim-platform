@@ -10,10 +10,22 @@ const MAP_SLUG: Record<string, string> = {
 
 const KNOWN = new Set(Object.values(MAP_SLUG))
 
-// 맵명(한글·영문 모두) → 썸네일 경로. 매핑 없으면 null(컴포넌트에서 미표시).
-export function mapIcon(map: string | null | undefined): string | null {
+// 맵명(한글·영문 모두) → 슬러그. 매핑 없으면 null.
+function resolveSlug(map: string | null | undefined): string | null {
   if (!map) return null
   const raw = map.trim()
   const slug = MAP_SLUG[raw] ?? raw.toLowerCase().replace(/\s+/g, '')
-  return KNOWN.has(slug) ? `/maps/${slug}.png` : null
+  return KNOWN.has(slug) ? slug : null
+}
+
+// 목록·헤더용 썸네일(listViewIcon). 매핑 없으면 null(컴포넌트에서 미표시).
+export function mapIcon(map: string | null | undefined): string | null {
+  const s = resolveSlug(map)
+  return s ? `/maps/${s}.png` : null
+}
+
+// 작전판 배경용 탑뷰 미니맵(displayIcon). 매핑 없으면 null.
+export function minimapIcon(map: string | null | undefined): string | null {
+  const s = resolveSlug(map)
+  return s ? `/minimaps/${s}.png` : null
 }

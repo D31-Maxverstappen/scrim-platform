@@ -4,3 +4,6 @@
 // "metric 기반 shame 금지"에 걸릴 소지가 있어, 프로덕션 키 신청 전 비활성화.
 // 라이엇에 App Note로 문의해 허용 확인되면 true로 되돌린다. (입력·표시 모두 이 값으로 제어)
 export const MANNER_ENABLED = false
+
+// 전략 노트 작전판(맵 드로잉, Pro 후보). MVP 개발 중 — 룩·기능 확정 전까지 OFF(라이브 미노출).
+export const STRATEGY_BOARD_ENABLED = false
