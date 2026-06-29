@@ -1,3 +1,5 @@
+import { D31ScoreBadge } from '@/components/profile/D31ScoreCard'
+
 export type DirUser = {
   id: string
   val_gamename: string | null
@@ -28,8 +30,9 @@ export default function UserDirectory({
   return (
     <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
       <div className="grid grid-cols-12 gap-3 px-6 py-4 border-b border-white/5 text-xs text-slate-600 uppercase tracking-wider">
-        <span className="col-span-7">{isCoach ? '코치' : '선수'}</span>
-        <span className="col-span-3">{isCoach ? '유형' : '티어'}</span>
+        <span className={isCoach ? 'col-span-7' : 'col-span-6'}>{isCoach ? '코치' : '선수'}</span>
+        <span className={isCoach ? 'col-span-3' : 'col-span-2'}>{isCoach ? '유형' : '티어'}</span>
+        {!isCoach && <span className="col-span-2">D31 Rating</span>}
         <span className="col-span-2 text-right">프로필</span>
       </div>
       <div className="divide-y divide-white/5">
@@ -38,7 +41,7 @@ export default function UserDirectory({
           const tier = u.val_tier ?? u.tier ?? '—'
           return (
             <div key={u.id} className="grid grid-cols-12 gap-3 px-6 py-4 items-center hover:bg-white/3 transition">
-              <a href={`/users/${u.id}`} className="col-span-7 flex items-center gap-3 group min-w-0">
+              <a href={`/users/${u.id}`} className={`${isCoach ? 'col-span-7' : 'col-span-6'} flex items-center gap-3 group min-w-0`}>
                 <span className="w-10 h-10 shrink-0 rounded-full bg-[#1a1a2e] border border-white/10 flex items-center justify-center overflow-hidden text-white font-black">
                   {u.avatar_url
                     ? <img src={u.avatar_url} alt={name} className="w-full h-full object-cover" />
@@ -46,11 +49,16 @@ export default function UserDirectory({
                 </span>
                 <span className="text-white font-semibold group-hover:text-[#00D2BE] transition truncate">{name}</span>
               </a>
-              <span className="col-span-3">
+              <span className={isCoach ? 'col-span-3' : 'col-span-2'}>
                 {isCoach
                   ? <span className="text-xs bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded">코치</span>
                   : <span className="text-slate-400 text-sm">{tier}</span>}
               </span>
+              {!isCoach && (
+                <span className="col-span-2">
+                  <D31ScoreBadge seed={u.id} />
+                </span>
+              )}
               <div className="col-span-2 flex justify-end">
                 <a href={`/users/${u.id}`} className="text-xs bg-white/5 hover:bg-white/10 text-slate-300 px-3 py-1 transition">보기</a>
               </div>

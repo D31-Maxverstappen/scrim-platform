@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { GAME_COLOR } from '@/lib/games'
 import { getTierColor } from '@/lib/tiers'
 import { EmptyState, EmptyIcons } from '@/components/common/EmptyState'
+import { D31ScoreBadge } from '@/components/profile/D31ScoreCard'
 import type { RecruitPost } from '@/lib/types'
 
 // 필터용 — 티어 그룹(LFP는 콤마결합이라 그룹 ilike로 매칭), 포지션(roles 배열 contains)
@@ -61,7 +62,6 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   onDelete: (id: string) => void
 }) {
   const u = Array.isArray(post.users) ? post.users[0] : post.users
-  const gc = GAME_COLOR[post.game_type] ?? '#00D2BE'
   const gameName = u?.val_gamename ?? u?.riot_gamename
   const profileTier = u?.val_tier ?? u?.tier
   const tierDisplay = formatTierDisplay(post.tier)
@@ -69,66 +69,58 @@ function LftCard({ post, currentUserId, onClose, onDelete }: {
   const isCoach = u?.account_type === 'coach'
 
   return (
-    <div className={`bg-[#13131f] border rounded p-4 flex flex-col gap-3 relative ${isOwn ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
-      {isOwn && <span className="absolute top-3 right-3 text-[9px] font-black text-[#00D2BE] bg-[#00D2BE]/10 px-1.5 py-0.5 rounded">내 글</span>}
-
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full overflow-hidden bg-white/5 shrink-0 flex items-center justify-center text-sm font-black text-white/30">
+    <div className={`flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.03] transition ${isOwn ? 'bg-[#00D2BE]/[0.04]' : ''}`}>
+      {/* 선수 */}
+      <a href={`/users/${u?.id ?? ''}`} className="flex items-center gap-3 w-44 shrink-0 min-w-0 group">
+        <div className="w-9 h-9 rounded-full overflow-hidden bg-white/5 shrink-0 flex items-center justify-center text-sm font-black text-white/30">
           {u?.avatar_url
             ? <img src={u.avatar_url} className="w-full h-full object-cover" alt="" />
             : gameName?.[0]?.toUpperCase() ?? '?'}
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-white font-bold text-sm truncate">{gameName ?? '—'}</p>
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0"
-              style={isCoach ? { background: '#60a5fa1a', color: '#60a5fa' } : { background: '#94a3b81a', color: '#94a3b8' }}>
-              {isCoach ? '코치' : '선수'}
-            </span>
+            <p className="text-white font-bold text-sm truncate group-hover:text-[#00D2BE] transition">{gameName ?? '—'}</p>
+            {isOwn && <span className="text-[9px] font-black text-[#00D2BE] bg-[#00D2BE]/10 px-1 py-0.5 rounded shrink-0">내 글</span>}
           </div>
-          {tierDisplay.length === 0 && profileTier && !isCoach && (
-            <p className="text-xs" style={{ color: getTierColor(profileTier) }}>{profileTier}</p>
-          )}
+          <span className="text-[11px] font-bold" style={isCoach ? { color: '#60a5fa' } : { color: '#94a3b8' }}>
+            {isCoach ? '코치' : '선수'}
+          </span>
+          {profileTier && !isCoach && <span className="text-[11px] ml-1.5" style={{ color: getTierColor(profileTier) }}>{profileTier}</span>}
         </div>
-        <span className="text-[11px] font-bold px-2 py-0.5 rounded shrink-0"
-          style={{ background: gc + '22', color: gc }}>VAL</span>
+      </a>
+
+      {/* 티어 / 포지션 태그 */}
+      <div className="hidden md:flex items-center gap-1 flex-wrap w-52 shrink-0">
+        {tierDisplay.map((d, i) => (
+          <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
+            style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
+        ))}
+        {post.roles?.map((r: string) => (
+          <span key={r} className="text-[11px] font-semibold bg-white/5 text-slate-400 px-2 py-0.5 rounded">{r}</span>
+        ))}
       </div>
 
-      {tierDisplay.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {tierDisplay.map((d, i) => (
-            <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
-              style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
-          ))}
-        </div>
-      )}
+      {/* 한 줄 소개 (항상 공간 확보, 텍스트는 lg부터) */}
+      <div className="flex-1 min-w-0">
+        <p className="hidden lg:block truncate text-slate-400 text-xs">{post.note ?? ''}</p>
+      </div>
 
-      {post.roles && post.roles.length > 0 && (
-        <div className="flex flex-wrap gap-1">
-          {post.roles.map((r: string) => (
-            <span key={r} className="text-[11px] font-semibold bg-white/5 text-slate-400 px-2 py-0.5 rounded">{r}</span>
-          ))}
-        </div>
-      )}
+      {/* D31 Score */}
+      <div className="w-28 shrink-0">
+        {!isCoach && u?.id && <D31ScoreBadge seed={u.id} />}
+      </div>
 
-      {post.note && <p className="text-slate-400 text-xs leading-relaxed">{post.note}</p>}
-
-      <div className="flex items-center justify-between mt-auto pt-1 border-t border-white/5">
-        {post.discord_tag ? (
-          <span className="text-[#5865F2] text-xs font-semibold">{post.discord_tag}</span>
-        ) : (
-          <span className="text-slate-600 text-xs">Discord 미등록</span>
+      {/* 연락 · 등록 + 액션 */}
+      <div className="w-44 shrink-0 flex items-center justify-end gap-3">
+        {post.discord_tag && <span className="hidden xl:inline text-[#5865F2] text-[11px] font-semibold truncate">{post.discord_tag}</span>}
+        <span className="text-slate-600 text-[11px] w-12 text-right shrink-0">{timeAgo(post.created_at)}</span>
+        {isOwn && (
+          <div className="flex items-center gap-1.5">
+            <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
+            <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
+            <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
+          </div>
         )}
-        <div className="flex items-center gap-2">
-          <span className="text-slate-600 text-[11px]">{timeAgo(post.created_at)}</span>
-          {isOwn && (
-            <>
-              <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
-              <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
-              <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
-            </>
-          )}
-        </div>
       </div>
     </div>
   )
@@ -170,81 +162,68 @@ function LfpCard({ post, currentUserId, currentUserHasTeam, currentUserAccountTy
     : currentUserAccountType !== 'coach' && !currentUserHasTeam)
 
   return (
-    <div className={`bg-[#13131f] border rounded p-4 flex flex-col gap-3 relative ${isOwn ? 'border-[#00D2BE]/30' : 'border-white/5'}`}>
-      {isOwn && <span className="absolute top-3 right-3 text-[9px] font-black text-[#00D2BE] bg-[#00D2BE]/10 px-1.5 py-0.5 rounded">내 글</span>}
-
-      <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded flex items-center justify-center text-lg font-black shrink-0"
+    <div className={`flex items-center gap-4 px-5 py-3.5 hover:bg-white/[0.03] transition ${isOwn ? 'bg-[#00D2BE]/[0.04]' : ''}`}>
+      {/* 팀 */}
+      <a href={team?.id ? `/teams/${team.id}` : '#'} className="flex items-center gap-3 w-44 shrink-0 min-w-0 group">
+        <div className="w-9 h-9 rounded flex items-center justify-center text-base font-black shrink-0"
           style={{ background: gc + '22', color: gc }}>
           {team?.name?.[0]?.toUpperCase() ?? '?'}
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-white font-bold text-sm truncate">{team?.name ?? '팀 없음'}</p>
-            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded shrink-0"
-              style={isLfc ? { background: '#60a5fa1a', color: '#60a5fa' } : { background: '#00D2BE1a', color: '#00D2BE' }}>
-              {isLfc ? '코치 구함' : '선수 구함'}
-            </span>
+            <p className="text-white font-bold text-sm truncate group-hover:text-[#00D2BE] transition">{team?.name ?? '팀 없음'}</p>
+            {isOwn && <span className="text-[9px] font-black text-[#00D2BE] bg-[#00D2BE]/10 px-1 py-0.5 rounded shrink-0">내 글</span>}
           </div>
-          {team?.tier_avg && <p className="text-xs text-slate-400">Avg. {team.tier_avg}</p>}
+          <span className="text-[11px] font-bold" style={isLfc ? { color: '#60a5fa' } : { color: '#00D2BE' }}>
+            {isLfc ? '코치 구함' : '선수 구함'}
+          </span>
+          {team?.tier_avg && <span className="text-[11px] text-slate-500 ml-1.5">Avg. {team.tier_avg}</span>}
         </div>
-        <span className="text-[11px] font-bold px-2 py-0.5 rounded shrink-0"
-          style={{ background: gc + '22', color: gc }}>VAL</span>
+      </a>
+
+      {/* 모집 포지션 / 희망 티어 */}
+      <div className="hidden md:flex items-center gap-1 flex-wrap w-52 shrink-0">
+        {!isLfc && post.roles?.map((r: string) => (
+          <span key={r} className="text-[11px] font-semibold bg-[#00D2BE]/10 text-[#00D2BE] px-2 py-0.5 rounded">{r}</span>
+        ))}
+        {!isLfc && tierDisplay.map((d, i) => (
+          <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
+            style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
+        ))}
+        {isLfc && (
+          <span className="text-[11px] font-semibold px-2 py-0.5 rounded" style={{ background: '#60a5fa1a', color: '#60a5fa' }}>코치</span>
+        )}
       </div>
 
-      {!isLfc && post.roles && post.roles.length > 0 && (
-        <div className="flex flex-wrap gap-1 items-center">
-          <span className="text-[11px] text-slate-600">모집 포지션</span>
-          {post.roles.map((r: string) => (
-            <span key={r} className="text-[11px] font-semibold bg-[#00D2BE]/10 text-[#00D2BE] px-2 py-0.5 rounded">{r}</span>
-          ))}
-        </div>
-      )}
+      {/* 한 줄 소개 (항상 공간 확보, 텍스트는 lg부터) */}
+      <div className="flex-1 min-w-0">
+        <p className="hidden lg:block truncate text-slate-400 text-xs">{post.note ?? ''}</p>
+      </div>
 
-      {!isLfc && tierDisplay.length > 0 && (
-        <div className="flex flex-wrap gap-1 items-center">
-          <span className="text-[11px] text-slate-600 shrink-0">희망 티어</span>
-          {tierDisplay.map((d, i) => (
-            <span key={i} className="text-[11px] font-bold px-2 py-0.5 rounded border"
-              style={{ background: d.color + '22', color: d.color, borderColor: d.color + '55' }}>{d.text}</span>
-          ))}
-        </div>
-      )}
-
-      {post.note && <p className="text-slate-400 text-xs leading-relaxed">{post.note}</p>}
-
-      <div className="flex items-center justify-between mt-auto pt-2 border-t border-white/5 gap-2">
-        <div className="flex items-center gap-2 min-w-0">
-          {post.discord_tag ? (
-            <span className="text-[#5865F2] text-xs font-semibold truncate">{post.discord_tag}</span>
+      {/* 지원 · 등록 + 액션 */}
+      <div className="w-48 shrink-0 flex items-center justify-end gap-3">
+        {post.discord_tag && <span className="hidden xl:inline text-[#5865F2] text-[11px] font-semibold truncate">{post.discord_tag}</span>}
+        <span className="text-slate-600 text-[11px] w-12 text-right shrink-0">{timeAgo(post.created_at)}</span>
+        {showApplyBtn && (
+          applyState === 'done' ? (
+            <span className="text-[11px] font-bold text-green-400 bg-green-500/10 px-3 py-1.5 rounded">✓ 신청 완료</span>
           ) : (
-            <span className="text-slate-600 text-xs">Discord 미등록</span>
-          )}
-          <span className="text-slate-600 text-[11px] shrink-0">{timeAgo(post.created_at)}</span>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
-          {showApplyBtn && (
-            applyState === 'done' ? (
-              <span className="text-[11px] font-bold text-green-400 bg-green-500/10 px-3 py-1.5 rounded">✓ 신청 완료</span>
-            ) : (
-              <button
-                onClick={handleApply}
-                disabled={applyState === 'loading'}
-                className="text-[11px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition"
-              >
-                {applyState === 'loading' ? '신청 중...' : isLfc ? '코치 지원' : '가입 신청'}
-              </button>
-            )
-          )}
-          {isOwn && (
-            <>
-              <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
-              <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
-              <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
-            </>
-          )}
-        </div>
+            <button
+              onClick={handleApply}
+              disabled={applyState === 'loading'}
+              className="text-[11px] font-bold bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-50 text-white px-3 py-1.5 rounded transition shrink-0"
+            >
+              {applyState === 'loading' ? '신청 중...' : isLfc ? '코치 지원' : '가입 신청'}
+            </button>
+          )
+        )}
+        {isOwn && (
+          <div className="flex items-center gap-1.5">
+            <a href={`/recruit/post/edit/${post.id}`} className="text-[11px] text-slate-500 hover:text-white transition font-semibold">수정</a>
+            <button onClick={() => onClose(post.id)} className="text-[11px] text-slate-500 hover:text-[#00D2BE] transition font-semibold">완료</button>
+            <button onClick={() => onDelete(post.id)} className="text-[11px] text-slate-500 hover:text-red-400 transition font-semibold">삭제</button>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -320,12 +299,24 @@ export default function RecruitBoard({ posts, currentUserId, currentUserHasTeam,
           action={<a href={`/recruit/post?type=${activeType}`} className="bg-[#00D2BE]/20 hover:bg-[#00D2BE]/30 text-[#00D2BE] text-sm px-5 py-2.5 rounded transition">+ 글 올리기</a>}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {localPosts.map((post) =>
-            activeType === 'lft'
-              ? <LftCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
-              : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} currentUserAccountType={currentUserAccountType} onClose={handleClose} onDelete={handleDelete} />
-          )}
+        <div className="bg-[#13131f] border border-white/5 rounded overflow-hidden">
+          {/* 컬럼 헤더 (행과 동일한 컬럼 폭으로 정렬) */}
+          <div className="flex items-center gap-4 px-5 py-3 border-b border-white/5 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="w-44 shrink-0">{activeType === 'lft' ? '선수' : '팀'}</span>
+            <span className="hidden md:block w-52 shrink-0">{activeType === 'lft' ? '티어 · 포지션' : '모집 대상'}</span>
+            <span className="flex-1 min-w-0"><span className="hidden lg:inline">소개</span></span>
+            {activeType === 'lft' && <span className="w-28 shrink-0">D31 Rating</span>}
+            <span className={`${activeType === 'lft' ? 'w-44' : 'w-48'} shrink-0 text-right`}>
+              {activeType === 'lft' ? '등록' : '지원 · 등록'}
+            </span>
+          </div>
+          <div className="divide-y divide-white/5">
+            {localPosts.map((post) =>
+              activeType === 'lft'
+                ? <LftCard key={post.id} post={post} currentUserId={currentUserId} onClose={handleClose} onDelete={handleDelete} />
+                : <LfpCard key={post.id} post={post} currentUserId={currentUserId} currentUserHasTeam={currentUserHasTeam} currentUserAccountType={currentUserAccountType} onClose={handleClose} onDelete={handleDelete} />
+            )}
+          </div>
         </div>
       )}
     </>

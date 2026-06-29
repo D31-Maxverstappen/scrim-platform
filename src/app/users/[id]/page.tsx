@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect, notFound } from 'next/navigation'
 import { FlagImg } from '@/components/common/CountrySelect'
 import InviteButton from '@/components/team/InviteButton'
+import D31ScoreCard from '@/components/profile/D31ScoreCard'
 import { MANNER_ENABLED } from '@/lib/features'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
@@ -93,6 +94,9 @@ export default async function UserProfilePage({ params }: { params: Promise<{ id
             )}
           </div>
         </div>
+
+        {/* D31 Score — 선수 정체성 점수(헤드라인, 현재 목업) · 코치는 제외 */}
+        {!isCoach && <D31ScoreCard seed={profile.id} />}
 
         {/* 통계 — (매너 점수) / 스크림 전적 / 승률 · 매너는 MANNER_ENABLED로 비활성화 */}
         <div className={`grid ${MANNER_ENABLED ? 'grid-cols-3' : 'grid-cols-2'} gap-3 mb-6`}>

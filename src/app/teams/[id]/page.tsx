@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { formatKST } from '@/lib/datetime'
 import { redirect, notFound } from 'next/navigation'
-import { MANNER_ENABLED } from '@/lib/features'
 import RealtimeRefresher from '@/components/common/RealtimeRefresher'
 import JoinTeamButton from '@/components/team/JoinTeamButton'
 import LeaveTeamButton from '@/components/team/LeaveTeamButton'
@@ -10,6 +9,7 @@ import TeamPageTabs from '@/components/team/TeamPageTabs'
 import BookmarkButton from '@/components/common/BookmarkButton'
 import { FlagImg } from '@/components/common/CountrySelect'
 import TeamChat from '@/components/team/TeamChat'
+import TeamStatsDashboard from '@/components/team/TeamStatsDashboard'
 import TeamNotes, { type TeamNote } from '@/components/team/TeamNotes'
 import { GAME_LABEL, GAME_COLOR } from '@/lib/games'
 
@@ -104,12 +104,6 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   const gameColor = GAME_COLOR[team.game_type] ?? '#00D2BE'
   const isVal = team.game_type === 'valorant'
   const total = (team.wins ?? 0) + (team.losses ?? 0)
-  const teamManner = members && members.length
-    ? Math.round(members.reduce((sum: number, m) => {
-        const u = Array.isArray(m.users) ? m.users[0] : m.users
-        return sum + (u?.manner_score ?? 100)
-      }, 0) / members.length)
-    : 100
 
   // ── Overview 탭 ──
   const overviewContent = (
@@ -221,31 +215,8 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
     </div>
   )
 
-  // ── Stats 탭 ──
-  const statsContent = (
-    <div className="flex gap-6">
-      <div className="flex-1 min-w-0">
-        <div className="bg-[#13131f] border border-white/5 rounded">
-          <div className="px-4 py-2.5 border-b border-white/5">
-            <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">통계</p>
-          </div>
-          <div className={`grid ${MANNER_ENABLED ? 'grid-cols-4' : 'grid-cols-3'} divide-x divide-white/5`}>
-            {[
-              { label: '총 스크림', value: allMatches.length > 0 ? String(allMatches.length) : '—' },
-              { label: '승률', value: total > 0 ? `${Math.round(((team.wins ?? 0) / total) * 100)}%` : '—' },
-              { label: '평균 티어', value: team.tier_avg ?? '—' },
-              ...(MANNER_ENABLED ? [{ label: '매너 점수', value: `${teamManner}` }] : []),
-            ].map((s) => (
-              <div key={s.label} className="px-6 py-5 text-center">
-                <p className="text-2xl font-black text-white mb-1">{s.value}</p>
-                <p className="text-xs text-slate-500">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+  // ── Stats 탭 — 팀 통계 대시보드(Pro 유료 기능, 현재 목업 시연) ──
+  const statsContent = <TeamStatsDashboard teamId={id} teamName={team.name} />
 
   // ── Matches 탭 ──
   const matchesContent = (
@@ -373,6 +344,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
         <TeamPageTabs
           overviewContent={overviewContent}
           statsContent={statsContent}
+          showStats={isMember || isCaptain}
           matchesContent={matchesContent}
           playbookContent={playbookContent}
           showPlaybook={isMember || isCaptain}

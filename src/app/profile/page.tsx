@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/server'
 import AvatarUpload from '@/components/profile/AvatarUpload'
 import CountrySelect from '@/components/common/CountrySelect'
 import CareerEditor from '@/components/profile/CareerEditor'
+import D31ScoreCard from '@/components/profile/D31ScoreCard'
 import DeleteAccountButton from '@/components/profile/DeleteAccountButton'
 import DisconnectRiotButton from '@/components/profile/DisconnectRiotButton'
 import { GAME_LABEL } from '@/lib/games'
@@ -173,6 +174,9 @@ export default async function ProfilePage() {
           </div>
 
         </div>
+
+        {/* D31 Score — 선수 정체성 점수(헤드라인, 현재 목업) */}
+        <D31ScoreCard seed={profile?.id ?? user.id} />
 
         <div className={`grid grid-cols-1 ${MANNER_ENABLED ? 'sm:grid-cols-2' : ''} gap-4 mb-6`}>
 
