@@ -255,7 +255,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
       {/* VLR 스타일 팀명 + 스코어 */}
       {selectedMap && (
         <div className="px-6 py-4 border-b border-white/10">
-          <div className="flex items-center justify-between mb-4">
+          <div className="grid grid-cols-3 items-center mb-4">
             <div>
               <a href={`/teams/${team1?.id}`} className="text-white font-black text-lg hover:text-[#00D2BE] transition">{teamAbbr(team1)}</a>
               <p className="text-slate-600 text-xs">{t1Score} / {t1Score + t2Score > 0 ? t1Score + t2Score : 0}</p>
