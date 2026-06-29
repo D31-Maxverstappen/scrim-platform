@@ -3,11 +3,8 @@
 import { useState } from 'react'
 import { FlagImg } from '@/components/common/CountrySelect'
 import MapIcon from '@/components/common/MapIcon'
+import { parseRounds, type RoundCell, type RoundReason } from '@/lib/roundResults'
 import type { TeamBrief, MatchMap, MatchStat, TeamMemberBrief } from '@/lib/types'
-
-const ROUND_COLORS: Record<string, string> = {
-  W: '#00D2BE', L: '#ff4655', D: '#6b7280',
-}
 
 const VAL_MAP_ABBR: Record<string, string> = {
   Ascent: 'ASC', Bind: 'BIND', Haven: 'HVN', Icebox: 'ICE',
@@ -27,15 +24,20 @@ function padTo5<T>(arr: T[]): (T | null)[] {
   return [...arr, ...Array(Math.max(0, 5 - arr.length)).fill(null)]
 }
 
-function RoundBox({ result }: { result: string | null }) {
-  if (!result) return (
-    <div className="w-5 h-5 bg-white/5" />
-  )
+// 라운드 종료사유 아이콘 (직접 그린 SVG — 라이엇이 배포하지 않는 자산이라 자체 제작)
+//  e 제거 · b 스파이크 폭발 · d 해체 · t 시간초과
+function RoundIcon({ reason, color }: { reason: RoundReason; color: string }) {
+  const shape = {
+    e: <><rect x="4.5" y="4.5" width="15" height="15" rx="4" /><path d="M9 9l6 6M15 9l-6 6" /></>,
+    b: <><circle cx="12" cy="12" r="2.6" fill={color} stroke="none" /><path d="M12 2.5v3.2M12 18.3v3.2M2.5 12h3.2M18.3 12h3.2M5.2 5.2l2.3 2.3M16.5 16.5l2.3 2.3M18.8 5.2l-2.3 2.3M7.5 16.5l-2.3 2.3" /></>,
+    d: <><circle cx="6" cy="7" r="2.2" /><circle cx="6" cy="17" r="2.2" /><path d="M8 8.4l11.5 5.8M8 15.6l11.5-5.8" /></>,
+    t: <><circle cx="12" cy="12.5" r="8" /><path d="M12 8v4.5l3 2" /></>,
+  }[reason]
   return (
-    <div className="w-5 h-5 flex items-center justify-center text-[9px] font-black"
-      style={{ background: (ROUND_COLORS[result] ?? '#374151') + '33', color: ROUND_COLORS[result] ?? '#6b7280' }}>
-      {result}
-    </div>
+    <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke={color}
+      strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      {shape}
+    </svg>
   )
 }
 
@@ -121,19 +123,34 @@ function EmptyStatRow({ member }: { member: TeamMemberBrief | null }) {
   )
 }
 
-function RoundTimeline({ results, label }: { results: string | null; label: string }) {
-  const totalRounds = 24
-  const chars = results ? results.split('') : []
-
+function RoundTimeline({ rounds, team, color, label }: { rounds: RoundCell[]; team: 1 | 2; color: string; label: string }) {
   return (
-    <div className="flex items-center gap-3 py-2">
+    <div className="flex items-center gap-3 py-1.5">
       <span className="text-[11px] text-slate-500 w-6 shrink-0 font-bold">{label}</span>
       <div className="flex gap-0.5">
-        {Array.from({ length: totalRounds }).map((_, i) => (
-          <RoundBox key={i} result={chars[i] ?? null} />
-        ))}
+        {Array.from({ length: 24 }).map((_, i) => {
+          const cell = rounds[i]
+          return (
+            <div key={i} className="w-5 h-5 flex items-center justify-center">
+              {cell && cell.winner === team
+                ? <RoundIcon reason={cell.reason} color={color} />
+                : <span className="w-1 h-1 rounded-full bg-white/10" />}
+            </div>
+          )
+        })}
       </div>
     </div>
+  )
+}
+
+// team1=틸, team2=빨강 두 행 — round_results를 파싱해 이긴 팀 쪽에만 사유 아이콘
+function RoundTimelines({ raw, t1, t2 }: { raw: string | null; t1: string; t2: string }) {
+  const rounds = parseRounds(raw)
+  return (
+    <>
+      <RoundTimeline rounds={rounds} team={1} color="#00D2BE" label={t1} />
+      <RoundTimeline rounds={rounds} team={2} color="#ff4655" label={t2} />
+    </>
   )
 }
 
@@ -227,8 +244,7 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
                 ))}
               </div>
             </div>
-            <RoundTimeline results={selectedMap.round_results} label={teamAbbr(team1)} />
-            <RoundTimeline results={null} label={teamAbbr(team2)} />
+            <RoundTimelines raw={selectedMap.round_results} t1={teamAbbr(team1)} t2={teamAbbr(team2)} />
           </div>
         </div>
       )}
