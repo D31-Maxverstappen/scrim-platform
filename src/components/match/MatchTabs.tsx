@@ -126,12 +126,12 @@ function EmptyStatRow({ member }: { member: TeamMemberBrief | null }) {
   )
 }
 
-function RoundTimeline({ rounds, team, color, label }: { rounds: RoundCell[]; team: 1 | 2; color: string; label: string }) {
+function RoundTimeline({ rounds, count, team, color, label }: { rounds: RoundCell[]; count: number; team: 1 | 2; color: string; label: string }) {
   return (
     <div className="flex items-center gap-3 py-1.5">
       <span className="text-[11px] text-slate-500 w-6 shrink-0 font-bold">{label}</span>
       <div className="flex gap-0.5">
-        {Array.from({ length: 24 }).map((_, i) => {
+        {Array.from({ length: count }).map((_, i) => {
           const cell = rounds[i]
           return (
             <div key={i} className="w-5 h-5 flex items-center justify-center">
@@ -146,13 +146,23 @@ function RoundTimeline({ rounds, team, color, label }: { rounds: RoundCell[]; te
   )
 }
 
-// team1=틸, team2=빨강 두 행 — round_results를 파싱해 이긴 팀 쪽에만 사유 아이콘
-function RoundTimelines({ raw, t1, t2 }: { raw: string | null; t1: string; t2: string }) {
+// team1=틸, team2=빨강 두 행 + 라운드 번호. 라운드 수는 데이터 길이(없으면 스코어 합)로 동적.
+function RoundTimelines({ raw, t1, t2, total }: { raw: string | null; t1: string; t2: string; total: number }) {
   const rounds = parseRounds(raw)
+  const count = rounds.length || total || 0
+  if (count === 0) return null
   return (
     <>
-      <RoundTimeline rounds={rounds} team={1} color="#00D2BE" label={t1} />
-      <RoundTimeline rounds={rounds} team={2} color="#ff4655" label={t2} />
+      <div className="flex items-center gap-3 pb-1 border-b border-white/5">
+        <span className="text-[11px] text-slate-600 w-6" />
+        <div className="flex gap-0.5">
+          {Array.from({ length: count }).map((_, i) => (
+            <span key={i} className="text-[8px] text-slate-700 w-5 text-center">{i + 1}</span>
+          ))}
+        </div>
+      </div>
+      <RoundTimeline rounds={rounds} count={count} team={1} color="#00D2BE" label={t1} />
+      <RoundTimeline rounds={rounds} count={count} team={2} color="#ff4655" label={t2} />
     </>
   )
 }
@@ -171,8 +181,32 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
 
   const selectedMap = mapTab === 'all' ? null : maps.find((m) => m.id === mapTab)
 
-  const filterStats = (teamId: string | undefined) =>
-    stats.filter((s) => s.team_id === teamId && (mapTab === 'all' || s.map_id === mapTab))
+  // 전체 맵 탭: 선수별 종합 — K/D/A·FK·FD 합산, ACS·KAST·ADR·HS% 평균
+  const aggregateByUser = (rows: MatchStat[]): MatchStat[] => {
+    const byUser = new Map<string, MatchStat[]>()
+    for (const r of rows) {
+      const arr = byUser.get(r.user_id) ?? []
+      arr.push(r)
+      byUser.set(r.user_id, arr)
+    }
+    return [...byUser.values()].map((rs) => {
+      const n = rs.length
+      const sum = (k: keyof MatchStat) => rs.reduce((a, r) => a + (r[k] as number), 0)
+      const avg = (k: keyof MatchStat) => Math.round(sum(k) / n)
+      return {
+        ...rs[0],
+        kills: sum('kills'), deaths: sum('deaths'), assists: sum('assists'),
+        acs: avg('acs'), kast: avg('kast'), adr: avg('adr'), hs_pct: avg('hs_pct'),
+        fk: sum('fk'), fd: sum('fd'),
+        map_id: '',
+      }
+    })
+  }
+
+  const filterStats = (teamId: string | undefined) => {
+    const teamRows = stats.filter((s) => s.team_id === teamId)
+    return mapTab === 'all' ? aggregateByUser(teamRows) : teamRows.filter((s) => s.map_id === mapTab)
+  }
 
   const team1Stats = filterStats(team1?.id)
   const team2Stats = filterStats(team2?.id)
@@ -237,17 +271,9 @@ export default function MatchTabs({ match, team1, team2, maps, stats, team1Membe
             </div>
           </div>
 
-          {/* 라운드 박스 */}
+          {/* 라운드 박스 — 라운드 수는 데이터/스코어 합에 맞춰 동적 */}
           <div className="border border-white/5 px-4 py-2">
-            <div className="flex items-center gap-3 pb-1 border-b border-white/5">
-              <span className="text-[11px] text-slate-600 w-6" />
-              <div className="flex gap-0.5">
-                {Array.from({ length: 24 }).map((_, i) => (
-                  <span key={i} className="text-[8px] text-slate-700 w-5 text-center">{i + 1}</span>
-                ))}
-              </div>
-            </div>
-            <RoundTimelines raw={selectedMap.round_results} t1={teamAbbr(team1)} t2={teamAbbr(team2)} />
+            <RoundTimelines raw={selectedMap.round_results} t1={teamAbbr(team1)} t2={teamAbbr(team2)} total={t1Score + t2Score} />
           </div>
         </div>
       )}
