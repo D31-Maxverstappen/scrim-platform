@@ -1,8 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { formatKST } from '@/lib/datetime'
+import type { BoardData } from '@/components/board/StrategyBoard'
+
+// Konva 작전판은 클라 전용 → SSR 끄고 동적 로드(모달에서만 번들)
+const StrategyBoard = dynamic(() => import('@/components/board/StrategyBoard'), { ssr: false })
 
 export type TeamNote = {
   id: string
@@ -10,6 +15,7 @@ export type TeamNote = {
   created_at: string
   author_id: string | null
   author: { val_gamename: string | null; riot_gamename: string | null; avatar_url: string | null } | null
+  board_data: BoardData | null
 }
 
 function authorName(n: TeamNote) {
@@ -28,6 +34,7 @@ export default function TeamNotes({
   const [content, setContent] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [boardEdit, setBoardEdit] = useState<{ initialData?: BoardData } | null>(null)
 
   const submit = async () => {
     const text = content.trim()
@@ -64,13 +71,22 @@ export default function TeamNotes({
           {error
             ? <span className="text-red-400 text-xs">{error}</span>
             : <span className="text-slate-600 text-[11px]">🔒 상대 팀에는 보이지 않아요</span>}
-          <button
-            onClick={submit}
-            disabled={!content.trim() || busy}
-            className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold px-4 py-2 rounded transition"
-          >
-            {busy ? '저장 중...' : '노트 추가'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setBoardEdit({})}
+              type="button"
+              className="bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold px-4 py-2 rounded transition"
+            >
+              ＋ 작전판
+            </button>
+            <button
+              onClick={submit}
+              disabled={!content.trim() || busy}
+              className="bg-[#00D2BE] hover:bg-[#00a896] disabled:opacity-40 disabled:cursor-not-allowed text-white text-xs font-bold px-4 py-2 rounded transition"
+            >
+              {busy ? '저장 중...' : '노트 추가'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -99,10 +115,32 @@ export default function TeamNotes({
                       className="ml-auto text-slate-600 hover:text-red-400 text-[11px] transition">삭제</button>
                   )}
                 </div>
-                <p className="text-slate-200 text-sm whitespace-pre-wrap leading-relaxed">{n.content}</p>
+                {n.content && <p className="text-slate-200 text-sm whitespace-pre-wrap leading-relaxed">{n.content}</p>}
+                {n.board_data && (
+                  <button
+                    onClick={() => setBoardEdit({ initialData: n.board_data ?? undefined })}
+                    className="mt-1 inline-flex items-center gap-1.5 text-xs font-bold text-[#00D2BE] bg-[#00D2BE]/10 px-3 py-1.5 rounded hover:bg-[#00D2BE]/20 transition"
+                  >
+                    작전판 열기 · {n.board_data.map}
+                  </button>
+                )}
               </div>
             )
           })}
+        </div>
+      )}
+
+      {boardEdit && (
+        <div className="fixed inset-0 z-50 bg-black/75 flex items-start justify-center p-4 overflow-auto" onClick={() => setBoardEdit(null)}>
+          <div onClick={(e) => e.stopPropagation()} className="bg-[#0a0a0e] rounded-lg p-4 border border-white/10 my-4">
+            <StrategyBoard
+              teamId={teamId}
+              matchId={matchId}
+              initialData={boardEdit.initialData}
+              onSaved={() => { setBoardEdit(null); router.refresh() }}
+              onClose={() => setBoardEdit(null)}
+            />
+          </div>
         </div>
       )}
     </div>

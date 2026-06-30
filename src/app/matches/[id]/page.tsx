@@ -97,7 +97,7 @@ export default async function MatchPage({ params }: { params: Promise<{ id: stri
   if (viewerTeamId) {
     const { data: rawNotes } = await supabase
       .from('team_notes')
-      .select('id, content, created_at, author_id')
+      .select('id, content, created_at, author_id, board_data')
       .eq('team_id', viewerTeamId)
       .eq('match_id', id)
       .order('created_at', { ascending: false })

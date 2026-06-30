@@ -8,14 +8,15 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: '로그인이 필요해요.' }, { status: 401 })
 
-  const { teamId, matchId, content } = await req.json()
+  const { teamId, matchId, content, boardData } = await req.json()
   const text = (content ?? '').trim()
-  if (!teamId || !text) return NextResponse.json({ error: '내용을 입력해 주세요.' }, { status: 400 })
+  // 텍스트 노트 또는 작전판 중 최소 하나는 있어야 함
+  if (!teamId || (!text && !boardData)) return NextResponse.json({ error: '내용을 입력해 주세요.' }, { status: 400 })
   if (text.length > 4000) return NextResponse.json({ error: '내용이 너무 길어요. (최대 4000자)' }, { status: 400 })
 
   const { data, error } = await supabase
     .from('team_notes')
-    .insert({ team_id: teamId, match_id: matchId ?? null, author_id: user.id, content: text })
+    .insert({ team_id: teamId, match_id: matchId ?? null, author_id: user.id, content: text, board_data: boardData ?? null })
     .select('id')
     .single()
 

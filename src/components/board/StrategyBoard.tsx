@@ -57,14 +57,23 @@ function ImgToken({ obj, selected, onSelect, onMove }: {
   )
 }
 
-export default function StrategyBoard() {
-  const [map, setMap] = useState('어센트')
+export type BoardData = { map: string; strokes: Stroke[]; tokens: Token[] }
+
+export default function StrategyBoard({ teamId, matchId = null, initialData, onSaved, onClose }: {
+  teamId?: string
+  matchId?: string | null
+  initialData?: BoardData
+  onSaved?: () => void
+  onClose?: () => void
+} = {}) {
+  const [map, setMap] = useState(initialData?.map ?? '어센트')
   const [mapOpen, setMapOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
   const [tool, setTool] = useState<Tool>('pen')
   const [color, setColor] = useState(COLORS[0])
   const [width, setWidth] = useState(3)
-  const [strokes, setStrokes] = useState<Stroke[]>([])
-  const [tokens, setTokens] = useState<Token[]>([])
+  const [strokes, setStrokes] = useState<Stroke[]>(initialData?.strokes ?? [])
+  const [tokens, setTokens] = useState<Token[]>(initialData?.tokens ?? [])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [agentPalOpen, setAgentPalOpen] = useState(false)
   const [skillPalOpen, setSkillPalOpen] = useState(false)
@@ -165,6 +174,21 @@ export default function StrategyBoard() {
       a.href = uri
       a.click()
     })
+  }
+
+  // 팀 전략노트로 저장(작전판 데이터를 board_data JSON으로)
+  const saveAsNote = async () => {
+    if (!teamId || saving) return
+    setSaving(true)
+    const boardData: BoardData = { map, strokes, tokens }
+    const res = await fetch('/api/team-notes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ teamId, matchId, content: '', boardData }),
+    })
+    setSaving(false)
+    if (res.ok) onSaved?.()
+    else alert('저장에 실패했어요. 팀원만 저장할 수 있어요.')
   }
 
   const toolBtn = (t: Tool, label: string) => (
@@ -308,7 +332,15 @@ export default function StrategyBoard() {
           )}
           <button onClick={undo} className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-400 hover:text-white transition">되돌리기</button>
           <button onClick={clear} className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-400 hover:text-white transition">전체 지우기</button>
-          <button onClick={exportPNG} className="px-3 py-1.5 rounded text-xs font-black bg-[#00D2BE] text-[#04342c] hover:opacity-90 transition">PNG 저장</button>
+          <button onClick={exportPNG} className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-300 hover:text-white transition">PNG</button>
+          {teamId && (
+            <button onClick={saveAsNote} disabled={saving} className="px-3 py-1.5 rounded text-xs font-black bg-[#00D2BE] text-[#04342c] hover:opacity-90 transition disabled:opacity-50">
+              {saving ? '저장 중…' : '노트 저장'}
+            </button>
+          )}
+          {onClose && (
+            <button onClick={onClose} className="px-2 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-400 hover:text-white transition">닫기</button>
+          )}
         </div>
       </div>
 

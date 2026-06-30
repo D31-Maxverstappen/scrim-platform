@@ -1155,6 +1155,7 @@ export type Database = {
       team_notes: {
         Row: {
           author_id: string | null
+          board_data: Json | null
           content: string
           created_at: string
           id: string
@@ -1164,6 +1165,7 @@ export type Database = {
         }
         Insert: {
           author_id?: string | null
+          board_data?: Json | null
           content: string
           created_at?: string
           id?: string
@@ -1173,6 +1175,7 @@ export type Database = {
         }
         Update: {
           author_id?: string | null
+          board_data?: Json | null
           content?: string
           created_at?: string
           id?: string

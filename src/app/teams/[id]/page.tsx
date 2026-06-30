@@ -69,7 +69,7 @@ export default async function TeamDetailPage({ params }: { params: Promise<{ id:
   if (isMember || isCaptain) {
     const { data: rawNotes } = await supabase
       .from('team_notes')
-      .select('id, content, created_at, author_id')
+      .select('id, content, created_at, author_id, board_data')
       .eq('team_id', id)
       .is('match_id', null)
       .order('created_at', { ascending: false })
