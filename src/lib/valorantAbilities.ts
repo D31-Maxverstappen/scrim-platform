@@ -363,5 +363,59 @@ export const ABILITIES: Record<string, Ability[]> = {
       "name": "칼날 폭풍",
       "icon": "/abilities/jett-3.png"
     }
+  ],
+  "brimstone": [
+    { "name": "소이탄", "icon": "/abilities/brimstone-0.png" },
+    { "name": "공중 연막", "icon": "/abilities/brimstone-1.png" },
+    { "name": "자극제 신호기", "icon": "/abilities/brimstone-2.png" },
+    { "name": "궤도 일격", "icon": "/abilities/brimstone-3.png" }
+  ],
+  "cypher": [
+    { "name": "사이버 감옥", "icon": "/abilities/cypher-0.png" },
+    { "name": "스파이캠", "icon": "/abilities/cypher-1.png" },
+    { "name": "함정", "icon": "/abilities/cypher-2.png" },
+    { "name": "신경 절도", "icon": "/abilities/cypher-3.png" }
+  ],
+  "kayo": [
+    { "name": "플래시/드라이브", "icon": "/abilities/kayo-0.png" },
+    { "name": "제로/포인트", "icon": "/abilities/kayo-1.png" },
+    { "name": "파편/탄", "icon": "/abilities/kayo-2.png" },
+    { "name": "무력화/명령", "icon": "/abilities/kayo-3.png" }
+  ],
+  "phoenix": [
+    { "name": "뜨거운 손", "icon": "/abilities/phoenix-0.png" },
+    { "name": "커브볼", "icon": "/abilities/phoenix-1.png" },
+    { "name": "불길", "icon": "/abilities/phoenix-2.png" },
+    { "name": "역습", "icon": "/abilities/phoenix-3.png" }
+  ],
+  "tejo": [
+    { "name": "특별 배송", "icon": "/abilities/tejo-0.png" },
+    { "name": "유도 일제 사격", "icon": "/abilities/tejo-1.png" },
+    { "name": "잠입 드론", "icon": "/abilities/tejo-2.png" },
+    { "name": "아마겟돈", "icon": "/abilities/tejo-3.png" }
+  ],
+  "miks": [
+    { "name": "화음", "icon": "/abilities/miks-0.png" },
+    { "name": "웨이브폼", "icon": "/abilities/miks-1.png" },
+    { "name": "M-파동", "icon": "/abilities/miks-2.png" },
+    { "name": "요동치는 베이스", "icon": "/abilities/miks-3.png" }
+  ],
+  "vyse": [
+    { "name": "가지치기", "icon": "/abilities/vyse-0.png" },
+    { "name": "아크 장미", "icon": "/abilities/vyse-1.png" },
+    { "name": "면도날 덩굴", "icon": "/abilities/vyse-2.png" },
+    { "name": "강철 정원", "icon": "/abilities/vyse-3.png" }
+  ],
+  "veto": [
+    { "name": "목조르기", "icon": "/abilities/veto-0.png" },
+    { "name": "요격기", "icon": "/abilities/veto-1.png" },
+    { "name": "지름길", "icon": "/abilities/veto-2.png" },
+    { "name": "진화", "icon": "/abilities/veto-3.png" }
+  ],
+  "waylay": [
+    { "name": "광속", "icon": "/abilities/waylay-0.png" },
+    { "name": "굴절", "icon": "/abilities/waylay-1.png" },
+    { "name": "포화", "icon": "/abilities/waylay-2.png" },
+    { "name": "초점 교차", "icon": "/abilities/waylay-3.png" }
   ]
 }

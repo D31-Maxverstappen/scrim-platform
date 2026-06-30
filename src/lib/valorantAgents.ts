@@ -6,6 +6,8 @@ const AGENT_SLUG: Record<string, string> = {
   소바: 'sova', 바이퍼: 'viper', 레이나: 'reyna', 브리치: 'breach', 네온: 'neon',
   페이드: 'fade', 스카이: 'skye', 체임버: 'chamber', 아스트라: 'astra', 요루: 'yoru',
   게코: 'gekko', 데드락: 'deadlock', 하버: 'harbor', 클로브: 'clove', 아이소: 'iso',
+  브림스톤: 'brimstone', 사이퍼: 'cypher', '케이/오': 'kayo', 피닉스: 'phoenix', 테호: 'tejo',
+  믹스: 'miks', 바이스: 'vyse', 비토: 'veto', 웨이레이: 'waylay',
 }
 
 // 팔레트용 요원 목록(초상화 매핑된 요원명).
