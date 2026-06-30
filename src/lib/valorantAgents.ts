@@ -17,3 +17,9 @@ export function agentIcon(agent: string | null | undefined): string | null {
   const slug = AGENT_SLUG[agent.trim()]
   return slug ? `/agents/${slug}.png` : null
 }
+
+// 요원명 → slug (스킬 매핑 등에서 사용). 매핑 없으면 null.
+export function agentSlug(agent: string | null | undefined): string | null {
+  if (!agent) return null
+  return AGENT_SLUG[agent.trim()] ?? null
+}

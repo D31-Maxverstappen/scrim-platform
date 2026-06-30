@@ -5,45 +5,43 @@ import { Stage, Layer, Line, Arrow, Image as KonvaImage } from 'react-konva'
 import type Konva from 'konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import { minimapIcon } from '@/lib/valorantMaps'
-import { agentIcon, AGENT_NAMES } from '@/lib/valorantAgents'
+import { agentIcon, agentSlug, AGENT_NAMES } from '@/lib/valorantAgents'
+import { ABILITIES } from '@/lib/valorantAbilities'
 
-// 전략 노트 작전판 v1 — 맵 미니맵 배경 위에 펜·화살표로 그리고 요원 토큰을 배치한다.
+// 전략 노트 작전판 v1 — 맵 미니맵 배경 위에 펜·화살표로 그리고 요원·스킬 토큰을 배치한다.
 // 라이브러리: react-konva(Konva). 클라이언트 전용(ssr:false로 로드).
 
 const MAPS = ['어센트', '바인드', '헤이븐', '스플릿', '로터스', '선셋', '어비스', '아이스박스', '브리즈', '프랙처', '펄', '코로드']
 const COLORS = ['#00D2BE', '#ff4655', '#ffd700', '#ffffff', '#3b82f6', '#a855f7']
 const SIZE = 680
-const AGENT_SIZE = 40
 
 type Tool = 'pen' | 'arrow'
 type Stroke = { tool: Tool; points: number[]; color: string; width: number }
-type AgentObj = { id: string; agent: string; x: number; y: number }
+type Token = { id: string; icon: string; x: number; y: number; size: number }
 
-// 캔버스 위 요원 토큰 — 드래그 이동·클릭 선택. 선택 시 틸 테두리.
-function AgentToken({ obj, selected, onSelect, onMove }: {
-  obj: AgentObj
+// 캔버스 위 이미지 토큰(요원·스킬 공용) — 드래그 이동·클릭 선택. 선택 시 틸 테두리.
+function ImgToken({ obj, selected, onSelect, onMove }: {
+  obj: Token
   selected: boolean
   onSelect: () => void
   onMove: (x: number, y: number) => void
 }) {
   const [img, setImg] = useState<HTMLImageElement | null>(null)
   useEffect(() => {
-    const src = agentIcon(obj.agent)
-    if (!src) return
     const i = new window.Image()
-    i.src = src
+    i.src = obj.icon
     i.onload = () => setImg(i)
-  }, [obj.agent])
+  }, [obj.icon])
   if (!img) return null
   return (
     <KonvaImage
       image={img}
       x={obj.x}
       y={obj.y}
-      width={AGENT_SIZE}
-      height={AGENT_SIZE}
-      offsetX={AGENT_SIZE / 2}
-      offsetY={AGENT_SIZE / 2}
+      width={obj.size}
+      height={obj.size}
+      offsetX={obj.size / 2}
+      offsetY={obj.size / 2}
       cornerRadius={6}
       draggable
       onClick={onSelect}
@@ -66,14 +64,17 @@ export default function StrategyBoard() {
   const [color, setColor] = useState(COLORS[0])
   const [width, setWidth] = useState(3)
   const [strokes, setStrokes] = useState<Stroke[]>([])
-  const [agents, setAgents] = useState<AgentObj[]>([])
+  const [tokens, setTokens] = useState<Token[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [paletteOpen, setPaletteOpen] = useState(false)
+  const [agentPalOpen, setAgentPalOpen] = useState(false)
+  const [skillPalOpen, setSkillPalOpen] = useState(false)
+  const [skillAgent, setSkillAgent] = useState(AGENT_NAMES[0])
   const [mapImg, setMapImg] = useState<HTMLImageElement | null>(null)
   const drawing = useRef(false)
   const stageRef = useRef<Konva.Stage>(null)
   const mapRef = useRef<HTMLDivElement>(null)
-  const paletteRef = useRef<HTMLDivElement>(null)
+  const agentPalRef = useRef<HTMLDivElement>(null)
+  const skillPalRef = useRef<HTMLDivElement>(null)
 
   // 맵 바뀌면 미니맵 배경 로드
   useEffect(() => {
@@ -86,20 +87,22 @@ export default function StrategyBoard() {
 
   // 드롭다운/팔레트 외부 클릭 시 닫기
   useEffect(() => {
-    if (!mapOpen && !paletteOpen) return
+    if (!mapOpen && !agentPalOpen && !skillPalOpen) return
     const onDoc = (e: MouseEvent) => {
-      if (mapOpen && mapRef.current && !mapRef.current.contains(e.target as Node)) setMapOpen(false)
-      if (paletteOpen && paletteRef.current && !paletteRef.current.contains(e.target as Node)) setPaletteOpen(false)
+      const t = e.target as Node
+      if (mapOpen && mapRef.current && !mapRef.current.contains(t)) setMapOpen(false)
+      if (agentPalOpen && agentPalRef.current && !agentPalRef.current.contains(t)) setAgentPalOpen(false)
+      if (skillPalOpen && skillPalRef.current && !skillPalRef.current.contains(t)) setSkillPalOpen(false)
     }
     document.addEventListener('mousedown', onDoc)
     return () => document.removeEventListener('mousedown', onDoc)
-  }, [mapOpen, paletteOpen])
+  }, [mapOpen, agentPalOpen, skillPalOpen])
 
-  // Delete/Backspace 로 선택 요원 삭제
+  // Delete/Backspace 로 선택 토큰 삭제
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.key === 'Delete' || e.key === 'Backspace') && selectedId) {
-        setAgents((prev) => prev.filter((a) => a.id !== selectedId))
+        setTokens((prev) => prev.filter((t) => t.id !== selectedId))
         setSelectedId(null)
       }
     }
@@ -109,7 +112,7 @@ export default function StrategyBoard() {
 
   const start = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     const stage = e.target.getStage()
-    // 요원 토큰 위에서 시작하면 그리기 안 함(토큰이 선택/드래그 처리)
+    // 토큰 위에서 시작하면 그리기 안 함(토큰이 선택/드래그 처리)
     if (e.target !== stage && e.target.name() !== 'bg') return
     setSelectedId(null) // 빈 곳 클릭 → 선택 해제
     drawing.current = true
@@ -134,28 +137,26 @@ export default function StrategyBoard() {
 
   const end = () => { drawing.current = false }
   const undo = () => setStrokes((prev) => prev.slice(0, -1))
-  const clear = () => { setStrokes([]); setAgents([]); setSelectedId(null) }
+  const clear = () => { setStrokes([]); setTokens([]); setSelectedId(null) }
 
-  const addAgent = (agent: string) => {
-    setAgents((prev) => {
-      // 새 토큰을 그리드로 살짝 어긋나게 배치(겹침 방지)
+  const addToken = (icon: string, size: number) => {
+    setTokens((prev) => {
       const n = prev.length
       const ox = (n % 4) * 46 - 69
       const oy = Math.floor(n / 4) * 46 - 46
-      return [...prev, { id: crypto.randomUUID(), agent, x: SIZE / 2 + ox, y: SIZE / 2 + oy }]
+      return [...prev, { id: crypto.randomUUID(), icon, x: SIZE / 2 + ox, y: SIZE / 2 + oy, size }]
     })
-    setPaletteOpen(false)
   }
-  const moveAgent = (id: string, x: number, y: number) =>
-    setAgents((prev) => prev.map((a) => (a.id === id ? { ...a, x, y } : a)))
+  const moveToken = (id: string, x: number, y: number) =>
+    setTokens((prev) => prev.map((t) => (t.id === id ? { ...t, x, y } : t)))
   const removeSelected = () => {
     if (!selectedId) return
-    setAgents((prev) => prev.filter((a) => a.id !== selectedId))
+    setTokens((prev) => prev.filter((t) => t.id !== selectedId))
     setSelectedId(null)
   }
 
   const exportPNG = () => {
-    setSelectedId(null) // 선택 테두리 빼고 깔끔하게 저장
+    setSelectedId(null)
     requestAnimationFrame(() => {
       const uri = stageRef.current?.toDataURL({ pixelRatio: 2 })
       if (!uri) return
@@ -174,6 +175,8 @@ export default function StrategyBoard() {
       {label}
     </button>
   )
+
+  const skillList = ABILITIES[agentSlug(skillAgent) ?? ''] ?? []
 
   return (
     <div className="flex flex-col gap-4">
@@ -203,19 +206,19 @@ export default function StrategyBoard() {
         </div>
 
         {/* 요원 팔레트 */}
-        <div className="relative" ref={paletteRef}>
+        <div className="relative" ref={agentPalRef}>
           <button
-            onClick={() => setPaletteOpen((o) => !o)}
+            onClick={() => { setAgentPalOpen((o) => !o); setSkillPalOpen(false) }}
             className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-300 hover:text-white transition"
           >
             ＋ 요원
           </button>
-          {paletteOpen && (
+          {agentPalOpen && (
             <div className="absolute top-full left-0 mt-1 z-50 w-64 max-h-72 overflow-auto rounded border border-white/10 bg-[#1e1e2e] shadow-xl p-2 grid grid-cols-5 gap-1.5">
               {AGENT_NAMES.map((a) => (
                 <button
                   key={a}
-                  onClick={() => addAgent(a)}
+                  onClick={() => { addToken(agentIcon(a) ?? '', 40); setAgentPalOpen(false) }}
                   title={a}
                   className="aspect-square rounded overflow-hidden bg-[#0a0a0e] hover:ring-2 hover:ring-[#00D2BE] transition"
                 >
@@ -223,6 +226,49 @@ export default function StrategyBoard() {
                   <img src={agentIcon(a) ?? ''} alt={a} className="w-full h-full object-cover" />
                 </button>
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* 스킬 팔레트 */}
+        <div className="relative" ref={skillPalRef}>
+          <button
+            onClick={() => { setSkillPalOpen((o) => !o); setAgentPalOpen(false) }}
+            className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-300 hover:text-white transition"
+          >
+            ＋ 스킬
+          </button>
+          {skillPalOpen && (
+            <div className="absolute top-full left-0 mt-1 z-50 w-72 rounded border border-white/10 bg-[#1e1e2e] shadow-xl p-2">
+              {/* 요원 선택 */}
+              <div className="grid grid-cols-7 gap-1 mb-2 max-h-28 overflow-auto">
+                {AGENT_NAMES.map((a) => (
+                  <button
+                    key={a}
+                    onClick={() => setSkillAgent(a)}
+                    title={a}
+                    className={`aspect-square rounded overflow-hidden transition ${a === skillAgent ? 'ring-2 ring-[#00D2BE]' : 'opacity-50 hover:opacity-100'}`}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={agentIcon(a) ?? ''} alt={a} className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+              {/* 선택 요원 스킬 */}
+              <div className="grid grid-cols-4 gap-1 pt-2 border-t border-white/10">
+                {skillList.map((ab) => (
+                  <button
+                    key={ab.icon}
+                    onClick={() => { addToken(ab.icon, 34); setSkillPalOpen(false) }}
+                    title={ab.name}
+                    className="flex flex-col items-center gap-1 p-1 rounded hover:bg-white/5 transition"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={ab.icon} alt={ab.name} className="w-8 h-8 object-contain" />
+                    <span className="text-[9px] text-slate-400 truncate w-full text-center">{ab.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -258,7 +304,7 @@ export default function StrategyBoard() {
 
         <div className="flex gap-1.5 ml-auto">
           {selectedId && (
-            <button onClick={removeSelected} className="px-3 py-1.5 rounded text-xs font-bold bg-[#ff4655]/15 text-[#ff4655] hover:bg-[#ff4655]/25 transition">요원 삭제</button>
+            <button onClick={removeSelected} className="px-3 py-1.5 rounded text-xs font-bold bg-[#ff4655]/15 text-[#ff4655] hover:bg-[#ff4655]/25 transition">토큰 삭제</button>
           )}
           <button onClick={undo} className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-400 hover:text-white transition">되돌리기</button>
           <button onClick={clear} className="px-3 py-1.5 rounded text-xs font-bold bg-white/5 text-slate-400 hover:text-white transition">전체 지우기</button>
@@ -286,19 +332,19 @@ export default function StrategyBoard() {
                 ? <Arrow key={i} points={s.points} stroke={s.color} fill={s.color} strokeWidth={s.width} pointerLength={10} pointerWidth={10} />
                 : <Line key={i} points={s.points} stroke={s.color} strokeWidth={s.width} lineCap="round" lineJoin="round" tension={0.3} />
             )}
-            {agents.map((o) => (
-              <AgentToken
+            {tokens.map((o) => (
+              <ImgToken
                 key={o.id}
                 obj={o}
                 selected={selectedId === o.id}
                 onSelect={() => setSelectedId(o.id)}
-                onMove={(x, y) => moveAgent(o.id, x, y)}
+                onMove={(x, y) => moveToken(o.id, x, y)}
               />
             ))}
           </Layer>
         </Stage>
       </div>
-      <p className="text-[11px] text-slate-600">맵 선택 → ＋요원으로 토큰 배치(드래그 이동, 클릭 후 삭제) → 펜·화살표로 작전 → PNG 저장. (v1 — 스킬 아이콘·텍스트 예정)</p>
+      <p className="text-[11px] text-slate-600">맵 선택 → ＋요원·＋스킬로 토큰 배치(드래그 이동, 클릭 후 삭제) → 펜·화살표로 작전 → PNG 저장. (v1 — 텍스트 예정)</p>
     </div>
   )
 }
