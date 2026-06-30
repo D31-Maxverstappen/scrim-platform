@@ -7,3 +7,6 @@ export const MANNER_ENABLED = false
 
 // 전략 노트 작전판(맵 드로잉, Pro 후보). MVP 개발 중 — 룩·기능 확정 전까지 OFF(라이브 미노출).
 export const STRATEGY_BOARD_ENABLED = false
+
+// 트레이닝(연습실 — 반응속도·플래시 피하기, Pro 후보). 개발 중 — 확정 전까지 OFF(라이브 미노출).
+export const TRAINING_ENABLED = false
