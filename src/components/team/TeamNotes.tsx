@@ -4,7 +4,11 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { formatKST } from '@/lib/datetime'
+import { STRATEGY_BOARD_ENABLED } from '@/lib/features'
 import type { BoardData } from '@/components/board/StrategyBoard'
+
+// 작전판은 개발 중 — 라이브(production)에선 OFF, dev에선 노출
+const BOARD_ON = STRATEGY_BOARD_ENABLED || process.env.NODE_ENV !== 'production'
 
 // Konva 작전판은 클라 전용 → SSR 끄고 동적 로드(모달에서만 번들)
 const StrategyBoard = dynamic(() => import('@/components/board/StrategyBoard'), { ssr: false })
@@ -72,13 +76,15 @@ export default function TeamNotes({
             ? <span className="text-red-400 text-xs">{error}</span>
             : <span className="text-slate-600 text-[11px]">🔒 상대 팀에는 보이지 않아요</span>}
           <div className="flex gap-2">
-            <button
-              onClick={() => setBoardEdit({})}
-              type="button"
-              className="bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold px-4 py-2 rounded transition"
-            >
-              ＋ 작전판
-            </button>
+            {BOARD_ON && (
+              <button
+                onClick={() => setBoardEdit({})}
+                type="button"
+                className="bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold px-4 py-2 rounded transition"
+              >
+                ＋ 작전판
+              </button>
+            )}
             <button
               onClick={submit}
               disabled={!content.trim() || busy}
@@ -116,7 +122,7 @@ export default function TeamNotes({
                   )}
                 </div>
                 {n.content && <p className="text-slate-200 text-sm whitespace-pre-wrap leading-relaxed">{n.content}</p>}
-                {n.board_data && (
+                {BOARD_ON && n.board_data && (
                   <button
                     onClick={() => setBoardEdit({ initialData: n.board_data ?? undefined })}
                     className="mt-1 inline-flex items-center gap-1.5 text-xs font-bold text-[#00D2BE] bg-[#00D2BE]/10 px-3 py-1.5 rounded hover:bg-[#00D2BE]/20 transition"
