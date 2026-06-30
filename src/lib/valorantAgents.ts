@@ -8,6 +8,9 @@ const AGENT_SLUG: Record<string, string> = {
   게코: 'gekko', 데드락: 'deadlock', 하버: 'harbor', 클로브: 'clove', 아이소: 'iso',
 }
 
+// 팔레트용 요원 목록(초상화 매핑된 요원명).
+export const AGENT_NAMES = Object.keys(AGENT_SLUG)
+
 // 요원명 → 초상화 경로. 매핑 없으면 null(컴포넌트에서 이름 첫 글자 폴백).
 export function agentIcon(agent: string | null | undefined): string | null {
   if (!agent) return null
