@@ -26,6 +26,15 @@ const FLASHES = [
 type Flash = (typeof FLASHES)[number]
 type Motion = Flash['motion']
 
+// 난이도(현재는 명목상 선택 UI — 실제 게임 로직 반영은 추후)
+const DIFFICULTIES = [
+  { id: 'easy', label: '쉬움', desc: '느긋하게 감각 익히기', active: 'bg-emerald-500' },
+  { id: 'normal', label: '보통', desc: '기본 밸런스', active: 'bg-sky-500' },
+  { id: 'hard', label: '어려움', desc: '적 시야·플래시 강화', active: 'bg-orange-500' },
+  { id: 'hell', label: '지옥', desc: '한 번의 실수도 용납되지 않음', active: 'bg-[#ff4655]' },
+] as const
+type DiffId = (typeof DIFFICULTIES)[number]['id']
+
 // 적 배치(구석·엄폐 뒤) [x,z] — 전부 +z(접근로) 감시
 const ENEMY_SPOTS: Array<[number, number]> = [[-4, 21], [4, 5], [-4, -11], [4, -27], [-4, -41], [3, -45]]
 
@@ -46,13 +55,18 @@ export default function FlashDodge() {
   const [headshots, setHeadshots] = useState(0)
   const [hitKind, setHitKind] = useState<'head' | 'body' | null>(null)
   const [sensitivity, setSensitivity] = useState(1)
+  const [difficulty, setDifficulty] = useState<DiffId>('normal')
+  const [showSettings, setShowSettings] = useState(false)
 
   // 감도 로드/저장 + ref 동기화(포인터락 콜백에서 최신값 참조)
   useEffect(() => {
     const saved = Number(localStorage.getItem('d31_train_sens'))
     if (saved >= 0.2 && saved <= 2.5) { setSensitivity(saved); sensRef.current = saved }
+    const d = localStorage.getItem('d31_train_diff')
+    if (d && DIFFICULTIES.some((x) => x.id === d)) setDifficulty(d as DiffId)
   }, [])
   useEffect(() => { sensRef.current = sensitivity; try { localStorage.setItem('d31_train_sens', String(sensitivity)) } catch { /* noop */ } }, [sensitivity])
+  useEffect(() => { try { localStorage.setItem('d31_train_diff', difficulty) } catch { /* noop */ } }, [difficulty])
 
   useEffect(() => {
     const mount = mountRef.current
@@ -387,9 +401,9 @@ export default function FlashDodge() {
   }, [])
 
   const overlayTitle = mission === 'win' ? '미션 성공! 🎉' : mission === 'lose' ? '미션 실패' : '시가전 미션'
-  const overlaySub = mission === 'win' ? '클릭하여 다시 도전'
-    : mission === 'lose' ? `${missionMsg} · 클릭하여 재시작`
-    : '통로를 전진해 끝(사이트)까지 도달하세요. 구석의 적이 보면 즉시 제압, 플래시는 등 돌려 회피. 클릭하여 시작.'
+  const overlaySub = mission === 'win' ? '아래에서 다시 도전할 수 있어요.'
+    : mission === 'lose' ? missionMsg
+    : '통로를 전진해 끝(사이트)까지 도달하세요. 구석의 적이 보면 즉시 제압, 플래시는 등 돌려 회피.'
 
   return (
     <div className="flex flex-col gap-3">
@@ -420,15 +434,56 @@ export default function FlashDodge() {
 
         {!locked && (
           <>
-            <button onClick={requestLock} className={`absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 cursor-pointer px-6 text-center ${mission === 'win' ? 'bg-[#04342c]/80' : mission === 'lose' ? 'bg-[#3a0d12]/85' : 'bg-black/55'} text-white`}>
-              <div className="text-3xl font-black">{overlayTitle}</div>
-              <div className="text-sm text-slate-200 max-w-md">{overlaySub}</div>
-              {lockError && <div className="text-xs text-[#ff4655] mt-2 max-w-md leading-relaxed">이 미리보기(iframe)에선 마우스 잠금이 막혀 있어요. 새 탭에서 <b>localhost:3000/valorant/training</b> 을 직접 열어 플레이하세요.</div>}
-            </button>
-            <div className="absolute bottom-4 left-1/2 z-40 -translate-x-1/2 w-64 bg-black/70 rounded-lg px-4 py-2.5 text-white" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between text-[11px] mb-1"><span className="font-bold">마우스 감도</span><span className="text-[#00D2BE] font-mono">{sensitivity.toFixed(2)}</span></div>
-              <input type="range" min={0.2} max={2.5} step={0.05} value={sensitivity} onChange={(e) => setSensitivity(Number(e.target.value))} className="w-full accent-[#00D2BE] cursor-pointer" />
+            {/* 우측 게임 메뉴(발로란트식) */}
+            <div className={`absolute inset-0 z-30 flex items-center justify-end px-8 text-white bg-gradient-to-l to-transparent ${mission === 'win' ? 'from-[#04342c]/90 via-[#04342c]/40' : mission === 'lose' ? 'from-[#3a0d12]/90 via-[#3a0d12]/40' : 'from-black/80 via-black/40'}`}>
+              <div className="flex flex-col items-end gap-2.5 w-52">
+                <div className="text-right mb-2">
+                  <div className="text-2xl font-black leading-tight">{overlayTitle}</div>
+                  <div className="text-xs text-slate-300 mt-1">{overlaySub}</div>
+                </div>
+                <button onClick={requestLock} className="w-full px-5 py-3 rounded-md bg-[#00D2BE] hover:bg-[#00b8a6] text-black font-black text-sm text-right transition cursor-pointer">
+                  {mission === 'idle' ? '게임 시작' : '다시 도전'}
+                </button>
+                <button onClick={() => setShowSettings(true)} className="w-full px-5 py-3 rounded-md bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-sm text-right transition cursor-pointer">
+                  설정
+                </button>
+                {lockError && <div className="text-xs text-[#ff4655] mt-2 text-right leading-relaxed">이 미리보기(iframe)에선 마우스 잠금이 막혀 있어요. 새 탭에서 <b>localhost:3000/valorant/training</b> 을 직접 열어 플레이하세요.</div>}
+              </div>
             </div>
+
+            {/* 설정 모달 */}
+            {showSettings && (
+              <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/80 px-6" onClick={() => setShowSettings(false)}>
+                <div className="w-80 bg-[#14141b] border border-white/10 rounded-xl p-5 flex flex-col gap-4 text-left" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm font-black text-white">설정</div>
+                    <button onClick={() => setShowSettings(false)} className="text-white/50 hover:text-white text-lg leading-none cursor-pointer">✕</button>
+                  </div>
+
+                  {/* 난이도(명목상) */}
+                  <div className="flex flex-col gap-1.5">
+                    <div className="text-[11px] font-bold text-white/80">난이도</div>
+                    <div className="grid grid-cols-4 gap-1">
+                      {DIFFICULTIES.map((d) => (
+                        <button key={d.id} onClick={() => setDifficulty(d.id)}
+                          className={`py-1.5 rounded-md text-[11px] font-bold transition ${difficulty === d.id ? `${d.active} text-white` : 'bg-white/5 text-white/50 hover:bg-white/10'}`}>
+                          {d.label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="text-[10px] text-white/40 min-h-[14px]">{DIFFICULTIES.find((d) => d.id === difficulty)?.desc}</div>
+                  </div>
+
+                  {/* 감도 */}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between text-[11px]"><span className="font-bold text-white/80">마우스 감도</span><span className="text-[#00D2BE] font-mono">{sensitivity.toFixed(2)}</span></div>
+                    <input type="range" min={0.2} max={2.5} step={0.05} value={sensitivity} onChange={(e) => setSensitivity(Number(e.target.value))} className="w-full accent-[#00D2BE] cursor-pointer" />
+                  </div>
+
+                  <button onClick={() => setShowSettings(false)} className="mt-1 w-full py-2 rounded-md bg-[#00D2BE] hover:bg-[#00b8a6] text-black font-black text-xs transition cursor-pointer">확인</button>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
