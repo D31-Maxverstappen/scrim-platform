@@ -9,6 +9,7 @@ import { agentIcon } from '@/lib/valorantAgents'
 // 끝(사이트)까지 안 죽고 도달하면 성공. 마우스 시점=포인터락. ※ 지형·총·플래시 전부 자체 그래픽(IP 회피).
 
 const SPEED = 7
+const WALK_MULT = 0.42       // 걷기(Shift) 속도 배수
 const BOUND_X = 6, BOUND_Z = 46
 const REACT_MS = 850       // 적에게 발각된 뒤 제압 제한시간
 const SIGHT_RANGE = 18     // 적 시야 거리
@@ -33,6 +34,7 @@ type Mission = 'idle' | 'playing' | 'win' | 'lose'
 export default function FlashDodge() {
   const mountRef = useRef<HTMLDivElement>(null)
   const audioRef = useRef<AudioContext | null>(null)
+  const sensRef = useRef(1)
   const [locked, setLocked] = useState(false)
   const [lockError, setLockError] = useState(false)
   const [mission, setMission] = useState<Mission>('idle')
@@ -41,6 +43,16 @@ export default function FlashDodge() {
   const [alerted, setAlerted] = useState(false)
   const [activeFlash, setActiveFlash] = useState<Flash | null>(null)
   const [whiteout, setWhiteout] = useState(0)
+  const [headshots, setHeadshots] = useState(0)
+  const [hitKind, setHitKind] = useState<'head' | 'body' | null>(null)
+  const [sensitivity, setSensitivity] = useState(1)
+
+  // 감도 로드/저장 + ref 동기화(포인터락 콜백에서 최신값 참조)
+  useEffect(() => {
+    const saved = Number(localStorage.getItem('d31_train_sens'))
+    if (saved >= 0.2 && saved <= 2.5) { setSensitivity(saved); sensRef.current = saved }
+  }, [])
+  useEffect(() => { sensRef.current = sensitivity; try { localStorage.setItem('d31_train_sens', String(sensitivity)) } catch { /* noop */ } }, [sensitivity])
 
   useEffect(() => {
     const mount = mountRef.current
@@ -100,13 +112,16 @@ export default function FlashDodge() {
     const dirL = new THREE.DirectionalLight(0xffffff, 0.9); dirL.position.set(6, 16, 10); scene.add(dirL)
     for (const lz of [38, 14, -10, -34]) { const pl = new THREE.PointLight(0xffffff, 0.5, 46); pl.position.set(0, 7, lz); scene.add(pl) }
 
-    // 적 — 캡슐. fwd=감시 방향(+z). alive·alertAt 상태.
-    type Enemy = { mesh: THREE.Mesh; alive: boolean; alertAt: number; fwd: THREE.Vector3 }
-    const enemyGeo = new THREE.CapsuleGeometry(0.35, 1.1, 4, 8)
+    // 적 — 몸통(캡슐)+머리(구체) 분리. 머리 명중=헤드샷. fwd=감시 방향(+z). alive·alertAt 상태.
+    type Enemy = { group: THREE.Group; body: THREE.Mesh; head: THREE.Mesh; mat: THREE.MeshStandardMaterial; alive: boolean; alertAt: number; fwd: THREE.Vector3 }
+    const bodyGeo = new THREE.CapsuleGeometry(0.32, 1.0, 4, 8)
+    const headGeo = new THREE.SphereGeometry(0.2, 16, 12)
     const enemies: Enemy[] = ENEMY_SPOTS.map(([x, z]) => {
-      const mesh = new THREE.Mesh(enemyGeo, new THREE.MeshStandardMaterial({ color: '#c8323f', emissive: '#7a1620', emissiveIntensity: 0.3, roughness: 0.8 }))
-      mesh.position.set(x, 1.05, z); scene.add(mesh)
-      return { mesh, alive: true, alertAt: 0, fwd: new THREE.Vector3(0, 0, 1) }
+      const mat = new THREE.MeshStandardMaterial({ color: '#c8323f', emissive: '#7a1620', emissiveIntensity: 0.3, roughness: 0.8 })
+      const body = new THREE.Mesh(bodyGeo, mat); body.position.y = 1.0
+      const head = new THREE.Mesh(headGeo, mat); head.position.y = 1.85
+      const group = new THREE.Group(); group.add(body, head); group.position.set(x, 0, z); scene.add(group)
+      return { group, body, head, mat, alive: true, alertAt: 0, fwd: new THREE.Vector3(0, 0, 1) }
     })
 
     // 플래시(빛 구체) + 글로우 + 조명 + 꼬리
@@ -131,6 +146,7 @@ export default function FlashDodge() {
 
     // 플래시 궤적
     const mO = new THREE.Vector3(), mE = new THREE.Vector3(), mC = new THREE.Vector3(), mB = new THREE.Vector3(), mTmp = new THREE.Vector3()
+    const mN = new THREE.Vector3(), mS = new THREE.Vector3(), mSurf = new THREE.Vector3()
     const easeOut = (t: number) => 1 - (1 - t) * (1 - t)
     const motionPos = (m: Motion, p: number, out: THREE.Vector3) => {
       if (m === 'wall' || m === 'placed') { out.copy(mE); return }
@@ -150,8 +166,8 @@ export default function FlashDodge() {
     document.addEventListener('mousemove', onMouseMove)
 
     // 이동
-    const keys = { w: false, a: false, s: false, d: false }
-    const setKey = (c: string, v: boolean) => { if (c === 'KeyW') keys.w = v; else if (c === 'KeyS') keys.s = v; else if (c === 'KeyA') keys.a = v; else if (c === 'KeyD') keys.d = v }
+    const keys = { w: false, a: false, s: false, d: false, shift: false }
+    const setKey = (c: string, v: boolean) => { if (c === 'KeyW') keys.w = v; else if (c === 'KeyS') keys.s = v; else if (c === 'KeyA') keys.a = v; else if (c === 'KeyD') keys.d = v; else if (c === 'ShiftLeft' || c === 'ShiftRight') keys.shift = v }
     const onKeyDown = (e: KeyboardEvent) => { if (document.pointerLockElement === renderer.domElement) setKey(e.code, true) }
     const onKeyUp = (e: KeyboardEvent) => setKey(e.code, false)
     document.addEventListener('keydown', onKeyDown); document.addEventListener('keyup', onKeyUp)
@@ -176,11 +192,18 @@ export default function FlashDodge() {
       if (document.pointerLockElement !== renderer.domElement || e.button !== 0) return
       gunKick = 0.06
       shootRay.setFromCamera(new THREE.Vector2(0, 0), camera)
-      const live = enemies.filter((en) => en.alive).map((en) => en.mesh)
-      const hit = shootRay.intersectObjects(live, false)[0]
+      const parts: THREE.Mesh[] = []
+      for (const en of enemies) if (en.alive) { parts.push(en.body, en.head) }
+      const hit = shootRay.intersectObjects(parts, false)[0]
       if (hit) {
-        const en = enemies.find((x) => x.mesh === hit.object)
-        if (en) { en.alive = false; en.alertAt = 0; en.mesh.visible = false; g.kills++; setKills(g.kills) }
+        const en = enemies.find((x) => x.body === hit.object || x.head === hit.object)
+        if (en) {
+          const isHead = hit.object === en.head
+          en.alive = false; en.alertAt = 0; en.group.visible = false; g.kills++; setKills(g.kills)
+          if (isHead) { g.headshots++; setHeadshots(g.headshots) }
+          setHitKind(isHead ? 'head' : 'body')
+          timers.push(window.setTimeout(() => setHitKind(null), 550))
+        }
       }
     }
     document.addEventListener('mousedown', onMouseDown)
@@ -195,7 +218,7 @@ export default function FlashDodge() {
     }
 
     // 미션 상태
-    const g = { mission: 'idle' as Mission, fphase: 'off' as 'off' | 'arm' | 'tele', tStart: 0, ms: 600, motion: 'wall' as Motion, kills: 0 }
+    const g = { mission: 'idle' as Mission, fphase: 'off' as 'off' | 'arm' | 'tele', tStart: 0, ms: 600, motion: 'wall' as Motion, kills: 0, headshots: 0 }
     let timers: number[] = []
     const clearTimers = () => { timers.forEach((t) => clearTimeout(t)); timers = [] }
     const hideFlash = () => { flash.visible = false; trail.visible = false; glow.visible = false; flashLight.intensity = 0; setActiveFlash(null) }
@@ -213,18 +236,31 @@ export default function FlashDodge() {
     const spawnFlash = () => {
       if (g.mission !== 'playing') return
       const f = FLASHES[Math.floor(Math.random() * FLASHES.length)]
-      const ex0 = camera.position.x, ez0 = camera.position.z
+      const px = camera.position.x, pz = camera.position.z
       camera.getWorldDirection(mTmp); mTmp.y = 0; if (mTmp.lengthSq() < 1e-4) mTmp.set(0, 0, -1); mTmp.normalize()
-      losRay.set(new THREE.Vector3(ex0, 1.6, ez0), mTmp); losRay.far = 24
-      const hit = losRay.intersectObjects(walls, false)[0]
-      let dist = 7 + Math.random() * 4
-      if (hit && hit.distance - 1.6 < dist) dist = Math.max(3.5, hit.distance - 1.6)
-      const ex = ex0 + mTmp.x * dist, ez = ez0 + mTmp.z * dist, ty = 1.5 + Math.random() * 0.8
-      mE.set(ex, ty, ez)
-      const fd = dist + 5, fx = ex0 + mTmp.x * fd, fz = ez0 + mTmp.z * fd
-      const sx = -mTmp.z, sz = mTmp.x, sgn = Math.random() < 0.5 ? 1 : -1
+      // 플래시는 반드시 벽/코너에 붙어(또는 뒤에서) 나온다 — 벽 표면과 법선을 찾는다
+      const eye = mB.set(px, 1.4, pz)   // mB 임시 재사용(bounce 모션 미사용)
+      const findWall = (dir: THREE.Vector3, far: number) => { losRay.set(eye, dir); losRay.far = far; return losRay.intersectObjects(walls, false)[0] }
+      let hit = findWall(mTmp, 26)
+      if (!hit) { mS.set(-mTmp.z, 0, mTmp.x); hit = findWall(mS, 9) || findWall(mS.clone().negate(), 9) }  // 정면에 벽 없으면 좌우(코너·측벽)
+      if (hit && hit.face) {
+        mSurf.copy(hit.point)
+        mN.copy(hit.face.normal).transformDirection(hit.object.matrixWorld); mN.y = 0
+        if (mN.lengthSq() < 1e-4) mN.copy(mTmp).negate(); else mN.normalize()
+      } else { mSurf.set(px + mTmp.x * 8, 1.5, pz + mTmp.z * 8); mN.copy(mTmp).negate() }  // 완전 폴백
+      if (mN.x * (px - mSurf.x) + mN.z * (pz - mSurf.z) < 0) mN.negate()  // 법선이 플레이어를 향하도록
+      mS.set(-mN.z, 0, mN.x)  // 벽면 접선(옆 방향)
+      const sgn = Math.random() < 0.5 ? 1 : -1
       g.motion = f.motion
-      if (f.motion === 'curve') { mO.set(fx + sx * 3 * sgn, 1.4, fz + sz * 3 * sgn); mC.set((ex + fx) / 2 + sx * 1.5 * sgn, 3.8, (ez + fz) / 2 + sz * 1.5 * sgn) }
+      if (f.motion === 'placed') {          // 바이스 — 벽 낮은 곳에 부착
+        mE.copy(mSurf).addScaledVector(mN, 0.05); mE.y = 0.7 + Math.random() * 0.5
+      } else if (f.motion === 'wall') {     // 브리치 — 벽에 합쳐져(표면) 중간 높이
+        mE.copy(mSurf).addScaledVector(mN, 0.02); mE.y = 1.4 + Math.random() * 0.5
+      } else {                               // 피닉스 커브볼 — 벽 모서리 뒤에서 곡선으로 날아나옴
+        mE.copy(mSurf).addScaledVector(mN, 0.7); mE.y = 1.5
+        mO.copy(mSurf).addScaledVector(mN, -1.2).addScaledVector(mS, 2.6 * sgn); mO.y = 1.4
+        mC.set((mO.x + mE.x) / 2 + mS.x * 1.4 * sgn, 3.2, (mO.z + mE.z) / 2 + mS.z * 1.4 * sgn)
+      }
       const staticStart = f.motion === 'wall' || f.motion === 'placed'
       flash.position.copy(staticStart ? mE : mO); flash.visible = true; flash.scale.setScalar(staticStart ? 0.2 : 0.4)
       flashMat.color.set(f.color); flashMat.emissive.set(f.color)
@@ -245,8 +281,8 @@ export default function FlashDodge() {
     const startMission = () => {
       clearTimers(); hideFlash(); setWhiteout(0)   // 재시작 시 섬광 화이트아웃 확실히 제거
       camera.position.copy(SPAWN); euler.set(0, 0, 0, 'YXZ'); camera.quaternion.setFromEuler(euler)
-      for (const en of enemies) { en.alive = true; en.alertAt = 0; en.mesh.visible = true }
-      g.kills = 0; setKills(0); setAlerted(false); g.mission = 'playing'; setMission('playing')
+      for (const en of enemies) { en.alive = true; en.alertAt = 0; en.group.visible = true }
+      g.kills = 0; g.headshots = 0; setKills(0); setHeadshots(0); setHitKind(null); setAlerted(false); g.mission = 'playing'; setMission('playing')
       armFlash()
     }
 
@@ -254,7 +290,7 @@ export default function FlashDodge() {
       const on = document.pointerLockElement === renderer.domElement
       setLocked(on)
       if (on) { if (g.mission !== 'playing') startMission() }
-      else { if (g.mission === 'playing') { g.mission = 'idle'; setMission('idle') } clearTimers(); hideFlash(); g.fphase = 'off'; keys.w = keys.a = keys.s = keys.d = false; setAlerted(false) }
+      else { if (g.mission === 'playing') { g.mission = 'idle'; setMission('idle') } clearTimers(); hideFlash(); g.fphase = 'off'; keys.w = keys.a = keys.s = keys.d = keys.shift = false; setAlerted(false); setHitKind(null) }
     }
     document.addEventListener('pointerlockchange', onLockChange)
     const onLockErr = () => setLockError(true)
@@ -276,7 +312,7 @@ export default function FlashDodge() {
         mv.set(0, 0, 0)
         if (keys.w) mv.add(fwd); if (keys.s) mv.sub(fwd); if (keys.d) mv.add(right); if (keys.a) mv.sub(right)
         if (mv.lengthSq() > 0) {
-          mv.normalize().multiplyScalar(SPEED * dt)
+          mv.normalize().multiplyScalar((keys.shift ? SPEED * WALK_MULT : SPEED) * dt)
           camera.position.x = Math.max(-BOUND_X, Math.min(BOUND_X, camera.position.x + mv.x))
           camera.position.z = Math.max(-BOUND_Z, Math.min(BOUND_Z, camera.position.z + mv.z))
           camera.position.y = 1.6
@@ -291,8 +327,8 @@ export default function FlashDodge() {
         let anyAlert = false
         for (const en of enemies) {
           if (!en.alive) continue
-          eEye.copy(en.mesh.position); eEye.y = 1.5
-          eToP.copy(camera.position).sub(en.mesh.position); eToP.y = 0
+          eEye.copy(en.group.position); eEye.y = 1.5
+          eToP.copy(camera.position).sub(en.group.position); eToP.y = 0
           const d = eToP.length()
           let sees = false
           if (d < SIGHT_RANGE && d > 0.1) {
@@ -305,8 +341,7 @@ export default function FlashDodge() {
             anyAlert = true
           } else en.alertAt = 0
           // 발각된 적은 밝게
-          const mat = en.mesh.material as THREE.MeshStandardMaterial
-          mat.emissiveIntensity = en.alertAt ? 0.6 + 0.4 * Math.sin(now * 0.02) : 0.3
+          en.mat.emissiveIntensity = en.alertAt ? 0.6 + 0.4 * Math.sin(now * 0.02) : 0.3
         }
         if (anyAlert !== prevAlert) { prevAlert = anyAlert; setAlerted(anyAlert) }
 
@@ -336,7 +371,8 @@ export default function FlashDodge() {
       window.removeEventListener('resize', onResize)
       document.removeEventListener('mousemove', onMouseMove); document.removeEventListener('keydown', onKeyDown); document.removeEventListener('keyup', onKeyUp)
       document.removeEventListener('mousedown', onMouseDown); document.removeEventListener('pointerlockchange', onLockChange); document.removeEventListener('pointerlockerror', onLockErr)
-      renderer.dispose(); trailGeo.dispose(); glowTex.dispose(); enemyGeo.dispose()
+      renderer.dispose(); trailGeo.dispose(); glowTex.dispose(); bodyGeo.dispose(); headGeo.dispose()
+      for (const en of enemies) en.mat.dispose()
       gun.traverse((o) => { if (o instanceof THREE.Mesh) o.geometry.dispose() }); gunMat.dispose()
       if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement)
     }
@@ -362,7 +398,7 @@ export default function FlashDodge() {
 
         {locked && (
           <>
-            <div className="absolute top-3 left-3 z-10 text-xs font-bold text-white/90 bg-black/40 rounded px-2 py-1">처치 {kills}</div>
+            <div className="absolute top-3 left-3 z-10 text-xs font-bold text-white/90 bg-black/40 rounded px-2 py-1">처치 {kills} · <span className="text-[#ffd700]">헤드샷 {headshots}</span></div>
             {alerted && <div className="absolute top-3 right-3 z-10 text-xs font-black text-white bg-[#ff4655] rounded px-2 py-1 animate-pulse">⚠ 발각! 제압하라</div>}
             {alerted && <div className="absolute inset-0 z-0 pointer-events-none" style={{ boxShadow: 'inset 0 0 90px 20px rgba(255,70,85,0.4)' }} />}
             {activeFlash && (
@@ -373,16 +409,27 @@ export default function FlashDodge() {
               </div>
             )}
             <div className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#00D2BE] shadow" />
-            <div className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2 text-[11px] text-white/50">WASD 이동 · 클릭 사격 · 플래시 등 돌려 회피 · 끝까지 도달 · ESC 종료</div>
+            {hitKind && (
+              <div className={`absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-[190%] text-sm font-black ${hitKind === 'head' ? 'text-[#ffd700]' : 'text-white'}`}>
+                {hitKind === 'head' ? 'HEADSHOT!' : '명중'}
+              </div>
+            )}
+            <div className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2 text-[11px] text-white/50">WASD 이동 · Shift 걷기 · 클릭 사격(머리=헤드샷) · 플래시 등 돌려 회피 · ESC 종료</div>
           </>
         )}
 
         {!locked && (
-          <button onClick={requestLock} className={`absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 cursor-pointer px-6 text-center ${mission === 'win' ? 'bg-[#04342c]/80' : mission === 'lose' ? 'bg-[#3a0d12]/85' : 'bg-black/55'} text-white`}>
-            <div className="text-3xl font-black">{overlayTitle}</div>
-            <div className="text-sm text-slate-200 max-w-md">{overlaySub}</div>
-            {lockError && <div className="text-xs text-[#ff4655] mt-2 max-w-md leading-relaxed">이 미리보기(iframe)에선 마우스 잠금이 막혀 있어요. 새 탭에서 <b>localhost:3000/valorant/training</b> 을 직접 열어 플레이하세요.</div>}
-          </button>
+          <>
+            <button onClick={requestLock} className={`absolute inset-0 z-30 flex flex-col items-center justify-center gap-2 cursor-pointer px-6 text-center ${mission === 'win' ? 'bg-[#04342c]/80' : mission === 'lose' ? 'bg-[#3a0d12]/85' : 'bg-black/55'} text-white`}>
+              <div className="text-3xl font-black">{overlayTitle}</div>
+              <div className="text-sm text-slate-200 max-w-md">{overlaySub}</div>
+              {lockError && <div className="text-xs text-[#ff4655] mt-2 max-w-md leading-relaxed">이 미리보기(iframe)에선 마우스 잠금이 막혀 있어요. 새 탭에서 <b>localhost:3000/valorant/training</b> 을 직접 열어 플레이하세요.</div>}
+            </button>
+            <div className="absolute bottom-4 left-1/2 z-40 -translate-x-1/2 w-64 bg-black/70 rounded-lg px-4 py-2.5 text-white" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between text-[11px] mb-1"><span className="font-bold">마우스 감도</span><span className="text-[#00D2BE] font-mono">{sensitivity.toFixed(2)}</span></div>
+              <input type="range" min={0.2} max={2.5} step={0.05} value={sensitivity} onChange={(e) => setSensitivity(Number(e.target.value))} className="w-full accent-[#00D2BE] cursor-pointer" />
+            </div>
+          </>
         )}
       </div>
       <p className="text-[11px] text-slate-600">자체 디자인 그레이박스(특정 맵 복제 아님) — 시가전 통로를 전진하며 구석의 적을 제압하고(보이면 빨리!), 피닉스·바이스·브리치 플래시를 등 돌려 피해 끝까지 도달하면 성공.</p>
