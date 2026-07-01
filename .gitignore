@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# supabase CLI 로컬 캐시(머신·유저별 — 커밋 금지. 링크 ref 등)
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
