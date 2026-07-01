@@ -243,7 +243,7 @@ export default function FlashDodge() {
     }
 
     const startMission = () => {
-      clearTimers(); hideFlash()
+      clearTimers(); hideFlash(); setWhiteout(0)   // 재시작 시 섬광 화이트아웃 확실히 제거
       camera.position.copy(SPAWN); euler.set(0, 0, 0, 'YXZ'); camera.quaternion.setFromEuler(euler)
       for (const en of enemies) { en.alive = true; en.alertAt = 0; en.mesh.visible = true }
       g.kills = 0; setKills(0); setAlerted(false); g.mission = 'playing'; setMission('playing')
